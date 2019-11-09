@@ -5,40 +5,101 @@ import java.util.ArrayList;
 public class Doctor extends User
 {
 	private String type;
-	private String idInsuranse;
-	private float avgRating;
-	private ArrayList<Integer> ratings;
-	//private ArrayList<Appointment> scheduledApp;
-	//private ArrayList<Appointment> completedApp;
-	//private ArrayList<Operation> scheduledOp;
-	//private ArrayList<Operation> completedOp;
+	private String incuranseID;
+	private float avgReview;
+	private ArrayList<DoctorReview> review;
+	private ArrayList<Appointment> scheduledAppointment;
+	private ArrayList<Appointment> completedAppointment;
+	private ArrayList<Surgery> scheduledSurgery;
+	private ArrayList<Surgery> completedSurgery;
 	//holiday list
-	
-	
+
+	public Doctor() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	public Doctor(String username, String password, String email, String name, String surname, String city,
+			String address, String state, String phone) {
+		super(username, password, email, name, surname, city, address, state, phone, UserRole.Doctor);
+		scheduledAppointment = new ArrayList<Appointment>();
+		completedAppointment = new ArrayList<Appointment>();
+		scheduledSurgery = new ArrayList<Surgery>();
+		completedSurgery = new ArrayList<Surgery>();
+
+		// TODO Auto-generated constructor stub
+	}
+
 	public String getType() {
 		return type;
 	}
+	
 	public void setType(String type) {
 		this.type = type;
 	}
 	public String getIdInsuranse() {
-		return idInsuranse;
+		return incuranseID;
 	}
-	public void setIdInsuranse(String idInsuranse) {
-		this.idInsuranse = idInsuranse;
+	public void setIdInsuranse(String incuranseID) {
+		this.incuranseID = incuranseID;
 	}
-	public float getAvgRating() {
-		return avgRating;
+	public float getAvgReview() {
+		return avgReview;
 	}
-	public void setAvgRating(float avgRating) {
-		this.avgRating = avgRating;
+	public void setAvgReview(float avgReview) {
+		this.avgReview = avgReview;
 	}
-	public ArrayList<Integer> getRatings() {
-		return ratings;
+	
+	
+	public ArrayList<DoctorReview> getReview() {
+		return review;
 	}
-	public void setRatings(ArrayList<Integer> ratings) {
-		this.ratings = ratings;
+
+	public void setReview(ArrayList<DoctorReview> review) {
+		this.review = review;
 	}
+
+	public String getIncuranseID() {
+		return incuranseID;
+	}
+	public void setIncuranseID(String incuranseID) {
+		this.incuranseID = incuranseID;
+	}
+
+	public ArrayList<Appointment> getScheduledAppointment() {
+		return scheduledAppointment;
+	}
+
+	public void setScheduledAppointment(ArrayList<Appointment> scheduledAppointment) {
+		this.scheduledAppointment = scheduledAppointment;
+	}
+
+	public ArrayList<Appointment> getCompletedAppointment() {
+		return completedAppointment;
+	}
+
+	public void setCompletedAppointment(ArrayList<Appointment> completedAppointment) {
+		this.completedAppointment = completedAppointment;
+	}
+
+	public ArrayList<Surgery> getScheduledSurgery() {
+		return scheduledSurgery;
+	}
+
+	public void setScheduledSurgery(ArrayList<Surgery> scheduledSurgery) {
+		this.scheduledSurgery = scheduledSurgery;
+	}
+
+	public ArrayList<Surgery> getCompletedSurgery() {
+		return completedSurgery;
+	}
+
+	public void setCompletedSurgery(ArrayList<Surgery> completedSurgery) {
+		this.completedSurgery = completedSurgery;
+	}
+
+	
+
 	
 	
 	
