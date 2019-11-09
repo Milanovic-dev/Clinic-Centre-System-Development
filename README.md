@@ -1,2 +1,2 @@
 # Clinic-Centre-System
-Web based application made for patients and Clinic Center.
+Web based application made for patients and Clinic Centre.
