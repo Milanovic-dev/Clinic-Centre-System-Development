@@ -1,33 +1,35 @@
 package model;
 
+import java.util.Date;
+
 public class Appointment 
 {
-	private String appointmentID;
-	private long startingDateAndTime;
+	public enum AppointmentType{ Examination, Surgery }
+	
+	private Long id;
+	private Date startingDateAndTime;
 	private long duration;
 	private double price;
 	private Hall hall;
 	private Patient patient;
 	private Clinic clinic;
-	
+	private AppointmentType appointmentType;
 	
 	public Appointment() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 	
-	
-
-	public Appointment(String appointmentID, long startingDateAndTime, long duration, double price,
-			Hall hall, Patient patient, Clinic clinic) {
+	public Appointment(Date startingDateAndTime, long duration, double price,
+			Hall hall, Patient patient, Clinic clinic,AppointmentType type) {
 		super();
-		this.appointmentID = appointmentID;
 		this.startingDateAndTime = startingDateAndTime;
 		this.duration = duration;
 		this.price = price;
 		this.hall = hall;
 		this.patient = patient;
 		this.clinic = clinic;
+		this.appointmentType = type;
 	}
 
 
@@ -50,16 +52,14 @@ public class Appointment
 	}
 
 
-	public String getAppointmentID() {
-		return appointmentID;
+	public Long getId() {
+		return id;
 	}
-	public void setAppointmentID(String appointmentID) {
-		this.appointmentID = appointmentID;
-	}
-	public long getStartingDateAndTime() {
+
+	public Date getStartingDateAndTime() {
 		return startingDateAndTime;
 	}
-	public void setStartingDateAndTime(long startingDateAndTime) {
+	public void setStartingDateAndTime(Date startingDateAndTime) {
 		this.startingDateAndTime = startingDateAndTime;
 	}
 	public long getDuration() {
@@ -80,11 +80,18 @@ public class Appointment
 	public void setHall(Hall hall) {
 		this.hall = hall;
 	}
+	
+	public AppointmentType getAppointmentType() {
+		return appointmentType;
+	}
 
+	public void setAppointmentType(AppointmentType appointmentType) {
+		this.appointmentType = appointmentType;
+	}
 
 	@Override
 	public String toString() {
-		return "Appointment [appointmentID=" + appointmentID + ", startingDateAndTime=" + startingDateAndTime
+		return "Appointment [appointmentID=" + id + ", startingDateAndTime=" + startingDateAndTime
 				+ ", duration=" + duration + ", price=" + price + ", hall=" + hall + "]";
 	}
 	

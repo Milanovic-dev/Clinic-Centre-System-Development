@@ -1,5 +1,7 @@
 package model;
 
+import java.util.Date;
+
 public class Examination extends Appointment
 {
 	private Doctor doctor;
@@ -17,10 +19,11 @@ public class Examination extends Appointment
 	}
 
 
-	public Examination(String appointmentID, long startingDateAndTime, long duration, double price, Hall hall,
-			Patient patient, Clinic clinic) {
-		super(appointmentID, startingDateAndTime, duration, price, hall, patient, clinic);
-		// TODO Auto-generated constructor stub
+	public Examination(Date startingDateAndTime, long duration, double price, Hall hall,
+			Patient patient, Clinic clinic, Doctor doctor, String typeOfExamination) {
+		super(startingDateAndTime, duration, price, hall, patient, clinic,AppointmentType.Examination);
+		this.doctor = doctor;
+		this.typeOfExamination = typeOfExamination;
 	}
 
 	public Doctor getDoctor() {
