@@ -2,23 +2,23 @@ package model;
 
 import java.util.Date;
 
-public class DoctorReview {
+public class ClinicReview {
     private String header;
     private String description;
     private int rating;
     private Date date;
-    private String doctorID;
+    private String clinicID;
 
-    public DoctorReview(String header, String description, int rating, Date date, String doctorID) {
+    public ClinicReview(){
+
+    }
+
+    public ClinicReview(String header, String description, int rating, Date date, String clinicID) {
         this.header = header;
         this.description = description;
         this.rating = rating;
         this.date = date;
-        this.doctorID = doctorID;
-    }
-
-    public DoctorReview(){
-
+        this.clinicID = clinicID;
     }
 
     public String getHeader() {
@@ -53,11 +53,11 @@ public class DoctorReview {
         this.date = date;
     }
 
-    public String getDoctorID() {
-        return doctorID;
+    public String getClinicID() {
+        return clinicID;
     }
 
-    public void setDoctorID(String doctorID) {
-        this.doctorID = doctorID;
+    public void setClinicID(String clinicID) {
+        this.clinicID = clinicID;
     }
 }

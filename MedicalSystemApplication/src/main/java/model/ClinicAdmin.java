@@ -1,5 +1,5 @@
 package model;
 
-public class ClinicAdmin {
+public class ClinicAdmin extends User {
 
 }
