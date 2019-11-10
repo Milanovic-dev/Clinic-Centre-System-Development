@@ -1,10 +1,10 @@
 package model;
 
-public class CentreAdmin{
+import java.util.ArrayList;
 
 public class CentreAdmin extends User {
+	
     private ArrayList<RegistrationRequest> registrationRequests;
-
 
     public CentreAdmin() {
     }
