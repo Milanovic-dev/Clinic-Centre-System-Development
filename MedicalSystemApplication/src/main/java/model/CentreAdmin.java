@@ -1,6 +1,6 @@
 package model;
 
-import java.util.ArrayList;
+public class CentreAdmin{
 
 public class CentreAdmin extends User {
     private ArrayList<RegistrationRequest> registrationRequests;
