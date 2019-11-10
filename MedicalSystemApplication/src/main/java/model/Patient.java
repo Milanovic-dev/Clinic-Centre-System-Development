@@ -1,13 +1,13 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.Collection;
 
 public class Patient extends User{
 
 	private String insuranceId;
 	private MedicalRecord medicalRecord;
-	private ArrayList<Appointment> scheduledAppointments;
-	private ArrayList<Surgery> scheduledSurgeries;
+	private Collection<Appointment> scheduledAppointments;
 
 	public Patient()
 	{
@@ -19,7 +19,6 @@ public class Patient extends User{
 		super(username, password, email, name, surname, city, address, state, phone, UserRole.Patient);
 		medicalRecord = new MedicalRecord();
 		scheduledAppointments = new ArrayList<Appointment>();
-		scheduledSurgeries = new ArrayList<Surgery>();
 	}
 
 	public String getInsuranceId() {
@@ -38,21 +37,13 @@ public class Patient extends User{
 		this.medicalRecord = medicalRecord;
 	}
 
-	public ArrayList<Appointment> getScheduledAppointments() {
+	public Collection<Appointment> getScheduledAppointments() {
 		return scheduledAppointments;
 	}
 
 	public void setScheduledAppointments(ArrayList<Appointment> scheduledAppointments) {
 		this.scheduledAppointments = scheduledAppointments;
 	}
-
-	public ArrayList<Surgery> getScheduledSurgeries() {
-		return scheduledSurgeries;
-	}
-
-	public void setScheduledSurgeries(ArrayList<Surgery> scheduledSurgeries) {
-		this.scheduledSurgeries = scheduledSurgeries;
-	}
-		
+	
 	
 }
