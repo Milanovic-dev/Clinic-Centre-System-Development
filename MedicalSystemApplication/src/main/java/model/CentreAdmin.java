@@ -1,5 +1,5 @@
 package model;
 
-public class CentreAdmin {
+public class CentreAdmin{
 
 }
