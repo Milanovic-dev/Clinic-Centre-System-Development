@@ -6,7 +6,6 @@ public class Appointment
 	private long startingDateAndTime;
 	private long duration;
 	private double price;
-	private Doctor doctor;
 	private Hall hall;
 	private Patient patient;
 	private Clinic clinic;
@@ -19,14 +18,13 @@ public class Appointment
 	
 	
 
-	public Appointment(String appointmentID, long startingDateAndTime, long duration, double price, Doctor doctor,
+	public Appointment(String appointmentID, long startingDateAndTime, long duration, double price,
 			Hall hall, Patient patient, Clinic clinic) {
 		super();
 		this.appointmentID = appointmentID;
 		this.startingDateAndTime = startingDateAndTime;
 		this.duration = duration;
 		this.price = price;
-		this.doctor = doctor;
 		this.hall = hall;
 		this.patient = patient;
 		this.clinic = clinic;
@@ -76,12 +74,6 @@ public class Appointment
 	public void setPrice(double price) {
 		this.price = price;
 	}
-	public Doctor getDoctor() {
-		return doctor;
-	}
-	public void setDoctor(Doctor doctor) {
-		this.doctor = doctor;
-	}
 	public Hall getHall() {
 		return hall;
 	}
@@ -93,7 +85,7 @@ public class Appointment
 	@Override
 	public String toString() {
 		return "Appointment [appointmentID=" + appointmentID + ", startingDateAndTime=" + startingDateAndTime
-				+ ", duration=" + duration + ", price=" + price + ", doctor=" + doctor + ", hall=" + hall + "]";
+				+ ", duration=" + duration + ", price=" + price + ", hall=" + hall + "]";
 	}
 	
 	
