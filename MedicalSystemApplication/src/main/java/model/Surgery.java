@@ -6,26 +6,32 @@ import java.util.Date;
 
 public class Surgery extends Appointment
 {
-	private Collection<Doctor> doctors;
+	private ArrayList<Doctor> doctors;
 
 	
 	public Surgery() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
+	
 
-	public Surgery(Date startingDateAndTime, long duration, double price, Hall hall,
-			Patient patient, Clinic clinic) {
-		super(startingDateAndTime, duration, price, hall, patient, clinic, AppointmentType.Surgery);
+	public Surgery(Date startingDateAndTime, long duration, double price, Hall hall, Patient patient, Clinic clinic,
+			AppointmentType type) {
+		super(startingDateAndTime, duration, price, hall, patient, clinic, type);
+		
 		doctors = new ArrayList<Doctor>();
 	}
 
-	public Collection<Doctor> getDoctors() {
+
+	public ArrayList<Doctor> getDoctors() {
 		return doctors;
 	}
 
-	public void setDoctors(Collection<Doctor> doctors) {
+
+	public void setDoctors(ArrayList<Doctor> doctors) {
 		this.doctors = doctors;
 	}
+
+
 	
 }
