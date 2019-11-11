@@ -1,12 +1,11 @@
 package model;
 
-
 import java.util.ArrayList;
 
 public class CentreAdmin extends User {
+	
     private ArrayList<RegistrationRequest> registrationRequests;
     ClinicCenter clinicCentre;
-
 
     public CentreAdmin() {
     }
