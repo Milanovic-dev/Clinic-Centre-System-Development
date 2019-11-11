@@ -5,9 +5,10 @@ import java.util.Collection;
 
 public class Recipe {
 
+	private Long id;
 	private String header;
 	private String description;
-	private Collection<Drug> drugs;
+	private ArrayList<Drug> drugs;
 	
 	
 	public Recipe(String header, String description) {
@@ -16,7 +17,14 @@ public class Recipe {
 		this.description = description;
 		drugs = new ArrayList<Drug>();
 	}
-
+	
+	public Long getId() {
+		return id;
+	}
+	
+	public void setId(Long id) {
+		this.id = id;
+	}
 
 	public String getHeader() {
 		return header;
@@ -38,12 +46,12 @@ public class Recipe {
 	}
 
 
-	public Collection<Drug> getDrugs() {
+	public ArrayList<Drug> getDrugs() {
 		return drugs;
 	}
 
 
-	public void setDrugs(Collection<Drug> drugs) {
+	public void setDrugs(ArrayList<Drug> drugs) {
 		this.drugs = drugs;
 	}
 	

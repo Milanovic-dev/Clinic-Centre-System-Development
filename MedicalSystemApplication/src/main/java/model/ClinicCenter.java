@@ -8,7 +8,6 @@ public class ClinicCenter
 	private CentreAdmin centreAdmin;
 	
 	
-	
 	public ClinicCenter() {
 		super();
 		// TODO Auto-generated constructor stub

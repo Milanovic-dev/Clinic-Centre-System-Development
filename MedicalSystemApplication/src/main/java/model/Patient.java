@@ -7,7 +7,7 @@ public class Patient extends User{
 
 	private String insuranceId;
 	private MedicalRecord medicalRecord;
-	private Collection<Appointment> scheduledAppointments;
+	private ArrayList<Appointment> scheduledAppointments;
 
 	public Patient()
 	{
@@ -17,6 +17,13 @@ public class Patient extends User{
 	public Patient(String username, String password, String email, String name, String surname, String city,
 			String address, String state, String phone) {
 		super(username, password, email, name, surname, city, address, state, phone, UserRole.Patient);
+		medicalRecord = new MedicalRecord();
+		scheduledAppointments = new ArrayList<Appointment>();
+	}
+	
+	public Patient(RegistrationRequest request)
+	{
+		super(request,UserRole.Patient);
 		medicalRecord = new MedicalRecord();
 		scheduledAppointments = new ArrayList<Appointment>();
 	}
@@ -37,7 +44,7 @@ public class Patient extends User{
 		this.medicalRecord = medicalRecord;
 	}
 
-	public Collection<Appointment> getScheduledAppointments() {
+	public ArrayList<Appointment> getScheduledAppointments() {
 		return scheduledAppointments;
 	}
 

@@ -3,18 +3,17 @@ package model;
 import java.util.Date;
 
 public class DoctorReview {
+	
     private String header;
     private String description;
     private int rating;
     private Date date;
-    private String doctorID;
 
-    public DoctorReview(String header, String description, int rating, Date date, String doctorID) {
+    public DoctorReview(String header, String description, int rating, Date date) {
         this.header = header;
         this.description = description;
         this.rating = rating;
         this.date = date;
-        this.doctorID = doctorID;
     }
 
     public DoctorReview(){
@@ -53,11 +52,4 @@ public class DoctorReview {
         this.date = date;
     }
 
-    public String getDoctorID() {
-        return doctorID;
-    }
-
-    public void setDoctorID(String doctorID) {
-        this.doctorID = doctorID;
-    }
 }

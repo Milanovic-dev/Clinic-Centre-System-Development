@@ -4,9 +4,9 @@ import java.sql.Date;
 
 public class Vacation 
 {
+	private Long id;
 	private Date startDate;
 	private Date endDate;
-	private User vacationUser;
 	
 	public Vacation() {
 		super();
@@ -16,13 +16,19 @@ public class Vacation
 		super();
 		this.startDate = startDate;
 		this.endDate = endDate;
-		this.vacationUser = vacationUser;
 	}
-	public User getVacationUser() {
-		return vacationUser;
+	
+	public Vacation(VacationRequest request)
+	{
+		this.startDate = request.getStartDate();
+		this.endDate = request.getEndDate();
 	}
-	public void setVacationUser(User vacationUser) {
-		this.vacationUser = vacationUser;
+	
+	public Long getId() {
+		return id;
+	}
+	public void setId(Long id) {
+		this.id = id;
 	}
 	public Date getStartDate() {
 		return startDate;

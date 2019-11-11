@@ -21,6 +21,12 @@ public class Surgery extends Appointment
 		
 		doctors = new ArrayList<Doctor>();
 	}
+	
+	public Surgery(AppointmentRequest request)
+	{
+		super(request,AppointmentType.Surgery);
+		doctors = new ArrayList<Doctor>();
+	}
 
 
 	public ArrayList<Doctor> getDoctors() {

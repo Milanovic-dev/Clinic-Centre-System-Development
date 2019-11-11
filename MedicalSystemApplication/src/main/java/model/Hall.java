@@ -2,9 +2,9 @@ package model;
 
 public class Hall
 {
-	private Long hallID;
+	private Long id;
 	private Clinic clinic;
-	private Integer number; 	
+	private int number; 	
 
 	public Hall() {
 		super();
@@ -12,7 +12,7 @@ public class Hall
 	}
 	
 	
-	public Hall(Clinic clinic, Integer number) {
+	public Hall(Clinic clinic, int number) {
 		super();
 		this.clinic = clinic;
 		this.number = number;
@@ -20,15 +20,19 @@ public class Hall
 	}
 
 
-	public Integer getNumber() {
+	public int getNumber() {
 		return number;
 	}
-	public void setNumber(Integer number) {
+	public void setNumber(int number) {
 		this.number = number;
 	}
 
-	public Long getHallID() {
-		return hallID;
+	public Long getId() {
+		return id;
+	}
+	
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	public Clinic getClinic() {
@@ -41,7 +45,7 @@ public class Hall
 
 	@Override
 	public String toString() {
-		return "Hall [hallID=" + hallID + ", clinic=" + clinic + ", number=" + number + ", scheduleAppointments="
+		return "Hall [hallID=" + id + ", clinic=" + clinic + ", number=" + number + ", scheduleAppointments="
 				+ "]";
 	}
 	

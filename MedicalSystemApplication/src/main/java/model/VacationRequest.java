@@ -2,10 +2,13 @@ package model;
 
 import java.sql.Date;
 
-public class VacationRequest extends Vacation
+public class VacationRequest
 {
 	private Long id;
 	
+	private Date startDate;
+	private Date endDate;
+	private User vacationUser;
 
 	public VacationRequest() {
 		super();
@@ -13,9 +16,10 @@ public class VacationRequest extends Vacation
 	}
 	
 
-	public VacationRequest(Date startDate, Date endDate, User vacationUser, Long id) {
-		super(startDate, endDate, vacationUser);
-		this.id = id;
+	public VacationRequest(Date startDate, Date endDate, User vacationUser) {
+		this.startDate = startDate;
+		this.endDate = endDate;
+		this.vacationUser = vacationUser;
 	}
 
 
@@ -26,6 +30,38 @@ public class VacationRequest extends Vacation
 	public void setId(Long id) {
 		this.id = id;
 	}
+
+
+	public Date getStartDate() {
+		return startDate;
+	}
+
+
+	public void setStartDate(Date startDate) {
+		this.startDate = startDate;
+	}
+
+
+	public Date getEndDate() {
+		return endDate;
+	}
+
+
+	public void setEndDate(Date endDate) {
+		this.endDate = endDate;
+	}
+
+
+	public User getVacationUser() {
+		return vacationUser;
+	}
+
+
+	public void setVacationUser(User vacationUser) {
+		this.vacationUser = vacationUser;
+	}
+	
+	
 	
 
 }

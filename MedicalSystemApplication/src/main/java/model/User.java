@@ -35,6 +35,21 @@ public abstract class User
 		this.phone = phone;
 		this.role = role;
 	}
+	
+	public User(RegistrationRequest request, UserRole role)
+	{
+		super();
+		this.username = request.getUsername();
+		this.password = request.getPassword();
+		this.email = request.getEmail();
+		this.name = request.getName();
+		this.surname = request.getSurname();
+		this.city = request.getCity();
+		this.address = request.getAddress();
+		this.state = request.getState();
+		this.phone = request.getPhone();
+		this.role = role;
+	}
 
 	public String getUsername() {
 		return username;
