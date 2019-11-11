@@ -2,17 +2,17 @@ package model;
 
 import java.util.Date;
 
-public class Appointment 
+public abstract class Appointment 
 {
 	public enum AppointmentType{ Examination, Surgery }
 	
 	private Long id;
 	private Date startingDateAndTime;
-	private long duration;
-	private double price;
 	private Hall hall;
 	private Patient patient;
 	private Clinic clinic;
+	private long duration;
+	private double price;
 	private AppointmentType appointmentType;
 	
 	public Appointment() {
@@ -31,8 +31,17 @@ public class Appointment
 		this.clinic = clinic;
 		this.appointmentType = type;
 	}
-
-
+	
+	public Appointment(AppointmentRequest request,AppointmentType type)
+	{
+		this.startingDateAndTime = request.getStartingDateAndTime();
+		this.hall = request.getHall();
+		this.patient = request.getPatient();
+		this.clinic = request.getClinic();
+		this.duration = request.getDuration();
+		this.price = request.getPrice();
+		this.appointmentType = type;
+	}
 
 	public Clinic getClinic() {
 		return clinic;

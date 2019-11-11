@@ -3,22 +3,27 @@ package model;
 import java.util.Date;
 
 public class ClinicReview {
+	
+	private Long id;
     private String header;
     private String description;
     private int rating;
     private Date date;
-    private String clinicID;
 
     public ClinicReview(){
 
     }
 
-    public ClinicReview(String header, String description, int rating, Date date, String clinicID) {
+    public ClinicReview(String header, String description, int rating, Date date) {
         this.header = header;
         this.description = description;
         this.rating = rating;
         this.date = date;
-        this.clinicID = clinicID;
+    }
+    
+    public Long getId()
+    {
+    	return id;
     }
 
     public String getHeader() {
@@ -53,11 +58,4 @@ public class ClinicReview {
         this.date = date;
     }
 
-    public String getClinicID() {
-        return clinicID;
-    }
-
-    public void setClinicID(String clinicID) {
-        this.clinicID = clinicID;
-    }
 }

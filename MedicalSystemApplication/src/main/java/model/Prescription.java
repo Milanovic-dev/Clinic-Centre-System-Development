@@ -4,6 +4,7 @@ import java.util.Date;
 
 public class Prescription {
 
+	private Long id;
 	private Recipe recipe;
 	private Date validationDate;
 	private Boolean isValid;
@@ -18,8 +19,17 @@ public class Prescription {
 	
 	public void validate(Nurse nurse)
 	{
+		nurse.getPrescriptions().add(this);
 		this.nurse = nurse;
 		isValid = true;
+	}
+	
+	public Long getId() {
+		return id;
+	}
+	
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	public Recipe getRecipe() {

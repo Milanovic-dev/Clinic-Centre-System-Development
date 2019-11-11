@@ -10,8 +10,6 @@ public class Doctor extends User
 	private ArrayList<DoctorReview> review;
 	private ArrayList<Appointment> scheduledAppointment;
 	private ArrayList<Appointment> completedAppointment;
-	private ArrayList<Surgery> scheduledSurgery;
-	private ArrayList<Surgery> completedSurgery;
 	//holiday list
 
 	public Doctor() {
@@ -24,10 +22,6 @@ public class Doctor extends User
 		super(username, password, email, name, surname, city, address, state, phone, UserRole.Doctor);
 		scheduledAppointment = new ArrayList<Appointment>();
 		completedAppointment = new ArrayList<Appointment>();
-		scheduledSurgery = new ArrayList<Surgery>();
-		completedSurgery = new ArrayList<Surgery>();
-
-		// TODO Auto-generated constructor stub
 	}
 
 	public String getType() {
@@ -49,8 +43,7 @@ public class Doctor extends User
 	public void setAvgReview(float avgReview) {
 		this.avgReview = avgReview;
 	}
-	
-	
+		
 	public ArrayList<DoctorReview> getReview() {
 		return review;
 	}
@@ -81,26 +74,5 @@ public class Doctor extends User
 	public void setCompletedAppointment(ArrayList<Appointment> completedAppointment) {
 		this.completedAppointment = completedAppointment;
 	}
-
-	public ArrayList<Surgery> getScheduledSurgery() {
-		return scheduledSurgery;
-	}
-
-	public void setScheduledSurgery(ArrayList<Surgery> scheduledSurgery) {
-		this.scheduledSurgery = scheduledSurgery;
-	}
-
-	public ArrayList<Surgery> getCompletedSurgery() {
-		return completedSurgery;
-	}
-
-	public void setCompletedSurgery(ArrayList<Surgery> completedSurgery) {
-		this.completedSurgery = completedSurgery;
-	}
-
-	
-
-	
-	
 	
 }

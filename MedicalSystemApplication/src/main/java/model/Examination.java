@@ -25,6 +25,13 @@ public class Examination extends Appointment
 		this.doctor = doctor;
 		this.typeOfExamination = typeOfExamination;
 	}
+	
+	public Examination(AppointmentRequest request,Doctor doctor, String typeOfExamination)
+	{
+		super(request,AppointmentType.Examination);
+		this.doctor = doctor;
+		this.typeOfExamination = typeOfExamination;
+	}
 
 	public Doctor getDoctor() {
 		return doctor;
