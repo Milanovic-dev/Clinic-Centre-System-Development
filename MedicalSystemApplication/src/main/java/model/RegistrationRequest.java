@@ -19,5 +19,5 @@ public class RegistrationRequest extends User{
     public void setApproved(boolean approved) {
         this.approved = approved;
     }
-    
+
 }

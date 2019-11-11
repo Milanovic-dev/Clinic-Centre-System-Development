@@ -1,5 +1,20 @@
 package model;
 
 public class ClinicAdmin extends User {
-	//ne postoji na klasnom ali ClinicAdmin treba da ima cenovnik(Pricelist),tacka 3.4
+
+    private Clinic clinic;
+    //zahtevi za salu
+    //zahtevi godisnjih
+
+    public ClinicAdmin(){
+    }
+
+    public Clinic getClinic() {
+        return clinic;
+    }
+
+    public void setClinic(Clinic clinic) {
+        this.clinic = clinic;
+    }
+
 }

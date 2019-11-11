@@ -3,29 +3,29 @@ package model;
 import java.util.ArrayList;
 
 public class Nurse extends User{
-    private String InsuranceID;
+    private String insuranceID;
     private ArrayList<Recipe> recipes;
 
     public Nurse() {
     }
 
-    public Nurse(String InsuranceID, ArrayList<Recipe> recipes) {
-        this.InsuranceID = InsuranceID;
-        this.recipes = recipes;
+    public Nurse(String insuranceID) {
+        this.insuranceID = insuranceID;
+        this.recipes = new ArrayList<Recipe>();
     }
 
-    public Nurse(String username, String password, String email, String name, String surname, String city, String address, String state, String phone, UserRole role, String InsuranceID, ArrayList<Recipe> recipes) {
-        super(username, password, email, name, surname, city, address, state, phone, role);
-        this.InsuranceID = InsuranceID;
-        this.recipes = recipes;
+    public Nurse(String username, String password, String email, String name, String surname, String city, String address, String state, String phone, String insuranceID) {
+        super(username, password, email, name, surname, city, address, state, phone, UserRole.Nurse);
+        this.insuranceID = insuranceID;
+        this.recipes = new ArrayList<Recipe>();
     }
 
     public String getInsuranceID() {
-        return InsuranceID;
+        return insuranceID;
     }
 
     public void setInsuranceID(String InsuranceID) {
-        this.InsuranceID = InsuranceID;
+        this.insuranceID = insuranceID;
     }
 
     public ArrayList<Recipe> getRecipes() {
