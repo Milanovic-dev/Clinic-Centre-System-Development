@@ -1,13 +1,21 @@
 package model;
 
+import javax.persistence.*;
 import java.util.Date;
 
 public class ClinicReview {
-	
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
+
+    @Column(name = "header", nullable = false)
     private String header;
+    @Column(name = "description", nullable = false)
     private String description;
+    @Column(name = "rating", nullable = false)
     private int rating;
+    @Column(name = "date", nullable = false)
     private Date date;
 
     public ClinicReview(){

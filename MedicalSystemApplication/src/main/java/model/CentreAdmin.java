@@ -1,10 +1,17 @@
 package model;
 
+import javax.persistence.*;
 import java.util.ArrayList;
 
 public class CentreAdmin extends User {
-	
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     private ArrayList<RegistrationRequest> registrationRequests;
+
 
     public CentreAdmin() {
     }

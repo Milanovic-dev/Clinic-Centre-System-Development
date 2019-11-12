@@ -1,8 +1,18 @@
 package model;
 
+import javax.persistence.*;
+
+
 public class ClinicAdmin extends User {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+
+    @OneToMany(fetch = FetchType.LAZY)
     private Clinic clinic;
+
+
     //zahtevi za salu
     //zahtevi godisnjih
 
