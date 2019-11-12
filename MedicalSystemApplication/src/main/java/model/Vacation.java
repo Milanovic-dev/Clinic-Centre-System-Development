@@ -2,10 +2,27 @@ package model;
 
 import java.sql.Date;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.Table;
+
+@Entity
+@Table
 public class Vacation 
 {
+	@Id
+	@GeneratedValue( strategy = GenerationType.AUTO)
 	private Long id;
+	
+	@Column(name = "startDate", nullable = false)
 	private Date startDate;
+	
+	@Column(name = "endDate", nullable = false)
 	private Date endDate;
 	
 	public Vacation() {

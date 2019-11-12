@@ -2,17 +2,51 @@ package model;
 
 import java.util.Date;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+@Entity
+@Table
+@Inheritance( strategy = InheritanceType.TABLE_PER_CLASS)
 public abstract class Appointment 
 {
 	public enum AppointmentType{ Examination, Surgery }
 	
+	@Id
+	@GeneratedValue( strategy = GenerationType.AUTO)
 	private Long id;
+	
+	@Column(name= "startingDateAndTime",nullable = false)
 	private Date startingDateAndTime;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "hall_id")
 	private Hall hall;
+	
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "patient_id")
 	private Patient patient;
+	
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "clinic_id")
 	private Clinic clinic;
+	
+	@Column(name = "duration",nullable = true)
 	private long duration;
+	
+	@Column(name = "price",nullable = true)
 	private double price;
+	
+	@Column(name = "appointmentType",nullable = true)
 	private AppointmentType appointmentType;
 	
 	public Appointment() {
