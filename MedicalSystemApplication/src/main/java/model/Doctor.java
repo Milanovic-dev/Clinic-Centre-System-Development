@@ -2,15 +2,32 @@ package model;
 
 import java.util.ArrayList;
 
+import javax.persistence.*;
+
+@Entity
 public class Doctor extends User
 {
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+	
+	@Column(name = "type", nullable = false)
 	private String type;
-	private String incuranseID;
-	private float avgReview;
+	@Column(name = "insuranceId", nullable = false)
+	private String insuranceId;
+	@Column(name = "shiftStart", nullable = false)
+    private String shiftStart;
+    @Column(name = "shiftEnd", nullable = false)
+    private String shiftEnd;
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    public Clinic clinic;
+    @OneToMany(fetch = FetchType.LAZY)
 	private ArrayList<DoctorReview> review;
+    @OneToMany(fetch = FetchType.LAZY)
 	private ArrayList<Appointment> scheduledAppointment;
+    @OneToMany(fetch = FetchType.LAZY)
 	private ArrayList<Appointment> completedAppointment;
-	//holiday list
+	
 
 	public Doctor() {
 		super();
@@ -31,19 +48,17 @@ public class Doctor extends User
 	public void setType(String type) {
 		this.type = type;
 	}
-	public String getIdInsuranse() {
-		return incuranseID;
+	
+	
+	public String getInsuranceId() {
+		return insuranceId;
 	}
-	public void setIdInsuranse(String incuranseID) {
-		this.incuranseID = incuranseID;
+
+	public void setInsuranceId(String insuranceId) {
+		this.insuranceId = insuranceId;
 	}
-	public float getAvgReview() {
-		return avgReview;
-	}
-	public void setAvgReview(float avgReview) {
-		this.avgReview = avgReview;
-	}
-		
+
+	
 	public ArrayList<DoctorReview> getReview() {
 		return review;
 	}
@@ -52,12 +67,6 @@ public class Doctor extends User
 		this.review = review;
 	}
 
-	public String getIncuranseID() {
-		return incuranseID;
-	}
-	public void setIncuranseID(String incuranseID) {
-		this.incuranseID = incuranseID;
-	}
 
 	public ArrayList<Appointment> getScheduledAppointment() {
 		return scheduledAppointment;

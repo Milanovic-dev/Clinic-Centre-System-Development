@@ -2,8 +2,9 @@ package model;
 
 import java.util.Date;
 
-public class Prescription {
 
+public class Prescription {
+	
 	private Long id;
 	private Recipe recipe;
 	private Date validationDate;

@@ -1,12 +1,23 @@
 package model;
 
 import java.util.ArrayList;
-import java.util.Collection;
+import javax.persistence.Column;
+import javax.persistence.GenerationType;
+import javax.persistence.*;
 
+
+@Entity
 public class Patient extends User{
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+	@Column(name = "insuranceId", nullable = false)
 	private String insuranceId;
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "medicalRecord_id", referencedColumnName = "id")
 	private MedicalRecord medicalRecord;
+	@OneToMany(fetch = FetchType.LAZY)
 	private ArrayList<Appointment> scheduledAppointments;
 
 	public Patient()
