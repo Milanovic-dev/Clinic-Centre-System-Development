@@ -3,14 +3,17 @@ package model;
 import javax.persistence.*;
 import java.util.ArrayList;
 
+@Entity(name = "centreAdmins")
+@Table
 public class CentreAdmin extends User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.LAZY)
     private ArrayList<RegistrationRequest> registrationRequests;
+
 
 
     public CentreAdmin() {

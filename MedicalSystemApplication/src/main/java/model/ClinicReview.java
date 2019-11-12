@@ -3,6 +3,8 @@ package model;
 import javax.persistence.*;
 import java.util.Date;
 
+@Entity(name = "clinicReviews")
+@Table
 public class ClinicReview {
 
     @Id
@@ -11,22 +13,29 @@ public class ClinicReview {
 
     @Column(name = "header", nullable = false)
     private String header;
+
     @Column(name = "description", nullable = false)
     private String description;
+
     @Column(name = "rating", nullable = false)
     private int rating;
+
     @Column(name = "date", nullable = false)
     private Date date;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Clinic clinic;
 
     public ClinicReview(){
 
     }
 
-    public ClinicReview(String header, String description, int rating, Date date) {
+    public ClinicReview(String header, String description, int rating, Date date, Clinic clinic) {
         this.header = header;
         this.description = description;
         this.rating = rating;
         this.date = date;
+        this.clinic = clinic;
     }
     
     public Long getId()
@@ -66,4 +75,15 @@ public class ClinicReview {
         this.date = date;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Clinic getClinic() {
+        return clinic;
+    }
+
+    public void setClinic(Clinic clinic) {
+        this.clinic = clinic;
+    }
 }

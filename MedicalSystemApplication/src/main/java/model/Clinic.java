@@ -153,5 +153,7 @@ public class Clinic
     public void setReviews(ArrayList<ClinicReview> reviews) {
     	this.reviews = reviews;
     }
+
+
 	
 }
