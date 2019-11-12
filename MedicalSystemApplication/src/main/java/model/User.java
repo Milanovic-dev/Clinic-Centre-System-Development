@@ -1,19 +1,37 @@
 package model;
 
+import javax.persistence.*;
+
+@Entity(name = "users")
+@Table
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public abstract class User
 {
 	public enum UserRole{ Patient, Doctor, Nurse, ClinicAdmin, CentreAdmin}
-		
+	
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
+	
+	@Column(name = "username", nullable = false)
 	private String username;
+	@Column(name = "password", nullable = false)
 	private String password;
+	@Column(name = "email", nullable = false)
 	private String email;
+	@Column(name = "name", nullable = false)
 	private String name;
+	@Column(name = "surname", nullable = false)
 	private String surname;
+	@Column(name = "city", nullable = false)
 	private String city;
+	@Column(name = "address", nullable = false)
 	private String address;
+	@Column(name = "state", nullable = false)
 	private String state;
+	@Column(name = "phone", nullable = false)
 	private String phone;
+	@Column(name = "role", nullable = false)
 	private UserRole role;
 	
 	public User()

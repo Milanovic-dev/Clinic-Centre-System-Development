@@ -2,9 +2,22 @@ package model;
 
 import java.util.ArrayList;
 
+import javax.persistence.*;
+@Entity
 public class Nurse extends User{
 	
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+	@Column(name = "insuranceId", nullable = false)
     private String insuranceID;
+	@Column(name = "shiftStart", nullable = false)
+    private String shiftStart;
+    @Column(name = "shiftEnd", nullable = false)
+    private String shiftEnd;
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private Clinic clinic;
+    @OneToMany(fetch = FetchType.LAZY)
     private ArrayList<Prescription> prescriptions;
 
     public Nurse() {
@@ -28,6 +41,30 @@ public class Nurse extends User{
     public void setInsuranceID(String insuranceID) {
         this.insuranceID = insuranceID;
     }
+    
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public String getShiftStart() {
+		return shiftStart;
+	}
+
+	public void setShiftStart(String shiftStart) {
+		this.shiftStart = shiftStart;
+	}
+
+	public String getShiftEnd() {
+		return shiftEnd;
+	}
+
+	public void setShiftEnd(String shiftEnd) {
+		this.shiftEnd = shiftEnd;
+	}
 
 	public ArrayList<Prescription> getPrescriptions() {
 		return prescriptions;
@@ -37,5 +74,12 @@ public class Nurse extends User{
 		this.prescriptions = prescriptions;
 	}
 
-    
+	public Clinic getClinic() {
+		return clinic;
+	}
+
+	public void setClinic(Clinic clinic) {
+		this.clinic = clinic;
+	}
+   
 }
