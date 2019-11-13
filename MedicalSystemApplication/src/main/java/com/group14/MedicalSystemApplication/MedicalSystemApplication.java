@@ -2,11 +2,13 @@ package com.group14.MedicalSystemApplication;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-
+import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import model.Patient;
-import repository.PatientRepository;
 
-@SpringBootApplication
+@EntityScan("model") 
+@EnableJpaRepositories(basePackages="repository") 
+@SpringBootApplication(scanBasePackages = {"model","service","repository"})
 public class MedicalSystemApplication {
 
 	public static void main(String[] args) {
