@@ -1,21 +1,45 @@
 package model;
 
+import javax.persistence.*;
 import java.util.ArrayList;
 
+@Entity(name = "clinics")
+@Table
 public class Clinic 
 {
-	
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
+
+    @Column(name = "name", nullable = false)
 	private String name;
+
+    @Column(name = "address", nullable = false)
 	private String address;
+
+    @Column(name = "city", nullable = false)
 	private String city;
+
+    @Column(name = "state", nullable = false)
 	private String state;
+
+    @Column(name = "description", nullable = false)
 	private String description;
-	
+
+    @OneToMany(fetch = FetchType.LAZY)
     private ArrayList<Hall> halls;
+
+    @OneToMany(fetch = FetchType.LAZY)
     private ArrayList<ClinicAdmin> clinicAdmins;
+
+    @OneToMany(fetch = FetchType.LAZY)
     private ArrayList<Doctor> doctors;
+
+    @OneToMany(fetch = FetchType.LAZY)
     private ArrayList<Appointment> appointments;
+
+    @OneToMany(fetch = FetchType.LAZY)
     private ArrayList<ClinicReview> reviews;
 	
     
@@ -129,5 +153,7 @@ public class Clinic
     public void setReviews(ArrayList<ClinicReview> reviews) {
     	this.reviews = reviews;
     }
+
+
 	
 }
