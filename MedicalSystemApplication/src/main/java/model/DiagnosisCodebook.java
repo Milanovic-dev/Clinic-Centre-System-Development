@@ -10,15 +10,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
-@Entity
+
 public class DiagnosisCodebook 
 {
-
-     @Id
-     @GeneratedValue(strategy = GenerationType.AUTO)
-	 private Long id;
-    
-     @OneToMany(fetch = FetchType.LAZY)
+	 private Long id;  
 	 private List<String> code;
 	 
 	 

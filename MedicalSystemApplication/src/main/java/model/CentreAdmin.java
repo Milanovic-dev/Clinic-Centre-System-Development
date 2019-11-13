@@ -8,10 +8,6 @@ import java.util.List;
 @Entity
 public class CentreAdmin extends User {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
-
     @OneToMany(fetch = FetchType.LAZY)
     private List<RegistrationRequest> registrationRequests;
 

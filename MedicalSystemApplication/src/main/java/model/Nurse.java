@@ -7,10 +7,7 @@ import javax.persistence.*;
 @Entity
 public class Nurse extends User{
 	
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
-	
+
 	@Column(name = "insuranceId", nullable = false)
     private String insuranceID;
 	
@@ -47,14 +44,6 @@ public class Nurse extends User{
     public void setInsuranceID(String insuranceID) {
         this.insuranceID = insuranceID;
     }
-    
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
 
 	public String getShiftStart() {
 		return shiftStart;

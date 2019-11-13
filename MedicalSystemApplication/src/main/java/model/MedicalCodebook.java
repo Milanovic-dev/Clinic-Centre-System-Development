@@ -10,15 +10,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
-
-@Entity
 public class MedicalCodebook 
 {
-	 @Id
-	 @GeneratedValue(strategy = GenerationType.IDENTITY)
 	 private Long id;
 	 
-	 @OneToMany(fetch = FetchType.LAZY)
 	 private List<String> codes;
 	 
 	 

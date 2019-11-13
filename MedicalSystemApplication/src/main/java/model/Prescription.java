@@ -2,13 +2,30 @@ package model;
 
 import java.util.Date;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 
+@Entity
 public class Prescription {
-	
+
+	@Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "recipe_id")
 	private Recipe recipe;
+	@Column(name = "date", nullable = false)
 	private Date validationDate;
+	@Column(name = "valid", nullable = false)
 	private Boolean isValid;
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "nurse_id")
 	private Nurse nurse;
 	
 	public Prescription(Recipe recipe, Date validationDate) {
