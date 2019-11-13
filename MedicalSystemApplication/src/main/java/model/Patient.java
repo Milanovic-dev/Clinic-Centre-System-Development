@@ -10,10 +10,6 @@ import javax.persistence.*;
 
 @Entity
 public class Patient extends User{
-
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
 	
 	@Column(name = "insuranceId", nullable = false)
 	private String insuranceId;

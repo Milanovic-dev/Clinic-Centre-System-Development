@@ -6,11 +6,8 @@ import javax.persistence.*;
 @Entity
 public class ClinicAdmin extends User {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
-
-    @OneToMany(fetch = FetchType.LAZY)
+	
+    @OneToOne(fetch = FetchType.LAZY)
     private Clinic clinic;
 
 

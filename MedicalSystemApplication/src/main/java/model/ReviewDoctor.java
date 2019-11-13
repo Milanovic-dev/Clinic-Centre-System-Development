@@ -4,7 +4,7 @@ import javax.persistence.*;
 import java.util.Date;
 
 @Entity
-public class DoctorReview {
+public class ReviewDoctor {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -25,7 +25,7 @@ public class DoctorReview {
     @ManyToOne(fetch = FetchType.LAZY)
     private Doctor doctor;
 
-    public DoctorReview(String header, String description, int rating, Date date, Doctor doctor) {
+    public ReviewDoctor(String header, String description, int rating, Date date, Doctor doctor) {
         this.header = header;
         this.description = description;
         this.rating = rating;
@@ -33,7 +33,7 @@ public class DoctorReview {
         this.doctor = doctor;
     }
 
-    public DoctorReview(){
+    public ReviewDoctor(){
 
     }
 

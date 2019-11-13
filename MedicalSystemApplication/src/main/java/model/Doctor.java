@@ -8,10 +8,7 @@ import javax.persistence.*;
 @Entity
 public class Doctor extends User
 {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
-	
+
 	@Column(name = "type", nullable = false)
 	private String type;
 	
@@ -28,7 +25,7 @@ public class Doctor extends User
     public Clinic clinic;
     
     @OneToMany(fetch = FetchType.LAZY)
-	private List<DoctorReview> review;
+	private List<ReviewDoctor> review;
     
     @OneToMany(fetch = FetchType.LAZY)
 	private List<Appointment> scheduledAppointment;
@@ -67,11 +64,11 @@ public class Doctor extends User
 	}
 
 	
-	public List<DoctorReview> getReview() {
+	public List<ReviewDoctor> getReview() {
 		return review;
 	}
 
-	public void setReview(List<DoctorReview> review) {
+	public void setReview(List<ReviewDoctor> review) {
 		this.review = review;
 	}
 

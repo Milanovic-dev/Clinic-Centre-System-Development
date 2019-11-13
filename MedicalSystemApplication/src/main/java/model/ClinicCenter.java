@@ -8,14 +8,10 @@ import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
-
-@Entity
 public class ClinicCenter 
 {
-	@OneToMany(fetch = FetchType.LAZY)
-	private List<Clinic> clinics;
 	
-	@OneToOne(fetch = FetchType.LAZY)
+	private List<Clinic> clinics;	
 	private CentreAdmin centreAdmin;
 	
 	
