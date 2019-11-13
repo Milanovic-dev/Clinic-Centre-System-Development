@@ -1,26 +1,21 @@
 package model;
 
+import javax.persistence.*;
 import java.util.ArrayList;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-@Entity
+
+@Entity(name = "centreAdmins")
+@Table
 public class CentreAdmin extends User {
-	
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private Long id;
-	
-	@OneToMany(fetch = FetchType.LAZY)
-	@JoinColumn(name = "registrationRequest_id")
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+
+    @OneToMany(fetch = FetchType.LAZY)
     private ArrayList<RegistrationRequest> registrationRequests;
+
+
 
     public CentreAdmin() {
     }

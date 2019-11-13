@@ -1,23 +1,20 @@
+
 package model;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 
-@Entity
+@Entity(name = "clinicAdmins")
+@Table
 public class ClinicAdmin extends User {
-	
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private Long id;
-	
-	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+
+    @OneToMany(fetch = FetchType.LAZY)
     private Clinic clinic;
+
+
     //zahtevi za salu
     //zahtevi godisnjih
 
@@ -33,3 +30,4 @@ public class ClinicAdmin extends User {
     }
 
 }
+
