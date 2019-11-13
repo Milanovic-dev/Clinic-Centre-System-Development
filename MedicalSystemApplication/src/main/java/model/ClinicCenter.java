@@ -2,9 +2,24 @@ package model;
 
 import java.util.ArrayList;
 
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+
+
+@Entity
+@Table
 public class ClinicCenter 
 {
+	@OneToMany(fetch = FetchType.LAZY)
+	@JoinColumn(name = "clinic_id")
 	private ArrayList<Clinic> clinics;
+	
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name="user_id")
 	private CentreAdmin centreAdmin;
 	
 	

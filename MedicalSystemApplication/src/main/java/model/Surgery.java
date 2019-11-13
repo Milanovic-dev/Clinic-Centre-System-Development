@@ -4,8 +4,14 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 
+import javax.persistence.Entity;
+import javax.persistence.ManyToMany;
+
+
+@Entity
 public class Surgery extends Appointment
 {
+	@ManyToMany
 	private ArrayList<Doctor> doctors;
 
 	

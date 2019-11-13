@@ -1,9 +1,27 @@
 package model;
 
+import java.util.ArrayList;
+
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+
+@Entity
+@Table
 public class MedicalCodebook 
 {
+	 @Id
+	 @GeneratedValue(strategy = GenerationType.IDENTITY)
 	 private Long id;
-	 private String code;
+	 
+	 @OneToMany(fetch = FetchType.LAZY)
+	 @JoinColumn(name = "drug_id")
+	 private ArrayList<String> codes;
 	 
 	 
 	public MedicalCodebook() {
@@ -11,11 +29,15 @@ public class MedicalCodebook
 		// TODO Auto-generated constructor stub
 	}
 	
-	public MedicalCodebook(Long id, String code) {
+	
+
+	public MedicalCodebook(Long id) {
 		super();
 		this.id = id;
-		this.code = code;
+		codes = new ArrayList<String>();
 	}
+
+
 
 	public Long getId() {
 		return id;
@@ -23,12 +45,14 @@ public class MedicalCodebook
 	public void setId(Long id) {
 		this.id = id;
 	}
-	public String getCode() {
-		return code;
+
+	public ArrayList<String> getCodes() {
+		return codes;
 	}
-	public void setCode(String code) {
-		this.code = code;
+	public void setCodes(ArrayList<String> codes) {
+		this.codes = codes;
 	}
+	
 	 
 	 
 }

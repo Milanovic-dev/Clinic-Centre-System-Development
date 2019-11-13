@@ -1,3 +1,4 @@
+
 package model;
 
 import javax.persistence.*;
@@ -29,3 +30,4 @@ public class ClinicAdmin extends User {
     }
 
 }
+

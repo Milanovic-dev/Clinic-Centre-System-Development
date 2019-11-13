@@ -3,6 +3,7 @@ package model;
 import javax.persistence.*;
 import java.util.ArrayList;
 
+
 @Entity(name = "centreAdmins")
 @Table
 public class CentreAdmin extends User {
