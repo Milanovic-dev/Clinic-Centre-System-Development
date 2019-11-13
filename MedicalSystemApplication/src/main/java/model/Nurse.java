@@ -1,6 +1,7 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.*;
 @Entity
@@ -9,16 +10,21 @@ public class Nurse extends User{
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+	
 	@Column(name = "insuranceId", nullable = false)
     private String insuranceID;
+	
 	@Column(name = "shiftStart", nullable = false)
     private String shiftStart;
+	
     @Column(name = "shiftEnd", nullable = false)
     private String shiftEnd;
+    
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Clinic clinic;
+    
     @OneToMany(fetch = FetchType.LAZY)
-    private ArrayList<Prescription> prescriptions;
+    private List<Prescription> prescriptions;
 
     public Nurse() {
     }
@@ -66,11 +72,11 @@ public class Nurse extends User{
 		this.shiftEnd = shiftEnd;
 	}
 
-	public ArrayList<Prescription> getPrescriptions() {
+	public List<Prescription> getPrescriptions() {
 		return prescriptions;
 	}
 
-	public void setPrescriptions(ArrayList<Prescription> prescriptions) {
+	public void setPrescriptions(List<Prescription> prescriptions) {
 		this.prescriptions = prescriptions;
 	}
 

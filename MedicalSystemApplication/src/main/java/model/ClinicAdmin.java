@@ -3,8 +3,7 @@ package model;
 
 import javax.persistence.*;
 
-@Entity(name = "clinicAdmins")
-@Table
+@Entity
 public class ClinicAdmin extends User {
 
     @Id

@@ -1,8 +1,8 @@
 package model;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
@@ -12,7 +12,7 @@ import javax.persistence.ManyToMany;
 public class Surgery extends Appointment
 {
 	@ManyToMany
-	private ArrayList<Doctor> doctors;
+	private List<Doctor> doctors;
 
 	
 	public Surgery() {
@@ -35,12 +35,12 @@ public class Surgery extends Appointment
 	}
 
 
-	public ArrayList<Doctor> getDoctors() {
+	public List<Doctor> getDoctors() {
 		return doctors;
 	}
 
 
-	public void setDoctors(ArrayList<Doctor> doctors) {
+	public void setDoctors(List<Doctor> doctors) {
 		this.doctors = doctors;
 	}
 

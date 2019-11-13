@@ -1,14 +1,30 @@
 package model;
 
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.List;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+
+@Entity
 public class Recipe {
-
+	
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
+	
+    @Column(name = "header", nullable = false)
 	private String header;
+    
+    @Column(name = "description", nullable = false)
 	private String description;
-	private ArrayList<Drug> drugs;
+    
+    @ManyToMany
+	private List<Drug> drugs;
 	
 	
 	public Recipe(String header, String description) {
@@ -46,12 +62,12 @@ public class Recipe {
 	}
 
 
-	public ArrayList<Drug> getDrugs() {
+	public List<Drug> getDrugs() {
 		return drugs;
 	}
 
 
-	public void setDrugs(ArrayList<Drug> drugs) {
+	public void setDrugs(List<Drug> drugs) {
 		this.drugs = drugs;
 	}
 	

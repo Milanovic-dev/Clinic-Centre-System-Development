@@ -1,7 +1,7 @@
 package model;
 
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.List;
 
 import javax.persistence.*;
 
@@ -9,17 +9,23 @@ import javax.persistence.*;
 public class MedicalRecord {
 
 	public enum BloodType{A, B, AB, O}
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+	
 	@OneToMany(mappedBy = "medicalRecord", fetch = FetchType.LAZY)
-	private ArrayList<PatientMedicalReport> reports;
+	private List<PatientMedicalReport> reports;
+	
 	@Column(name = "bloodType", nullable = false)
 	private BloodType bloodType;
+	
 	@Column(name = "alergies", nullable = false)
 	private String alergies;
+	
 	@Column(name = "height", nullable = false)
 	private String weight;
+	
 	@Column(name = "weight", nullable = false)
 	private String height;
 	
@@ -82,11 +88,11 @@ public class MedicalRecord {
 		this.id = id;
 	}
 
-	public ArrayList<PatientMedicalReport> getReports() {
+	public List<PatientMedicalReport> getReports() {
 		return reports;
 	}
 
-	public void setReports(ArrayList<PatientMedicalReport> reports) {
+	public void setReports(List<PatientMedicalReport> reports) {
 		this.reports = reports;
 	}
 	

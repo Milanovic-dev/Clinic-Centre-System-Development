@@ -12,7 +12,6 @@ import javax.persistence.InheritanceType;
 import javax.persistence.Table;
 
 @Entity
-@Table
 public class Vacation 
 {
 	@Id

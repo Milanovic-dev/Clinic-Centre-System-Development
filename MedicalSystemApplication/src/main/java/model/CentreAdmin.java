@@ -2,10 +2,10 @@ package model;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.List;
 
 
-@Entity(name = "centreAdmins")
-@Table
+@Entity
 public class CentreAdmin extends User {
 
     @Id
@@ -13,9 +13,7 @@ public class CentreAdmin extends User {
     private Long id;
 
     @OneToMany(fetch = FetchType.LAZY)
-    private ArrayList<RegistrationRequest> registrationRequests;
-
-
+    private List<RegistrationRequest> registrationRequests;
 
     public CentreAdmin() {
     }
@@ -25,11 +23,11 @@ public class CentreAdmin extends User {
         this.registrationRequests = new ArrayList<RegistrationRequest>();
     }
 
-    public ArrayList<RegistrationRequest> getRegistrationRequests() {
+    public List<RegistrationRequest> getRegistrationRequests() {
         return registrationRequests;
     }
 
-    public void setRegistrationRequests(ArrayList<RegistrationRequest> registrationRequests) {
+    public void setRegistrationRequests(List<RegistrationRequest> registrationRequests) {
         this.registrationRequests = registrationRequests;
     }
 

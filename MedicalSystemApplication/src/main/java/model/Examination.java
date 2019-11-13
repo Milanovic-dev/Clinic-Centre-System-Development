@@ -2,9 +2,20 @@ package model;
 
 import java.util.Date;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+
+@Entity
 public class Examination extends Appointment
 {
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "doctor_id")
 	private Doctor doctor;
+	
+	@Column(name = "typeOfExamination", nullable = false)
 	private String typeOfExamination;
 	
 	public Examination() {

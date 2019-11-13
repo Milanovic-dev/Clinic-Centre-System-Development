@@ -15,22 +15,31 @@ public abstract class User
 	
 	@Column(name = "username", nullable = false)
 	private String username;
+	
 	@Column(name = "password", nullable = false)
 	private String password;
+	
 	@Column(name = "email", nullable = false)
 	private String email;
+	
 	@Column(name = "name", nullable = false)
 	private String name;
+	
 	@Column(name = "surname", nullable = false)
 	private String surname;
+	
 	@Column(name = "city", nullable = false)
 	private String city;
+	
 	@Column(name = "address", nullable = false)
 	private String address;
+	
 	@Column(name = "state", nullable = false)
 	private String state;
+	
 	@Column(name = "phone", nullable = false)
 	private String phone;
+	
 	@Column(name = "role", nullable = false)
 	private UserRole role;
 	

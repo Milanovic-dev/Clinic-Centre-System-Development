@@ -1,6 +1,8 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.GenerationType;
 import javax.persistence.*;
@@ -12,13 +14,16 @@ public class Patient extends User{
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+	
 	@Column(name = "insuranceId", nullable = false)
 	private String insuranceId;
+	
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "medicalRecord_id", referencedColumnName = "id")
 	private MedicalRecord medicalRecord;
+	
 	@OneToMany(fetch = FetchType.LAZY)
-	private ArrayList<Appointment> scheduledAppointments;
+	private List<Appointment> scheduledAppointments;
 
 	public Patient()
 	{
@@ -55,11 +60,11 @@ public class Patient extends User{
 		this.medicalRecord = medicalRecord;
 	}
 
-	public ArrayList<Appointment> getScheduledAppointments() {
+	public List<Appointment> getScheduledAppointments() {
 		return scheduledAppointments;
 	}
 
-	public void setScheduledAppointments(ArrayList<Appointment> scheduledAppointments) {
+	public void setScheduledAppointments(List<Appointment> scheduledAppointments) {
 		this.scheduledAppointments = scheduledAppointments;
 	}
 	

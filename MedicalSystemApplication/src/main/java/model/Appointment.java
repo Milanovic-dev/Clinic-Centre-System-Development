@@ -29,7 +29,6 @@ public abstract class Appointment
 	private Date startingDateAndTime;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "hall_id")
 	private Hall hall;
 	
 	@OneToOne(fetch = FetchType.LAZY)
