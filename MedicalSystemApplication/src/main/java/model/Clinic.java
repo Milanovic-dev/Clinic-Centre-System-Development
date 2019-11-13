@@ -2,9 +2,9 @@ package model;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.List;
 
-@Entity(name = "clinics")
-@Table
+@Entity
 public class Clinic 
 {
 
@@ -28,19 +28,19 @@ public class Clinic
 	private String description;
 
     @OneToMany(fetch = FetchType.LAZY)
-    private ArrayList<Hall> halls;
+    private List<Hall> halls;
 
     @OneToMany(fetch = FetchType.LAZY)
-    private ArrayList<ClinicAdmin> clinicAdmins;
+    private List<ClinicAdmin> clinicAdmins;
 
     @OneToMany(fetch = FetchType.LAZY)
-    private ArrayList<Doctor> doctors;
+    private List<Doctor> doctors;
 
     @OneToMany(fetch = FetchType.LAZY)
-    private ArrayList<Appointment> appointments;
+    private List<Appointment> appointments;
 
     @OneToMany(fetch = FetchType.LAZY)
-    private ArrayList<ClinicReview> reviews;
+    private List<ClinicReview> reviews;
 	
     
     public Clinic() 
@@ -114,43 +114,43 @@ public class Clinic
     	this.id = id;
     }
     
-    public ArrayList<Hall> getHalls() {
+    public List<Hall> getHalls() {
     	return halls;
     }
     
-    public void setHalls(ArrayList<Hall> halls) {
+    public void setHalls(List<Hall> halls) {
     	this.halls = halls;
     }
     
-    public ArrayList<ClinicAdmin> getClinicAdmins() {
+    public List<ClinicAdmin> getClinicAdmins() {
     	return clinicAdmins;
     }
     
-    public void setClinicAdmins(ArrayList<ClinicAdmin> clinicAdmins) {
+    public void setClinicAdmins(List<ClinicAdmin> clinicAdmins) {
     	this.clinicAdmins = clinicAdmins;
     }
     
-    public ArrayList<Doctor> getDoctors() {
+    public List<Doctor> getDoctors() {
     	return doctors;
     }
     
-    public void setDoctors(ArrayList<Doctor> doctors) {
+    public void setDoctors(List<Doctor> doctors) {
     	this.doctors = doctors;
     }
     
-    public ArrayList<Appointment> getAppointments() {
+    public List<Appointment> getAppointments() {
     	return appointments;
     }
     
-    public void setAppointments(ArrayList<Appointment> appointments) {
+    public void setAppointments(List<Appointment> appointments) {
     	this.appointments = appointments;
     }
     
-    public ArrayList<ClinicReview> getReviews() {
+    public List<ClinicReview> getReviews() {
     	return reviews;
     }
     
-    public void setReviews(ArrayList<ClinicReview> reviews) {
+    public void setReviews(List<ClinicReview> reviews) {
     	this.reviews = reviews;
     }
 

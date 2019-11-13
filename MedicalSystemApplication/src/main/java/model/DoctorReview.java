@@ -3,8 +3,7 @@ package model;
 import javax.persistence.*;
 import java.util.Date;
 
-@Entity(name = "doctorReviews")
-@Table
+@Entity
 public class DoctorReview {
 
     @Id

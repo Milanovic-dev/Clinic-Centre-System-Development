@@ -1,7 +1,7 @@
 package model;
 
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.List;
 
 import javax.persistence.*;
 
@@ -11,14 +11,17 @@ public class PatientMedicalReport {
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+	
 	@Column(name = "reportDescription", nullable = false)
     private String description;
+	
 	@OneToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name="appointment_id")
 	private Appointment appointment;
+	
 	@ManyToMany
     @JoinTable(name = "patientMedicalReports_prescriptions", joinColumns = @JoinColumn(name = "patientMedicalReport_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "prescription_id", referencedColumnName = "id"))
-	private ArrayList<Prescription> prescription;
+	private List<Prescription> prescription;
 	
 	public PatientMedicalReport(Appointment appointment, String description) {
 		super();
@@ -51,11 +54,11 @@ public class PatientMedicalReport {
 		this.description = description;
 	}
 
-	public ArrayList<Prescription> getPrescription() {
+	public List<Prescription> getPrescription() {
 		return prescription;
 	}
 
-	public void setPrescription(ArrayList<Prescription> prescription) {
+	public void setPrescription(List<Prescription> prescription) {
 		this.prescription = prescription;
 	}
 	

@@ -1,17 +1,46 @@
 package model;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+@Entity
 public class RegistrationRequest{
 	
+    
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    
+    @Column(name = "approved", nullable = false)
     private boolean approved = false;
     
+    @Column(name = "username", nullable = false)
     private String username;
+    
+    @Column(name = "password", nullable = false)
 	private String password;
+	
+	@Column(name = "email", nullable = false)
 	private String email;
+	
+	@Column(name = "name", nullable = false)
 	private String name;
+	
+	@Column(name = "surname", nullable = false)
 	private String surname;
+	
+	@Column(name = "city", nullable = false)
 	private String city;
+	
+	@Column(name = "address", nullable = false)
 	private String address;
+	
+	@Column(name = "state", nullable = false)
 	private String state;
+	
+	@Column(name = "phoneNumber", nullable = false)
 	private String phone;
 
     public RegistrationRequest() {

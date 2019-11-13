@@ -1,6 +1,7 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.*;
 
@@ -13,20 +14,27 @@ public class Doctor extends User
 	
 	@Column(name = "type", nullable = false)
 	private String type;
+	
 	@Column(name = "insuranceId", nullable = false)
 	private String insuranceId;
+	
 	@Column(name = "shiftStart", nullable = false)
     private String shiftStart;
+	
     @Column(name = "shiftEnd", nullable = false)
     private String shiftEnd;
+    
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     public Clinic clinic;
+    
     @OneToMany(fetch = FetchType.LAZY)
-	private ArrayList<DoctorReview> review;
+	private List<DoctorReview> review;
+    
     @OneToMany(fetch = FetchType.LAZY)
-	private ArrayList<Appointment> scheduledAppointment;
+	private List<Appointment> scheduledAppointment;
+    
     @OneToMany(fetch = FetchType.LAZY)
-	private ArrayList<Appointment> completedAppointment;
+	private List<Appointment> completedAppointment;
 	
 
 	public Doctor() {
@@ -59,28 +67,28 @@ public class Doctor extends User
 	}
 
 	
-	public ArrayList<DoctorReview> getReview() {
+	public List<DoctorReview> getReview() {
 		return review;
 	}
 
-	public void setReview(ArrayList<DoctorReview> review) {
+	public void setReview(List<DoctorReview> review) {
 		this.review = review;
 	}
 
 
-	public ArrayList<Appointment> getScheduledAppointment() {
+	public List<Appointment> getScheduledAppointment() {
 		return scheduledAppointment;
 	}
 
-	public void setScheduledAppointment(ArrayList<Appointment> scheduledAppointment) {
+	public void setScheduledAppointment(List<Appointment> scheduledAppointment) {
 		this.scheduledAppointment = scheduledAppointment;
 	}
 
-	public ArrayList<Appointment> getCompletedAppointment() {
+	public List<Appointment> getCompletedAppointment() {
 		return completedAppointment;
 	}
 
-	public void setCompletedAppointment(ArrayList<Appointment> completedAppointment) {
+	public void setCompletedAppointment(List<Appointment> completedAppointment) {
 		this.completedAppointment = completedAppointment;
 	}
 	

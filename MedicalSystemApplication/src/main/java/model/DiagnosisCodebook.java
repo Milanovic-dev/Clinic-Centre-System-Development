@@ -1,9 +1,25 @@
 package model;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+
+@Entity
 public class DiagnosisCodebook 
 {
+
+     @Id
+     @GeneratedValue(strategy = GenerationType.AUTO)
 	 private Long id;
-	 private String code;
+    
+     @OneToMany(fetch = FetchType.LAZY)
+	 private List<String> code;
 	 
 	 
 	public DiagnosisCodebook() {
@@ -13,7 +29,7 @@ public class DiagnosisCodebook
 	public DiagnosisCodebook(Long id, String code) {
 		super();
 		this.id = id;
-		this.code = code;
+		this.code = new ArrayList<String>();
 	}
 	public Long getId() {
 		return id;
@@ -21,12 +37,13 @@ public class DiagnosisCodebook
 	public void setId(Long id) {
 		this.id = id;
 	}
-	public String getCode() {
+	public List<String> getCode() {
 		return code;
 	}
-	public void setCode(String code) {
+	public void setCode(List<String> code) {
 		this.code = code;
 	}
+	
 	 
 	 
 }
