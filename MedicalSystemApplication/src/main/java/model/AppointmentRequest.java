@@ -4,16 +4,37 @@ import java.util.Date;
 
 import model.Appointment.AppointmentType;
 
+import javax.persistence.*;
 
-
+@Entity
 public class AppointmentRequest
 {
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+
+	@Column(name = "approved", nullable = false)
 	private Boolean approved;
+
+	@Column(name = "date", nullable = false)
 	private Date startingDateAndTime;
+
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "hall_id", referencedColumnName = "id")
 	private Hall hall;
+
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "patient_id", referencedColumnName = "id")
 	private Patient patient;
+
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "clinic_id", referencedColumnName = "id")
 	private Clinic clinic;
+
+	@Column(name = "duration", nullable = false)
 	private long duration;
+
+	@Column(name = "price", nullable = false)
 	private double price;
 	
 	public AppointmentRequest() {

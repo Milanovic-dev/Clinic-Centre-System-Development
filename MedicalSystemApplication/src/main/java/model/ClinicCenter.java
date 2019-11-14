@@ -1,30 +1,25 @@
 package model;
 
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-
+@Entity
 public class ClinicCenter 
 {
-	
-	private List<Clinic> clinics;	
-	private CentreAdmin centreAdmin;
-	
-	
+
+	@OneToMany(fetch = FetchType.LAZY)
+	private List<Clinic> clinics;
+
+	@OneToMany(fetch = FetchType.LAZY)
+	private List<CentreAdmin> centreAdmins;
+
+
+
 	public ClinicCenter() {
 		super();
-		// TODO Auto-generated constructor stub
-	}
-	
-	
-	public ClinicCenter(ArrayList<Clinic> clinics) {
-		super();
-		this.clinics = clinics;
-		this.clinics = new ArrayList<Clinic>();
+		this.clinics = new ArrayList<>();
+		this.centreAdmins = new ArrayList<>();
 	}
 
 
@@ -34,16 +29,12 @@ public class ClinicCenter
 	public void setClinics(List<Clinic> clinics) {
 		this.clinics = clinics;
 	}
-	public CentreAdmin getCentreAdmin() {
-		return centreAdmin;
+
+	public List<CentreAdmin> getCentreAdmins() {
+		return centreAdmins;
 	}
-	public void setCentreAdmin(CentreAdmin centreAdmin) {
-		this.centreAdmin = centreAdmin;
+
+	public void setCentreAdmins(List<CentreAdmin> centreAdmins) {
+		this.centreAdmins = centreAdmins;
 	}
-	@Override
-	public String toString() {
-		return "ClinicCenter [clinics=" + clinics + ", centreAdmin=" + centreAdmin + "]";
-	}
-	
-	
 }

@@ -41,7 +41,8 @@ public class Clinic
 
     @OneToMany(fetch = FetchType.LAZY)
     private List<ClinicReview> reviews;
-	
+
+
     
     public Clinic() 
     {
@@ -49,7 +50,7 @@ public class Clinic
       
     }
 
-    public Clinic(String name, String address, String city, String state, String description, Long id) 
+    public Clinic(String name, String address, String city, String state, String description, Long id)
     { 	
     	super();
 	    this.name = name;
@@ -59,11 +60,11 @@ public class Clinic
 	    this.description = description;
 	    this.id = id;
 	
-	    halls = new ArrayList<Hall>();
-	    clinicAdmins = new ArrayList<ClinicAdmin>();
-	    doctors = new ArrayList<Doctor>();
-	    appointments = new ArrayList<Appointment>();
-	    reviews = new ArrayList<ClinicReview>();
+	    this.halls = new ArrayList<Hall>();
+	    this.clinicAdmins = new ArrayList<ClinicAdmin>();
+	    this.doctors = new ArrayList<Doctor>();
+	    this.appointments = new ArrayList<Appointment>();
+	    this.reviews = new ArrayList<ClinicReview>();
     }
 
     public String getName() {
@@ -154,6 +155,4 @@ public class Clinic
     	this.reviews = reviews;
     }
 
-
-	
 }
