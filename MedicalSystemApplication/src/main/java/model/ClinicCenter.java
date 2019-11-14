@@ -7,7 +7,10 @@ import java.util.List;
 @Entity
 public class ClinicCenter 
 {
-
+	@Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+	private Long Id;
+	
 	@OneToMany(fetch = FetchType.LAZY)
 	private List<Clinic> clinics;
 
@@ -22,6 +25,15 @@ public class ClinicCenter
 		this.centreAdmins = new ArrayList<>();
 	}
 
+	
+	public Long getId() {
+		return Id;
+	}
+
+
+	public void setId(Long id) {
+		Id = id;
+	}
 
 	public List<Clinic> getClinics() {
 		return clinics;
