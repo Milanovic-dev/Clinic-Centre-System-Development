@@ -1,10 +1,23 @@
 package model;
 
+import javax.persistence.*;
+
+
+@Entity
 public class Priceslist 
 {
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+
+	@ManyToOne(fetch = FetchType.LAZY)
 	private Clinic clinic;
+
+	@Column(name = "typeOfExamination", nullable = false)
 	private String typeOfExamination;
+
+	@Column(name = "price", nullable = false)
 	private Long price;
 	
 	

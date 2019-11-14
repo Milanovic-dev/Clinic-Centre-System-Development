@@ -11,7 +11,11 @@ public class CentreAdmin extends User {
     @OneToMany(fetch = FetchType.LAZY)
     private List<RegistrationRequest> registrationRequests;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    private ClinicCenter clinicCentre;
+
     public CentreAdmin() {
+        super();
     }
 
     public CentreAdmin(String username, String password, String email, String name, String surname, String city, String address, String state, String phone, ClinicCenter clinicCentre) {
@@ -27,4 +31,11 @@ public class CentreAdmin extends User {
         this.registrationRequests = registrationRequests;
     }
 
+    public ClinicCenter getClinicCentre() {
+        return clinicCentre;
+    }
+
+    public void setClinicCentre(ClinicCenter clinicCentre) {
+        this.clinicCentre = clinicCentre;
+    }
 }
