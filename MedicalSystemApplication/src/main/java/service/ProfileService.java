@@ -15,9 +15,9 @@ public class ProfileService
 	@Autowired
 	private UserRepository userRepository;
 	
-	public Boolean updateUser(UserDTO u)
+	public Boolean updateUser(String email,UserDTO u)
 	{
-		Doctor user = new Doctor();
+		User user = userRepository.findByEmail(email);
 		if(user != null) {
 			user.setName(u.getName());
 			user.setSurname(u.getSurname());
