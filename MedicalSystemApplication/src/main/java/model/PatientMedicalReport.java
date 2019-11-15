@@ -12,7 +12,7 @@ public class PatientMedicalReport {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@Column(name = "reportDescription", nullable = false)
+	@Column(name = "reportDescription", nullable = true)
     private String description;
 	
 	@OneToOne(fetch = FetchType.EAGER)

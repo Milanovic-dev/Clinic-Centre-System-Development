@@ -12,10 +12,7 @@ public class RegistrationRequest{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
-    @Column(name = "approved", nullable = false)
-    private boolean approved = false;
-    
+      
     @Column(name = "username", nullable = false)
     private String username;
     
@@ -57,16 +54,20 @@ public class RegistrationRequest{
 		this.address = address;
 		this.state = state;
 		this.phone = phone;
-        this.approved = false;
     }
-
-	public boolean isApproved() {
-		return approved;
-	}
-
-	public void setApproved(boolean approved) {
-		this.approved = approved;
-	}
+    
+    public RegistrationRequest(RegistrationRequest req)
+    {
+    	this.username = req.getUsername();
+		this.password = req.getPassword();
+		this.email = req.getEmail();
+		this.name = req.getName();
+		this.surname = req.getSurname();
+		this.city = req.getCity();
+		this.address = req.getAddress();
+		this.state = req.getState();
+		this.phone = req.getPhone();
+    }
 
 	public String getUsername() {
 		return username;

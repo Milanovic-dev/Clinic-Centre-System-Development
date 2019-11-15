@@ -17,16 +17,16 @@ public class MedicalRecord {
 	@OneToMany(fetch = FetchType.LAZY)
 	private List<PatientMedicalReport> reports;
 	
-	@Column(name = "bloodType", nullable = false)
+	@Column(name = "bloodType", nullable = true)
 	private BloodType bloodType;
 	
-	@Column(name = "alergies", nullable = false)
+	@Column(name = "alergies", nullable = true)
 	private String alergies;
 	
-	@Column(name = "height", nullable = false)
+	@Column(name = "height", nullable = true)
 	private String weight;
 	
-	@Column(name = "weight", nullable = false)
+	@Column(name = "weight", nullable = true)
 	private String height;
 	
 	public MedicalRecord()

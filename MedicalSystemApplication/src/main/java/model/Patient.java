@@ -11,10 +11,10 @@ import javax.persistence.*;
 @Entity
 public class Patient extends User{
 	
-	@Column(name = "insuranceId", nullable = false)
+	@Column(name = "insuranceId", nullable = true)
 	private String insuranceId;
 	
-	@OneToOne(fetch = FetchType.LAZY)
+	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinColumn(name = "medicalRecord_id", referencedColumnName = "id")
 	private MedicalRecord medicalRecord;
 	
