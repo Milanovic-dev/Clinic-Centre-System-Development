@@ -10,20 +10,31 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import dto.UserDTO;
-import service.ProfileService;
+import model.User;
+import service.UserService;
 
 @RestController
-@RequestMapping(value = "api/profiles")
-public class MedicalStaffController 
+@RequestMapping(value = "api/users")
+public class UserController 
 {
 	@Autowired
-	private ProfileService service;
+	private UserService userService;
 	
 	@PostMapping(value = "/update/{email}")
-	public ResponseEntity<Void> login(@RequestBody UserDTO dto,@PathVariable("email")String email)
+	public ResponseEntity<Void> updateUser(@RequestBody UserDTO dto,@PathVariable("email")String email)
 	{	
-		if(service.updateUser(email,dto))
-		{
+		User user = userService.findByEmail(email);
+		if(user != null) {
+			user.setName(dto.getName());
+			user.setSurname(dto.getSurname());
+			user.setEmail(dto.getEmail());
+			user.setUsername(dto.getUsername());
+			user.setAddress(dto.getAddress());
+			user.setCity(dto.getCity());
+			user.setState(dto.getState());
+			user.setPassword(dto.getPassword());
+			user.setPhone(dto.getPhone());
+			userService.save(user);
 			return new ResponseEntity<>(HttpStatus.OK);
 		}
 		
