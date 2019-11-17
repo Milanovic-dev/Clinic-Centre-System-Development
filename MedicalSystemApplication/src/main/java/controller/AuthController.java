@@ -1,7 +1,9 @@
 package controller;
 
 import java.security.NoSuchAlgorithmException;
+import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +36,7 @@ public class AuthController
 	private UserService userService;
 	
 	@PostMapping(value ="/login")
-	public ResponseEntity<Void> login(@RequestBody LoginDTO dto)
+	public ResponseEntity<Void> login(@RequestBody LoginDTO dto,HttpServletRequest request)
 	{	
 		HttpHeaders header = new HttpHeaders();
 		
@@ -54,6 +56,7 @@ public class AuthController
 			
 			if(hash.equals(u.getPassword()))
 			{
+				request.getSession(true).setAttribute("SESSION_USER", u);
 				return new ResponseEntity<>(HttpStatus.OK);
 			}
 			
@@ -82,7 +85,7 @@ public class AuthController
 		return new ResponseEntity<>(HttpStatus.OK);
 	}	
 	
-	@PostMapping(value = "/register/{email}")
+	@PostMapping(value = "/confirmRegister/{email}")
 	public ResponseEntity<Void> register(@PathVariable("email") String email)
 	{
 		RegistrationRequest req = authService.
@@ -108,6 +111,21 @@ public class AuthController
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		
+	}
+		
+	@GetMapping(value = "/sessionUser")
+	public ResponseEntity<User> getSessionUser(HttpServletRequest request)
+	{
+		User user = (User) request.getSession().getAttribute("SESSION_USER");
+		return new ResponseEntity<User>(user,HttpStatus.OK);
+	}
+	
+	@GetMapping(value = "/getAllRegRequest")
+	public ResponseEntity<List<RegistrationRequest>> getRegRequests()
+	{
+		List<RegistrationRequest> ret = authService.getAll();
+		
+		return new ResponseEntity<>(ret,HttpStatus.OK);
 	}
 	
 }

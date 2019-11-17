@@ -1,6 +1,7 @@
 package service;
 
 import java.security.NoSuchAlgorithmException;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,11 @@ public class AuthService
 
 	@Autowired
 	private RegistrationRequestRepository requestRepository;
+	
+	public List<RegistrationRequest> getAll()
+	{
+		return requestRepository.findAll();
+	}
 	
 	public RegistrationRequest findByEmail(String email)
 	{

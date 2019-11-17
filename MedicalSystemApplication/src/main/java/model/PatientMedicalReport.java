@@ -12,30 +12,32 @@ public class PatientMedicalReport {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@Column(name = "reportDescription", nullable = true)
+	@Column(name = "description", nullable = true)
     private String description;
 	
-	@OneToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name="appointment_id")
-	private Appointment appointment;
+	@Column(name = "dateAndTime", nullable = false)
+    private long dateAndTime;
+
+	@OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "doctor_id")
+    private Doctor doctor;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "clinic_id")
+    private Clinic clinic;
 	
 	@ManyToMany
-    @JoinTable(name = "patientMedicalReports_prescriptions", joinColumns = @JoinColumn(name = "patientMedicalReport_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "prescription_id", referencedColumnName = "id"))
+    @JoinTable(joinColumns = @JoinColumn(name = "patientMedicalReport_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "prescription_id", referencedColumnName = "id"))
 	private List<Prescription> prescription;
 	
-	public PatientMedicalReport(Appointment appointment, String description) {
+	
+	public PatientMedicalReport(String description, long dateAndTime, Doctor doctor, Clinic clinic) {
 		super();
-		this.appointment = appointment;
 		this.description = description;
+		this.dateAndTime = dateAndTime;
+		this.doctor = doctor;
+		this.clinic = clinic;
 		this.prescription = new ArrayList<Prescription>();
-	}
-
-	public Appointment getAppointment() {
-		return appointment;
-	}
-
-	public void setAppointment(Appointment appointment) {
-		this.appointment = appointment;
 	}
 
 	public Long getId() {
@@ -61,8 +63,29 @@ public class PatientMedicalReport {
 	public void setPrescription(List<Prescription> prescription) {
 		this.prescription = prescription;
 	}
-	
-	
-	
-	
+
+	public long getDateAndTime() {
+		return dateAndTime;
+	}
+
+	public void setDateAndTime(long dateAndTime) {
+		this.dateAndTime = dateAndTime;
+	}
+
+	public Doctor getDoctor() {
+		return doctor;
+	}
+
+	public void setDoctor(Doctor doctor) {
+		this.doctor = doctor;
+	}
+
+	public Clinic getClinic() {
+		return clinic;
+	}
+
+	public void setClinic(Clinic clinic) {
+		this.clinic = clinic;
+	}
+		
 }
