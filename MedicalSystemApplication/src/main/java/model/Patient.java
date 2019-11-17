@@ -18,8 +18,6 @@ public class Patient extends User{
 	@JoinColumn(name = "medicalRecord_id", referencedColumnName = "id")
 	private MedicalRecord medicalRecord;
 	
-	@OneToMany(fetch = FetchType.LAZY)
-	private List<Appointment> scheduledAppointments;
 
 	public Patient()
 	{
@@ -30,14 +28,12 @@ public class Patient extends User{
 			String address, String state, String phone) {
 		super(username, password, email, name, surname, city, address, state, phone, UserRole.Patient);
 		medicalRecord = new MedicalRecord();
-		scheduledAppointments = new ArrayList<Appointment>();
 	}
 	
 	public Patient(RegistrationRequest request)
 	{
 		super(request,UserRole.Patient);
 		medicalRecord = new MedicalRecord();
-		scheduledAppointments = new ArrayList<Appointment>();
 	}
 
 	public String getInsuranceId() {
@@ -55,14 +51,5 @@ public class Patient extends User{
 	public void setMedicalRecord(MedicalRecord medicalRecord) {
 		this.medicalRecord = medicalRecord;
 	}
-
-	public List<Appointment> getScheduledAppointments() {
-		return scheduledAppointments;
-	}
-
-	public void setScheduledAppointments(List<Appointment> scheduledAppointments) {
-		this.scheduledAppointments = scheduledAppointments;
-	}
-	
 	
 }
