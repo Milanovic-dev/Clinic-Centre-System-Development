@@ -22,7 +22,7 @@ $(document).ready(function(){
 			{
 				console.log(data.status)
 				
-				if(status == "200")
+				if(data.status == "200")
 				{
 					window.location.href = "index.html"
 				}
