@@ -60,6 +60,8 @@ img{
  }
 
 
+
+
 .overlay-content {
   top: 25%;
   width: 100%;
@@ -68,6 +70,7 @@ img{
   padding:60px;
   position:relative;
 }
+
 
 .overlay-content-info {
   position: absolute;
@@ -90,6 +93,10 @@ img{
   text-align: left;
 }
 
+.overlay a:hover{
+    opacity:70%;
+}
+
 .white {
   padding: 2px !important;
   text-decoration: none;
@@ -102,6 +109,22 @@ img{
   text-align: right;
 }
 
+.white:hover {
+  color: white;
+  opacity: 50%;
+}
+
+.white-info {
+  padding: 2px !important;
+  text-decoration: none;
+  font-size: 22px !important;
+  color: white !important;
+  opacity: 0.65;
+  display: block;
+  font-weight: 500;
+  font-family: Arial Narrow;
+  text-align: right;
+}
 
 
 #list {
