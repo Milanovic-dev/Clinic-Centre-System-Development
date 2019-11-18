@@ -5,8 +5,10 @@ function sessionCheck()
 		$.ajax({
 			type: 'get',
 			url: 'api/auth/sessionUser',
-			complete: 
+			complete: function(data){
 				addPersonalInformations(data)
+			}
+				
 			
 		})
 		
@@ -14,6 +16,9 @@ function sessionCheck()
 
 function addPersonalInformations(data)
 {
+	data = {"name":"Nikola","surname":"Milanovic","email":"nikola@gmail.com","phone":"0532543","city":"Novi Sad","state":"Srbija","address":"Karadj 8","role":"Doktor","avarageRating":"8.56"}
+	
+	
 	$("#pName").text(data.name);
 	$("#pSurname").text(data.surname);
 	$("#pEmail").text(data.email);
@@ -27,7 +32,14 @@ function addPersonalInformations(data)
 	$("#sRating").text(data.avarageRating);
 }
 
-$(document).ready(){
+$(document).ready(function(){
 	
-	sessionCheck();
-}
+	sessionCheck()
+	
+	
+	$('#change_profile_edit').click(function(e){
+		//TODO: Otvori stranicu za editovanje
+	})
+	
+})
+	
