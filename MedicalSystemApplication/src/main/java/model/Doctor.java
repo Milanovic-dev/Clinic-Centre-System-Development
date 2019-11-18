@@ -21,6 +21,9 @@ public class Doctor extends User
     @Column(name = "shiftEnd", nullable = false)
     private String shiftEnd;
     
+    @Column(name = "avarageRating", nullable = false)
+    private float avarageRating;
+    
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     public Clinic clinic;
     
@@ -62,8 +65,16 @@ public class Doctor extends User
 	public void setInsuranceId(String insuranceId) {
 		this.insuranceId = insuranceId;
 	}
-
 	
+	
+	public float getAvarageRating() {
+		return avarageRating;
+	}
+
+	public void setAvarageRating(float avarageRating) {
+		this.avarageRating = avarageRating;
+	}
+
 	public List<ReviewDoctor> getReview() {
 		return review;
 	}
