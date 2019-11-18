@@ -35,7 +35,7 @@ public class AuthController
 	@Autowired
 	private UserService userService;
 	
-	@PostMapping(value ="/login")
+	@PostMapping(value ="/login", consumes = "application/json")
 	public ResponseEntity<Void> login(@RequestBody LoginDTO dto,HttpServletRequest request)
 	{	
 		HttpHeaders header = new HttpHeaders();
@@ -69,7 +69,7 @@ public class AuthController
 		return new ResponseEntity<>(header,HttpStatus.NOT_FOUND);
 	}
 	
-	@PostMapping(value = "/registerRequest")
+	@PostMapping(value = "/registerRequest",consumes = "application/json")
 	public ResponseEntity<Void> requestRegistration(@RequestBody RegistrationRequest request)
 	{
 		RegistrationRequest req = authService.
