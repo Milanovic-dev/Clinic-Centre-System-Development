@@ -1,0 +1,167 @@
+html, body {
+    background-color: #282c34;
+}
+
+img{
+    width: 100px;
+    height: 100px;
+    display: inline;
+}
+
+.header{
+    padding: 30px 30px 30px;
+    -webkit-animation: flickerAnimation 4s infinite;
+       -moz-animation: flickerAnimation 4s infinite;
+       -o-animation: flickerAnimation 4s infinite;
+        animation: flickerAnimation 4s infinite;
+}
+
+.header img {
+  float: left;
+  width: 120px;
+  height: 120px;
+}
+
+.header h1 {
+  position: relative;
+  top: 18px;
+  left: 10px;
+  color: #4287f5;
+  font-size: 65px;
+  font-family: "Optima";
+}
+
+@keyframes flickerAnimation {
+  0%   { opacity:1; }
+  50%  { opacity:0.3; }
+  100% { opacity:1; }
+}
+@-o-keyframes flickerAnimation{
+  0%   { opacity:1; }
+  50%  { opacity:0.3; }
+  100% { opacity:1; }
+}
+@-moz-keyframes flickerAnimation{
+  0%   { opacity:1; }
+  50%  { opacity:0.3; }
+  100% { opacity:1; }
+}
+@-webkit-keyframes flickerAnimation{
+  0%   { opacity:1; }
+  50%  { opacity:0.3; }
+  100% { opacity:1; }
+}
+//////////////////////////////////////////////////
+
+.overlay {
+   height: 50%;
+   width: 0;
+   display: inline-block;
+ }
+
+
+
+
+.overlay-content {
+  top: 25%;
+  width: 100%;
+  text-align: right;
+  margin-top: 30px;
+  padding:60px;
+  position:relative;
+}
+
+
+.overlay-content-info {
+  position: absolute;
+  top: 80px;
+  width: 100%;
+  text-align: left;
+  margin-top: 30px;
+  padding:60px;
+  margin-top: 500px;
+}
+
+.overlay a {
+  padding: 5px;
+  text-decoration: none;
+  font-size: 25px;
+  color: #4287f5;
+  display: block;
+  font-weight: 500;
+  font-family: Arial Narrow;
+  text-align: left;
+}
+
+.overlay a:hover{
+    opacity:70%;
+}
+
+.white {
+  padding: 2px !important;
+  text-decoration: none;
+  font-size: 22px !important;
+  color: white !important;
+  opacity: 0.65;
+  display: block;
+  font-weight: 500;
+  font-family: Arial Narrow;
+  text-align: right;
+}
+
+.white:hover {
+  color: white;
+  opacity: 50%;
+}
+
+.white-info {
+  padding: 2px !important;
+  text-decoration: none;
+  font-size: 22px !important;
+  color: white !important;
+  opacity: 0.65;
+  display: block;
+  font-weight: 500;
+  font-family: Arial Narrow;
+  text-align: right;
+}
+
+
+#list {
+  max-height: 0;
+  overflow: hidden;
+  transition: 0.3s linear;
+}
+
+a:focus+#list {
+  max-height: 100px;
+}
+/* only select that link , here using the href attribute */
+a[href="nowhere"]:focus {
+  pointer-events: none;
+}
+
+#list2 {
+  max-height: 0;
+  overflow: hidden;
+  transition: 0.3s linear;
+}
+
+a:focus+#list2 {
+  max-height: 100px;
+}
+
+#list3 {
+  max-height: 0;
+  overflow: hidden;
+  transition: 0.3s linear;
+}
+
+a:focus+#list3 {
+  max-height: 300px;
+}
+
+/* only select that link , here using the href attribute */
+a[href="nowhere"]:focus {
+  pointer-events: none;
+}
