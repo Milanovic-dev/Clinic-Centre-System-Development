@@ -156,6 +156,11 @@ $(document).ready(function(){
 			{
 				console.log(data.status)
 				
+				if(data.status == "208")
+				{
+					//TODO: Vec postoji sa tim emailom
+				}
+				
 				if(data.status == "200")
 				{
 					window.location.href = "registrationComplete.html"
