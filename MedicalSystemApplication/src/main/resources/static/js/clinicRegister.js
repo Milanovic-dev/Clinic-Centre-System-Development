@@ -1,3 +1,8 @@
+/**
+ *
+ */
+
+
 $(document).ready(function(){
 
 	$('#reg_submit').click(function(e){
@@ -10,22 +15,21 @@ $(document).ready(function(){
         let description = $('#description').val()
 
 
-//		$.post({
-//			url:'/api/',
-//			data: JSON.stringify({name, address, city, state, description})
-//			dataType : "json",
-//			contentType : "application/json; charset=utf-8",
-//			success: function(data)
-//                {
-//                  alert('Uspesna registracija klinike!');
-//                   window.location.href = "./centreAdminPage.html";
-//                }
-//             error: function(){
-//                alert('Greska!');
-//			}
-//		})
-//
-//	})
+		$.post({
+			url:'/api/clinics/registerClinic',
+			data: JSON.stringify({name, address, city, state, description}),
+			dataType: "json",
+			contentType : "application/json; charset=utf-8",
+			success: function(data){
+                  alert('Uspesna registracija klinike!');
+                   window.location.href = "./centreAdminPage.html";
+             },
+             error: function(){
+                alert('Greska!');
+			}
+		})
+
+	})
 
 
 
