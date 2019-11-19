@@ -1,18 +1,6 @@
-body{
-    background: -webkit-linear-gradient(left, #3931af, #00c6ff);
-}
-.emp-profile{
-	display-block;
-    padding: 3%;
-    margin-top: 10%;
-    margin-bottom: 3%;
-    border-radius: 0.5rem;
-    background: #fff;
-}
-.profile-img{
-    text-align: center;
-}
+@charset "ISO-8859-1";
 
-.App-logo{
-	padding-left: 28%;
+/* Move down content because we have a fixed navbar that is 3.5rem tall */
+.jumbotron {
+  padding-top: 3.5rem;
 }

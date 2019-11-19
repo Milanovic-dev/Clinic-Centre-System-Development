@@ -1,12 +1,11 @@
 @charset "ISO-8859-1";
 
-
 body{
 	background: #141415;
+	font-family: 'Roboto', sans-serif;
 }
 
 .container{
-	width: 27%;
+	width: 35%;
 	padding: 10px;
 }
-
