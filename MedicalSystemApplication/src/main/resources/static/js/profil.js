@@ -3,7 +3,7 @@
 function sessionCheck()
 {
 		$.ajax({
-			type: 'get',
+			type: 'GET',
 			url: 'api/auth/sessionUser',
 			complete: function(data){
 				addPersonalInformations(data)
@@ -16,7 +16,7 @@ function sessionCheck()
 
 function addPersonalInformations(data)
 {
-	data = {"name":"Nikola","surname":"Milanovic","email":"nikola@gmail.com","phone":"0532543","city":"Novi Sad","state":"Srbija","address":"Karadj 8","role":"Doktor","avarageRating":"8.56"}
+	data = {"name":"Nikola","surname":"Milanovic","email":"nikola@gmail.com","phone":"0532543","city":"Novi Sad","state":"Srbija","address":"Karadjordjeva 8","role":"Doktor","avarageRating":"8.56"}
 	
 	
 	$("#pName").text(data.name);

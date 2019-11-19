@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<link rel="stylesheet" href = "css/login.css">
+<script
+  src="https://code.jquery.com/jquery-3.4.1.js"
+  integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+  crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+<script src ="js/navbar.js"></script>
+<script src="js/profil.js"></script>
+<link rel = "stylesheet" href="css/profilDoktor.css">
+</head>
+<body>
+
+		
+	<div class="container emp-profile">
+            <form method="post">
+                <div class="row">
+                    <div class="col-md-4">
+							<div class="profile-img">
+									<img src="logo.png" alt=""/>
+								</div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="profile-head">
+                            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                                <li class="nav-item">
+                                    <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Osnovne informacije</a>
+                                </li>
+                               
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <button type="button" id="change_profile_edit" class="btn btn-outline-primary">Izmeni</button>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="profile-work">
+                            <p id = "pRole"></p>
+                            <a href="">Lista klinika</a>
+                            <a href="">Zdravstveni Karton</a><br/>
+                            <a href="">Zakazi pregled</a><br/>
+                            <a href="">Istorija pregleda</a><br/>
+                            <a href="">Istorija operacija</a><br/>
+                            
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="tab-content profile-tab" id="myTabContent">
+                            <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <label>Ime</label>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <p id="pName"></p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <label>Prezime</label>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <p id="pSurname"></p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <label>Email</label>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <p id="pEmail"></p>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <label>Telefon</label>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <p id="pPhone"></p>
+                                            </div>
+										</div>
+										<div class="row">
+												<div class="col-md-6">
+													<label>Grad</label>
+												</div>
+												<div class="col-md-6">
+													<p id="pCity"></p>
+												</div>
+											</div>
+											<div class="row">
+													<div class="col-md-6">
+														<label>Drzava</label>
+													</div>
+													<div class="col-md-6">
+														<p id="pState"></p>
+													</div>
+											</div>
+											<div class="row">
+													<div class="col-md-6">
+														<label>Adresa</label>
+													</div>
+													<div class="col-md-6">
+														<p id="pAddress"></p>
+													</div>
+												</div>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+            </form>           
+        </div>
+  </body>
+</html>
