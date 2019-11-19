@@ -12,9 +12,29 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 <script src ="js/navbar.js"></script>
 <script src="js/profil.js"></script>
-<link rel = "stylesheet" href="css/profilDoktor.css">
+<link rel = "stylesheet" href="css/profile.css">
 </head>
 <body>
+
+	<header>
+    	<nav class="navbar navbar-expand navbar-dark bg-dark">
+    	<a class="navbar-brand" href="#">
+    		<img src="images/logo.png" width="30" height="30" alt="">
+  		</a>
+         <a class="navbar-brand" href="index.html">Klinicki Centar</a>
+         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+         	<span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+           	<ul class="navbar-nav mr-auto"></ul>
+                <form class="form-inline my-2 my-lg-0" id="log_buttons" >
+                    <button type="button" class="btn btn-outline-light" id = "navbar_prijava_btn">Prijava</button>
+                    &nbsp&nbsp
+                    <button type="button" class="btn btn-light" id = "navbar_registracija_btn">Registracija</button>
+                </form>
+              </div>
+         </nav>
+    </header>
 
 		
 	<div class="container emp-profile">
@@ -22,11 +42,12 @@
                 <div class="row">
                     <div class="col-md-4">
 							<div class="profile-img">
-									<img src="logo.png" alt=""/>
+									<img src="images/logo.png" alt=""/>
 								</div>
                     </div>
                     <div class="col-md-6">
                         <div class="profile-head">
+                        <p class="proile-rating"> <span id ="sRating"></span></p>
                             <ul class="nav nav-tabs" id="myTab" role="tablist">
                                 <li class="nav-item">
                                     <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Osnovne informacije</a>

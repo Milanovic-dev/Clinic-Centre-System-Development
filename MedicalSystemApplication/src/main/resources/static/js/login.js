@@ -5,7 +5,7 @@
 
 $(document).ready(function(){
 	
-	$('#submitPrijava').click(function(e){
+	$('#submitLogin').click(function(e){
 		e.preventDefault()
 		
 		

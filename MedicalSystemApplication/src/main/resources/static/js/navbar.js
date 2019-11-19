@@ -10,6 +10,7 @@ $(document).ready(function()
 		url: 'api/auth/sessionUser',
 		complete: function(data){
 			
+			return
 			if(data == undefined)
 			{
 				$('#log_buttons').show()
