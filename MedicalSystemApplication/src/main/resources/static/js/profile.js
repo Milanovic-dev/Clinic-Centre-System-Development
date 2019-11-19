@@ -9,7 +9,6 @@ function sessionCheck()
 				addPersonalInformations(data)
 			}
 				
-			
 		})
 		
 }
@@ -39,6 +38,7 @@ $(document).ready(function(){
 	
 	$('#change_profile_edit').click(function(e){
 		//TODO: Otvori stranicu za editovanje
+		window.location.href = "profileChange.html
 	})
 	
 })
