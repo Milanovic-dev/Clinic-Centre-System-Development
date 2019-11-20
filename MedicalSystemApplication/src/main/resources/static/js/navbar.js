@@ -10,14 +10,9 @@ $(document).ready(function()
 		url: 'api/auth/sessionUser',
 		complete: function(data){
 			
-			return
-			if(data == undefined)
+			if(data.status == "200")
 			{
-				$('#log_buttons').show()
-			}
-			else
-			{
-				$('#log_buttons').hide()
+				console.log(data.responseJSON)
 			}
 			
 		}		
