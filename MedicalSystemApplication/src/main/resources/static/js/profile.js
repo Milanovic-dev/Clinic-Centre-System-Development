@@ -34,15 +34,18 @@ function addPersonalInformations(data)
 	if(user.role == "Doctor")
 	{
 		$("#sRating").text(user.avarageRating);
-		$("#pRole").text("Doktor");	
+		$("#pRole").text("Doktor");
+		$('#pRating').show();
 	}
 	else if(user.role == "Patient")
 	{
 		$('#pRole').text("Pacijent")
+		$('#pRating').hide();
 	}
 	else if(user.role == "Nurse")
 	{
 		$('#pRole').text("Med. Sestra")
+		$('#pRating').hide();
 	}
 }
 
@@ -51,8 +54,8 @@ $(document).ready(function(){
 	sessionCheck()
 	
 	
+	
 	$('#change_profile_edit').click(function(e){
-		//TODO: Otvori stranicu za editovanje
 		window.location.href = "profileChange.html"
 	})
 	

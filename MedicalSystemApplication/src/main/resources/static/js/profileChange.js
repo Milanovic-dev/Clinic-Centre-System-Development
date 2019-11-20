@@ -30,6 +30,8 @@ function addPersonalInformations(data)
 	$("#inputAddressChange").val(user.address);
 	$("#inputPhoneChange").val(user.phone);
 	
+	
+	
 }
 
 
