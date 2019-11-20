@@ -20,6 +20,7 @@ public class UserService {
 	public List<User> getAll(UserRole role)
 	{
 		return userRepository.findAllByRole(role);
+		
 	}
 	
 	public List<User> getAll()
