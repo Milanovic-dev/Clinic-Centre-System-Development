@@ -14,20 +14,25 @@ $(document).ready(function(){
         let state = $('#state').val()
         let description = $('#description').val()
 
+       let data = JSON.stringify({"name":name,"address:":address,"city:":city,"state:":state,"description:":description})
+       console.log(data)
 
-		$.post({
-			url:'/api/clinics/registerClinic',
-			data: JSON.stringify({name, address, city, state, description}),
-			dataType: "json",
-			contentType : "application/json; charset=utf-8",
-			success: function(data){
-                  alert('Uspesna registracija klinike!');
-                   window.location.href = "./centreAdminPage.html";
-             },
-             error: function(){
-                alert('Greska!');
-			}
-		})
+		$.ajax({
+        			type: 'POST',
+        			url:'api/clinic/registerClinic',
+        			data: data,
+        			dataType : "json",
+        			contentType : "application/json; charset=utf-8",
+        			complete: function(data)
+        			{
+        				console.log(data.status)
+
+        				if(data.status == "200")
+        				{
+        					window.location.href = "clinicCentreAdmin.html"
+        				}
+        			}
+        		})
 
 	})
 
