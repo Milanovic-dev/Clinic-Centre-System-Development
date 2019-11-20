@@ -30,9 +30,20 @@ function addPersonalInformations(data)
 	$("#pAddress").text(user.address);
 	
 	
-	$("#pRole").text(user.role);
+	
 	if(user.role == "Doctor")
+	{
 		$("#sRating").text(user.avarageRating);
+		$("#pRole").text("Doktor");	
+	}
+	else if(user.role == "Patient")
+	{
+		$('#pRole').text("Pacijent")
+	}
+	else if(user.role == "Nurse")
+	{
+		$('#pRole').text("Med. Sestra")
+	}
 }
 
 $(document).ready(function(){
