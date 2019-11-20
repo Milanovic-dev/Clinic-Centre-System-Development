@@ -3,34 +3,46 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        <link rel="stylesheet" href = "css/login.css">
 
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        <script
+                src="https://code.jquery.com/jquery-3.4.1.js"
+                integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+                crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+        <script src ="js/navbar.js"></script>
+        <script src="js/centreAdminPage.js"></script>
     <link rel = "stylesheet" href="css/centreAdminPage.css">
-    <script
-            src="https://code.jquery.com/jquery-3.4.1.js"
-            integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
-            crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-    <script src ="js/centreAdminPage.js"></script>
-
-    <meta charset="ISO-8859-1">
     <title>Nalog</title>
 </head>
 <body>
-<div  class="header"><a href="index.html">
-    <div class="col-md-4">
-        <div>
-            <img class="logo" src="logo.png" alt=""/>
-        </div>
-    </div>
-    <h1 style="display:inline-block;">KLINIČKI CENTAR</h1>
-</a>
-
-</div>
-
-
 <!-- Navigation -->
+
+<header>
+    <nav class="navbar navbar-expand navbar-dark bg-dark">
+        <a class="navbar-brand" href="#">
+            <img src="images/logo.png" width="30" height="30" alt="">
+        </a>
+        <a class="navbar-brand" href="index.html">Klinicki Centar</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+            <ul class="navbar-nav mr-auto"></ul>
+            <form class="form-inline my-2 my-lg-0" id="log_buttons" >
+                <button type="button" class="btn btn-outline-light" id = "navbar_prijava_btn">Prijava</button>
+                &nbsp&nbsp
+                <button type="button" class="btn btn-light" id = "navbar_registracija_btn">Registracija</button>
+            </form>
+        </div>
+    </nav>
+</header>
+
+
 <header>
     <div id="myNav" class="overlay">
         <nav class="overlay-content">
@@ -45,7 +57,7 @@
                 <li><a href="#nowhere">Registracija</a>
                 <ul id="list2">
                         <a class="white" href="clinicRegister.html">Registracija klinike</a>
-                        <a class="white"  href="#">Registracija administratora klinike</a>
+                        <a class="white"  href="clinicAdminRegister.html">Registracija administratora klinike</a>
                 </ul>
                 </li>
             </ul>
@@ -53,7 +65,7 @@
 
         <nav class="overlay-content">
             <ul>
-                <li><a style="text-align:right;position:fixed; bottom:610px; right:65px" href="#nowhere">Profil</a>
+                <li><a style="text-align:right;position:fixed; bottom:550px; right:65px" href="#nowhere">Profil</a>
                     <ul id="list3" style="text-align:right;position:fixed; bottom:200px; right:65px">
                         <li class="white-info">Korisničko ime</li>
                         <li class="white-info">Email adresa</li>

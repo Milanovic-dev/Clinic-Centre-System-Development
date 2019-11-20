@@ -16,8 +16,7 @@
 </head>
 <body>
 
-<!---------------------------------------NAVBAR---------------------------------------->
-	<header>
+<header>
     	<nav class="navbar navbar-expand navbar-dark bg-dark">
     	<a class="navbar-brand" href="#">
     		<img src="images/logo.png" width="30" height="30" alt="">
@@ -28,27 +27,14 @@
           </button>
           <div class="collapse navbar-collapse" id="navbarsExampleDefault">
            	<ul class="navbar-nav mr-auto"></ul>
-                <form class="form-inline my-2 my-lg-0" id="log_buttons" hidden="true">
+                <form class="form-inline my-2 my-lg-0" id="log_buttons" >
                     <button type="button" class="btn btn-outline-light" id = "navbar_prijava_btn">Prijava</button>
                     &nbsp&nbsp
                     <button type="button" class="btn btn-light" id = "navbar_registracija_btn">Registracija</button>
                 </form>
-        		<form class="form-inline my-2 my-lg-0" id="drop_down_menu" hidden="true">
-              		<div class="btn-group">
-  						<button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
-  					<div class="dropdown-menu dropdown-menu-lg-right">
-    					<a class="dropdown-item" href="userProfileNew.html">Profil</a>
-    				<div class="dropdown-divider"></div>
-    					<a class="dropdown-item" href="index.html" id="dropdown-item_logout">Odjavi se</a>
-  					</div>
-					</div>
-  					</div>
-                </form>
               </div>
          </nav>
     </header>
-
-<!---------------------------------------NAVBAR END---------------------------------------->
 
 <div class="container">
     <div class="card card-register mx-auto mt-5">
@@ -104,7 +90,7 @@
                   <div class="valid-feedback">Izgleda dobro!</div>
                   <div class="invalid-feedback">Morate uneti adresu.</div>
             </div>
-          </div>      
+          </div>
           <div class="form-group">
             <div class="form-row">
               <div class="col-md-6">
@@ -117,7 +103,9 @@
               <div class="col-md-6">
                 <div class="form-label-group">
                   <select class="form-control" id="selectState">
+  					<option disabled selected value>Drzava</option>
                 <option value="Afghanistan">Afghanistan</option>
+                <option value="Åland Islands">Åland Islands</option>
                 <option value="Albania">Albania</option>
                 <option value="Algeria">Algeria</option>
                 <option value="American Samoa">American Samoa</option>
@@ -128,7 +116,7 @@
                 <option value="Antigua and Barbuda">Antigua and Barbuda</option>
                 <option value="Argentina">Argentina</option>
                 <option value="Armenia">Armenia</option>
-                <option value="Aruba">Aruba</option>
+                <option valu="Aruba">Aruba</option>
                 <option value="Australia">Australia</option>
                 <option value="Austria">Austria</option>
                 <option value="Azerbaijan">Azerbaijan</option>
@@ -361,7 +349,6 @@
                 <option value="Zambia">Zambia</option>
                 <option value="Zimbabwe">Zimbabwe</option>
 				</select>
-
                 </div>
               </div>
             </div>

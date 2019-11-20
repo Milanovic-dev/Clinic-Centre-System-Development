@@ -137,14 +137,25 @@ $(document).ready(function(){
 			input.addClass('is-valid')
 		}
 
+			if($('#state').find(':selected').prop('disabled')){
+                		    var input = $('#state')
+                            input.addClass('is-invalid')
+                            input.removeClass('is-valid')
+                		} else {
+                		    var input = $('#state')
+                            input.removeClass('is-invalid')
+                            input.addClass('is-valid')
+                		}
+
+
 		if(flag == false) return
 
 
 		let data = JSON.stringify({"username":"","password":password,"email":email,"name":name,"surname":surname,"city":city,"address":address,"state":state,"phone":phone})
-		console.log(regReq)
+		console.log(data)
 		$.ajax({
 			type: 'POST',
-			url:'/api/cAdmins/registerClinicAdmin',
+			url:'/api/auth/registerRequest',
 			data: data,
 			dataType : "json",
 			contentType : "application/json; charset=utf-8",

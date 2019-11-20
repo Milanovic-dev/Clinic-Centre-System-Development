@@ -14,6 +14,9 @@ public class CentreAdmin extends User {
     @ManyToOne(fetch = FetchType.LAZY)
     private ClinicCenter clinicCentre;
 
+    @Column(name= "predefined", nullable = true)
+    private boolean predefined = false;
+
     public CentreAdmin() {
         super();
     }
