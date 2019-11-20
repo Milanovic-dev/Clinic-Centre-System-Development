@@ -34,12 +34,12 @@ $(document).ready(function(){
 	
 	$("#exitChanges").click(function(e){
 		e.preventDefault()
-		window.location.href = "profile.html"
-	})
+		window.location.href = "userProfile.html"
+	}
 	
 	$("#submitChanges").click(function(e){
 		e.preventDefault()
-		
+	}
 		
 	let email = $("#inputEmailChange").val()
 	let name = $("#inputNameChange").val()
@@ -64,11 +64,6 @@ $(document).ready(function(){
 					window.location.href = "profile.html"
 				}
 			}
-				
-			}
-		
-		
+	
 	})
-	
-	
-})
+}
