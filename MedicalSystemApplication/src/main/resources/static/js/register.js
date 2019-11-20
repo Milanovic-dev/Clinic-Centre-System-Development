@@ -111,6 +111,7 @@ $(document).ready(function(){
 			input.addClass('is-valid')
 		}
 		
+		
 		if(address == "")
 		{
 			var input = $('#inputAddress')
@@ -163,6 +164,8 @@ $(document).ready(function(){
 				
 				if(data.status == "200")
 				{
+					
+											
 					window.location.href = "registrationComplete.html"
 				}
 			}

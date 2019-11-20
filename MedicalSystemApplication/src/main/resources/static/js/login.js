@@ -12,10 +12,13 @@ $(document).ready(function(){
 		let email = $('#inputEmail').val()
 		let password = $('#inputPassword').val()
 		
+		let json = JSON.stringify({"email":email,"password":password})
+		console.log(json)
+		
 		$.ajax({
 			type: 'POST',
 			url:'/api/auth/login',
-			data: JSON.stringify({"email":email,"password:":password}),
+			data: json,
 			dataType : "json",
 			contentType : "application/json; charset=utf-8",
 			complete: function(data)

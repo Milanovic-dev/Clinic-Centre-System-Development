@@ -18,11 +18,11 @@ public class PatientMedicalReport {
 	@Column(name = "dateAndTime", nullable = false)
     private long dateAndTime;
 
-	@OneToOne(fetch = FetchType.LAZY)
+	@OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "doctor_id")
     private Doctor doctor;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "clinic_id")
     private Clinic clinic;
 	
