@@ -1,4 +1,9 @@
-let email = $('#inputEmail').val()
+$(document).ready(function(){
+
+	$('#submitRegister').click(function(e){
+		e.preventDefault()
+
+        let email = $('#inputEmail').val()
 		let password = $('#inputPassword').val()
 		let confirmPassword = $('#confirmPassword').val()
 		let name = $('#inputName').val()
@@ -135,12 +140,12 @@ let email = $('#inputEmail').val()
 		if(flag == false) return
 
 
-		let regReq = JSON.stringify({"username":"","password":password,"email":email,"name":name,"surname":surname,"city":city,"address":address,"state":state,"phone":phone})
+		let data = JSON.stringify({"username":"","password":password,"email":email,"name":name,"surname":surname,"city":city,"address":address,"state":state,"phone":phone})
 		console.log(regReq)
 		$.ajax({
 			type: 'POST',
-			url:'/api/auth/registerRequest',
-			data: regReq,
+			url:'/api/cAdmins/registerClinicAdmin',
+			data: data,
 			dataType : "json",
 			contentType : "application/json; charset=utf-8",
 			complete: function(data)
@@ -156,6 +161,12 @@ let email = $('#inputEmail').val()
 				{
 					window.location.href = "centreAdminPage.html"
 				}
+			},
+			success: function(){
+			    alert('Registrovan!')
+			},
+			error: function(){
+			    alert('Greska!')
 			}
 		})
 
