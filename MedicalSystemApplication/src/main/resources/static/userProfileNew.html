@@ -13,7 +13,7 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 <script src ="js/navbar.js"></script>
 <script src="js/profile.js"></script>
-<link rel = "stylesheet" href="css/profileNew.css">
+<link rel = "stylesheet" href="css/profile.css">
   </head>
   <body>
 <!---------------------------------------NAVBAR---------------------------------------->
@@ -49,6 +49,7 @@
     </header>
 
 <!---------------------------------------NAVBAR END---------------------------------------->
+
 <div class = "prikaz">
 	<div class="container emp-profile">
             <form method="post">
@@ -60,7 +61,7 @@
                     </div>
                     <div class="col-md-6">
                         <div class="profile-head">
-                                    <p class="proile-rating"> OCENA: <span id ="sRating"></span></p>
+                                    <p  class="proile-rating" id="pRating"> OCENA: <span id ="sRating"></span></p>
                             <ul class="nav nav-tabs" id="myTab" role="tablist">
                                 <li class="nav-item">
                                     <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Osnovne informacije</a>
@@ -68,16 +69,14 @@
                             </ul>
                         </div>
                     </div>
-                    <div class="col-md-2">
-                        <button type="button" id="change_profile_edit" class="btn btn-outline-primary">Izmeni</button>
-                    </div>
+                   
                 </div>
                  <div class="row">
                     <div class="col-md-4">
                         <div class="profile-work">
                             <p id = "pRole"></p>
-                            <a href="" hidden>Lista svih pacijenata</a><br/>
-                            <a href="" hidden>Zapocni pregled</a><br/>
+                            <a href="profileChange.html" >Izmeni profil</a><br/>
+                            <a href="passwordChange.html" >Izmeni sifru</a><br/>
                             <a href="" hidden>Radni kalendar</a><br/>
                             <a href="" hidden>Zahtev za odustvo</a><br/>
                             <a href="" hidden>Zakazivanje pregleda</a><br/>
