@@ -61,15 +61,15 @@ $(document).ready(function(){
         			input.addClass('is-valid')
         		}
 
-//        		if(state.selectedIndex==0){
-//        		    var input = $('#selectState')
-//                    input.addClass('is-invalid')
-//                    input.removeClass('is-valid')
-//        		} else {
-//        		    var input = $('#selectState')
-//                    input.removeClass('is-invalid')
-//                    input.addClass('is-valid')
-//        		}
+        		if($('#state').find(':selected').prop('disabled')){
+        		    var input = $('#state')
+                    input.addClass('is-invalid')
+                    input.removeClass('is-valid')
+        		} else {
+        		    var input = $('#state')
+                    input.removeClass('is-invalid')
+                    input.addClass('is-valid')
+        		}
 
 
 

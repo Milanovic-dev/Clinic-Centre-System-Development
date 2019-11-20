@@ -140,6 +140,16 @@ $(document).ready(function(){
 			input.removeClass('is-invalid')
 			input.addClass('is-valid')
 		}
+
+		if($('#selectState').find(':selected').prop('disabled')){
+                		    var input = $('#selectState')
+                            input.addClass('is-invalid')
+                            input.removeClass('is-valid')
+                		} else {
+                		    var input = $('#selectState')
+                            input.removeClass('is-invalid')
+                            input.addClass('is-valid')
+                		}
 		
 		if(flag == false) return
 		
