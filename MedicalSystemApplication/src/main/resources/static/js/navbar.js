@@ -10,25 +10,19 @@ $(document).ready(function()
 		url: 'api/auth/sessionUser',
 		complete: function(data){
 			
-			if(data.status == "200")
-			{
-				console.log(data.responseJSON)
-			}
-			
 			user = data.responseJSON
 			
 			if(user != undefined)
 			{
-				$('#log_buttons').hide()
-				$('#drop_down_menu').show()
-				
+				$('#drop_down_menu').removeAttr('hidden')
+				$('#log_buttons').attr('hidden')
+			}	
 			if(user == undefined)
 			{
-				$('#log_buttons').show()
-				$('#drop_down_menu').hide()
-			}
-			
-		}
+				$('#drop_down_menu').attr('hidden')
+				$('#log_buttons').removeAttr('hidden')
+			}				
+					
 		}	
 	})
 	
@@ -43,9 +37,17 @@ $(document).ready(function()
 		window.location.href = "register.html"
 	})
 	
-	$('#dropdown-item_logout').click(function(e){
+	$('#dropdown-item_logout').on("click",function(e){
 		e.preventDefault()
-		//TODO: unistiti coockie
+
+		$.ajax({
+			type : 'POST',
+			url: 'api/auth/logout',
+			complete: function(data)
+			{
+				window.location.href = "index.html"
+			}
+		})
 	})
 
 })

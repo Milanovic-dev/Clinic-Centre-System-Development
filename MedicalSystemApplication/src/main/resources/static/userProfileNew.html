@@ -16,6 +16,7 @@
 <link rel = "stylesheet" href="css/profileNew.css">
   </head>
   <body>
+<!---------------------------------------NAVBAR---------------------------------------->
 	<header>
     	<nav class="navbar navbar-expand navbar-dark bg-dark">
     	<a class="navbar-brand" href="#">
@@ -27,14 +28,27 @@
           </button>
           <div class="collapse navbar-collapse" id="navbarsExampleDefault">
            	<ul class="navbar-nav mr-auto"></ul>
-                <form class="form-inline my-2 my-lg-0" id="log_buttons" >
+                <form class="form-inline my-2 my-lg-0" id="log_buttons" hidden="true">
                     <button type="button" class="btn btn-outline-light" id = "navbar_prijava_btn">Prijava</button>
                     &nbsp&nbsp
                     <button type="button" class="btn btn-light" id = "navbar_registracija_btn">Registracija</button>
                 </form>
+        		<form class="form-inline my-2 my-lg-0" id="drop_down_menu" hidden="true">
+              		<div class="btn-group">
+  						<button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
+  					<div class="dropdown-menu dropdown-menu-lg-right">
+    					<a class="dropdown-item" href="userProfileNew.html">Profil</a>
+    				<div class="dropdown-divider"></div>
+    					<a class="dropdown-item" href="index.html" id="dropdown-item_logout">Odjavi se</a>
+  					</div>
+					</div>
+  					</div>
+                </form>
               </div>
          </nav>
     </header>
+
+<!---------------------------------------NAVBAR END---------------------------------------->
 <div class = "prikaz">
 	<div class="container emp-profile">
             <form method="post">
