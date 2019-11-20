@@ -5,7 +5,6 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-<link rel="stylesheet" href = "css/login.css">
 
 <script
   src="https://code.jquery.com/jquery-3.4.1.js"
@@ -13,10 +12,11 @@
   crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 <script src ="js/navbar.js"></script>
-<script src="js/profil.js"></script>
-	<link rel = "stylesheet" href="css/profile.css">
+<script src="js/profile.js"></script>
+<link rel = "stylesheet" href="css/profileNew.css">
   </head>
   <body>
+<!---------------------------------------NAVBAR---------------------------------------->
 	<header>
     	<nav class="navbar navbar-expand navbar-dark bg-dark">
     	<a class="navbar-brand" href="#">
@@ -28,15 +28,28 @@
           </button>
           <div class="collapse navbar-collapse" id="navbarsExampleDefault">
            	<ul class="navbar-nav mr-auto"></ul>
-                <form class="form-inline my-2 my-lg-0" id="log_buttons" >
+                <form class="form-inline my-2 my-lg-0" id="log_buttons" hidden="true">
                     <button type="button" class="btn btn-outline-light" id = "navbar_prijava_btn">Prijava</button>
                     &nbsp&nbsp
                     <button type="button" class="btn btn-light" id = "navbar_registracija_btn">Registracija</button>
                 </form>
+        		<form class="form-inline my-2 my-lg-0" id="drop_down_menu" hidden="true">
+              		<div class="btn-group">
+  						<button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
+  					<div class="dropdown-menu dropdown-menu-lg-right">
+    					<a class="dropdown-item" href="userProfileNew.html">Profil</a>
+    				<div class="dropdown-divider"></div>
+    					<a class="dropdown-item" href="index.html" id="dropdown-item_logout">Odjavi se</a>
+  					</div>
+					</div>
+  					</div>
+                </form>
               </div>
          </nav>
     </header>
-		
+
+<!---------------------------------------NAVBAR END---------------------------------------->
+<div class = "prikaz">
 	<div class="container emp-profile">
             <form method="post">
                 <div class="row">
@@ -59,6 +72,18 @@
                         <button type="button" id="change_profile_edit" class="btn btn-outline-primary">Izmeni</button>
                     </div>
                 </div>
+                 <div class="row">
+                    <div class="col-md-4">
+                        <div class="profile-work">
+                            <p id = "pRole"></p>
+                            <a href="" hidden>Lista svih pacijenata</a><br/>
+                            <a href="" hidden>Zapocni pregled</a><br/>
+                            <a href="" hidden>Radni kalendar</a><br/>
+                            <a href="" hidden>Zahtev za odustvo</a><br/>
+                            <a href="" hidden>Zakazivanje pregleda</a><br/>
+                            <a href="" hidden>Zakazivanje operacija</a><br/>
+                        </div>
+                    </div>
                     <div class="col-md-8">
                         <div class="tab-content profile-tab" id="myTabContent">
                             <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
@@ -126,5 +151,6 @@
                 </div>
             </form>           
         </div>
+     </div>
   </body>
 </html>

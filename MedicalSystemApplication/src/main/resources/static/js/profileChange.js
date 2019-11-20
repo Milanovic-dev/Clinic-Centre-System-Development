@@ -15,15 +15,20 @@ function sessionCheck()
 
 function addPersonalInformations(data)
 {
-	data = {"name":"Nikola","surname":"Milanovic","email":"nikola@gmail.com","phone":"0532543","city":"Novi Sad","state":"Srbija","address":"Karadjordjeva 8","role":"Doktor","avarageRating":"8.56"}
+	user = data.responseJSON
+	if(user == undefined)
+		{
+			console.log("nema data.")
+		}
 	
-	$("#inputEmailChange").val(data.email);
-	$("#inputNameChange").val(data.name);
-	$("#inputSurnameChange").val(data.surname);
-	$("#selectStateChange").val(data.state);
-	$("#inputCityChange").val(data.city);
-	$("#inputAddressChange").val(data.address);
-	$("#inputPhoneChange").val(data.phone);
+	
+	$("#inputEmailChange").val(user.email);
+	$("#inputNameChange").val(user.name);
+	$("#inputSurnameChange").val(user.surname);
+	$("#selectStateChange").val(user.state).change();
+	$("#inputCityChange").val(user.city);
+	$("#inputAddressChange").val(user.address);
+	$("#inputPhoneChange").val(user.phone);
 	
 }
 
@@ -32,25 +37,24 @@ $(document).ready(function(){
 
 	sessionCheck()
 	
-	$("#exitChanges").click(function(e){
+	$('#exitChanges').click(function(e){
 		e.preventDefault()
-		window.location.href = "profile.html"
+		window.location.href = "userProfileNew.html"
 	})
+	
 	
 	$("#submitChanges").click(function(e){
 		e.preventDefault()
+		let email = $("#inputEmailChange").val()
+		let name = $("#inputNameChange").val()
+		let surname = $("#inputSurnameChange").val()
+		let state = $("#selectStateChange").val()
+		let address = $("#inputAddressChange").val()
+		let phone = $("#inputPhoneChange").val();
+		let city = $("#inputCityChange").val();
 		
-		
-	let email = $("#inputEmailChange").val()
-	let name = $("#inputNameChange").val()
-	let surname = $("#inputSurnameChange").val()
-	let state = $("#selectStateChange").val()
-	let address = $("#inputAddressChange").val()
-	let phone = $("#inputPhoneChange").val();
-	let city = $("#inputCityChange").val();
-	
-	let changeReq = JSON.stringify({"username":"","password": "","email":email,"name":name,"surname":surname,"city":city,"address":address,"state":state,"phone":phone})	
-	$.ajax({
+		let changeReq = JSON.stringify({"username":"","password": "","email":email,"name":name,"surname":surname,"city":city,"address":address,"state":state,"phone":phone})	
+		$.ajax({
 			type: 'PUT',
 			url: 'api/users/update/'+email,
 			data: changeReq,
@@ -64,11 +68,8 @@ $(document).ready(function(){
 					window.location.href = "profile.html"
 				}
 			}
-				
-			}
 		
-		
+		})
 	})
-	
-	
+		
 })

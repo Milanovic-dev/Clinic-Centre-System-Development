@@ -14,7 +14,7 @@ public class Patient extends User{
 	@Column(name = "insuranceId", nullable = true)
 	private String insuranceId;
 	
-	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinColumn(name = "medicalRecord_id", referencedColumnName = "id")
 	private MedicalRecord medicalRecord;
 	

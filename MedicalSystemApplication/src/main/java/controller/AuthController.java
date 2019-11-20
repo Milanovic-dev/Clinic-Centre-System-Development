@@ -3,13 +3,16 @@ package controller;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,6 +21,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import dto.LoginDTO;
+import dto.SessionUserDTO;
+import dto.UserDTO;
 import helpers.SecurePasswordHasher;
 import model.Patient;
 import model.RegistrationRequest;
@@ -36,10 +41,11 @@ public class AuthController
 	private UserService userService;
 	
 	@PostMapping(value ="/login", consumes = "application/json")
-	public ResponseEntity<Void> login(@RequestBody LoginDTO dto,HttpServletRequest request)
+	public ResponseEntity<Void> login(@RequestBody LoginDTO dto,HttpServletResponse response)
 	{	
 		HttpHeaders header = new HttpHeaders();
 		
+		System.out.println(dto);
 		User u = userService.
 				findByEmail(dto.getEmail());
 		
@@ -56,11 +62,11 @@ public class AuthController
 			
 			if(hash.equals(u.getPassword()))
 			{
-				request.getSession(true).setAttribute("SESSION_USER", u);
+				response.addCookie(new Cookie("email",u.getEmail()));
 				return new ResponseEntity<>(HttpStatus.OK);
 			}
 			
-		} catch (NoSuchAlgorithmException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -116,10 +122,35 @@ public class AuthController
 	}
 		
 	@GetMapping(value = "/sessionUser")
-	public ResponseEntity<User> getSessionUser(HttpServletRequest request)
+	public ResponseEntity<SessionUserDTO> getSessionUser(@CookieValue(value = "email", defaultValue = "none") String email)
 	{
-		User user = (User) request.getSession().getAttribute("SESSION_USER");
-		return new ResponseEntity<User>(user,HttpStatus.OK);
+		if(email == null || email == "none")
+		{
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+		
+		
+		User user = userService.findByEmail(email);
+		
+		if(user == null)
+		{
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+		
+		SessionUserDTO dto = new SessionUserDTO(user);
+		
+		return new ResponseEntity<SessionUserDTO>(dto,HttpStatus.OK);
+	}
+	
+	
+	@PostMapping(value = "/logout")
+	public ResponseEntity<Void> logout(HttpServletResponse response)
+	{
+		Cookie cookie = new Cookie("email",null);
+		cookie.setMaxAge(0);
+		
+		response.addCookie(cookie);
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 	
 	@GetMapping(value = "/getAllRegRequest")

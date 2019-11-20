@@ -5,6 +5,10 @@ public class LoginDTO {
 	private String email;
 	private String password;
 	
+	public LoginDTO()
+	{
+		super();
+	}
 	
 	public LoginDTO(String username, String password) {
 		super();
@@ -32,6 +36,10 @@ public class LoginDTO {
 		this.password = password;
 	}
 	
-	
+	@Override
+	public String toString()
+	{
+		return "["+this.email + " + " + this.password + "]";
+	}
 	
 }
