@@ -124,6 +124,12 @@ public class AuthController
 	@GetMapping(value = "/sessionUser")
 	public ResponseEntity<SessionUserDTO> getSessionUser(@CookieValue(value = "email", defaultValue = "none") String email)
 	{
+		if(email == null || email == "none")
+		{
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+		
+		
 		User user = userService.findByEmail(email);
 		
 		if(user == null)
@@ -134,6 +140,17 @@ public class AuthController
 		SessionUserDTO dto = new SessionUserDTO(user);
 		
 		return new ResponseEntity<SessionUserDTO>(dto,HttpStatus.OK);
+	}
+	
+	
+	@PostMapping(value = "/logout")
+	public ResponseEntity<Void> logout(HttpServletResponse response)
+	{
+		Cookie cookie = new Cookie("email",null);
+		cookie.setMaxAge(0);
+		
+		response.addCookie(cookie);
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 	
 	@GetMapping(value = "/getAllRegRequest")

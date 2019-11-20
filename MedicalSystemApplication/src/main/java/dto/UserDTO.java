@@ -14,8 +14,28 @@ public class UserDTO
 	private String state;
 	private String phone;
 	
+	public UserDTO()
+	{
+		super();
+	}
+		
+	public UserDTO(String username, String password, String email, String name, String surname, String city,
+			String address, String state, String phone) {
+		super();
+		this.username = username;
+		this.password = password;
+		this.email = email;
+		this.name = name;
+		this.surname = surname;
+		this.city = city;
+		this.address = address;
+		this.state = state;
+		this.phone = phone;
+	}
+
 	public UserDTO(User dto)
 	{
+		super();
 		email = dto.getEmail();
 		password = dto.getPassword();
 		name = dto.getName();
