@@ -33,22 +33,19 @@ public class ClinicController {
 
         Clinic c = clinicService.findByName(dto.getName());
 
-        Clinic clinic = new Clinic();
-        clinic.setName(dto.getName());
-        clinic.setAddress((dto.getAddress()));
-        clinic.setCity(dto.getCity());
-        clinic.setDescription(dto.getDescription());
-        clinic.setState(dto.getState());
-        clinic.setAppointments(new ArrayList<>());
-        clinic.setDoctors(new ArrayList<>());
-        clinic.setHalls(new ArrayList<>());
-        clinic.setReviews(new ArrayList<>());
-        clinic.setClinicAdmins(new ArrayList<>());
-
-
-        if(c == null)
-        {
-            clinicService.save(new Clinic(clinic));
+        if(c == null) {
+            Clinic clinic = new Clinic();
+            clinic.setName(dto.getName());
+            clinic.setAddress((dto.getAddress()));
+            clinic.setCity(dto.getCity());
+            clinic.setDescription(dto.getDescription());
+            clinic.setState(dto.getState());
+            clinic.setAppointments(new ArrayList<>());
+            clinic.setDoctors(new ArrayList<>());
+            clinic.setHalls(new ArrayList<>());
+            clinic.setReviews(new ArrayList<>());
+            clinic.setClinicAdmins(new ArrayList<>());
+            clinicService.save(clinic);
         } else {
             return new ResponseEntity<>(HttpStatus.ALREADY_REPORTED);
         }

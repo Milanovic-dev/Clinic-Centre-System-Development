@@ -1,34 +1,5 @@
-html, body {
-    background-color: #282c34;
-}
-
-img{
-    width: 100px;
-    height: 100px;
-    display: inline;
-}
-
-.header{
-    padding: 30px 30px 30px;
-    -webkit-animation: flickerAnimation 4s infinite;
-       -moz-animation: flickerAnimation 4s infinite;
-       -o-animation: flickerAnimation 4s infinite;
-        animation: flickerAnimation 4s infinite;
-}
-
-.header img {
-  float: left;
-  width: 120px;
-  height: 120px;
-}
-
-.header h1 {
-  position: relative;
-  top: 18px;
-  left: 10px;
-  color: #4287f5;
-  font-size: 65px;
-  font-family: "Optima";
+ul {
+  list-style-type: none;
 }
 
 @keyframes flickerAnimation {
