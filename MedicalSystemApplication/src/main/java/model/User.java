@@ -5,7 +5,7 @@ import javax.persistence.*;
 @Entity(name = "users")
 @Table
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-public abstract class User
+public class User
 {
 	public enum UserRole{ Patient, Doctor, Nurse, ClinicAdmin, CentreAdmin}
 	

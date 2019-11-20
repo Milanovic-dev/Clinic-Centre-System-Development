@@ -15,7 +15,21 @@ $(document).ready(function()
 				console.log(data.responseJSON)
 			}
 			
-		}		
+			user = data.responseJSON
+			
+			if(user != undefined)
+			{
+				$('#log_buttons').hide()
+				$('#drop_down_menu').show()
+				
+			if(user == undefined)
+			{
+				$('#log_buttons').show()
+				$('#drop_down_menu').hide()
+			}
+			
+		}
+		}	
 	})
 	
 	
@@ -27,6 +41,11 @@ $(document).ready(function()
 	$('#navbar_registracija_btn').click(function(e){
 		e.preventDefault()
 		window.location.href = "register.html"
+	})
+	
+	$('#dropdown-item_logout').click(function(e){
+		e.preventDefault()
+		//TODO: unistiti coockie
 	})
 
 })

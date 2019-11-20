@@ -15,18 +15,20 @@ function sessionCheck()
 
 function addPersonalInformations(data)
 {
-	//user = data.responseJSON
+	user = data.responseJSON
+	if(user == undefined)
+		{
+			console.log("nema data.")
+		}
 	
-	data = {"name":"Nikola","surname":"Milanovic","email":"nikola@gmail.com","phone":"0532543","city":"Novi Sad","state":"Srbija","address":"Karadjordjeva 8","role":"Doktor","avarageRating":"8.56"}
 	
-	
-	$("#inputEmailChange").val(data.email);
-	$("#inputNameChange").val(data.name);
-	$("#inputSurnameChange").val(data.surname);
-	$("#selectStateChange").val(data.state);
-	$("#inputCityChange").val(data.city);
-	$("#inputAddressChange").val(data.address);
-	$("#inputPhoneChange").val(data.phone);
+	$("#inputEmailChange").val(user.email);
+	$("#inputNameChange").val(user.name);
+	$("#inputSurnameChange").val(user.surname);
+	$("#selectStateChange").val(user.state);
+	$("#inputCityChange").val(user.city);
+	$("#inputAddressChange").val(user.address);
+	$("#inputPhoneChange").val(user.phone);
 	
 }
 
