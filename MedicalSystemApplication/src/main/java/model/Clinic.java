@@ -67,6 +67,9 @@ public class Clinic
 	    this.reviews = new ArrayList<ClinicReview>();
     }
 
+    public Clinic(Clinic clinic) {
+    }
+
     public String getName() {
     	return name;
     }
