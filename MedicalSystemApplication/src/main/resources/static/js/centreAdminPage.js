@@ -1,22 +1,48 @@
-$("#slideshow > div:gt(0)").hide();
+function sessionCheck()
+{
+		$.ajax({
+			type: 'GET',
+			url: 'api/auth/sessionUser',
+			complete: function(data){
+				addPersonalInformations(data)
+			}
 
-setInterval(function () {
-    $('#slideshow > div:first')
-        .fadeOut(1000)
-        .next()
-        .fadeIn(1000)
-        .end()
-        .appendTo('#slideshow');
-}, 3000);
+		})
+
+}
+
+function addPersonalInformations(data)
+{
+	user = data.responseJSON
+	if(user == undefined)
+		{
+			console.log("nema data.")
+		}
+
+	$("#pName").text(user.name);
+	$("#pSurname").text(user.surname);
+	$("#pEmail").text(user.email);
+	$("#pPhone").text(user.phone);
+	$("#pCity").text(user.city);
+	$("#pState").text(user.state);
+	$("#pAddress").text(user.address);
 
 
 
-$('#openNav').on('click', function() {
-  $('#myNav').css("width", "100%");
-});
+//	if(user.predefined == true)
+//	{
+//		$('#centreAdminReg').show();
+//	}
 
-$('#closeNav').on('click', function() {
-  $('#myNav').css("width", "0%");
-});
+
+}
+
+$(document).ready(function(){
+
+	sessionCheck()
+
+})
+
+
 
 
