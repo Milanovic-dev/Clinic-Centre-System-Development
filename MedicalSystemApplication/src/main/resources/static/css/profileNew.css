@@ -44,3 +44,11 @@ body{
 	position: relative;
 	top:20px;
 }
+
+.profile-work a{
+    text-decoration: none;
+    color: #495057;
+    font-weight: 600;
+    font-size: 14px;
+}
+

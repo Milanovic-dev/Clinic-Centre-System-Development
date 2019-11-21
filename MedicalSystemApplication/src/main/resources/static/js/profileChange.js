@@ -25,10 +25,12 @@ function addPersonalInformations(data)
 	$("#inputEmailChange").val(user.email);
 	$("#inputNameChange").val(user.name);
 	$("#inputSurnameChange").val(user.surname);
-	$("#selectStateChange").val(user.state).change();
+	$("#selectStateChange").val(user.state).prop('selected',true)
 	$("#inputCityChange").val(user.city);
 	$("#inputAddressChange").val(user.address);
 	$("#inputPhoneChange").val(user.phone);
+	
+	
 	
 }
 
