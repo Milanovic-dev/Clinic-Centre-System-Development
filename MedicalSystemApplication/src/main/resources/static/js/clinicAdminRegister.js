@@ -1,4 +1,25 @@
 $(document).ready(function(){
+	
+	
+	$.ajax({
+		type: 'GET',
+		url:'api/clinic/getAll',
+		complete: function(data)
+		{
+			let select = $('#selectClinic').val()
+			
+			$.each(data.responseJSON, function (i, item) {
+			    $('#selectClinic').append($('<option>', { 
+			        value: item.name,
+			        text : item.name 
+			    }));
+			});
+
+			
+			
+		}
+	})
+	
 
 	$('#submitRegister').click(function(e){
 		e.preventDefault()
@@ -12,6 +33,7 @@ $(document).ready(function(){
 		let city = $('#inputCity').val()
 		let address = $('#inputAddress').val()
 		let phone = $('#inputPhone').val()
+		let clinic = $('#selectClinic').val()
 
 		flag = true
 
@@ -151,11 +173,11 @@ $(document).ready(function(){
 		if(flag == false) return
 
 
-		let data = JSON.stringify({"username":"","password":password,"email":email,"name":name,"surname":surname,"city":city,"address":address,"state":"Srbija","phone":phone})
+		let data = JSON.stringify({"username":"","password":password,"email":email,"name":name,"surname":surname,"city":city,"address":address,"state":state,"phone":phone})
 		console.log(data)
 		$.ajax({
 			type: 'POST',
-			url:'/api/auth/registerRequest',
+			url:'/api/admins/center/registerClinicAdmin/'+clinic,
 			data: data,
 			dataType : "json",
 			contentType : "application/json; charset=utf-8",
@@ -172,13 +194,12 @@ $(document).ready(function(){
 				{
 					window.location.href = "centreAdminPage.html"
 				}
+				else
+				{
+					alert(data.Response)
+				}
 			},
-			success: function(){
-			    alert('Registrovan!')
-			},
-			error: function(){
-			    alert('Greska!')
-			}
+
 		})
 
 	})

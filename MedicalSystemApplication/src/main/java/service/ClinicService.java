@@ -23,4 +23,8 @@ public class ClinicService {
     {
         clinicRepository.save(clinic);
     }
+
+	public List<Clinic> findAll() {
+		return clinicRepository.findAll();
+	}
 }
