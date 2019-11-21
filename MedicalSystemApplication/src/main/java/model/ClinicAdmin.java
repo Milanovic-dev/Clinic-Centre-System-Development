@@ -19,6 +19,7 @@ public class ClinicAdmin extends User {
     private  List<VacationRequest> vacationRequests;
 
     public ClinicAdmin(){
+    	setRole(UserRole.CentreAdmin);
     }
 
     public ClinicAdmin(String username, String password, String email, String name, String surname, String city, String address, String state, String phone, Clinic clinic) {

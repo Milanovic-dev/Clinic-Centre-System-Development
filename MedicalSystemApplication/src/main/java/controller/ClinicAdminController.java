@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import dto.UserDTO;
 import service.ClinicAdminService;
@@ -19,7 +20,8 @@ import service.ClinicService;
 
 import java.security.NoSuchAlgorithmException;
 
-@RequestMapping(value = "api/cAdmins")
+@RestController
+@RequestMapping(value = "api/admins/center")
 public class ClinicAdminController {
 
     @Autowired

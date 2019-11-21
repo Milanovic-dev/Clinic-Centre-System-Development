@@ -13,7 +13,7 @@ public class User
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 	
-	@Column(name = "username", nullable = false)
+	@Column(name = "username", nullable = true)
 	private String username;
 	
 	@Column(name = "password", nullable = false)

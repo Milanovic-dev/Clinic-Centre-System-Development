@@ -17,7 +17,7 @@
 <body>
 
 <!---------------------------------------NAVBAR---------------------------------------->
-	<header>
+<header>
     	<nav class="navbar navbar-expand navbar-dark bg-dark">
     	<a class="navbar-brand" href="#">
     		<img src="images/logo.png" width="30" height="30" alt="">
@@ -34,7 +34,10 @@
                     <button type="button" class="btn btn-light" id = "navbar_registracija_btn">Registracija</button>
                 </form>
         		<form class="form-inline my-2 my-lg-0" id="drop_down_menu" hidden="true">
+        			<span class="navbar-text" id="welcome-text"></span>
+        			&nbsp&nbsp
               		<div class="btn-group">
+              		<button class="btn btn-warning" id="admin_btn">Admin</button>
   						<button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
   					<div class="dropdown-menu dropdown-menu-lg-right">
     					<a class="dropdown-item" href="userProfileNew.html">Profil</a>
@@ -47,7 +50,6 @@
               </div>
          </nav>
     </header>
-
 <!---------------------------------------NAVBAR END---------------------------------------->
 
 <div class="container">

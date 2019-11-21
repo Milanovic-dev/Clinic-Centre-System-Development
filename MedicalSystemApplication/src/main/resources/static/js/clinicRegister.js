@@ -88,7 +88,7 @@ $(document).ready(function(){
 
         				if(data.status == "200")
         				{
-        					window.location.href = "clinicCentreAdmin.html"
+        					window.location.href = "centreAdminPage.html"
         				}
         			}
         		})

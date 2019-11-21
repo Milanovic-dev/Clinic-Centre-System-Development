@@ -17,6 +17,25 @@ $(document).ready(function()
 				$('#drop_down_menu').removeAttr('hidden')
 				$('#log_buttons').attr('hidden')
 				$('#welcome-text').text("Dobrodosao, " + user.name)
+				
+				
+				let role = user.role
+				
+				if(role == "CentreAdmin")
+				{
+					$('#admin_btn').show()
+					
+					$('#admin_btn').click(function(e){
+						e.preventDefault()
+						
+						window.location.href = "centreAdminPage.html"
+					})
+				}
+				else
+				{
+					$('#admin_btn').hide()
+				}
+				
 			}	
 			if(user == undefined)
 			{
