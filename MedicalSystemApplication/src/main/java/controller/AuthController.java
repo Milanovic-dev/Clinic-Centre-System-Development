@@ -46,7 +46,6 @@ public class AuthController
 	{	
 		HttpHeaders header = new HttpHeaders();
 		
-		System.out.println(dto);
 		User u = userService.
 				findByEmail(dto.getEmail());
 		

@@ -18,13 +18,11 @@ function addRequest(request)
 
 
 function getRequests(){
-    return function (){
          $.get({
                   url: '/api/auth/getAllRegRequest',
                   contentType: 'application/json',
                   success: function(requests)
                   {
-                       window.location='./registerRequests.html';
                        $('#tableRequests tbody').html('');
                        console.log(requests);
                        for(let req of requests)
@@ -32,9 +30,8 @@ function getRequests(){
                               addRequest(req);
                             }
                    }
-                   });
+               });
 
-    }
 }
 
 $(document).ready(()=>{
@@ -68,13 +65,13 @@ function confirmRegister(request){
 
         $.ajax({
         			type: 'POST',
-        			url:'/api/auth/confirmRegister/email',
+        			url:'/api/auth/confirmRegister/'+email,
         			contentType : "application/json; charset=utf-8",
         			complete: function(data)
         			{
         				console.log(data.status)
 
-        				if(data.status == "200")
+        				if(data.status == "201")
         				{
         					window.location.href = "registerRequests.html"
         				}

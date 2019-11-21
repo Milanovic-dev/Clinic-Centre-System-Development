@@ -28,6 +28,12 @@ public class Prescription {
 	@JoinColumn(name = "nurse_id")
 	private Nurse nurse;
 	
+	
+	public Prescription()
+	{
+		super();
+	}
+	
 	public Prescription(Recipe recipe, Date validationDate) {
 		super();
 		this.recipe = recipe;

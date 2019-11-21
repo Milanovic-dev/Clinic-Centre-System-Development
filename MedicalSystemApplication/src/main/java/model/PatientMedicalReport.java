@@ -30,6 +30,10 @@ public class PatientMedicalReport {
     @JoinTable(joinColumns = @JoinColumn(name = "patientMedicalReport_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "prescription_id", referencedColumnName = "id"))
 	private List<Prescription> prescription;
 	
+	public PatientMedicalReport()
+	{
+		super();
+	}
 	
 	public PatientMedicalReport(String description, long dateAndTime, Doctor doctor, Clinic clinic) {
 		super();

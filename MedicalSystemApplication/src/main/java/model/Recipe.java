@@ -26,6 +26,10 @@ public class Recipe {
     @ManyToMany
 	private List<Drug> drugs;
 	
+    public Recipe()
+    {
+    	super();
+    }
 	
 	public Recipe(String header, String description) {
 		super();

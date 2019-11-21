@@ -19,6 +19,12 @@ public class Drug {
 	@Column(name= "code",nullable = false)
 	private String code;
 	
+	
+	public Drug()
+	{
+		
+	}
+	
 	public Drug(String name, String description, String code) {
 		super();
 		this.name = name;

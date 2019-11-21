@@ -16,11 +16,13 @@ $(document).ready(function()
 			{
 				$('#drop_down_menu').removeAttr('hidden')
 				$('#log_buttons').attr('hidden')
+				$('#welcome-text').text("Dobrodosao, " + user.name)
 			}	
 			if(user == undefined)
 			{
 				$('#drop_down_menu').attr('hidden')
 				$('#log_buttons').removeAttr('hidden')
+				$('#welcome-text').text("")
 			}				
 					
 		}	
