@@ -17,22 +17,29 @@ function addRequest(request)
 }
 
 
+function getRequests(){
+    return function (){
+         $.get({
+                  url: '/api/auth/getAllRegRequest',
+                  contentType: 'application/json',
+                  success: function(requests)
+                  {
+                       window.location='./registerRequests.html';
+                       $('#tableRequests tbody').html('');
+                       console.log(requests);
+                       for(let req of requests)
+                            {
+                              addRequest(req);
+                            }
+                   }
+                   });
+
+    }
+}
+
 $(document).ready(()=>{
 
-    $.get({
-          url: '/api/auth/getAllRegRequest',
-          contentType: 'application/json',
-          success: function(requests)
-          {
-               window.location='./registerRequests.html';
-               $('#tableRequests tbody').html('');
-               console.log(requests);
-               for(let req of requests)
-                    {
-                      addRequest(req);
-                    }
-           }
-           });
+    getRequests();
 
 
 })
