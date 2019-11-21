@@ -190,14 +190,11 @@ $(document).ready(function(){
 					//TODO: Vec postoji sa tim emailom
 				}
 
-				if(data.status == "200")
+				if(data.status == "201")
 				{
 					window.location.href = "centreAdminPage.html"
 				}
-				else
-				{
-					alert(data.Response)
-				}
+
 			},
 
 		})
