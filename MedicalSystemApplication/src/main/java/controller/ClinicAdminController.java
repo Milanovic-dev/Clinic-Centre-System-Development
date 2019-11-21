@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import dto.UserDTO;
-import service.ClinicAdminService;
 import service.ClinicService;
+import service.UserService;
 
 import java.security.NoSuchAlgorithmException;
 
@@ -25,7 +25,7 @@ import java.security.NoSuchAlgorithmException;
 public class ClinicAdminController {
 
     @Autowired
-    private ClinicAdminService clinicAdminService;
+    private UserService userService;
     
     @Autowired
     private ClinicService clinicService;
@@ -33,7 +33,7 @@ public class ClinicAdminController {
     @PostMapping(value = "/registerClinicAdmin/{clinicName}")
     public ResponseEntity<Void> registerClinicAdmin(@RequestBody UserDTO dto,@PathVariable("clinicName") String clinicName)
     {
-        ClinicAdmin ca = clinicAdminService.findByEmail(dto.getEmail());
+        ClinicAdmin ca = (ClinicAdmin) userService.findByEmail(dto.getEmail());
         
         Clinic clinic = clinicService.findByName(clinicName);
         HttpHeaders header = new HttpHeaders();
@@ -59,7 +59,7 @@ public class ClinicAdminController {
             try {
                 String hash = SecurePasswordHasher.encode(token);
                 clinicAdmin.setPassword(hash);
-                clinicAdminService.save(clinicAdmin);
+                userService.save(clinicAdmin);
                 clinicAdmin.setClinic(clinic);
                 return new ResponseEntity<>(HttpStatus.CREATED);
             } catch (Exception e) {
