@@ -19,17 +19,6 @@ function addRequest(request)
 
 $(document).ready(()=>{
 
-      let request1;
-      let request2;
-      let request3;
-      request1 = "mia@gmail.com"
-      request2 = "milana@gmail.com"
-      request3 = "nikola@gmail.com"
-      addRequest(request1);
-      addRequest(request2);
-      addRequest(request3);
-
-
     $.get({
           url: '/api/auth/getAllRegRequest',
           contentType: 'application/json',
