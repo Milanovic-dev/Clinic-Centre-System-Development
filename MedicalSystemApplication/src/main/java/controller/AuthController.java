@@ -13,6 +13,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -94,7 +95,7 @@ public class AuthController
 	}	
 	
 	@PostMapping(value = "/confirmRegister/{email}")
-	public ResponseEntity<Void> register(@PathVariable("email") String email)
+	public ResponseEntity<Void> confirmRegister(@PathVariable("email") String email)
 	{
 		RegistrationRequest req = authService.
 				findByEmail(email);
@@ -112,6 +113,7 @@ public class AuthController
 			
 			patient.setPassword(hash);
 			userService.save(patient);
+			authService.delete(req);
 			return new ResponseEntity<>(HttpStatus.CREATED);
 		} catch (NoSuchAlgorithmException e) {
 			// TODO Auto-generated catch block
@@ -119,6 +121,21 @@ public class AuthController
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		
+	}
+	
+	@DeleteMapping(value ="/denyRegister/{email}")
+	public ResponseEntity<Void> denyRegistration(@PathVariable("email") String email)
+	{
+		RegistrationRequest req = authService.
+				findByEmail(email);
+		
+		if(req == null)
+		{
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+		
+		authService.delete(req);
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 		
 	@GetMapping(value = "/sessionUser")
@@ -141,8 +158,7 @@ public class AuthController
 		
 		return new ResponseEntity<SessionUserDTO>(dto,HttpStatus.OK);
 	}
-	
-	
+		
 	@PostMapping(value = "/logout")
 	public ResponseEntity<Void> logout(HttpServletResponse response)
 	{

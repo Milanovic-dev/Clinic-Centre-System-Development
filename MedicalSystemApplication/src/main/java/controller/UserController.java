@@ -1,10 +1,16 @@
 package controller;
 
+import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
 import java.util.List;
+
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,7 +19,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import dto.PasswordDTO;
 import dto.UserDTO;
+import helpers.SecurePasswordHasher;
 import model.*;
 import model.User.UserRole;
 import service.UserService;
@@ -44,6 +52,37 @@ public class UserController
 		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 	}
 	
+	@PutMapping(value="/update/password",consumes ="application/json")
+	public ResponseEntity<Void> updatePassword(@CookieValue(value = "email", defaultValue = "none") String email,@RequestBody PasswordDTO dto)
+	{
+		System.out.println(email);
+		User user = userService.findByEmail(email);
+		
+		if(user != null)
+		{		
+			try {
+				String oldPassword = dto.getOldPassword();
+				String oldHash = SecurePasswordHasher.encode(oldPassword);
+				
+				if(user.getPassword().equals(oldHash))
+				{
+					String newPassword = dto.getNewPassword();
+					String newHash = SecurePasswordHasher.encode(newPassword);
+					user.setPassword(newPassword);
+					userService.save(user);
+					return new ResponseEntity<>(HttpStatus.OK);
+				}
+				
+			} catch (NoSuchAlgorithmException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+			}
+			
+		}
+		
+		return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+	}
 	
 	@GetMapping(value = "/getUser/{email}")
 	public ResponseEntity<User> getUser(@PathVariable("email") String email)

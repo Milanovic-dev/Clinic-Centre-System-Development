@@ -67,7 +67,7 @@ $(document).ready(function(){
 				
 				if(data.status == "200")
 				{
-					window.location.href = "profile.html"
+					window.location.href = "userProfileNew.html"
 				}
 			}
 		

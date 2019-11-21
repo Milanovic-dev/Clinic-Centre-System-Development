@@ -2,7 +2,7 @@
 
 $(document).ready(function(){
 	
-	$('#submitLogin').click(function(e){
+	$('#submitPasswordChange').click(function(e){
 		e.preventDefault()
 		
 		let oldPassword = $('#inputPasswordChangeOld').val()
@@ -48,12 +48,36 @@ $(document).ready(function(){
 		
 		if(flag == false) return
 		
+		
+		let json = JSON.stringify({"oldPassword":oldPassword,"newPassword":newPassword})
+		
+		$.ajax({
+			type: 'PUT',
+			url:'api/users/update/password',
+			data: json,
+			dataType : "json",
+			contentType : "application/json; charset=utf-8",
+			complete: function(data)
+			{
+				if(data.status == 200)
+				{
+					window.location.href = "userProfileNew.html"
+				}
+				else
+				{
+					alert(data.status)
+				}
+			}
+		})
+		
+	})
+	
+	
 		$('#exitPasswordChange').click(function(e){
 			e.preventDefault()
 			window.location.href = "userProfileNew.html"
 		})
 		
-	}
 		
 		
-}
+})

@@ -36,4 +36,8 @@ public class AuthService
 		requestRepository.save(request);
 	}
 			
+	public void delete(RegistrationRequest request)
+	{
+		requestRepository.delete(request);
+	}
 }
