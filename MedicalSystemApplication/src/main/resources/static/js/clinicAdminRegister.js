@@ -25,8 +25,6 @@ $(document).ready(function(){
 		e.preventDefault()
 
         let email = $('#inputEmail').val()
-		let password = $('#inputPassword').val()
-		let confirmPassword = $('#confirmPassword').val()
 		let name = $('#inputName').val()
 		let surname = $('#inputSurname').val()
 		let state = $('#selectState').val()
@@ -87,33 +85,6 @@ $(document).ready(function(){
 			nameInput.removeClass('is-invalid')
 		}
 
-
-		if(password == "" || password.length < 3)
-		{
-			var passInput = $('#inputPassword')
-			passInput.addClass('is-invalid')
-			passInput.removeClass('is-valid')
-			flag = false
-		}
-		else
-		{
-			var passInput = $('#inputPassword')
-			passInput.addClass('is-valid')
-			passInput.removeClass('is-invalid')
-		}
-
-
-		if(password != confirmPassword)
-		{
-			var passInput = $('#inputPassword')
-			var passConfirm = $('#confirmPassword')
-
-			passInput.addClass('is-valid')
-			passConfirm.addClass('is-invalid')
-			flag = false
-		}
-
-
 		if(city == "")
 		{
 			var input = $('#inputCity')
@@ -173,7 +144,7 @@ $(document).ready(function(){
 		if(flag == false) return
 
 
-		let data = JSON.stringify({"username":"","password":password,"email":email,"name":name,"surname":surname,"city":city,"address":address,"state":state,"phone":phone})
+		let data = JSON.stringify({"username":"","password":"","email":email,"name":name,"surname":surname,"city":city,"address":address,"state":state,"phone":phone})
 		console.log(data)
 		$.ajax({
 			type: 'POST',
