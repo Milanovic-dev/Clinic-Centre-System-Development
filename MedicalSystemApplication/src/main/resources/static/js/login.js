@@ -60,9 +60,18 @@ $(document).ready(function(){
 			contentType : "application/json; charset=utf-8",
 			complete: function(data)
 			{	
+				
 				if(data.status == "200")
 				{
-					window.location.href = "index.html"
+					let user = data.responseJSON
+					if(user.isFirstLog)
+						{
+							window.location.href = "passwordChange.html"
+						}
+					else
+						{
+							window.location.href = "index.html"
+						}
 				}
 				else
 				{

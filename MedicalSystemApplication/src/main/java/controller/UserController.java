@@ -52,8 +52,8 @@ public class UserController
 		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 	}
 	
-	@PutMapping(value="/update/password",consumes ="application/json")
-	public ResponseEntity<Void> updatePassword(@CookieValue(value = "email", defaultValue = "none") String email,@RequestBody PasswordDTO dto)
+	@PutMapping(value="/update/password/{email}",consumes ="application/json")
+	public ResponseEntity<Void> updatePassword(@PathVariable("email") String email,@RequestBody PasswordDTO dto)
 	{
 		System.out.println(email);
 		User user = userService.findByEmail(email);
@@ -68,7 +68,7 @@ public class UserController
 				{
 					String newPassword = dto.getNewPassword();
 					String newHash = SecurePasswordHasher.encode(newPassword);
-					user.setPassword(newPassword);
+					user.setPassword(newHash);
 					userService.save(user);
 					return new ResponseEntity<>(HttpStatus.OK);
 				}
@@ -77,6 +77,28 @@ public class UserController
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 				return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+			}
+			
+		}
+		
+		
+		
+		return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+	}
+	
+	@PutMapping(value = "/update/firstPassword/{email}" ,consumes = "aplication/json")
+	public ResponseEntity<Void> updateFirstPassword(@PathVariable("email") String email,@RequestBody PasswordDTO dto)
+	{
+		User user = userService.findByEmail(email);
+		if(user != null)
+		{
+			String newPassword = dto.getNewPassword();
+			try {
+				String hashNewPassword = SecurePasswordHasher.encode(newPassword);
+				user.setPassword(newPassword);
+			} catch (NoSuchAlgorithmException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 			
 		}
