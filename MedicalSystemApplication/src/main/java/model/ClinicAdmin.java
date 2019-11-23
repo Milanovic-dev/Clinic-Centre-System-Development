@@ -20,6 +20,7 @@ public class ClinicAdmin extends User {
 
     public ClinicAdmin(){
     	setRole(UserRole.CentreAdmin);
+    	this.setIsFirstLog(true);
     }
 
     public ClinicAdmin(String username, String password, String email, String name, String surname, String city, String address, String state, String phone, Clinic clinic) {
