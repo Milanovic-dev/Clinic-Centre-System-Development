@@ -64,13 +64,14 @@ $(document).ready(function(){
 				if(data.status == "200")
 				{
 					let user = data.responseJSON
-					if(user.isFirstLog)
-						{
+				
+					if(user.isFirstLog)	{
 							window.location.href = "passwordChange.html"
 						}
 					else
 						{
 							window.location.href = "index.html"
+							
 						}
 				}
 				else
