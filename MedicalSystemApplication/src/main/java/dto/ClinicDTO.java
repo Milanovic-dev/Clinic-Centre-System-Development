@@ -1,5 +1,7 @@
 package dto;
 
+import model.Clinic;
+
 public class ClinicDTO {
 
     private String name;
@@ -7,13 +9,26 @@ public class ClinicDTO {
     private String city;
     private String state;
     private String description;
+    private float rating;
 
-    public ClinicDTO(String name, String address, String city, String state, String description) {
+    public ClinicDTO(String name, String address, String city, String state, String description,float rating) {
         this.name = name;
         this.address = address;
         this.city = city;
         this.state = state;
         this.description = description;
+        this.rating = rating;
+    }
+    
+    public ClinicDTO(Clinic clinic)
+    {
+    	this.name = clinic.getName();
+        this.address = clinic.getAddress();
+        this.city = clinic.getCity();
+        this.state = clinic.getState();
+        this.description = clinic.getDescription();
+        
+        this.rating = clinic.calculateRating();
     }
 
     public String getName() {
