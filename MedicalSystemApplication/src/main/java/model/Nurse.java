@@ -29,12 +29,14 @@ public class Nurse extends User{
     public Nurse(String insuranceID) {
         this.insuranceID = insuranceID;
         this.prescriptions = new ArrayList<Prescription>();
+        this.setIsFirstLog(true);
     }
 
     public Nurse(String username, String password, String email, String name, String surname, String city, String address, String state, String phone, String insuranceID) {
         super(username, password, email, name, surname, city, address, state, phone, UserRole.Nurse);
         this.insuranceID = insuranceID;
         this.prescriptions = new ArrayList<Prescription>();
+        this.setIsFirstLog(true);
     }
 
     public String getInsuranceID() {

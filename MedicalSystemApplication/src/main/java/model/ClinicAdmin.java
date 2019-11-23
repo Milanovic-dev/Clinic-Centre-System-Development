@@ -27,6 +27,7 @@ public class ClinicAdmin extends User {
         this.clinic = clinic;
         this.appointmentRequests = new ArrayList<>();
         this.vacationRequests = new ArrayList<>();
+        this.setIsFirstLog(true);
     }
 
 

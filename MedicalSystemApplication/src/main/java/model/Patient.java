@@ -28,12 +28,14 @@ public class Patient extends User{
 			String address, String state, String phone) {
 		super(username, password, email, name, surname, city, address, state, phone, UserRole.Patient);
 		medicalRecord = new MedicalRecord();
+		this.setIsFirstLog(false);
 	}
 	
 	public Patient(RegistrationRequest request)
 	{
 		super(request,UserRole.Patient);
 		medicalRecord = new MedicalRecord();
+		this.setIsFirstLog(false);
 	}
 
 	public String getInsuranceId() {
