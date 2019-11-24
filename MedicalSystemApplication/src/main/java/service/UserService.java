@@ -5,18 +5,35 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import model.*;
 import model.User.UserRole;
 import repository.UserRepository;
 
+import javax.annotation.PostConstruct;
+
 @Service
 public class UserService {
 
 	@Autowired
 	private UserRepository userRepository;
-	
+
+	@Component
+	class predefinedAdminCreate {
+
+		@Autowired
+		private UserRepository userRepository;
+
+		@PostConstruct
+		public void init() {
+			userRepository.save(new CentreAdmin("username", "admin1234", "klinickicentartest@gmail.com", "Admin", "Adminic","Novi Sad","Trg Dositeja Obradovica 6", "Srbija", "011100100"));
+		}
+	}
+
+
+
 	public List<User> getAll(UserRole role)
 	{
 		return userRepository.findAllByRole(role);
