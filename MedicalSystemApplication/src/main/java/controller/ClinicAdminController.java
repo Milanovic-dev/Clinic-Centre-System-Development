@@ -18,6 +18,7 @@ import service.ClinicService;
 import service.UserService;
 
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 
 @RestController
 @RequestMapping(value = "api/admins/center")
@@ -52,7 +53,9 @@ public class ClinicAdminController {
             clinicAdmin.setState(dto.getState());
             clinicAdmin.setPhone(dto.getPhone());
             clinicAdmin.setEmail(dto.getEmail());
-
+            clinicAdmin.setVacationRequests(new ArrayList<>());
+            clinicAdmin.setAppointmentRequests(new ArrayList<>());
+            clinicAdmin.setClinic(clinic);
             String token = "admin1234";
 
             try {
