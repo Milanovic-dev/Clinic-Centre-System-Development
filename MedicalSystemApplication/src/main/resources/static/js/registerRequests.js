@@ -3,19 +3,31 @@ function addRequest(request)
 	console.log(request);
 
 	let tr=$('<tr></tr>');
-	let tdEmail=$('<td class="email">'+ request.email +'</td>');
+	let tdEmail=$('<td class="email" data-toggle="modal" data-target="#exampleModalLong">'+ request.email +'</td>');
 	let tdConfirm=$('<td> <button type="button" class="btn btn-info">Prihvati</button></td>');
-	let tdDecline=$('<td> <button type="button" class="btn btn-light">Odbij</button></td>');
-
+	let tdDeny=$('<td> <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo">Odbij</button></td>');
 
 	tdConfirm.click(confirmRegister(request));
     tdEmail.click(addPersonalInformations(request));
+    tdDeny.click(deny(request.email));
 
-	tr.append(tdEmail).append(tdConfirm).append(tdDecline);
+	tr.append(tdEmail).append(tdConfirm).append(tdDeny);
 	$('#tableRequests tbody').append(tr);
 
 }
 
+function addPersonalInformations(user)
+{
+    return function(){
+    	$("#pName").text("Ime: "+user.name);
+        $("#pSurname").text("Prezime: "+user.surname);
+        $("#pEmail").text("Email: "+user.email);
+        $("#pPhone").text("Telefon: "+user.phone);
+        $("#pCity").text("Grad: "+user.city);
+        $("#pState").text("Drzava: "+user.state);
+        $("#pAddress").text("Adresa: "+user.address);
+    }
+}
 
 function getRequests(){
          $.get({
@@ -43,20 +55,7 @@ $(document).ready(()=>{
 
 
 
-function addPersonalInformations(request)
-{
-    return function(){
-    		$("#pName").text(user.name);
-        	$("#pSurname").text(user.surname);
-        	$("#pEmail").text(user.email);
-        	$("#pPhone").text(user.phone);
-        	$("#pCity").text(user.city);
-        	$("#pState").text(user.state);
-        	$("#pAddress").text(user.address);
-    }
 
-
-}
 
 function confirmRegister(request){
     return function(){
@@ -67,16 +66,37 @@ function confirmRegister(request){
         			type: 'POST',
         			url:'/api/auth/confirmRegister/'+email,
         			contentType : "application/json; charset=utf-8",
-        			complete: function(data)
+        			success: function(data)
         			{
-        				console.log(data.status)
-
-        				if(data.status == "201")
-        				{
-        					window.location.href = "registerRequests.html"
-        				}
+        				window.location.href = "registerRequests.html"
         			}
         		})
 
     }
+}
+
+function denyRegister(){
+
+     var email = document.getElementById("recipient-name").value;
+     var text = document.getElementById("message-text").value;
+
+     let url = '/api/auth/denyRegister/'
+     url+=email+','+text
+
+        $.ajax({
+        			type: 'DELETE',
+        			url: url,
+        			contentType : "application/json; charset=utf-8",
+        			success: function(data)
+        			{
+        			    window.location.href = "registerRequests.html"
+        			}
+        		})
+
+}
+
+function deny(email){
+
+ var text = document.getElementById("recipient-name");
+ text.value = email;
 }

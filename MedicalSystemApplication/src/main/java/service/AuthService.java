@@ -20,7 +20,7 @@ public class AuthService
 
 	@Autowired
 	private RegistrationRequestRepository requestRepository;
-	
+
 	public List<RegistrationRequest> getAll()
 	{
 		return requestRepository.findAll();
