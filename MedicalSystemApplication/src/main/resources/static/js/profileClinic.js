@@ -1,4 +1,9 @@
 
+$(document).ready(function(){
+
+	sessionCheck()
+	
+})
 
 function sessionCheck()
 {
@@ -29,7 +34,7 @@ function addClinicInformations(data)
 	$("#pDescriptionClinic").text(clinic.description);
 	$("#pCityClinic").text(clinic.city);
 	$("#pStateClinic").text(clinic.state);
-	$("#sClinicRating").text(clinic.);
+	//$("#sClinicRating").text();
 	
 
 }
