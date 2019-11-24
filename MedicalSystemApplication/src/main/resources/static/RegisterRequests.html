@@ -11,7 +11,6 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="css/regReq.css" >
     <script src ="js/navbar.js"></script>
-    <script src ="js/profile.js"></script>
     <script src ="js/registerRequests.js"></script>
     <title>Zahtevi za registraciju</title>
 </head>
@@ -45,7 +44,6 @@
     					<a class="dropdown-item" href="index.html" id="dropdown-item_logout">Odjavi se</a>
   					</div>
 					</div>
-  					</div>
                 </form>
               </div>
          </nav>
@@ -54,63 +52,109 @@
 <div class="container">
     <div class="card card-register mx-auto mt-5">
         <div class="card-header">Zahtevi za registraciju korisnika</div>
+            <table id="tableRequests" class="table table-borderless">
+                <thead>
+                <tr>
+                    <th scope="col"></th>
+                </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
 
-<table id="tableRequests" class="table table-borderless">
-    <thead>
-    <tr>
-        <th scope="col"></th>
-    </tr>
-    </thead>
-    <tbody>
 
-    </tbody>
-</table>
 
-<div class="col-md-8 info">
-    <div class="tab-content profile-tab" id="myTabContent">
-        <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-            <div class="row">
-                <div class="col-md-6">
-                    <p id="pName"></p>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-6">
-                    <p id="pSurname"></p>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-6">
-                    <p id="pEmail"></p>
-                </div>
-            </div>
+        </div>
+    </div>
+</div>
 
-            <div class="row">
-                <div class="col-md-6">
-                    <p id="pPhone"></p>
+
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Razlog odbijanja zahteva</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
-            </div>
-            <div class="row">
-                <div class="col-md-6">
-                    <p id="pCity"></p>
+                <div class="modal-body">
+                    <form id="formMail">
+                        <div class="form-group">
+                            <label for="recipient-name"  class="col-form-label">Za:</label>
+                            <input type="text" disabled class="form-control" id="recipient-name">
+                        </div>
+                        <div class="form-group">
+                            <label for="message-text" class="col-form-label">Poruka:</label>
+                            <textarea class="form-control" id="message-text"></textarea>
+                        </div>
+                    </form>
                 </div>
-            </div>
-            <div class="row">
-                <div class="col-md-6">
-                    <p id="pState"></p>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-6">
-                    <p id="pAddress"></p>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Odustani</button>
+                    <button type="button" class="btn btn-primary" onclick="denyRegister()">Posalji</button>
                 </div>
             </div>
         </div>
+    </div>
 
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Informacije</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p id="pName"></p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p id="pSurname"></p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p id="pEmail"></p>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p id="pPhone"></p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p id="pCity"></p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p id="pState"></p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p id="pAddress"></p>
+
+
+                        </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
     </div>
-</div>
     </div>
-</div>
+
 
 </body>
 </html>

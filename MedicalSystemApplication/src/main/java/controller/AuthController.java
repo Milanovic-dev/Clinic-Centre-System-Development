@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.MailException;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,6 +30,7 @@ import model.Patient;
 import model.RegistrationRequest;
 import model.User;
 import service.AuthService;
+import service.NotificationService;
 import service.UserService;
 
 @RestController
@@ -37,6 +39,10 @@ public class AuthController
 {
 	@Autowired
 	private AuthService authService;
+
+	@Autowired
+	private NotificationService notificationService;
+
 	
 	@Autowired
 	private UserService userService;
@@ -112,6 +118,7 @@ public class AuthController
 			
 			patient.setPassword(hash);
 			userService.save(patient);
+			notificationService.sendNotificationApproved(req);
 			authService.delete(req);
 			return new ResponseEntity<>(HttpStatus.CREATED);
 		} catch (NoSuchAlgorithmException e) {
@@ -119,12 +126,21 @@ public class AuthController
 			e.printStackTrace();
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
+
+
+
 		
 	}
 	
-	@DeleteMapping(value ="/denyRegister/{email}")
-	public ResponseEntity<Void> denyRegistration(@PathVariable("email") String email)
+	@DeleteMapping(value ="/denyRegister/{reply}")
+	public ResponseEntity<Void> denyRegistration(@PathVariable("reply") String reply)
 	{
+
+		String parts[]=reply.split(",", 2);
+
+		String email=parts[0];
+		String text = parts[1];
+
 		RegistrationRequest req = authService.
 				findByEmail(email);
 		
@@ -132,8 +148,14 @@ public class AuthController
 		{
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
-		
-		authService.delete(req);
+
+		try{
+			notificationService.sendNotificationDenied(req, text);
+			authService.delete(req);
+		} catch (MailException e){
+
+		}
+
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 		
