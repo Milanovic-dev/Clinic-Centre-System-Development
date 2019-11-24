@@ -13,6 +13,9 @@ public class User
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 	
+	@Column(name = "isFirstLog", nullable = false)
+	private Boolean isFirstLog;
+	
 	@Column(name = "username", nullable = true)
 	private String username;
 	
@@ -61,6 +64,7 @@ public class User
 		this.state = state;
 		this.phone = phone;
 		this.role = role;
+		
 	}
 	
 	public User(RegistrationRequest request, UserRole role)
@@ -76,6 +80,20 @@ public class User
 		this.state = request.getState();
 		this.phone = request.getPhone();
 		this.role = role;
+	}
+	
+	
+
+	public Boolean getIsFirstLog() {
+		return isFirstLog;
+	}
+
+	public void setIsFirstLog(Boolean isFirstLog) {
+		this.isFirstLog = isFirstLog;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	public String getUsername() {

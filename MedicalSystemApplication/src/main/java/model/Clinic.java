@@ -158,4 +158,11 @@ public class Clinic
     	this.reviews = reviews;
     }
 
+	public float calculateRating() {
+		// TODO Auto-generated method stub
+		
+		
+		return 0;
+	}
+
 }

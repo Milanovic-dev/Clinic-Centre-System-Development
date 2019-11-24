@@ -10,6 +10,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -56,17 +57,36 @@ public class ClinicController {
     }
     
     @GetMapping(value = "/getAll")
-    public ResponseEntity<List<Clinic>> getClinics()
+    public ResponseEntity<List<ClinicDTO>> getClinics()
     {
     	List<Clinic> clinics = clinicService.findAll();
-    	
+    	List<ClinicDTO> clinicsDTO = new ArrayList<ClinicDTO>();
     	if(clinics == null)
     	{
     		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     	}
     	
-    	return new ResponseEntity<>(clinics,HttpStatus.OK);
+    	for(Clinic c: clinics)
+    	{
+    		ClinicDTO dto = new ClinicDTO(c);
+    		clinicsDTO.add(dto);
+    	}
+    	
+    	
+    	
+    	return new ResponseEntity<>(clinicsDTO,HttpStatus.OK);
     }
-
+    
+    @GetMapping(value="/{name}")
+    public ResponseEntity<ClinicDTO> getClinicByName(@PathVariable String name)
+    {
+    	Clinic clinic = clinicService.findByName(name);
+    	
+    	
+    	ClinicDTO clinicDTO = new ClinicDTO(clinic);
+    	
+    	
+    	return new ResponseEntity<>(clinicDTO,HttpStatus.OK);
+    }
 
 }

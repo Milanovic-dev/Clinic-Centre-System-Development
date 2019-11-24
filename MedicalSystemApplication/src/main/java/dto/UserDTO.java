@@ -1,6 +1,7 @@
 package dto;
 
 import model.User;
+import model.User.UserRole;
 
 public class UserDTO 
 {
@@ -13,6 +14,7 @@ public class UserDTO
 	private String address;
 	private String state;
 	private String phone;
+	private UserRole role;
 	
 	public UserDTO()
 	{
@@ -20,7 +22,7 @@ public class UserDTO
 	}
 		
 	public UserDTO(String username, String password, String email, String name, String surname, String city,
-			String address, String state, String phone) {
+			String address, String state, String phone,UserRole role) {
 		super();
 		this.username = username;
 		this.password = password;
@@ -31,6 +33,7 @@ public class UserDTO
 		this.address = address;
 		this.state = state;
 		this.phone = phone;
+		this.role = role;
 	}
 
 	public UserDTO(User dto)
@@ -44,8 +47,18 @@ public class UserDTO
 		address = dto.getAddress();
 		state = dto.getState();
 		phone = dto.getPhone();
+		role = dto.getRole();
 	}
 	
+	
+	public UserRole getRole() {
+		return role;
+	}
+
+	public void setRole(UserRole role) {
+		this.role = role;
+	}
+
 	public String getUsername() {
 		return username;
 	}
