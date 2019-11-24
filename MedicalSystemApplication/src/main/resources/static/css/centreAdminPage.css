@@ -35,7 +35,7 @@ ul {
 
 .overlay-content {
   top: 25%;
-  width: 100%;
+  width: 50%;
   text-align: right;
   margin-top: 30px;
   padding:60px;
@@ -59,12 +59,11 @@ ul {
   font-size: 25px;
   color: #4287f5;
   display: block;
-  font-weight: 500;
   text-align: left;
 }
 
 .overlay a:hover{
-    opacity:70%;
+    opacity:0.6;
 }
 
 .white {
@@ -72,15 +71,14 @@ ul {
   text-decoration: none;
   font-size: 22px !important;
   color: white !important;
-  opacity: 0.65;
+  opacity: 0.7;
   display: block;
-  font-weight: 500;
   text-align: right;
 }
 
 .white:hover {
   color: white;
-  opacity: 50%;
+  opacity: 0.4;
 }
 
 .white-info {
@@ -88,9 +86,8 @@ ul {
   text-decoration: none;
   font-size: 22px !important;
   color: white !important;
-  opacity: 0.65;
+  opacity: 0.7;
   display: block;
-  font-weight: 500;
   text-align: right;
 }
 
@@ -116,7 +113,7 @@ a[href="nowhere"]:focus {
 }
 
 a:focus+#list2 {
-  max-height: 100px;
+  max-height: 200px;
 }
 
 #list3 {
