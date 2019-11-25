@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import service.DrugService;
+import org.springframework.web.bind.annotation.PutMapping;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
@@ -41,7 +42,7 @@ public class DrugController {
 
 
     @PostMapping(value ="/addDrug", consumes = "application/json")
-    public ResponseEntity<Void> login(@RequestBody DrugDTO dto, HttpServletRequest request)
+    public ResponseEntity<Void> addDrug(@RequestBody DrugDTO dto)
     {
         Drug d = drugService.findByCode(dto.getCode());
 
@@ -53,6 +54,39 @@ public class DrugController {
             drugService.save(drug);
         } else {
             return new ResponseEntity<>(HttpStatus.ALREADY_REPORTED);
+        }
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+
+    @PutMapping(value ="/updateDrug/{code}")
+    public ResponseEntity<Void> updateDrug(@RequestBody DrugDTO dto, @PathVariable("code") String code)
+    {
+        Drug drug = drugService.findByCode(code);
+
+        if(drug != null) {
+            drug.setName(dto.getName());
+            drugService.save(drug);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @DeleteMapping(value ="/deleteDrug/{code}")
+    public ResponseEntity<Void> deleteDrug(@PathVariable("code") String code)
+    {
+
+        Drug drug = drugService.findByCode(code);
+
+
+        if(drug == null)
+        {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } else {
+            drugService.delete(drug);
         }
 
         return new ResponseEntity<>(HttpStatus.OK);

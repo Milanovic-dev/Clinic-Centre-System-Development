@@ -73,12 +73,12 @@
                             </div>
                         </div>
                         <div class="col-sm-3">
-                            <button id="add" style="float:right important!;" class="btn btn-link "><i class="fas fa-plus"></i></button>
+                            <button id="add" style="float:right important!;" class="btn btn-link " data-toggle="popover" data-placement="right" data-content="Sifra leka mora biti jedinstvena"><i class="fas fa-plus"></i></button>
                         </div>
                     </div>
                 </div>
                 <div class="table-wrapper-scroll-y my-custom-scrollbar">
-                <table id="tableDrugs" class="table table-sm  " >
+                <table id="tableDrugs" class="table table-sm" >
                     <thead>
                     <tr>
                         <th scope="col">Sifra</th>
@@ -87,6 +87,7 @@
                         <th scope="col"></th>
                     </tr>
                     </thead>
+                    <tbody>
                     </tbody>
                 </table>
 
@@ -95,6 +96,38 @@
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Izmena leka</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label class="col-form-label">Sifra</label>
+                        <input type="text" class="form-control" id="updateCode" disabled>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-form-label">Naziv</label>
+                        <input type="text" class="form-control" id="updateName">
+                    </div>
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Odustani</button>
+                <button type="button" class="btn btn-primary" id="update">Sacuvaj izmene</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 
 </body>
 </html>
