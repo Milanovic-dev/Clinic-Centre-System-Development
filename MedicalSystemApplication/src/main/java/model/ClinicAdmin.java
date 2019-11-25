@@ -19,7 +19,7 @@ public class ClinicAdmin extends User {
     private  List<VacationRequest> vacationRequests;
 
     public ClinicAdmin(){
-    	setRole(UserRole.CentreAdmin);
+    	setRole(UserRole.ClinicAdmin);
     	this.setIsFirstLog(true);
     }
 

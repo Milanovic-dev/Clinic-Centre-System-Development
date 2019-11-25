@@ -81,7 +81,7 @@
         </ol>
 
         <!-- DataTables Example -->
-        <div class="card mb-3">
+        <div class="card mb-3" id = "upBar">
           <div class="card-header">
             <i class="fas fa-table"></i>
             Zakazno</div>
@@ -137,8 +137,46 @@
               </table>
             </div>
           </div>
-          <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
+          </div>
+    <div class="container" id ="addHallContainer" hidden>
+    <div class="card card-login mx-auto mt-5">
+      <div class="card-header">Dodavanje sale</div>
+      <div class="card-body">
+        <form>
+          <div class="form-group">
+          <label>Identifikacioni broj sale</label>
+            <div class="form-label-group">
+           
+              <input type="text" id="inputHall" class="form-control" placeholder="Identifikacioni broj sale" required="required" autofocus="autofocus">
+            </div>
+          </div>
+          <span style="color:#FF1103" id="errorSpan"></span>
+          <button type="button" class="btn btn-primary btn-block" id = "submitHall">Dodaj</button>
+        </form>
+      </div>
+    </div>
+  </div>
+  
+   <div class="container" id ="showHallContanier" hidden>
+    <div class="card card-login mx-auto mt-5">
+       <div class="card-header">Lista postojecih sala</div>
+            <table id="tableHall" class="table table-borderless">
+                <thead>
+                <tr>
+                    <th scope="col"></th>
+                </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+
+
+
         </div>
+    </div>
+  </div>
+
+        
 
       </div>
       <!-- /.container-fluid -->
@@ -147,13 +185,14 @@
       <footer class="sticky-footer">
         <div class="container my-auto">
           <div class="copyright text-center my-auto">
-            <span>Copyright © Your Website 2019</span>
+            <span id="addSpan" hidden>Uspesno!</span>
           </div>
         </div>
       </footer>
-
+	
     </div>
     <!-- /.content-wrapper -->
+    
 
   </div>
   <!-- /#wrapper -->
