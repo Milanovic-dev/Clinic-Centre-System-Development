@@ -1,7 +1,5 @@
 function addDiagnosis(diagnosis)
 {
-	console.log(drug);
-
 	let tr=$('<tr></tr>');
 	let tdCode=$('<td style="width:100px;">'+ diagnosis.code +'</td>');
 	let tdTag=$('<td style="width:120px;">'+ diagnosis.tag +'</td>');
@@ -141,9 +139,8 @@ $(document).ready(()=>{
 
     	     let name = $('#updateName').val()
              let code = $('#updateCode').val()
-             let code = $('#updateTag').val()
-            console.log(name)
-            console.log(code)
+             let tag = $('#updateTag').val()
+
 
         let data = JSON.stringify({"name":name,"code":code, "tag":tag})
 		$.ajax({

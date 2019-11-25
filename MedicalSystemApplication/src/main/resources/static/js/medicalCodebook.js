@@ -1,6 +1,5 @@
 function addDrug(drug)
 {
-	console.log(drug);
 
 	let tr=$('<tr></tr>');
 	let tdCode=$('<td>'+ drug.code +'</td>');
@@ -23,7 +22,7 @@ function getDrugs(){
                   success: function(drugs)
                   {
                        $('#tableDrugs tbody').html('');
-                       console.log(drugs);
+
                        for(let drug of drugs)
                             {
                               addDrug(drug);
@@ -94,7 +93,7 @@ $(document).ready(()=>{
             		}
 
            let data = JSON.stringify({"name":name,"code":code})
-           console.log(data)
+
 
     		$.ajax({
             			type: 'POST',
@@ -125,8 +124,7 @@ $(document).ready(()=>{
 
     	     let name = $('#updateName').val()
              let code = $('#updateCode').val()
-            console.log(name)
-            console.log(code)
+
 
         let data = JSON.stringify({"name":name,"code":code, "description":""})
 		$.ajax({
