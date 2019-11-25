@@ -26,6 +26,11 @@ public class DrugService {
         drugRepository.save(drug);
     }
 
+    public void delete(Drug drug)
+    {
+        drugRepository.delete(drug);
+    }
+
     public List<Drug> findAll() {
         return drugRepository.findAll();
     }
