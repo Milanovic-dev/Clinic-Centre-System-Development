@@ -15,3 +15,86 @@ function addDrug(drug)
 	$('#tableDrugs tbody').append(tr);
 
 }
+
+function getDrugs(){
+         $.get({
+                  url: '/api/drug/getAllDrugs',
+                  contentType: 'application/json',
+                  success: function(drugs)
+                  {
+                       $('#tableDrugs tbody').html('');
+                       console.log(drugs);
+                       for(let drug of drugs)
+                            {
+                              addDrug(drug);
+                            }
+                   }
+               });
+
+}
+
+$(document).ready(()=>{
+
+    getDrugs();
+
+    $('#add').click(function(e){
+    		e.preventDefault()
+
+    		let name = $('#name').val()
+           	let code = $('#code').val()
+
+            if(name == "")
+            		{
+            			var input = $('#name')
+
+            			input.addClass('is-invalid')
+
+            		}
+            		else
+            		{
+            			var input = $('#name')
+
+            			input.removeClass('is-invalid')
+
+            		}
+
+            		if(code == "")
+            		{
+            			var input = $('#code')
+
+            			input.addClass('is-invalid')
+
+            		}
+            		else
+            		{
+            			var input = $('#code')
+
+            			input.removeClass('is-invalid')
+
+            		}
+
+           let data = JSON.stringify({"name":name,"code":code})
+           console.log(data)
+
+    		$.ajax({
+            			type: 'POST',
+            			url:'/api/drug/addDrug',
+            			data: data,
+            			dataType : "json",
+            			contentType : "application/json; charset=utf-8",
+            			complete: function(data)
+            			{
+            				console.log(data.status)
+
+            				if(data.status == "200")
+            				{
+            					window.location.href = "medicalCodebook.html"
+            				}
+            			}
+            		})
+
+    	})
+
+
+
+})
