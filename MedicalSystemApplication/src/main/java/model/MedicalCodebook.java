@@ -15,7 +15,7 @@ public class MedicalCodebook
 	 private Long id;
 	 
 	 private List<String> codes;
-	 
+
 	 
 	public MedicalCodebook() {
 		super();

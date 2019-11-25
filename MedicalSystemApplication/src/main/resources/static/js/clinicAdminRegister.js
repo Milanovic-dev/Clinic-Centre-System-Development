@@ -152,21 +152,9 @@ $(document).ready(function(){
 			data: data,
 			dataType : "json",
 			contentType : "application/json; charset=utf-8",
-			complete: function(data)
-			{
-				console.log(data.status)
+			success: function(){
 
-				if(data.status == "208")
-				{
-					//TODO: Vec postoji sa tim emailom
-				}
-
-				if(data.status == "201")
-				{
-					window.location.href = "centreAdminPage.html"
-				}
-
-			},
+			}
 
 		})
 
