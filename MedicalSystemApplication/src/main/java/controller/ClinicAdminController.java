@@ -7,12 +7,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import dto.ClinicDTO;
 import dto.UserDTO;
 import service.ClinicService;
 import service.UserService;
@@ -20,7 +22,7 @@ import service.UserService;
 import java.security.NoSuchAlgorithmException;
 
 @RestController
-@RequestMapping(value = "api/admins/center")
+@RequestMapping(value = "api/admins/clinic")
 public class ClinicAdminController {
 
     @Autowired
@@ -28,6 +30,20 @@ public class ClinicAdminController {
     
     @Autowired
     private ClinicService clinicService;
+    
+    @GetMapping(value = "/getClinicFromAdmin/{email}")
+    public ResponseEntity<Clinic>getClinicFromAdmin(@PathVariable("email") String email)
+    {
+    	ClinicAdmin ca = (ClinicAdmin) userService.findByEmail(email);
+    	if(ca == null)
+    	{
+    		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    	}
+    	
+    	
+		return new ResponseEntity<Clinic>(ca.getClinic() , HttpStatus.OK);
+    	
+    }
 
     @PostMapping(value = "/registerClinicAdmin/{clinicName}")
     public ResponseEntity<Void> registerClinicAdmin(@RequestBody UserDTO dto,@PathVariable("clinicName") String clinicName)

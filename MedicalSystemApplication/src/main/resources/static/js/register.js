@@ -6,7 +6,6 @@ $(document).ready(function(){
 	
 	$('#submitRegister').click(function(e){
 		
-		console.log('dsfds')
 		let email = $('#inputEmail').val()
 		let password = $('#inputPassword').val()
 		let confirmPassword = $('#confirmPassword').val()

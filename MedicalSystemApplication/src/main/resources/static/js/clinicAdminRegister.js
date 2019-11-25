@@ -148,7 +148,7 @@ $(document).ready(function(){
 		console.log(data)
 		$.ajax({
 			type: 'POST',
-			url:'/api/admins/center/registerClinicAdmin/'+clinic,
+			url:'/api/admins/clinic/registerClinicAdmin/'+clinic,
 			data: data,
 			dataType : "json",
 			contentType : "application/json; charset=utf-8",
