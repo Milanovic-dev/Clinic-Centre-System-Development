@@ -33,10 +33,6 @@ public class Doctor extends User
     @OneToMany(fetch = FetchType.LAZY)
 	private List<Appointment> scheduledAppointment;
     
-    @OneToMany(fetch = FetchType.LAZY)
-	private List<Appointment> completedAppointment;
-	
-    
 	public Doctor() {
 		super();
 		// TODO Auto-generated constructor stub
@@ -46,7 +42,6 @@ public class Doctor extends User
 			String address, String state, String phone) {
 		super(username, password, email, name, surname, city, address, state, phone, UserRole.Doctor);
 		scheduledAppointment = new ArrayList<Appointment>();
-		completedAppointment = new ArrayList<Appointment>();
 		this.setIsFirstLog(true);
 	}
 
@@ -93,12 +88,5 @@ public class Doctor extends User
 		this.scheduledAppointment = scheduledAppointment;
 	}
 
-	public List<Appointment> getCompletedAppointment() {
-		return completedAppointment;
-	}
-
-	public void setCompletedAppointment(List<Appointment> completedAppointment) {
-		this.completedAppointment = completedAppointment;
-	}
 	
 }

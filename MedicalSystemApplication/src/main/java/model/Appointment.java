@@ -1,23 +1,23 @@
 package model;
 
-import java.util.Date;
+import java.util.ArrayList;
 
+import java.util.Date;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
-import javax.persistence.Table;
+
+
 @Entity
-@Table
-@Inheritance( strategy = InheritanceType.TABLE_PER_CLASS)
-public abstract class Appointment 
+public class Appointment 
 {
 	public enum AppointmentType{ Examination, Surgery }
 	
@@ -26,7 +26,7 @@ public abstract class Appointment
 	private Long id;
 	
 	@Column(name= "startingDateAndTime",nullable = false)
-	private Date startingDateAndTime;
+	private Date date;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Hall hall;
@@ -45,6 +45,12 @@ public abstract class Appointment
 	@Column(name = "price",nullable = true)
 	private double price;
 	
+	@ManyToMany(fetch = FetchType.LAZY)
+	private List<Doctor> doctors;
+	
+	@Column(name = "type", nullable = false)
+	private String appointmentDescription;
+	
 	@Column(name = "appointmentType",nullable = true)
 	private AppointmentType appointmentType;
 	
@@ -53,27 +59,53 @@ public abstract class Appointment
 		// TODO Auto-generated constructor stub
 	}
 	
-	public Appointment(Date startingDateAndTime, long duration, double price,
-			Hall hall, Patient patient, Clinic clinic,AppointmentType type) {
+		
+	public Appointment(Long id, Date date, Hall hall, Patient patient, Clinic clinic, long duration, double price,
+			String appointmentDescription, AppointmentType appointmentType) {
 		super();
-		this.startingDateAndTime = startingDateAndTime;
-		this.duration = duration;
-		this.price = price;
+		this.id = id;
+		this.date = date;
 		this.hall = hall;
 		this.patient = patient;
 		this.clinic = clinic;
-		this.appointmentType = type;
+		this.duration = duration;
+		this.price = price;
+		this.doctors = new ArrayList<Doctor>();
+		this.appointmentDescription = appointmentDescription;
+		this.appointmentType = appointmentType;
 	}
-	
-	public Appointment(AppointmentRequest request,AppointmentType type)
-	{
-		this.startingDateAndTime = request.getStartingDateAndTime();
-		this.hall = request.getHall();
-		this.patient = request.getPatient();
-		this.clinic = request.getClinic();
-		this.duration = request.getDuration();
-		this.price = request.getPrice();
-		this.appointmentType = type;
+
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public Date getDate() {
+		return date;
+	}
+
+	public void setDate(Date date) {
+		this.date = date;
+	}
+
+	public Hall getHall() {
+		return hall;
+	}
+
+	public void setHall(Hall hall) {
+		this.hall = hall;
+	}
+
+	public Patient getPatient() {
+		return patient;
+	}
+
+	public void setPatient(Patient patient) {
+		this.patient = patient;
 	}
 
 	public Clinic getClinic() {
@@ -84,45 +116,38 @@ public abstract class Appointment
 		this.clinic = clinic;
 	}
 
-	public Patient getPatient() {
-		return patient;
-	}
-
-
-	public void setPatient(Patient patient) {
-		this.patient = patient;
-	}
-
-
-	public Long getId() {
-		return id;
-	}
-
-	public Date getStartingDateAndTime() {
-		return startingDateAndTime;
-	}
-	public void setStartingDateAndTime(Date startingDateAndTime) {
-		this.startingDateAndTime = startingDateAndTime;
-	}
 	public long getDuration() {
 		return duration;
 	}
+
 	public void setDuration(long duration) {
 		this.duration = duration;
 	}
+
 	public double getPrice() {
 		return price;
 	}
+
 	public void setPrice(double price) {
 		this.price = price;
 	}
-	public Hall getHall() {
-		return hall;
+
+	public List<Doctor> getDoctors() {
+		return doctors;
 	}
-	public void setHall(Hall hall) {
-		this.hall = hall;
+
+	public void setDoctors(List<Doctor> doctors) {
+		this.doctors = doctors;
 	}
-	
+
+	public String getAppointmentDescription() {
+		return appointmentDescription;
+	}
+
+	public void setAppointmentDescription(String appointmentDescription) {
+		this.appointmentDescription = appointmentDescription;
+	}
+
 	public AppointmentType getAppointmentType() {
 		return appointmentType;
 	}
@@ -133,7 +158,7 @@ public abstract class Appointment
 
 	@Override
 	public String toString() {
-		return "Appointment [appointmentID=" + id + ", startingDateAndTime=" + startingDateAndTime
+		return "Appointment [appointmentID=" + id + ", startingDateAndTime=" + date
 				+ ", duration=" + duration + ", price=" + price + ", hall=" + hall + "]";
 	}
 	
