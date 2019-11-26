@@ -89,7 +89,6 @@ public class AuthController
 		
 		User u = userService.findByEmail(request.getEmail());
 		
-		//Odbij request ukoliko postoji u bazi
 		if(req != null || u != null)
 		{
 			return new ResponseEntity<>(HttpStatus.ALREADY_REPORTED);
