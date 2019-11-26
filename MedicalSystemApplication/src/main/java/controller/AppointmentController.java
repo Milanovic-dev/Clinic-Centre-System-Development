@@ -19,10 +19,12 @@ import org.springframework.web.bind.annotation.RestController;
 import dto.AppointmentRequestDTO;
 import model.*;
 import model.Appointment.AppointmentType;
+import model.User.UserRole;
 import service.AppointmentRequestService;
 import service.AppointmentService;
 import service.ClinicService;
 import service.HallService;
+import service.NotificationService;
 import service.UserService;
 
 @RestController
@@ -41,6 +43,9 @@ public class AppointmentController
 	
 	@Autowired
 	private ClinicService clinicService;
+	
+	@Autowired
+	private NotificationService notificationService;
 	
 	@RequestMapping(value="/get/{date}/{hallNumber}")
 	public ResponseEntity<Appointment> getAppointment(@PathVariable("date") String date, @PathVariable("hallNumber") int hallNumber)
@@ -146,6 +151,19 @@ public class AppointmentController
 		request.setAppointmentDescription(dto.getAppointmentDescription());
 		
 		//TODO : Send Mail
+		
+		List<User> admins = userService.getAll(UserRole.ClinicAdmin);
+		
+		for(User user : admins)
+		{
+			ClinicAdmin admin = (ClinicAdmin)user;
+			
+			if(admin.getClinic().getName().equals(clinic.getName()))
+			{
+				//TODO: Napisati lepo mail
+				notificationService.sendNotification(admin.getEmail(), "Novi zahtev za pregled", "Imate novi zahtev za pregled..");
+			}
+		}
 		
 		appointmentRequestService.save(request);
 		
