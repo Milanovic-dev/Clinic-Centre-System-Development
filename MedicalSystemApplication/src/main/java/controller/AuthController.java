@@ -117,7 +117,8 @@ public class AuthController
 			
 			patient.setPassword(hash);
 			userService.save(patient);
-			notificationService.sendNotificationApproved(req);
+			notificationService.sendNotification(req.getEmail(), "Registracija Klinicki centar",
+					"Postovani, Vas zahtev za registraciju naloga za Klinicki centar je prihvacen. Mozete se ulogovati u svoj nalog.");
 			authService.delete(req);
 			return new ResponseEntity<>(HttpStatus.CREATED);
 		} catch (NoSuchAlgorithmException e) {
@@ -149,7 +150,8 @@ public class AuthController
 		}
 
 		try{
-			notificationService.sendNotificationDenied(req, text);
+			notificationService.sendNotification(req.getEmail(), "Registracija Klinicki centar",
+					"Postovani, Vas zahtev za registraciju naloga za Klinicki centar je odbijen. Razlog odbijanja zahteva je sledeci: "+text);
 			authService.delete(req);
 		} catch (MailException e){
 

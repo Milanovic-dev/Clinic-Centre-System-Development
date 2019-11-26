@@ -17,23 +17,13 @@ public class NotificationService {
         this.javaMailSender = javaMailSender;
     }
 
-    public void sendNotificationApproved(RegistrationRequest req) throws MailException{
+
+    public void sendNotification(String email, String subject, String content) throws MailException{
         SimpleMailMessage mail = new SimpleMailMessage();
-        mail.setTo(req.getEmail());
+        mail.setTo(email);
         mail.setFrom("klinickicentartest@gmail.com");
-        mail.setSubject("Registracija klinicki centar");
-        mail.setText("Postovani, Vas zahtev za registraciju naloga za Klinicki centar je prihvacen. Mozete se ulogovati u svoj nalog.");
-
-        javaMailSender.send(mail);
-    }
-
-
-    public void sendNotificationDenied(RegistrationRequest req, String reply) throws MailException{
-        SimpleMailMessage mail = new SimpleMailMessage();
-        mail.setTo(req.getEmail());
-        mail.setFrom("klinickicentartest@gmail.com");
-        mail.setSubject("Registracija klinicki centar");
-        mail.setText("Postovani, Vas zahtev za registraciju naloga za Klinicki centar je odbijen. Razlog odbijanja zahteva je sledeci: "+reply);
+        mail.setSubject(subject);
+        mail.setText(content);
 
         javaMailSender.send(mail);
     }

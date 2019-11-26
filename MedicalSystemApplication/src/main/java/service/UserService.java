@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import helpers.SecurePasswordHasher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
@@ -28,8 +29,18 @@ public class UserService {
 
 		@PostConstruct
 		public void init() {
-			userRepository.save(new CentreAdmin("username", "admin1234", "klinickicentartest@gmail.com", "Admin", "Adminic","Novi Sad","Trg Dositeja Obradovica 6", "Srbija", "011100100"));
-		}
+
+			String token = "admin1234";
+
+			try {
+				String hash = SecurePasswordHasher.encode(token);
+				userRepository.save(new CentreAdmin("username", hash, "klinickicentartest@gmail.com", "Admin", "Adminic","Novi Sad","Trg Dositeja Obradovica 6", "Srbija", "011100100"));
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+
+			}
 	}
 
 
