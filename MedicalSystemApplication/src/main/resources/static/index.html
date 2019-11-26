@@ -138,9 +138,9 @@
             </div>
           </div>
           </div>
-    <div class="container" id ="addHallContainer" hidden>
+    <div class="container" id ="addHallContainer" >
     <div class="card card-login mx-auto mt-5">
-      <div class="card-header">Dodavanje sale</div>
+      <div class="card-header" id="header">Dodavanje sale</div>
       <div class="card-body">
         <form>
           <div class="form-group">
@@ -157,16 +157,39 @@
     </div>
   </div>
   
-   <div class="container" id ="showHallContanier" hidden>
+  <div class="container" id ="changeHallContainer" >
+    <div class="card card-login mx-auto mt-5">
+      <div class="card-header" id="header">Izmena sale</div>
+      <div class="card-body">
+        <form>
+          <div class="form-group">
+          <label>Identifikacioni broj sale</label>
+            <div class="form-label-group">
+           
+              <input type="text" id="inputChangeHall" class="form-control" placeholder="Identifikacioni broj sale" required="required" autofocus="autofocus">
+            </div>
+          </div>
+          <span style="color:#FF1103" id="errorSpan"></span>
+          <button type="button" class="btn btn-primary btn-block" id = "submitChangeHall">Sacuvaj</button>
+        </form>
+      </div>
+    </div>
+  </div>
+  
+   <div class="container" id ="showHallContainer">
     <div class="card card-login mx-auto mt-5">
        <div class="card-header">Lista postojecih sala</div>
-            <table id="tableHall" class="table table-borderless">
+            <table id="tableRequests" class="table table-borderless">
                 <thead>
-                <tr>
-                    <th scope="col"></th>
-                </tr>
-                </thead>
+    				<tr>
+      				<th scope="col">Broj sale</th>
+      				<th scope="col">Klinika</th>
+      				<th scope="col"></th>
+      				<th scope="col"></th>
+    				</tr>
+  				</thead>
                 <tbody>
+                	
                 </tbody>
             </table>
 
@@ -178,20 +201,7 @@
 
         
 
-      </div>
-      <!-- /.container-fluid -->
 
-      <!-- Sticky Footer -->
-      <footer class="sticky-footer">
-        <div class="container my-auto">
-          <div class="copyright text-center my-auto">
-            <span id="addSpan" hidden>Uspesno!</span>
-          </div>
-        </div>
-      </footer>
-	
-    </div>
-    <!-- /.content-wrapper -->
     
 
   </div>
