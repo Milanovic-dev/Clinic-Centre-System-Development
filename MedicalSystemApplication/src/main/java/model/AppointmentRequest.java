@@ -12,6 +12,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import model.Appointment.AppointmentType;
 
@@ -28,6 +29,9 @@ public class AppointmentRequest {
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "patient_id")
 	private Patient patient;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	private Hall hall;
 	
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "clinic_id")
@@ -49,16 +53,27 @@ public class AppointmentRequest {
 		this.doctors = new ArrayList<Doctor>();
 	}
 		
-	public AppointmentRequest(Long id, Date date, Patient patient, Clinic clinic,
+	public AppointmentRequest(Long id, Date date,Hall hall, Patient patient, Clinic clinic,
 			String appointmentDescription, AppointmentType appointmentType) {
 		super();
 		this.id = id;
 		this.date = date;
+		this.hall = hall;
 		this.patient = patient;
 		this.clinic = clinic;
 		this.doctors = new ArrayList<Doctor>();
 		this.appointmentDescription = appointmentDescription;
 		this.appointmentType = appointmentType;
+	}
+
+	
+	
+	public Hall getHall() {
+		return hall;
+	}
+
+	public void setHall(Hall hall) {
+		this.hall = hall;
 	}
 
 	public Long getId() {
