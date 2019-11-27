@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface DrugRepository extends JpaRepository<Drug,Long> {
 
-    public Drug findByCode(String name);
+    public Drug findByCode(String code);
 
     public Drug findByName(String name);
 

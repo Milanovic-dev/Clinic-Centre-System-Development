@@ -1,6 +1,5 @@
 function addDiagnosis(diagnosis)
 {
-	console.log(drug);
 
 	let tr=$('<tr></tr>');
 	let tdCode=$('<td style="width:100px;">'+ diagnosis.code +'</td>');
@@ -141,7 +140,7 @@ $(document).ready(()=>{
 
     	     let name = $('#updateName').val()
              let code = $('#updateCode').val()
-             let code = $('#updateTag').val()
+             let tag = $('#updateTag').val()
             console.log(name)
             console.log(code)
 
