@@ -29,10 +29,10 @@ function addPersonalInformations(data)
 
 
 
-//	if(user.predefined == true)
-//	{
-//		$('#centreAdminReg').show();
-//	}
+	if(user.predefined == false)
+	{
+		$('#centreAdminReg').hide();
+	}
 
 
 }

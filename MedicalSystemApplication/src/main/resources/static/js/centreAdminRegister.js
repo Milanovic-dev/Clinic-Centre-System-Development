@@ -1,25 +1,5 @@
 $(document).ready(function(){
-	
-	
-	$.ajax({
-		type: 'GET',
-		url:'api/clinic/getAll',
-		complete: function(data)
-		{
-			let select = $('#selectClinic').val()
-			
-			$.each(data.responseJSON, function (i, item) {
-			    $('#selectClinic').append($('<option>', { 
-			        value: item.name,
-			        text : item.name 
-			    }));
-			});
 
-			
-			
-		}
-	})
-	
 
 	$('#submitRegister').click(function(e){
 		e.preventDefault()
@@ -31,10 +11,8 @@ $(document).ready(function(){
 		let city = $('#inputCity').val()
 		let address = $('#inputAddress').val()
 		let phone = $('#inputPhone').val()
-		let clinic = $('#selectClinic').val()
 
 		flag = true
-
 
 		if(email.indexOf("@gmail.com") == -1)
 		{
@@ -148,13 +126,13 @@ $(document).ready(function(){
 		console.log(data)
 		$.ajax({
 			type: 'POST',
-			url:'/api/admins/clinic/registerClinicAdmin/'+clinic,
+			url:'/api/admins/centre/registerCentreAdmin',
 			data: data,
 			dataType : "json",
 			contentType : "application/json; charset=utf-8",
 			success: function(){
-			       console.log(data.status)
-                   window.location.href = "centreAdminPage.html"
+			    console.log(data.status)
+                window.location.href = "centreAdminPage.html"
 			}
 
 		})
