@@ -24,14 +24,11 @@ public class Clinic
     @Column(name = "state", nullable = false)
 	private String state;
 
-    @Column(name = "description", nullable = false)
+    @Column(name = "description", nullable = true)
 	private String description;
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.EAGER)
     private List<Hall> halls;
-
-    @OneToMany(fetch = FetchType.LAZY)
-    private List<ClinicAdmin> clinicAdmins;
 
     @OneToMany(fetch = FetchType.LAZY)
     private List<Doctor> doctors;
@@ -61,7 +58,6 @@ public class Clinic
 	    this.id = id;
 	
 	    this.halls = new ArrayList<Hall>();
-	    this.clinicAdmins = new ArrayList<ClinicAdmin>();
 	    this.doctors = new ArrayList<Doctor>();
 	    this.appointments = new ArrayList<Appointment>();
 	    this.reviews = new ArrayList<ClinicReview>();
@@ -124,14 +120,6 @@ public class Clinic
     
     public void setHalls(List<Hall> halls) {
     	this.halls = halls;
-    }
-    
-    public List<ClinicAdmin> getClinicAdmins() {
-    	return clinicAdmins;
-    }
-    
-    public void setClinicAdmins(List<ClinicAdmin> clinicAdmins) {
-    	this.clinicAdmins = clinicAdmins;
     }
     
     public List<Doctor> getDoctors() {

@@ -14,6 +14,8 @@ $(document).ready(function(){
         let state = $('#state').val()
         let description = $('#description').val()
 
+        flag = true
+        
         if(/^[a-zA-Z]+$/.test(name) == false || name == "")
         		{
         			var nameInput = $('#name')
@@ -37,6 +39,7 @@ $(document).ready(function(){
 
         			input.addClass('is-invalid')
         			input.removeClass('is-valid')
+        			flag = false
         		}
         		else
         		{
@@ -52,6 +55,7 @@ $(document).ready(function(){
 
         			input.addClass('is-invalid')
         			input.removeClass('is-valid')
+        			flag = false
         		}
         		else
         		{
@@ -65,13 +69,14 @@ $(document).ready(function(){
         		    var input = $('#state')
                     input.addClass('is-invalid')
                     input.removeClass('is-valid')
+                    flag = false
         		} else {
         		    var input = $('#state')
                     input.removeClass('is-invalid')
                     input.addClass('is-valid')
         		}
 
-
+       if(flag == false) return
 
        let data = JSON.stringify({"name":name,"address":address,"city":city,"state":state,"description":description})
        console.log(data)
