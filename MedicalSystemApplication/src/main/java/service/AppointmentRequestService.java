@@ -10,8 +10,10 @@ import org.springframework.stereotype.Service;
 
 import model.Appointment;
 import model.AppointmentRequest;
+import model.Clinic;
 import model.Hall;
 import repository.AppointmentRequestRepository;
+import repository.ClinicRepository;
 import repository.HallRepository;
 
 @Service
@@ -23,22 +25,26 @@ public class AppointmentRequestService {
 	@Autowired 
 	private HallRepository hallRepository;
 	
+	@Autowired
+	private ClinicRepository clinicRepository;
 	
-	public AppointmentRequest findByDateAndHall(Date date, Hall hall)
+	public AppointmentRequest findAppointmentRequest(Date date, Hall hall,Clinic clinic)
 	{
-		return appointmentRequestRepository.findByDateAndHall(date, hall);
+		return appointmentRequestRepository.findByDateAndHallAndClinic(date, hall,clinic);
 	}
 	
-	public AppointmentRequest findByDateAndHall(String date, int hallNumber)
+	public AppointmentRequest findAppointmentRequest(String date, int hallNumber,String clinic)
 	{
-		DateFormat df = new SimpleDateFormat();
+		DateFormat df = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
 		
 		try {
 			Date d = df.parse(date);
 			
 			Hall h = hallRepository.findByNumber(hallNumber);
 			
-			return findByDateAndHall(d,h);
+			Clinic c = clinicRepository.findByName(clinic);
+			
+			return findAppointmentRequest(d,h,c);
 			
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block

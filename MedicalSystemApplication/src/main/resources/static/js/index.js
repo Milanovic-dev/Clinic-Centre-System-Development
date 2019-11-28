@@ -16,15 +16,15 @@ $(document).ready(function(){
 
 			if(user != undefined)
 			{
-				$("#uu_index").hide()
-				$("#wrapper").show()
+				$("#uu_index").attr('hidden')
+				$("#wrapper").removeAttr('hidden')
 				
 			}
 			else
 			{
 				
-				$("#uu_index").show()
-				$("#wrapper").hide()
+				$("#uu_index").removeAttr('hidden')
+				$("#wrapper").attr('hidden')
 		
 				
 			}
@@ -40,20 +40,18 @@ $(document).ready(function(){
 			}
 			if(user.role == "Patient"){
 				sideBar.append("<li class='nav-item active'><a class='nav-link' href='userProfileNew.html'><i class='fas fa-fw fa-tachometer-alt'></i><span id='profileUser'>Profil</span></a></li>")	
-				sideBar.append("<li class='nav-item active'><a class='nav-link' href='userProfileNew.html'><i class='fas fa-fw fa-tachometer-alt'></i><span id='clinicList'>Lista klinika</span></a></li>")	
-				sideBar.append("<li class='nav-item active'><a class='nav-link' href='userProfileNew.html'><i class='fas fa-fw fa-tachometer-alt'></i><span id='historyOfOperation'>Istorija pregleda i operacija</span></a></li>")	
-				sideBar.append("<li class='nav-item active'><a class='nav-link' href='userProfileNew.html'><i class='fas fa-fw fa-tachometer-alt'></i><span id='medicalRecord'>Zdravstveni karton</span></a></li>")	
+				sideBar.append("<li class='nav-item active'><a class='nav-link' type='button'><i class='fas fa-fw fa-tachometer-alt'></i><span id='clinicList'>Lista klinika</span></a></li>")	
+				sideBar.append("<li class='nav-item active'><a class='nav-link' type='button'><i class='fas fa-fw fa-tachometer-alt'></i><span id='historyOfOperation'>Istorija pregleda i operacija</span></a></li>")	
+				sideBar.append("<li class='nav-item active'><a class='nav-link' type='button'><i class='fas fa-fw fa-tachometer-alt'></i><span id='medicalRecord'>Zdravstveni karton</span></a></li>")	
 
-			
+				setUpPatientPage(user)
 			}
 			
 			if(user.role == "ClinicAdmin"){
 				sideBar.append("<li class='nav-item active'><a class='nav-link' href='userProfileNew.html'><i class='fas fa-fw fa-tachometer-alt'></i><span id='profileUser'>Profil</span></a></li>")	
 				sideBar.append("<li class='nav-item active'><a class='nav-link' type='button'><i class='fas fa-fw fa-tachometer-alt'></i><span id='addHall'>Dodavanje sala</span></a></li>")	
 				sideBar.append("<li class='nav-item active'><a class='nav-link' type='button'><i class='fas fa-fw fa-tachometer-alt'></i><span id='showHalls'>Lista sala</span></a></li>")
-				$("#addHallContainer").hide()
-				$("#showHallContainer").hide()
-				$("#changeHallContainer").hide()
+
 				
 				
 				$('#addHall').click(function(e){
@@ -137,13 +135,62 @@ $(document).ready(function(){
 	
 })//KRAJ DOCUMENT READY
 
+
+
+
+function setUpPatientPage(user)
+{
+	$("#clinicList").click(function(e){
+		e.preventDefault()
+		
+		$('#showClinicContainer').show()
+		
+		$.ajax({
+			type: 'GET',
+			url:"api/clinic/getAll",
+			complete: function(data)
+			{
+				let clinics = data.responseJSON
+				let i = 0
+				
+				$('#tableClinics tbody').empty()
+				for(let c of clinics)
+				{
+					listClinic(c,i)
+					i++
+				}
+			}
+			
+		})
+		
+	})
+
+}
+
+
+function listClinic(data,i)
+{
+	let tr=$('<tr></tr>');
+	let tdName=$('<td>'+ data.name +'</td>');
+	let tdAdress = $('<td>'+ data.address +'</td>');
+	let tdCity = $('<td>'+ data.city +'</td>');
+	let tdState = $('<td>'+ data.state +'</td>');
+	let tdDesc = $('<td>'+ data.description +'</td>');
+	let tdRating = $('<td>'+ data.rating +'</td>');
+		
+	tr.append(tdName).append(tdAdress).append(tdCity).append(tdState).append(tdDesc).append(tdRating);
+	$('#tableClinics tbody').append(tr);
+	
+}
+
+
+
 function listHall(data,i)
 {
 	
-	console.log(data)
 	let tr=$('<tr></tr>');
 	let tdNumber=$('<td class="number" data-toggle="modal" data-target="#exampleModalLong">'+ data.number +'</td>');
-	let tdClinic=$('<td class="clinic" data-toggle="modal" data-target="#exampleModalLong">'+ data.clinic.name +'</td>');
+	let tdClinic=$('<td class="clinic" data-toggle="modal" data-target="#exampleModalLong">'+ data.clinicName +'</td>');
 	let tdChange=$('<td> <button type="button" class="btn btn-primary" id = "changeHall_btn'+i+'">Izmeni</button></td>');
 	let tdDelete=$('<td> <button type="button" class="btn btn-danger" id = "deleteHall_btn'+i+'">Izbrisi</button></td>');
 	

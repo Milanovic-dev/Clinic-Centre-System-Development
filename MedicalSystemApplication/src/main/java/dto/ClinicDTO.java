@@ -70,4 +70,14 @@ public class ClinicDTO {
     public void setDescription(String description) {
         this.description = description;
     }
+
+	public float getRating() {
+		return rating;
+	}
+
+	public void setRating(float rating) {
+		this.rating = rating;
+	}
+    
+    
 }
