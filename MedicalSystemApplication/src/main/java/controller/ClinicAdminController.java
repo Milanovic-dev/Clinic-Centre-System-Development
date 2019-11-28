@@ -33,7 +33,7 @@ public class ClinicAdminController {
     private ClinicService clinicService;
     
     @GetMapping(value = "/getClinicFromAdmin/{email}")
-    public ResponseEntity<Clinic>getClinicFromAdmin(@PathVariable("email") String email)
+    public ResponseEntity<ClinicDTO>getClinicFromAdmin(@PathVariable("email") String email)
     {
     	ClinicAdmin ca = (ClinicAdmin) userService.findByEmail(email);
     	if(ca == null)
@@ -41,8 +41,8 @@ public class ClinicAdminController {
     		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     	}
     	
-    	
-		return new ResponseEntity<Clinic>(ca.getClinic() , HttpStatus.OK);
+    	ClinicDTO dto = new ClinicDTO(ca.getClinic());
+		return new ResponseEntity<ClinicDTO>(dto , HttpStatus.OK);
     	
     }
 

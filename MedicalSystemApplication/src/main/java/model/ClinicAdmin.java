@@ -9,7 +9,7 @@ import java.util.List;
 public class ClinicAdmin extends User {
 
 	
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     private Clinic clinic;
 
     @OneToMany(fetch = FetchType.LAZY)

@@ -46,7 +46,6 @@ public class ClinicController {
             clinic.setDoctors(new ArrayList<>());
             clinic.setHalls(new ArrayList<>());
             clinic.setReviews(new ArrayList<>());
-            clinic.setClinicAdmins(new ArrayList<>());
             clinicService.save(clinic);
         } else {
             return new ResponseEntity<>(HttpStatus.ALREADY_REPORTED);

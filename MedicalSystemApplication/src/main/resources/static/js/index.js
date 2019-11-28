@@ -22,8 +22,10 @@ $(document).ready(function(){
 			}
 			else
 			{
+				
 				$("#uu_index").show()
 				$("#wrapper").hide()
+		
 				
 			}
 			if(user.role == "Doctor"){
@@ -47,24 +49,35 @@ $(document).ready(function(){
 			
 			if(user.role == "ClinicAdmin"){
 				sideBar.append("<li class='nav-item active'><a class='nav-link' href='userProfileNew.html'><i class='fas fa-fw fa-tachometer-alt'></i><span id='profileUser'>Profil</span></a></li>")	
-				sideBar.append("<li class='nav-item active'><a class='nav-link' href=''><i class='fas fa-fw fa-tachometer-alt'></i><span id='addHall'>Dodavanje sala</span></a></li>")	
-				sideBar.append("<li class='nav-item active'><a class='nav-link' href=''><i class='fas fa-fw fa-tachometer-alt'></i><span id='showHalls'>Lista sala</span></a></li>")
+				sideBar.append("<li class='nav-item active'><a class='nav-link' type='button'><i class='fas fa-fw fa-tachometer-alt'></i><span id='addHall'>Dodavanje sala</span></a></li>")	
+				sideBar.append("<li class='nav-item active'><a class='nav-link' type='button'><i class='fas fa-fw fa-tachometer-alt'></i><span id='showHalls'>Lista sala</span></a></li>")
+				$("#addHallContainer").hide()
+				$("#showHallContainer").hide()
+				$("#changeHallContainer").hide()
+				
 				
 				$('#addHall').click(function(e){
 					
 					e.preventDefault()
-					$("#addHallContainer").removeAttr('hidden')
+					$("#addHallContainer").show()
+					$("#showHallContainer").hide()
+					$("#changeHallContainer").hide()
+									
 					
 				})
 				
 				$('#showHalls').click(function(e){
 					
 					e.preventDefault()
-					$("#showHallContanier").removeAttr('hidden')
+					$("#showHallContainer").show()
+					$('#addHallContainer').hide()
+					$("#changeHallContainer").hide()
+					makeHallTable()
 					
-				})
-				
-
+					
+					
+						
+					})
 				let email = user.email
 				$('#submitHall').click(function(e){
 						e.preventDefault()
@@ -73,7 +86,7 @@ $(document).ready(function(){
 							type: 'GET',
 							url: 'api/admins/clinic/getClinicFromAdmin/'+email,
 							complete: function(data){
-							
+								
 								let clinic = data.responseJSON
 								let hall = JSON.stringify({"number" : idHall,"clinic" : clinic })
 								$.ajax({
@@ -88,7 +101,9 @@ $(document).ready(function(){
 										
 										if(data.status == "200")
 										{
-											window.location.href = "index.html"
+											$("#showHallContainer").show()
+											$('#addHallContainer').hide()
+											makeHallTable()
 										}
 									}
 										
@@ -100,12 +115,17 @@ $(document).ready(function(){
 						
 				})
 				
-			}
+				//KRAJ SUBMIT HALLS
+				
+				
+				
+			} //KRAJ ULOGE ADMINA
 			//TODO: Napisati dinamicke <li> clanove u nav baru sa strane za ulogu medicinske sestre.
 			
 			
-		}
-})
+		}//KRAJ COMPLETE FUNKCIJE
+	
+})//KRAJ AJAX POZIVA
 	
 	
 	
@@ -115,6 +135,97 @@ $(document).ready(function(){
 	})
 	
 	
-})
+})//KRAJ DOCUMENT READY
+
+function listHall(data,i)
+{
+	
+	console.log(data)
+	let tr=$('<tr></tr>');
+	let tdNumber=$('<td class="number" data-toggle="modal" data-target="#exampleModalLong">'+ data.number +'</td>');
+	let tdClinic=$('<td class="clinic" data-toggle="modal" data-target="#exampleModalLong">'+ data.clinic.name +'</td>');
+	let tdChange=$('<td> <button type="button" class="btn btn-primary" id = "changeHall_btn'+i+'">Izmeni</button></td>');
+	let tdDelete=$('<td> <button type="button" class="btn btn-danger" id = "deleteHall_btn'+i+'">Izbrisi</button></td>');
+	
+	tr.append(tdNumber).append(tdClinic).append(tdChange).append(tdDelete);
+	$('#tableRequests tbody').append(tr);
+	
+	$('#deleteHall_btn'+i).click(function(e)
+	{
+		e.preventDefault()
+		console.log(data.number)
+		
+		$.ajax({
+			type: 'DELETE',
+			url: 'api/hall/deleteHall/'+data.number,
+			complete: function(data)
+			{
+				if(data.status == "200")
+				{
+					makeHallTable()
+				}
+			}
+			
+		})
+	})
+	
+	$('#changeHall_btn'+i).click(function(e)
+	{
+		e.preventDefault()
+		console.log(data.number)
+		$('#addHallContainer').hide()
+		$('#showHallContainer').hide()
+		$('#changeHallContainer').show()
+		
+		$('#inputChangeHall').val() 
+		
+		$('#submitChangeHall').click(function(e)
+		{
+			let newNumber = $('#inputChangeHall').val()
+			$.ajax({
+				type: 'PUT',
+				url: 'api/hall/changeHall/'+data.number+"/"+newNumber,
+				complete: function(data)
+				{
+					console.log(data.status)
+					if(data.status == "200")
+					{
+						
+						$('#changeHallContainer').hide()
+						$('#showHallContainer').show()
+						makeHallTable()
+					}
+				}
+			
+			})
+	
+		})
+		
+	})
+	
+}
+
+
+function makeHallTable()
+{
+	$.ajax({
+		type: 'GET',
+		url: 'api/hall/getAll',
+		complete: function(data)
+		{
+			console.log(data)
+			halls = data.responseJSON
+			let i = 0
+			$('#tableRequests tbody').empty()
+			for(let d of halls)
+            {
+				listHall(d,i);
+				i++;
+            }
+		}
+								
+	})
+}
+
 
 
