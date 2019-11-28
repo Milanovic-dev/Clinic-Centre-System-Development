@@ -34,7 +34,7 @@ public class UserService {
 
 			try {
 				String hash = SecurePasswordHasher.encode(token);
-				userRepository.save(new CentreAdmin("username", hash, "klinickicentartest@gmail.com", "Admin", "Adminic","Novi Sad","Trg Dositeja Obradovica 6", "Srbija", "011100100"));
+				userRepository.save(new CentreAdmin("username", hash, "klinickicentartest@gmail.com", "Admin", "Adminic","Novi Sad","Trg Dositeja Obradovica 6", "Srbija", "011100100", true));
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
