@@ -29,9 +29,11 @@ function addPersonalInformations(data)
 
 
 
-	if(user.predefined == false)
+	if(user.email == "klinickicentartest@gmail.com")
 	{
-		$('#centreAdminReg').hide();
+
+       	document.getElementById("centreAdminReg").style.visibility = "visible";
+
 	}
 
 
@@ -40,6 +42,10 @@ function addPersonalInformations(data)
 $(document).ready(function(){
 
 	sessionCheck()
+
+
+
+
 
 })
 

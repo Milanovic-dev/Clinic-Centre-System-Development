@@ -130,11 +130,15 @@ $(document).ready(function(){
 			data: data,
 			dataType : "json",
 			contentType : "application/json; charset=utf-8",
-			success: function(){
-			    console.log(data.status)
-                window.location.href = "centreAdminPage.html"
-			}
+			complete: function(data)
+            {
+                 console.log(data.status)
 
+                  if(data.status == "200")
+                   {
+                    	window.location.href = "centreAdminPage.html"
+                   }
+            }
 		})
 
 	})

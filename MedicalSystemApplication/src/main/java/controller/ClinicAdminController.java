@@ -79,7 +79,7 @@ public class ClinicAdminController {
                 clinicAdmin.setPassword(hash);
                 userService.save(clinicAdmin);
                 clinicAdmin.setClinic(clinic);
-                return new ResponseEntity<>(HttpStatus.CREATED);
+                return new ResponseEntity<>(HttpStatus.OK);
             } catch (Exception e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();

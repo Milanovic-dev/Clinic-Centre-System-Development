@@ -41,7 +41,7 @@ public class CentreAdminController {
                 String hash = SecurePasswordHasher.encode(token);
                 centreAdmin.setPassword(hash);
                 userService.save(centreAdmin);
-                return new ResponseEntity<>(HttpStatus.CREATED);
+                return new ResponseEntity<>(HttpStatus.OK);
             } catch (Exception e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
@@ -53,6 +53,7 @@ public class CentreAdminController {
             header.set("Response", "Admin with that email already exists.");
             return new ResponseEntity<>(header,HttpStatus.ALREADY_REPORTED);
         }
+
 
     }
 
