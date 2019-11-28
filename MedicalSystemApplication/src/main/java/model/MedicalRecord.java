@@ -20,8 +20,10 @@ public class MedicalRecord {
 	@Column(name = "bloodType", nullable = true)
 	private BloodType bloodType;
 	
-	@Column(name = "alergies", nullable = true)
-	private String alergies;
+	@ElementCollection
+	@CollectionTable(name="Alergies", joinColumns=@JoinColumn(name="user_id"))
+	@Column(name="alergie")
+	private List<String> alergies;
 	
 	@Column(name = "height", nullable = true)
 	private String weight;
@@ -46,15 +48,14 @@ public class MedicalRecord {
 	}
 
 
-	public String getAlergies() {
+	public List<String> getAlergies() {
 		return alergies;
 	}
 
 
-	public void setAlergies(String alergies) {
+	public void setAlergies(List<String> alergies) {
 		this.alergies = alergies;
 	}
-
 
 	public String getWeight() {
 		return weight;

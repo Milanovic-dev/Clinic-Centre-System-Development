@@ -1,6 +1,7 @@
 package service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -54,7 +55,7 @@ public class UserService {
 				
 				Patient patient = new Patient("username",hash,"nikola@gmail.com","Nikola","Milanovic","Novi Sad","Karadjorjdeva 8","Srbija","4123432");
 				patient.getMedicalRecord().setBloodType(BloodType.AB);
-				patient.getMedicalRecord().setAlergies("Kikiriki");
+				patient.getMedicalRecord().setAlergies(Arrays.asList("Kikiriki","Secer"));
 				patient.getMedicalRecord().setHeight("195cm");
 				patient.getMedicalRecord().setWeight("90kg");
 				Clinic clinic = new Clinic("KlinikaTest","Karajdorjdeva 8","Novi Sad","Srbija","Opis");

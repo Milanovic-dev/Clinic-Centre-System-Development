@@ -12,6 +12,7 @@
 <script src ="js/navbar.js"></script>
 <script src="js/index.js"></script>
 <link href="css/sb-admin.css" rel="stylesheet">
+<link href="css/grid.css" rel ="stylesheet">
 <meta charset="ISO-8859-1">
 <title>Insert title here</title>
 </head>
@@ -78,7 +79,8 @@
             <a href="#">Pocetna</a>
           </li>
           <li class="breadcrumb-item active">Prikaz</li>
-
+		</ol>
+		
     <div class="container" id ="addHallContainer" style="display:none">
     <div class="card card-login mx-auto mt-5">
       <div class="card-header" id="header">Dodavanje sale</div>
@@ -184,8 +186,18 @@
           </div>
           </div>
    
-   
-   
+  		<div class="container-fluid" id="MedicalRecordContainer">
+  			<p>Osnovni podaci</p>
+  			<div class="row mb-3" id="basicData">
+    			<div class="col-4 themed-grid-col" id="height">Visina: 195</div>
+    			<div class="col-4 themed-grid-col" id="weight">Tezina: 95</div>
+    			<div class="col-4 themed-grid-col" id="bloodType">Krvna grupa: O+</div>
+  			</div>
+  			<p>Alergije</p>
+  			<div class="row mb-3" id="alergies">
+    			
+  			</div>
+  		</div>
    
   </div>
 

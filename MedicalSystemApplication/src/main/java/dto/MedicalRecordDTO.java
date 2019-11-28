@@ -11,7 +11,7 @@ public class MedicalRecordDTO {
 
 	
 	private List<PatientMedicalReportDTO> reports;	
-	private String alergies;	
+	private List<String> alergies;	
 	private String weight;
 	private BloodType bloodType;	
 	private String height;
@@ -22,7 +22,7 @@ public class MedicalRecordDTO {
 		// TODO Auto-generated constructor stub
 	}
 
-	public MedicalRecordDTO(String alergies, String weight, BloodType bloodType,
+	public MedicalRecordDTO(List<String> alergies, String weight, BloodType bloodType,
 			String height) {
 		super();
 		this.reports = new ArrayList<PatientMedicalReportDTO>();
@@ -57,11 +57,13 @@ public class MedicalRecordDTO {
 		this.reports = reports;
 	}
 
-	public String getAlergies() {
+	
+
+	public List<String> getAlergies() {
 		return alergies;
 	}
 
-	public void setAlergies(String alergies) {
+	public void setAlergies(List<String> alergies) {
 		this.alergies = alergies;
 	}
 

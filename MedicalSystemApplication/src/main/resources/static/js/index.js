@@ -156,6 +156,7 @@ function setUpPatientPage(user)
 		e.preventDefault()
 		
 		$('#showClinicContainer').show()
+		$('#MedicalRecordContainer').hide()
 		
 		$.ajax({
 			type: 'GET',
@@ -176,9 +177,40 @@ function setUpPatientPage(user)
 		})
 		
 	})
+	
+	$('#medicalRecord').click(function(e){
+		e.preventDefault()
+		
+		$('#showClinicContainer').hide()
+		$('#MedicalRecordContainer').show()
+		
+		$.ajax({
+			type:'GET',
+			url:"api/users/patient/getMedicalRecord/"+user.email,
+			complete: function(data)
+			{
+				let mr = data.responseJSON
+				makeMedicalRecord(mr)
+				
+			}
+		})
+	})
 
 }
 
+function makeMedicalRecord(data)
+{
+	$('#height').text("Visina: " + data.height)
+	$('#weight').text("Tezina: " + data.weight)
+	$('#bloodType').text("Krvna grupa: " + data.bloodType)
+	
+	let alergies = data.alergies
+	$('#alergies').empty()
+	for(let al of alergies)
+	{
+		$('#alergies').append("<div class='col-4 themed-grid-col' >"+al+"</div>")	
+	}
+}
 
 function listClinic(data,i)
 {
