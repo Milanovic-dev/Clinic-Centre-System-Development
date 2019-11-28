@@ -10,11 +10,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import model.Appointment;
+import model.Clinic;
 import model.Hall;
 import model.Patient;
 import model.User;
 import repository.AppointmentRepository;
 import repository.AppointmentRequestRepository;
+import repository.ClinicRepository;
 import repository.HallRepository;
 
 @Service
@@ -26,22 +28,25 @@ public class AppointmentService {
 	@Autowired 
 	private HallRepository hallRepository;
 	
+	@Autowired
+	private ClinicRepository clinicRepository;
 	
-	public Appointment findByDateAndHall(Date date, Hall hall)
+	public Appointment findAppointment(Date date, Hall hall, Clinic clinic)
 	{
-		return appointmentRepository.findByDateAndHall(date, hall);
+		return appointmentRepository.findByDateAndHallAndClinic(date, hall, clinic);
 	}
 	
-	public Appointment findByDateAndHall(String date, int hallNumber)
+	public Appointment findAppointment(String date, int hallNumber, String clinic)
 	{
-		DateFormat df = new SimpleDateFormat();
+		DateFormat df = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
 		
 		try {
 			Date d = df.parse(date);
 			
 			Hall h = hallRepository.findByNumber(hallNumber);
+			Clinic c = clinicRepository.findByName(clinic);
 			
-			return findByDateAndHall(d,h);
+			return findAppointment(d,h,c);
 			
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block

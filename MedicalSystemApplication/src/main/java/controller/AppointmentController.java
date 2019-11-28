@@ -11,12 +11,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import dto.AppointmentRequestDTO;
+import dto.AppointmentDTO;
 import model.*;
 import model.Appointment.AppointmentType;
 import model.User.UserRole;
@@ -47,10 +49,17 @@ public class AppointmentController
 	@Autowired
 	private NotificationService notificationService;
 	
-	@RequestMapping(value="/get/{date}/{hallNumber}")
-	public ResponseEntity<Appointment> getAppointment(@PathVariable("date") String date, @PathVariable("hallNumber") int hallNumber)
+	@Autowired
+	private HallService hallService;
+	
+	@GetMapping(value="/get")
+	public ResponseEntity<AppointmentDTO> getAppointment(@RequestBody AppointmentDTO dto)
 	{
-		Appointment appointment = appointmentService.findByDateAndHall(date, hallNumber);
+		String clinic = dto.getClinicName();
+		String date = dto.getDate();
+		int hallNumber = dto.getHallNumber();
+		
+		Appointment appointment = appointmentService.findAppointment(date, hallNumber,clinic);
 		
 		HttpHeaders header = new HttpHeaders();
 		if(appointment == null)
@@ -60,11 +69,27 @@ public class AppointmentController
 		}
 		
 		
-		return new ResponseEntity<>(appointment,HttpStatus.OK);
+		return new ResponseEntity<>(new AppointmentDTO(appointment),HttpStatus.OK);
 	}
 	
+	@GetMapping(value="/getRequest")
+	public ResponseEntity<AppointmentDTO> getAppointmentRequest(@RequestBody AppointmentDTO dto)
+	{
+		String clinic = dto.getClinicName();
+		String date = dto.getDate();
+		int hallNumber = dto.getHallNumber();
+		AppointmentRequest appointmentReq = appointmentRequestService.findAppointmentRequest(date, hallNumber,clinic);
+		
+		HttpHeaders header = new HttpHeaders();
+		if(appointmentReq == null)
+		{
+			header.set("responseText","Appointment not found for: ("+date+","+hallNumber+")");
+			return new ResponseEntity<>(header,HttpStatus.NOT_FOUND);
+		}
+		return new ResponseEntity<>(new AppointmentDTO(appointmentReq),HttpStatus.OK);
+	}
 	
-	@RequestMapping(value="patient/getAll/{email}")
+	@GetMapping(value="/patient/getAll/{email}")
 	public ResponseEntity<List<Appointment>> getAppointments(@PathVariable("email") String email)
 	{
 		Patient  p = null;
@@ -97,8 +122,8 @@ public class AppointmentController
 		
 	}
 	
-	@RequestMapping(value="/sendRequest")
-	public ResponseEntity<Void> addAppointmentRequest(@RequestBody AppointmentRequestDTO dto)
+	@PostMapping(value="/sendRequest")
+	public ResponseEntity<Void> addAppointmentRequest(@RequestBody AppointmentDTO dto)
 	{
 		HttpHeaders header = new HttpHeaders();
 		AppointmentRequest request = new AppointmentRequest();
@@ -123,7 +148,7 @@ public class AppointmentController
 		request.setPatient(patient);
 		
 		try {
-			Date date = new SimpleDateFormat().parse(dto.getDate());
+			Date date = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").parse(dto.getDate());
 			request.setDate(date);
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
@@ -150,7 +175,17 @@ public class AppointmentController
 		
 		request.setAppointmentDescription(dto.getAppointmentDescription());
 		
-		//TODO : Send Mail
+		
+		Hall hall = hallService.findByNumber(dto.getHallNumber());
+		
+		if(hall == null)
+		{
+			header.set("responseText","Hall not found: " + dto.getHallNumber());
+			return new ResponseEntity<>(header,HttpStatus.NOT_FOUND);
+		}
+		
+		request.setHall(hall);
+	
 		
 		List<User> admins = userService.getAll(UserRole.ClinicAdmin);
 		
@@ -167,7 +202,7 @@ public class AppointmentController
 		
 		appointmentRequestService.save(request);
 		
-		return new ResponseEntity<>(HttpStatus.OK);
+		return new ResponseEntity<>(HttpStatus.CREATED);
 	}
 	
 	

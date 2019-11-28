@@ -27,7 +27,7 @@ public class Clinic
     @Column(name = "description", nullable = true)
 	private String description;
 
-    @OneToMany(fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     private List<Hall> halls;
 
     @OneToMany(fetch = FetchType.LAZY)
@@ -47,7 +47,7 @@ public class Clinic
       
     }
 
-    public Clinic(String name, String address, String city, String state, String description, Long id)
+    public Clinic(String name, String address, String city, String state, String description)
     { 	
     	super();
 	    this.name = name;
@@ -55,8 +55,6 @@ public class Clinic
 	    this.city = city;
 	    this.state = state;
 	    this.description = description;
-	    this.id = id;
-	
 	    this.halls = new ArrayList<Hall>();
 	    this.doctors = new ArrayList<Doctor>();
 	    this.appointments = new ArrayList<Appointment>();

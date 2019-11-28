@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import dto.ClinicDTO;
+import dto.HallDTO;
 import model.Clinic;
 import model.Hall;
 import model.RegistrationRequest;
@@ -34,19 +35,26 @@ public class HallController {
     private HallService hallService;
 	
 	
-	
+	@Autowired
+	private ClinicService clinicService;
 	
 	@GetMapping(value = "/getAll")
-	public ResponseEntity<List<Hall>> getHalls()
+	public ResponseEntity<List<HallDTO>> getHalls()
 	{
 	   List<Hall> halls = hallService.findAll();
-	    	
-	    if(halls == null)
-	    {
-	    	return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-	    }
+	   List<HallDTO> ret = new ArrayList<HallDTO>();
+	   if(halls == null)
+	   {
+		   return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+	   }
+	   
+	   for(Hall hall : halls)
+	   {
+		   HallDTO dto = new HallDTO(hall);
+		   ret.add(dto);
+	   }
 
-	    return new ResponseEntity<>(halls,HttpStatus.OK);
+	   return new ResponseEntity<>(ret,HttpStatus.OK);
 	}
 	
 	@DeleteMapping(value="/deleteHall/{number}")
@@ -81,7 +89,7 @@ public class HallController {
 	
 	
 	 @GetMapping(value="/{number}")
-	    public ResponseEntity<Hall> getHallByNumber(@PathVariable("number") int number)
+	    public ResponseEntity<HallDTO> getHallByNumber(@PathVariable("number") int number)
 	    {
 	    	Hall hall= hallService.findByNumber(number);
 	    	if(hall == null)
@@ -90,8 +98,10 @@ public class HallController {
 	    	}
 	    	
 	    	
-	    	return new ResponseEntity<>(hall,HttpStatus.OK);
+	    	return new ResponseEntity<>(new HallDTO(hall),HttpStatus.OK);
 	    }
+	 
+	 
 	 @DeleteMapping(value="/delete/{number}")
 	 public ResponseEntity<Void> deleteHallByNumber(@PathVariable("number") int number)
 	 {
@@ -100,6 +110,9 @@ public class HallController {
 		{
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
+		Clinic c = hall.getClinic();
+		c.getHalls().remove(hall);
+		clinicService.save(c);
 		hallService.delete(hall);
 		
 		return new ResponseEntity<>(HttpStatus.OK);
