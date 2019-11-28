@@ -4,7 +4,7 @@
 
 
 $(document).ready(function(){
-	
+
 	$('#submitLogin').click(function(e){
 		e.preventDefault()
 		
@@ -59,19 +59,19 @@ $(document).ready(function(){
 			dataType : "json",
 			contentType : "application/json; charset=utf-8",
 			complete: function(data)
-			{	
-				
+			{
+
 				if(data.status == "200")
 				{
 					let user = data.responseJSON
-				
+
 					if(user.isFirstLog)	{
 							window.location.href = "passwordChange.html"
 						}
 					else
 						{
 							window.location.href = "index.html"
-							
+
 						}
 				}
 				else
@@ -82,7 +82,7 @@ $(document).ready(function(){
 					emailInput.removeClass('is-valid')
 					passInput.addClass('is-invalid')
 					passInput.removeClass('is-valid')
-					$('#errorSpan').text("Email ili sifra su pogresni.")			
+					$('#errorSpan').text("Email ili sifra su pogresni.")
 				}
 			}
 		})

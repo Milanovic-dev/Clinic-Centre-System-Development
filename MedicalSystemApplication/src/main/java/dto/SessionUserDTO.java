@@ -109,8 +109,8 @@ public class SessionUserDTO
 	public void setRole(UserRole role) {
 		this.role = role;
 	}
-	
-	
-	
-	
+
+
+
+
 }

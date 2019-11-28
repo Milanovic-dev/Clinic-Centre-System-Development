@@ -4,7 +4,7 @@ function addRequest(request)
 
 	let tr=$('<tr></tr>');
 	let tdEmail=$('<td class="email" data-toggle="modal" data-target="#exampleModalLong">'+ request.email +'</td>');
-	let tdConfirm=$('<td> <button type="button" class="btn btn-info">Prihvati</button></td>');
+	let tdConfirm=$('<td> <button type="button" class="btn btn-primary">Prihvati</button></td>');
 	let tdDeny=$('<td> <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo">Odbij</button></td>');
 
 	tdConfirm.click(confirmRegister(request));

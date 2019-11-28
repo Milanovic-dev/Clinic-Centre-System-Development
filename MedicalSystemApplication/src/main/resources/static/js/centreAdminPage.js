@@ -13,7 +13,11 @@ function sessionCheck()
 
 function addPersonalInformations(data)
 {
+
+
+
 	user = data.responseJSON
+	console.log(user)
 	if(user == undefined)
 		{
 			console.log("nema data.")
