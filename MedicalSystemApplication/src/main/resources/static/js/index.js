@@ -235,6 +235,7 @@ function listHall(data,i)
 		$('#addHallContainer').hide()
 		$('#showHallContainer').hide()
 		$('#changeHallContainer').show()
+	
 		
 		$('#inputChangeHall').val() 
 		
