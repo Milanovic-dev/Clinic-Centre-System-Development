@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import dto.MedicalRecordDTO;
 import dto.PasswordDTO;
 import dto.UserDTO;
 import helpers.SecurePasswordHasher;
@@ -145,5 +146,42 @@ public class UserController
 		}
 		
 		return new ResponseEntity<>(ret,HttpStatus.OK);
+	}
+	
+	@GetMapping(value="/patient/getMedicalRecord/{email}")
+	public ResponseEntity<MedicalRecordDTO> getMedicalRecord(@PathVariable("email")String email)
+	{
+		Patient patient = (Patient)userService.findByEmail(email);
+		
+		if(patient == null)
+		{
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+		
+		MedicalRecord mr = patient.getMedicalRecord();
+		
+		MedicalRecordDTO dto = new MedicalRecordDTO(mr);
+		
+		return new ResponseEntity<>(dto,HttpStatus.OK);
+	}
+	
+	
+	@PutMapping(value="/patient/updateMedicalReport/{email}")
+	public ResponseEntity<Void> updateMedicalRecord(@PathVariable("email") String email,@RequestBody MedicalRecordDTO dto)
+	{
+		Patient patient = (Patient)userService.findByEmail(email);
+		
+		if(patient == null)
+		{
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+		
+		patient.getMedicalRecord().setAlergies(dto.getAlergies());
+		patient.getMedicalRecord().setHeight(dto.getHeight());
+		patient.getMedicalRecord().setWeight(dto.getWeight());
+		
+		userService.save(patient);
+		
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 }

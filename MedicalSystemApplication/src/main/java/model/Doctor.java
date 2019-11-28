@@ -9,19 +9,19 @@ import javax.persistence.*;
 public class Doctor extends User
 {
 
-	@Column(name = "type", nullable = false)
+	@Column(name = "type", nullable = true)
 	private String type;
 	
-	@Column(name = "insuranceId", nullable = false)
+	@Column(name = "insuranceId", nullable = true)
 	private String insuranceId;
 	
-	@Column(name = "shiftStart", nullable = false)
+	@Column(name = "shiftStart", nullable = true)
     private String shiftStart;
 	
-    @Column(name = "shiftEnd", nullable = false)
+    @Column(name = "shiftEnd", nullable = true)
     private String shiftEnd;
     
-    @Column(name = "avarageRating", nullable = false)
+    @Column(name = "avarageRating", nullable = true)
     private float avarageRating;
     
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)

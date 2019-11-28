@@ -26,7 +26,7 @@ public class AppointmentRequest {
 	@Column(name= "startingDateAndTime",nullable = false)
 	private Date date;
 		
-	@OneToOne(fetch = FetchType.LAZY)
+	@OneToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "patient_id")
 	private Patient patient;
 	

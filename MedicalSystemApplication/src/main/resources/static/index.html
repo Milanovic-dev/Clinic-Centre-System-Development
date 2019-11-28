@@ -54,7 +54,7 @@
 
 <!---------------------------------------NAVBAR END---------------------------------------->
 
-<div class="jumbotron" id="uu_index">
+<div class="jumbotron" id="uu_index" hidden>
         <div class="container">
           <h2 class="display-2">Dobrodosli!</h2>
           <p>Pozdrav! Dobrodosli na glavnu stranicu klinickog centra, na kome mozete jednim klikom do zdravlja! Ukoliko nemate nalog, a zeleli biste da budete deo klinickog centra, kliknite na dugme za registraciju.</p>
@@ -62,7 +62,7 @@
         </div>
 </div>
 
-<div id="wrapper" >
+<div id="wrapper" hidden>
     <!-- Sidebar -->
     <ul class="sidebar navbar-nav" id ="sideBar">
       
@@ -78,67 +78,8 @@
             <a href="#">Pocetna</a>
           </li>
           <li class="breadcrumb-item active">Prikaz</li>
-        </ol>
 
-        <!-- DataTables Example -->
-        <div id="zakazno" class="card mb-3" id = "upBar">
-          <div  class="card-header">
-            <i class="fas fa-table"></i>
-            Zakazno</div>
-          <div class="card-body">
-            <div class="table-responsive">
-              <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0" hidden>
-                <thead>
-                  <tr>
-                    <th>Name</th>
-                    <th>Position</th>
-                    <th>Office</th>
-                    <th>Age</th>
-                    <th>Start date</th>
-                    <th>Salary</th>
-                  </tr>
-                </thead>
-                <tfoot>
-                  <tr>
-                    <th>Name</th>
-                    <th>Position</th>
-                    <th>Office</th>
-                    <th>Age</th>
-                    <th>Start date</th>
-                    <th>Salary</th>
-                  </tr>
-                </tfoot>
-                <tbody>
-                  <tr>
-                    <td>Tiger Nixon</td>
-                    <td>System Architect</td>
-                    <td>Edinburgh</td>
-                    <td>61</td>
-                    <td>2011/04/25</td>
-                    <td>$320,800</td>
-                  </tr>
-                  <tr>
-                    <td>Michael Bruce</td>
-                    <td>Javascript Developer</td>
-                    <td>Singapore</td>
-                    <td>29</td>
-                    <td>2011/06/27</td>
-                    <td>$183,000</td>
-                  </tr>
-                  <tr>
-                    <td>Donna Snider</td>
-                    <td>Customer Support</td>
-                    <td>New York</td>
-                    <td>27</td>
-                    <td>2011/01/25</td>
-                    <td>$112,000</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-          </div>
-    <div class="container" id ="addHallContainer" >
+    <div class="container" id ="addHallContainer" style="display:none">
     <div class="card card-login mx-auto mt-5">
       <div class="card-header" id="header">Dodavanje sale</div>
       <div class="card-body">
@@ -157,7 +98,7 @@
     </div>
   </div>
   
-  <div class="container" id ="changeHallContainer" >
+  <div class="container" id ="changeHallContainer" style="display:none">
     <div class="card card-login mx-auto mt-5">
       <div class="card-header" id="header">Izmena sale</div>
       <div class="card-body">
@@ -176,7 +117,7 @@
     </div>
   </div>
   
-   <div class="container" id ="showHallContainer">
+   <div class="container" id ="showHallContainer" style="display:none"> 
     <div class="card card-login mx-auto mt-5">
        <div class="card-header">Lista postojecih sala</div>
             <table id="tableRequests" class="table table-borderless">
@@ -192,18 +133,65 @@
                 	
                 </tbody>
             </table>
-
-
-
         </div>
     </div>
-  </div>
-
-        
-
-
+    
+    <div class="card mb-3" id = "showHallContainer" style="display:none">
+          <div class="card-header">
+            <i class="fas fa-table"></i>
+            Lista postojecih sala</div>
+          <div class="card-body">
+            <div class="table-responsive">
+              <table class="table table-bordered" id="tableRequests" width="100%" cellspacing="0">
+                <thead>
+					<tr>
+					<th scope="col">Broj sale</th>
+      				<th scope="col">Klinika</th>
+      				<th scope="col"></th>
+      				<th scope="col"></th>
+					</tr>					
+					</thead>
+					<tbody>             	
+                </tbody>
+              </table>
+            </div>
+          </div>
+          </div>
     
 
+
+   		<div class="card mb-3" id = "showClinicContainer" style="display:none">
+          <div class="card-header">
+            <i class="fas fa-table"></i>
+            Lista Klinika</div>
+          <div class="card-body">
+            <div class="table-responsive">
+              <table class="table table-bordered" id="tableClinics" width="100%" cellspacing="0">
+                <thead>
+					<tr>
+					<th scope="col">Ime Klinike</th>
+      				<th scope="col">Adresa</th>
+      				<th scope="col">Grad</th>
+      				<th scope="col">Drzava</th>
+      				<th scope="col">Opis</th>
+      				<th scope="col">Rejting</th>
+					</tr>					
+					</thead>
+					<tbody>             	
+                </tbody>
+              </table>
+            </div>
+          </div>
+          </div>
+   
+   
+   
+   
+  </div>
+
+          
+  </div>
+  
   </div>
   <!-- /#wrapper -->
 

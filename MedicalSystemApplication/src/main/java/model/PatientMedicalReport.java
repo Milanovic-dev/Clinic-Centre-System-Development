@@ -1,6 +1,7 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.*;
@@ -16,7 +17,7 @@ public class PatientMedicalReport {
     private String description;
 	
 	@Column(name = "dateAndTime", nullable = false)
-    private long dateAndTime;
+    private Date dateAndTime;
 
 	@OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "doctor_id")
@@ -35,7 +36,7 @@ public class PatientMedicalReport {
 		super();
 	}
 	
-	public PatientMedicalReport(String description, long dateAndTime, Doctor doctor, Clinic clinic) {
+	public PatientMedicalReport(String description, Date dateAndTime, Doctor doctor, Clinic clinic) {
 		super();
 		this.description = description;
 		this.dateAndTime = dateAndTime;
@@ -68,11 +69,11 @@ public class PatientMedicalReport {
 		this.prescription = prescription;
 	}
 
-	public long getDateAndTime() {
+	public Date getDateAndTime() {
 		return dateAndTime;
 	}
 
-	public void setDateAndTime(long dateAndTime) {
+	public void setDateAndTime(Date dateAndTime) {
 		this.dateAndTime = dateAndTime;
 	}
 
