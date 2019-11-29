@@ -8,13 +8,13 @@ import javax.persistence.*;
 public class Nurse extends User{
 	
 
-	@Column(name = "insuranceId", nullable = false)
+	@Column(name = "insuranceId", nullable = true)
     private String insuranceID;
 	
-	@Column(name = "shiftStart", nullable = false)
+	@Column(name = "shiftStart", nullable = true)
     private String shiftStart;
 	
-    @Column(name = "shiftEnd", nullable = false)
+    @Column(name = "shiftEnd", nullable = true)
     private String shiftEnd;
     
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)

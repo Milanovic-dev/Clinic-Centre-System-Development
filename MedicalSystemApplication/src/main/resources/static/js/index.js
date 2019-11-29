@@ -28,6 +28,14 @@ $(document).ready(function(){
 		
 				
 			}
+			
+			$("#addHallContainer").hide()
+   			$("#showHallContainer").hide()
+        	$("#changeHallContainer").hide()
+        	$("#zakazno").hide()
+        	$('#showClinicContainer').hide()
+        	$('#MedicalRecordContainer').hide()
+			
 			if(user.role == "Doctor"){
 				sideBar.append("<li class='nav-item active'><a class='nav-link' href='userProfileNew.html'><i class='fas fa-fw fa-tachometer-alt'></i><span id='profileUser'>Profil</span></a></li>")	
 				sideBar.append("<li class='nav-item active'><a class='nav-link' href='index.html'><i class='fas fa-fw fa-tachometer-alt'></i><span id='pacientList'>Lista pacijenata</span></a></li>")	
@@ -165,6 +173,7 @@ function setUpPatientPage(user)
 			{
 				let clinics = data.responseJSON
 				let i = 0
+				console.log(clinics.length)
 				
 				$('#tableClinics tbody').empty()
 				for(let c of clinics)
@@ -208,6 +217,7 @@ function makeMedicalRecord(data)
 	$('#alergies').empty()
 	for(let al of alergies)
 	{
+		
 		$('#alergies').append("<div class='col-4 themed-grid-col' >"+al+"</div>")	
 	}
 }

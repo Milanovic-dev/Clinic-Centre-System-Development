@@ -64,6 +64,9 @@ public class UserService {
 				clinic.getHalls().add(hall1);
 				clinic.getHalls().add(hall2);
 				
+				Nurse nurse = new Nurse("username",hash,"nurse@gmail.com","Sestra","Sestra","Novi Sad","Karadjordjeva 8","Srbija","42423423","");
+				
+				userRepository.save(nurse);
 				userRepository.save(doctor);
 				userRepository.save(doctor2);
 				userRepository.save(doctor3);
