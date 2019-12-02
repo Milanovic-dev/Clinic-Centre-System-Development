@@ -84,6 +84,19 @@ public class User
 	
 	
 
+	public User(User user) {
+		this.username = user.getUsername();
+		this.password = user.getPassword();
+		this.email = user.getEmail();
+		this.name = user.getName();
+		this.surname = user.getSurname();
+		this.city = user.getCity();
+		this.address = user.getAddress();
+		this.state = user.getState();
+		this.phone = user.getPhone();
+		this.role = user.getRole();
+	}
+
 	public Boolean getIsFirstLog() {
 		return isFirstLog;
 	}

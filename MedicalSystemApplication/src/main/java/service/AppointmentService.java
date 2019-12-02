@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import model.Appointment;
 import model.Clinic;
+import model.Doctor;
 import model.Hall;
 import model.Patient;
 import model.User;
@@ -64,5 +65,15 @@ public class AppointmentService {
 	public List<Appointment> findAllByPatient(Patient p)
 	{
 		return appointmentRepository.findAllByPatient(p);
+	}
+	
+	public List<Appointment> findAllByDoctors(Doctor d)
+	{
+		return appointmentRepository.findAllByDoctors(d);
+	}
+	
+	public List<Appointment> findAllByHall(Hall hall)
+	{
+		return appointmentRepository.findAllByHall(hall);
 	}
 }

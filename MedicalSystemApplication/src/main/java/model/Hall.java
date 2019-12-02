@@ -24,10 +24,14 @@ public class Hall
 	
 	@Column(name= "number",nullable = false)
 	private int number; 	
+	
+	@Column(name="deleted",nullable = false)
+	private Boolean deleted;
 
 	public Hall() {
 		super();
 		// TODO Auto-generated constructor stub
+		deleted = false;
 	}
 	
 	
@@ -35,7 +39,18 @@ public class Hall
 		super();
 		this.clinic = clinic;
 		this.number = number;
+		deleted = false;
+	}
+
 	
+
+	public Boolean getDeleted() {
+		return deleted;
+	}
+
+
+	public void setDeleted(Boolean deleted) {
+		this.deleted = deleted;
 	}
 
 

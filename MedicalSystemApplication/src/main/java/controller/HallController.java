@@ -21,10 +21,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import dto.ClinicDTO;
 import dto.HallDTO;
+import model.Appointment;
 import model.Clinic;
 import model.Hall;
 import model.RegistrationRequest;
 import model.User;
+import service.AppointmentService;
 import service.ClinicService;
 import service.HallService;
 
@@ -34,7 +36,8 @@ public class HallController {
 	@Autowired
     private HallService hallService;
 	
-	
+	@Autowired
+	private AppointmentService appointmentService;
 	@Autowired
 	private ClinicService clinicService;
 	
@@ -50,8 +53,11 @@ public class HallController {
 	   
 	   for(Hall hall : halls)
 	   {
-		   HallDTO dto = new HallDTO(hall);
-		   ret.add(dto);
+		   if(!hall.getDeleted())
+		   {
+			   HallDTO dto = new HallDTO(hall);
+			   ret.add(dto);
+		   }		   
 	   }
 
 	   return new ResponseEntity<>(ret,HttpStatus.OK);
@@ -67,7 +73,22 @@ public class HallController {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 		
-		hallService.delete(hall);
+		List<Appointment> list = appointmentService.findAllByHall(hall);
+		
+		if(list != null)
+		{
+			if(list.size() > 0)
+			{
+				return new ResponseEntity<>(HttpStatus.CONFLICT);
+			}		
+		}
+		else
+		{
+			return new ResponseEntity<>(HttpStatus.CONFLICT);
+		}
+		
+		hall.setDeleted(true);
+		hallService.save(hall);
 		return new ResponseEntity<>(HttpStatus.OK);
 		
 	}
@@ -88,7 +109,7 @@ public class HallController {
 	}
 	
 	
-	 @GetMapping(value="/{number}")
+	 @GetMapping(value="/get/{number}")
 	    public ResponseEntity<HallDTO> getHallByNumber(@PathVariable("number") int number)
 	    {
 	    	Hall hall= hallService.findByNumber(number);
@@ -97,26 +118,14 @@ public class HallController {
 	    		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 	    	}
 	    	
+	    	if(hall.getDeleted())
+	    	{
+	    		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+	    	}
 	    	
 	    	return new ResponseEntity<>(new HallDTO(hall),HttpStatus.OK);
 	    }
 	 
-	 
-	 @DeleteMapping(value="/delete/{number}")
-	 public ResponseEntity<Void> deleteHallByNumber(@PathVariable("number") int number)
-	 {
-		Hall hall = hallService.findByNumber(number);
-		if(hall == null )
-		{
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-		}
-		Clinic c = hall.getClinic();
-		c.getHalls().remove(hall);
-		clinicService.save(c);
-		hallService.delete(hall);
-		
-		return new ResponseEntity<>(HttpStatus.OK);
-	 }
 	    
 	  @PostMapping(value ="/addHall", consumes = "application/json")
 	    public ResponseEntity<Void> add(@RequestBody Hall hall)
