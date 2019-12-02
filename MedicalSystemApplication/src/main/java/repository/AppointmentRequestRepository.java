@@ -1,6 +1,7 @@
 package repository;
 
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -13,4 +14,5 @@ public interface AppointmentRequestRepository  extends JpaRepository<Appointment
 
 	public AppointmentRequest findByDateAndHallAndClinic(Date date, Hall hall,Clinic clinic);
 	
+	public List<AppointmentRequest> findAllByClinic(Clinic clinic);
 }

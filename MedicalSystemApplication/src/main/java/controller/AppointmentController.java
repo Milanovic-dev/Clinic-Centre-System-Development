@@ -1,6 +1,5 @@
 package controller;
 
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -11,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import dto.AppointmentDTO;
 import model.*;
-import model.Appointment.AppointmentType;
 import model.User.UserRole;
 import service.AppointmentRequestService;
 import service.AppointmentService;
@@ -89,6 +88,26 @@ public class AppointmentController
 		return new ResponseEntity<>(new AppointmentDTO(appointmentReq),HttpStatus.OK);
 	}
 	
+	@GetMapping(value="/clinic/getAll/{clinicName}")
+	public ResponseEntity<List<AppointmentDTO>> getAppointmentRequests(@PathVariable("clinicName") String clinic)
+	{
+		List<AppointmentRequest> list = appointmentRequestService.getAllByClinic(clinic);
+		
+		if(list == null)
+		{
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+		
+		List<AppointmentDTO> dtos = new ArrayList<AppointmentDTO>();
+		
+		for(AppointmentRequest req : list)
+		{
+			dtos.add(new AppointmentDTO(req));
+		}
+		
+		return new ResponseEntity<>(dtos,HttpStatus.OK);
+	}
+	
 	@GetMapping(value="/patient/getAll/{email}")
 	public ResponseEntity<List<Appointment>> getAppointments(@PathVariable("email") String email)
 	{
@@ -120,6 +139,53 @@ public class AppointmentController
 		
 		return new ResponseEntity<>(appointments,HttpStatus.OK);
 		
+	}
+	
+	@PostMapping(value="/confirmRequest")
+	public ResponseEntity<Void> confirmAppointmentRequest(@RequestBody AppointmentDTO dto)
+	{
+		HttpHeaders header = new HttpHeaders();
+		AppointmentRequest request = appointmentRequestService.findAppointmentRequest(dto.getDate(), dto.getHallNumber(), dto.getClinicName());
+		Appointment appointment = new Appointment();
+		
+		if(request == null)
+		{
+			header.set("responseText","Request not found: " + dto.getDate() +" ,"+ dto.getHallNumber() +", "+ dto.getClinicName());
+			return new ResponseEntity<>(header,HttpStatus.NOT_FOUND);
+		}
+		
+		appointment.setClinic(request.getClinic());
+		appointment.setHall(request.getHall());
+		appointment.setPatient(request.getPatient());
+		appointment.setDate(request.getDate());
+		for(Doctor doc : request.getDoctors())
+		{
+			appointment.getDoctors().add(doc);
+		}		
+		appointment.setAppointmentDescription(request.getAppointmentDescription());
+		appointment.setAppointmentType(request.getAppointmentType());
+		
+		//Send mail
+		appointmentRequestService.delete(request);
+		appointmentService.save(appointment);	
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
+	
+	@DeleteMapping(value="/denyRequest")
+	public ResponseEntity<Void> denyAppoinmtnetRequest(@RequestBody AppointmentDTO dto)
+	{
+		HttpHeaders header = new HttpHeaders();
+		AppointmentRequest request = appointmentRequestService.findAppointmentRequest(dto.getDate(), dto.getHallNumber(), dto.getClinicName());
+		
+		if(request == null)
+		{
+			header.set("responseText","Request not found: " + dto.getDate() +" ,"+ dto.getHallNumber() +", "+ dto.getClinicName());
+			return new ResponseEntity<>(header,HttpStatus.NOT_FOUND);
+		}
+		
+		//Send mail
+		appointmentRequestService.delete(request);
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 	
 	@PostMapping(value="/sendRequest")
