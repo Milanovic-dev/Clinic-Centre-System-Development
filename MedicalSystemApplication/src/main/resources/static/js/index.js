@@ -350,14 +350,16 @@ function listUser(data,i)
 	let tdCity=$('<td class="clinic" data-toggle="modal" data-target="#exampleModalLong">'+ data.city +'</td>');
 	let tdState=$('<td class="clinic" data-toggle="modal" data-target="#exampleModalLong">'+ data.state +'</td>');
 	
-	let tdChange=$('<td> <button type="button" class="btn btn-primary" id = "changeHall_btn'+i+'">Promeni u lekara</button></td>');
+	//<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo">Open modal for @mdo</button>
+	let tdChange=$('<td> <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addShiftModal" id = "changeUserRole_btn'+i+'">Promeni u lekara</button></td>');
 	
 	tr.append(tdName).append(tdSurname).append(tdEmail).append(tdPhone).append(tdAddress).append(tdCity).append(tdState).append(tdChange)
 	$('#tableUsers tbody').append(tr);
 
-	$('#changeHall_btn'+i).click(function(e)
+	$('#changeUserRole_btn'+i).click(function(e)
 	{
 		e.preventDefault()
+		$('#exampleModalLabel').text("Radno vreme ( " + data.name + " "  + data.surname + " )" )
 		
 	})
 	
