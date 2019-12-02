@@ -1,6 +1,7 @@
 package controller;
 
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -124,31 +125,42 @@ public class UserController
 	}
 	
 	@GetMapping(value = "/getAll/{role}")
-	public ResponseEntity<List<User>> getAllUsersByRole(@PathVariable("role") UserRole role)
+	public ResponseEntity<List<UserDTO>> getAllUsersByRole(@PathVariable("role") UserRole role)
 	{
 		List<User> ret = userService.getAll(role);
+		List<UserDTO> dtos = new ArrayList<UserDTO>();
+		for(User u : ret) 
+		{
+			dtos.add(new UserDTO(u));
+		}
 		
 		if(ret == null)
 		{
-			return new ResponseEntity<>(ret,HttpStatus.NOT_FOUND);
+			return new ResponseEntity<>(dtos,HttpStatus.NOT_FOUND);
 		}
 		
-		return new ResponseEntity<>(ret,HttpStatus.OK);
+		return new ResponseEntity<>(dtos,HttpStatus.OK);
 		
 		
 	}
 	
 	@GetMapping(value = "/getAll")
-	public ResponseEntity<List<User>> getAllUsers()
+	public ResponseEntity<List<UserDTO>> getAllUsers()
 	{
 		List<User> ret = userService.getAll();
+		List<UserDTO> dtos = new ArrayList<UserDTO>();
+		for(User u : ret) 
+		{
+			dtos.add(new UserDTO(u));
+		}
+		
 		
 		if(ret == null)
 		{
-			return new ResponseEntity<>(ret,HttpStatus.NOT_FOUND);
+			return new ResponseEntity<>(dtos,HttpStatus.NOT_FOUND);
 		}
 		
-		return new ResponseEntity<>(ret,HttpStatus.OK);
+		return new ResponseEntity<>(dtos,HttpStatus.OK);
 	}
 	
 	@GetMapping(value="/patient/getMedicalRecord/{email}")
