@@ -87,7 +87,7 @@ public class UserController
 		return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 	}
 	
-	@PutMapping(value = "/update/firstPassword/{email}" ,consumes = "aplication/json")
+	@PutMapping(value = "/update/firstPassword/{email}" ,consumes = "application/json")
 	public ResponseEntity<Void> updateFirstPassword(@PathVariable("email") String email,@RequestBody PasswordDTO dto)
 	{
 		User user = userService.findByEmail(email);
@@ -96,7 +96,10 @@ public class UserController
 			String newPassword = dto.getNewPassword();
 			try {
 				String hashNewPassword = SecurePasswordHasher.encode(newPassword);
-				user.setPassword(newPassword);
+				user.setPassword(hashNewPassword);
+				user.setIsFirstLog(false);
+				userService.save(user);
+				return new ResponseEntity<>(HttpStatus.OK);
 			} catch (NoSuchAlgorithmException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -104,7 +107,7 @@ public class UserController
 			
 		}
 		
-		return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 	}
 	
 	@GetMapping(value = "/getUser/{email}")
