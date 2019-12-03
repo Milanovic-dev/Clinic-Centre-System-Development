@@ -64,12 +64,12 @@ public class UserController
 		{		
 			try {
 				String oldPassword = dto.getOldPassword();
-				String oldHash = SecurePasswordHasher.encode(oldPassword);
+				String oldHash = SecurePasswordHasher.getInstance().encode(oldPassword);
 				
 				if(user.getPassword().equals(oldHash))
 				{
 					String newPassword = dto.getNewPassword();
-					String newHash = SecurePasswordHasher.encode(newPassword);
+					String newHash = SecurePasswordHasher.getInstance().encode(newPassword);
 					user.setPassword(newHash);
 					userService.save(user);
 					return new ResponseEntity<>(HttpStatus.OK);
@@ -96,7 +96,7 @@ public class UserController
 		{
 			String newPassword = dto.getNewPassword();
 			try {
-				String hashNewPassword = SecurePasswordHasher.encode(newPassword);
+				String hashNewPassword = SecurePasswordHasher.getInstance().encode(newPassword);
 				user.setPassword(hashNewPassword);
 				user.setIsFirstLog(false);
 				userService.save(user);

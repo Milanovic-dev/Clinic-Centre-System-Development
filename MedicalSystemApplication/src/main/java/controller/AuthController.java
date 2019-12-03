@@ -64,7 +64,7 @@ public class AuthController
 		String token = dto.getPassword();
 		
 		try {
-			String hash = SecurePasswordHasher.encode(token);
+			String hash = SecurePasswordHasher.getInstance().encode(token);
 			
 			if(hash.equals(u.getPassword()))
 			{
@@ -113,7 +113,7 @@ public class AuthController
 		String token = patient.getPassword();
 		
 		try {
-			String hash = SecurePasswordHasher.encode(token);
+			String hash = SecurePasswordHasher.getInstance().encode(token);
 			
 			patient.setPassword(hash);
 			userService.save(patient);

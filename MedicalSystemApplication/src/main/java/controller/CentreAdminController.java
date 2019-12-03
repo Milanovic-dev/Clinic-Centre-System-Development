@@ -38,7 +38,7 @@ public class CentreAdminController {
             String token = "admin1234";
 
             try {
-                String hash = SecurePasswordHasher.encode(token);
+                String hash = SecurePasswordHasher.getInstance().encode(token);
                 centreAdmin.setPassword(hash);
                 userService.save(centreAdmin);
                 return new ResponseEntity<>(HttpStatus.OK);

@@ -172,6 +172,7 @@ function setUpPatientPage(user)
 		
 		$('#showClinicContainer').show()
 		$('#MedicalRecordContainer').hide()
+		$('#makeAppointmentContainer').hide()
 		
 		$.ajax({
 			type: 'GET',
@@ -198,6 +199,7 @@ function setUpPatientPage(user)
 		e.preventDefault()
 		
 		$('#showClinicContainer').hide()
+		$('#makeAppointmentContainer').hide()
 		$('#MedicalRecordContainer').show()
 		
 		$.ajax({
@@ -252,14 +254,40 @@ function listClinic(data,i)
 		$('#inputClinicName').val(data.name)
 		$('#inputClinicAddress').val(data.address+", "+data.city)
 		
-		let tr=$('<tr></tr>');
+		
+		$.ajax({
+			type:'GET',
+			url:"api/clinic/getDoctors/"+data.name,
+			complete: function(data)
+			{
+				let doctors = data.responseJSON
 				
-		$('#tableDoctors tbody').append(tr)
+				let index = 0
+				for(let d of doctors)
+				{
+					listDoctor(d,index)
+					index++
+				}
+				
+			}
+		})
+		
+		
 	})
 	
 }
 
-
+function listDoctor(data,i)
+{
+	let tr=$('<tr></tr>');
+	let tdName=$('<td>'+ data.user.name +'</td>');
+	let tdSurname=$('<td>'+ data.user.name +'</td>');
+	let tdRating=$('<td>'+ data.avarageRating +'</td>');
+	let tdSelect = $("<td> <label class='label'><input class='label__checkbox' type='checkbox' id='checkDoctor"+i+"'><span class='label__text'><span class='label__check'><i class='fa fa-check icon'></i></span></span></label>" )
+	tr.append(tdName).append(tdSurname).append(tdRating).append(tdSelect)
+	$('#tableDoctors tbody').append(tr)
+	
+}
 
 function listHall(data,i)
 {

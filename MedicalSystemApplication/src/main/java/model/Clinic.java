@@ -30,7 +30,7 @@ public class Clinic
     @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     private List<Hall> halls;
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     private List<Doctor> doctors;
 
     @OneToMany(fetch = FetchType.LAZY)

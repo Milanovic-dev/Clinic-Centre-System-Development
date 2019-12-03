@@ -26,7 +26,7 @@ public class StartupApplicationListener implements ApplicationListener<Applicati
 		try {
 			CentreAdmin admin = new CentreAdmin();
 			admin.setEmail("admin@centar.com");
-			admin.setPassword(SecurePasswordHasher.encode("1234"));
+			admin.setPassword(SecurePasswordHasher.getInstance().encode("1234"));
 			userService.save(admin);
 		} catch (NoSuchAlgorithmException e) {
 			// TODO Auto-generated catch block

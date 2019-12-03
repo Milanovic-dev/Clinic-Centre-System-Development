@@ -43,15 +43,15 @@ public class UserService {
 			String token = "admin1234";
 
 			try {
-				String hash = SecurePasswordHasher.encode(token);
+				String hash = SecurePasswordHasher.getInstance().encode(token);
 				userRepository.save(new CentreAdmin("username", hash, "klinickicentartest@gmail.com", "Admin", "Adminic","Novi Sad","Trg Dositeja Obradovica 6", "Srbija", "011100100", true));
 			
-				hash = SecurePasswordHasher.encode("123");
+				hash = SecurePasswordHasher.getInstance().encode("123");
 				
 			
-				Doctor doctor = new Doctor("username",hash,"doktor1@gmail.com","Doktor","Doktor","Novi Sad","Karadjordjeva 8","Srbija","42423423");
-				Doctor doctor2 = new Doctor("username",hash,"doktor2@gmail.com","Doktor","Doktor","Novi Sad","Karadjordjeva 8","Srbija","42423423");
-				Doctor doctor3 = new Doctor("username",hash,"doktor3@gmail.com","Doktor","Doktor","Novi Sad","Karadjordjeva 8","Srbija","42423423");
+				Doctor doctor = new Doctor("username",hash,"doktor1@gmail.com","Doktor1","Doktor","Novi Sad","Karadjordjeva 8","Srbija","42423423");
+				Doctor doctor2 = new Doctor("username",hash,"doktor2@gmail.com","Doktor2","Doktor","Novi Sad","Karadjordjeva 8","Srbija","42423423");
+				Doctor doctor3 = new Doctor("username",hash,"doktor3@gmail.com","Doktor3","Doktor","Novi Sad","Karadjordjeva 8","Srbija","42423423");
 				
 				Patient patient = new Patient("username",hash,"nikola@gmail.com","Nikola","Milanovic","Novi Sad","Karadjorjdeva 8","Srbija","4123432");
 				patient.getMedicalRecord().setBloodType(BloodType.AB);
@@ -63,9 +63,16 @@ public class UserService {
 				Hall hall2 = new Hall(clinic,2);
 				clinic.getHalls().add(hall1);
 				clinic.getHalls().add(hall2);
+				doctor.setClinic(clinic);
+				doctor2.setClinic(clinic);
+				doctor3.setClinic(clinic);
+				clinic.getDoctors().add(doctor);
+				clinic.getDoctors().add(doctor2);
+				clinic.getDoctors().add(doctor3);
 				
 				Nurse nurse = new Nurse("username",hash,"nurse@gmail.com","Sestra","Sestra","Novi Sad","Karadjordjeva 8","Srbija","42423423","");
 				
+				clinicRepository.save(clinic);
 				userRepository.save(nurse);
 				userRepository.save(doctor);
 				userRepository.save(doctor2);
@@ -74,7 +81,6 @@ public class UserService {
 				
 				hallRepository.save(hall1);
 				hallRepository.save(hall2);
-				clinicRepository.save(clinic);
 				
 				userRepository.save(new ClinicAdmin("username",hash,"clinicAdmin@gmail.com","Admin","Admin","Novi Sad","Karadjordjeva 8","Srbija","2423423432",clinic));
 				

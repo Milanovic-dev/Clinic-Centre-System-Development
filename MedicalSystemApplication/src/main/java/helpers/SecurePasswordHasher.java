@@ -5,9 +5,11 @@ import java.security.NoSuchAlgorithmException;
 
 public class SecurePasswordHasher 
 {
-	private final static char[] hexArray = "0123456789ABCDEF".toCharArray();
+	private static SecurePasswordHasher instance;
+	
+	private final char[] hexArray = "0123456789ABCDEF".toCharArray();
 	 
-	public static String encode(String data) throws NoSuchAlgorithmException
+	public String encode(String data) throws NoSuchAlgorithmException
 	{
 		MessageDigest digest = MessageDigest.getInstance("SHA-256");
 		digest.reset();
@@ -15,7 +17,7 @@ public class SecurePasswordHasher
 		return bytesToStringHex(hash);
 	}
 	
-	private static String bytesToStringHex(byte[] bytes)
+	private String bytesToStringHex(byte[] bytes)
 	{
 		char[] hexChars = new char[bytes.length * 2];
 		for(int j = 0 ; j < bytes.length ; j++)
@@ -28,5 +30,14 @@ public class SecurePasswordHasher
 		return new String(hexChars);
 	}
 	
+	public static SecurePasswordHasher getInstance()
+	{
+		if(instance == null)
+		{
+			instance = new SecurePasswordHasher();			
+		}
+		
+		return instance;
+	}
 		
 }

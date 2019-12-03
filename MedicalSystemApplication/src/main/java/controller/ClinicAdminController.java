@@ -75,7 +75,7 @@ public class ClinicAdminController {
             String token = "admin1234";
 
             try {
-                String hash = SecurePasswordHasher.encode(token);
+                String hash = SecurePasswordHasher.getInstance().encode(token);
                 clinicAdmin.setPassword(hash);
                 userService.save(clinicAdmin);
                 clinicAdmin.setClinic(clinic);
