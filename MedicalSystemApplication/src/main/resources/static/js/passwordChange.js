@@ -7,7 +7,7 @@ $(document).ready(function(){
 		type: 'GET',
 		url: 'api/auth/sessionUser',
 		complete: function(data){
-			let user = data.response.JSON
+			let user = data.responseJSON
 			if(user.isFirstLog == true)
 			{
 				$('#inputPasswordChangeOld').hide()
@@ -86,7 +86,7 @@ function firstLogPasswordChange(data)
 		{
 			if(data.status == 200)
 			{
-				window.location.href = "userProfileNew.html"
+				window.location.href = "index.html"
 			}
 			else
 			{

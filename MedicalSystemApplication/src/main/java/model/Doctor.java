@@ -41,6 +41,38 @@ public class Doctor extends User
 		this.setIsFirstLog(true);
 	}
 
+	public Doctor(User user) {
+		super(user);
+		this.setRole(UserRole.Doctor);
+		this.setIsFirstLog(true);
+	}
+
+	
+	
+	public String getShiftStart() {
+		return shiftStart;
+	}
+
+	public void setShiftStart(String shiftStart) {
+		this.shiftStart = shiftStart;
+	}
+
+	public String getShiftEnd() {
+		return shiftEnd;
+	}
+
+	public void setShiftEnd(String shiftEnd) {
+		this.shiftEnd = shiftEnd;
+	}
+
+	public Clinic getClinic() {
+		return clinic;
+	}
+
+	public void setClinic(Clinic clinic) {
+		this.clinic = clinic;
+	}
+
 	public String getType() {
 		return type;
 	}

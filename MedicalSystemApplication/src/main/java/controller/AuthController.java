@@ -48,7 +48,7 @@ public class AuthController
 	private UserService userService;
 	
 	@PostMapping(value ="/login", consumes = "application/json")
-	public ResponseEntity<UserDTO> login(@RequestBody LoginDTO dto,HttpServletResponse response)
+	public ResponseEntity<SessionUserDTO> login(@RequestBody LoginDTO dto,HttpServletResponse response)
 	{	
 		HttpHeaders header = new HttpHeaders();
 		
@@ -69,7 +69,7 @@ public class AuthController
 			if(hash.equals(u.getPassword()))
 			{
 				response.addCookie(new Cookie("email",u.getEmail()));
-				return new ResponseEntity<>(new UserDTO(u),HttpStatus.OK);
+				return new ResponseEntity<>(new SessionUserDTO(u),HttpStatus.OK);
 			}
 			
 		} catch (Exception e) {

@@ -87,6 +87,10 @@ public class UserService {
 	}
 
 
+	public void delete(User user)
+	{
+		userRepository.delete(user);
+	}
 
 	public List<User> getAll(UserRole role)
 	{
