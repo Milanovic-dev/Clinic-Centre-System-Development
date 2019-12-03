@@ -2,6 +2,7 @@ package controller;
 
 
 import dto.ClinicDTO;
+import dto.DoctorDTO;
 import model.Clinic;
 import model.Doctor;
 import model.RegistrationRequest;
@@ -80,6 +81,28 @@ public class ClinicController {
     	
     	
     	return new ResponseEntity<>(clinicsDTO,HttpStatus.OK);
+    }
+    
+    @GetMapping(value="/getDoctors/{name}")
+    public ResponseEntity<List<DoctorDTO>> getClinicsDoctors(@PathVariable("name") String name)
+    {
+    	Clinic clinic = clinicService.findByName(name);
+    	
+    	if(clinic == null)
+    	{
+    		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    	}
+    	
+    	List<Doctor> doctors = clinic.getDoctors();
+    	List<DoctorDTO> dtos = new ArrayList<DoctorDTO>();
+    	
+    	for(Doctor doc : doctors)
+    	{
+    		DoctorDTO dto = new DoctorDTO(doc);
+    		dtos.add(dto);
+    	}
+    	
+    	return new ResponseEntity<>(dtos,HttpStatus.OK);
     }
     
     
