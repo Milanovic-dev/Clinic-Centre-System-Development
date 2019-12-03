@@ -1,8 +1,7 @@
+
 /**
  * 
  */
-
-
 $(document).ready(function(){
 	
 	
@@ -176,7 +175,6 @@ function setUpPatientPage(user)
 		
 		$('#showClinicContainer').show()
 		$('#MedicalRecordContainer').hide()
-		$('#makeAppointmentContainer').hide()
 		
 		$.ajax({
 			type: 'GET',
@@ -204,7 +202,6 @@ function setUpPatientPage(user)
 		
 		$('#showClinicContainer').hide()
 		$('#MedicalRecordContainer').show()
-		$('#makeAppointmentContainer').hide()
 		
 		$.ajax({
 			type:'GET',
@@ -306,7 +303,6 @@ function listHall(data,i)
 		$('#showHallContainer').hide()
 		$('#changeHallContainer').show()
 		
-
 		$('#inputChangeHall').val(data.number) 
 		
 		$('#submitChangeHall').click(function(e)
@@ -339,7 +335,7 @@ function makeUserTable()
 {
 	$.ajax({
 		type: 'GET',
-		url: 'api/users/getAll',
+		url: 'api/users/getAll/Patient',
 		complete: function(data)
 		{
 			console.log(data)
@@ -347,7 +343,7 @@ function makeUserTable()
 			let i = 0
 			for(let u of users)
             {
-				listUser(d,i);
+				listUser(u,i);
 				i++;
             }
 		}
@@ -369,62 +365,13 @@ function listUser(data,i)
 	let tdState=$('<td class="clinic" data-toggle="modal" data-target="#exampleModalLong">'+ data.state +'</td>');
 	
 	let tdChange=$('<td> <button type="button" class="btn btn-primary" id = "changeHall_btn'+i+'">Promeni u lekara</button></td>');
-	let tdDelete=$('<td> <button type="button" class="btn btn-danger" id = "deleteHall_btn'+i+'">Izbrisi</button></td>');
 	
-	tr.append(tdName).append(tdSurname).append(tdEmail).append(tdPhone).append(tdAdress).append(tdCity).append(tdState).append(tdDelete).append(tdChange)
-	$('#tableRequests tbody').append(tr);
-	
-	$('#deleteHall_btn'+i).click(function(e)
-	{
-		e.preventDefault()
-		console.log(data.number)
-		
-		$.ajax({
-			type: 'DELETE',
-			url: 'api/hall/deleteHall/'+data.number,
-			complete: function(data)
-			{
-				if(data.status == "200")
-				{
-					makeHallTable()
-				}
-			}
-			
-		})
-	})
-	
+	tr.append(tdName).append(tdSurname).append(tdEmail).append(tdPhone).append(tdAddress).append(tdCity).append(tdState).append(tdChange)
+	$('#tableUsers tbody').append(tr);
+
 	$('#changeHall_btn'+i).click(function(e)
 	{
 		e.preventDefault()
-		console.log(data.number)
-		$('#addHallContainer').hide()
-		$('#showHallContainer').hide()
-		$('#changeHallContainer').show()
-
-		
-		$('#inputChangeHall').val() 
-		
-		$('#submitChangeHall').click(function(e)
-		{
-			let newNumber = $('#inputChangeHall').val()
-			$.ajax({
-				type: 'PUT',
-				url: 'api/hall/changeHall/'+data.number+"/"+newNumber,
-				complete: function(data)
-				{
-					console.log(data.status)
-					if(data.status == "200")
-					{
-						
-						$('#changeHallContainer').hide()
-						$('#showHallContainer').show()
-						makeHallTable()
-					}
-				}
-			
-			})
-	
-		})
 		
 	})
 	
@@ -451,6 +398,3 @@ function makeHallTable()
 								
 	})
 }
-
-
-
