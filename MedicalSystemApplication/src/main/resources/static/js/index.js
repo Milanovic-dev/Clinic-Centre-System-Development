@@ -176,6 +176,7 @@ function setUpPatientPage(user)
 		
 		$('#showClinicContainer').show()
 		$('#MedicalRecordContainer').hide()
+		$('#makeAppointmentContainer').hide()
 		
 		$.ajax({
 			type: 'GET',
@@ -203,6 +204,7 @@ function setUpPatientPage(user)
 		
 		$('#showClinicContainer').hide()
 		$('#MedicalRecordContainer').show()
+		$('#makeAppointmentContainer').hide()
 		
 		$.ajax({
 			type:'GET',
@@ -242,9 +244,24 @@ function listClinic(data,i)
 	let tdState = $('<td>'+ data.state +'</td>');
 	let tdDesc = $('<td>'+ data.description +'</td>');
 	let tdRating = $('<td>'+ data.rating +'</td>');
+	let tdAppointment = $('<td><button type="button" class="btn btn-primary" id = "makeAppointment_btn'+i+'">Zakazi pregled</button></td>')
 		
-	tr.append(tdName).append(tdAdress).append(tdCity).append(tdState).append(tdDesc).append(tdRating);
+	tr.append(tdName).append(tdAdress).append(tdCity).append(tdState).append(tdDesc).append(tdRating).append(tdAppointment);
 	$('#tableClinics tbody').append(tr);
+	
+	$('#makeAppointment_btn'+i).click(function(e){
+		e.preventDefault()
+		$('#makeAppointmentContainer').show()
+		$('#showClinicContainer').hide()
+		$('#MedicalRecordContainer').hide()
+		
+		$('#inputClinicName').val(data.name)
+		$('#inputClinicAddress').val(data.address+", "+data.city)
+		
+		let tr=$('<tr></tr>');
+				
+		$('#tableDoctors tbody').append(tr)
+	})
 	
 }
 
@@ -289,6 +306,7 @@ function listHall(data,i)
 		$('#showHallContainer').hide()
 		$('#changeHallContainer').show()
 		
+
 		$('#inputChangeHall').val(data.number) 
 		
 		$('#submitChangeHall').click(function(e)
@@ -382,6 +400,7 @@ function listUser(data,i)
 		$('#addHallContainer').hide()
 		$('#showHallContainer').hide()
 		$('#changeHallContainer').show()
+
 		
 		$('#inputChangeHall').val() 
 		
