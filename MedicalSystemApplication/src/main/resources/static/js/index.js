@@ -295,6 +295,7 @@ function listHall(data,i)
 		$('#showHallContainer').hide()
 		$('#changeHallContainer').show()
 		
+		
 		$('#inputChangeHall').val() 
 		
 		$('#submitChangeHall').click(function(e)
