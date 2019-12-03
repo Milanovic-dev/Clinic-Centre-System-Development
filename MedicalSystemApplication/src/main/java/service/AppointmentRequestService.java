@@ -4,6 +4,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,6 +28,14 @@ public class AppointmentRequestService {
 	
 	@Autowired
 	private ClinicRepository clinicRepository;
+	
+	public List<AppointmentRequest> getAllByClinic(String clinic)
+	{
+		Clinic c = clinicRepository.findByName(clinic);
+		
+		return appointmentRequestRepository.findAllByClinic(c);
+	}
+	
 	
 	public AppointmentRequest findAppointmentRequest(Date date, Hall hall,Clinic clinic)
 	{
@@ -54,6 +63,10 @@ public class AppointmentRequestService {
 		return null;
 	}
 	
+	public void delete(AppointmentRequest request)
+	{
+		appointmentRequestRepository.delete(request);
+	}
 	
 	public void save(AppointmentRequest request)
 	{

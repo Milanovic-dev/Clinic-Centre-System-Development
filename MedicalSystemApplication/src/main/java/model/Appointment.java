@@ -56,6 +56,7 @@ public class Appointment
 	
 	public Appointment() {
 		super();
+		this.doctors = new ArrayList<Doctor>();
 		// TODO Auto-generated constructor stub
 	}
 	
