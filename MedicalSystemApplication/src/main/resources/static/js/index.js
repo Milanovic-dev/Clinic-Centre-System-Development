@@ -54,9 +54,9 @@ $(document).ready(function(){
 			
 			if(user.role == "ClinicAdmin"){
 				sideBar.append("<li class='nav-item active'><a class='nav-link' href='userProfileNew.html'><i class='fas fa-fw fa-tachometer-alt'></i><span id='profileUser'>Profil</span></a></li>")	
-				sideBar.append("<li class='nav-item active'><a class='nav-link' type='button'><i class='fas fa-fw fa-tachometer-alt'></i><span id='addHall'>Dodavanje sala</span></a></li>")	
-				sideBar.append("<li class='nav-item active'><a class='nav-link' type='button'><i class='fas fa-fw fa-tachometer-alt'></i><span id='showHalls'>Lista sala</span></a></li>")
-				sideBar.append("<li class='nav-item active'><a class='nav-link' type='button'><i class='fas fa-fw fa-tachometer-alt'></i><span id='addDoctor'>Dodaj lekara</span></a></li>")
+				sideBar.append("<li class='nav-item active'><a class='nav-link' type='button'><span id='addHall'>Dodavanje sala</span></a></li>")	
+				sideBar.append("<li class='nav-item active'><a class='nav-link' type='button'><span id='showHalls'>Lista sala</span></a></li>")
+				sideBar.append("<li class='nav-item active'><a class='nav-link' type='button'><span id='addDoctor'>Dodaj lekara</span></a></li>")
 
 				
 				
@@ -76,8 +76,18 @@ $(document).ready(function(){
 					$("#showHallContainer").hide()
 					$("#changeHallContainer").hide()
 					$("#showUserContainer").show()
-					makeUserTable()
 					
+					$.ajax({
+						type: 'GET',
+						url: 'api/admins/clinic/getClinicFromAdmin/' + user.email,
+						complete: function(data)
+						{
+							let clinic = data.responseJSON
+							makeUserTable(clinic)
+						}
+						
+					})
+	
 				})
 				
 				$('#showHalls').click(function(e){
@@ -356,7 +366,7 @@ function listHall(data,i)
 	
 }
 
-function makeUserTable()
+function makeUserTable(clinic)
 {
 	$.ajax({
 		type: 'GET',
@@ -366,9 +376,10 @@ function makeUserTable()
 			console.log(data)
 			users = data.responseJSON
 			let i = 0
+			$('#tableUsers tbody').empty()
 			for(let u of users)
             {
-				listUser(u,i);
+				listUser(u,i,clinic);
 				i++;
             }
 		}
@@ -377,7 +388,7 @@ function makeUserTable()
 
 }
 
-function listUser(data,i)
+function listUser(data,i,clinic)
 {
 	
 	let tr=$('<tr></tr>');
@@ -401,6 +412,36 @@ function listUser(data,i)
 		$('#exampleModalLabel').text("Radno vreme ( " + data.name + " "  + data.surname + " )" )
 		
 	})
+	
+	let startShift = $('#shiftStart_input').val()
+	let endShift = $('#shiftEnd_input').val()
+	
+	
+	$('#addShift_btn').click(function(e)
+	{
+		e.preventDefault()
+		
+		$.ajax({
+			type:'POST',
+			url: 'api/doctors/makeDoctor/' + data.email + '/' + '08:00' + '/' + '18:00',
+			complete: function(response)
+			{
+				$.ajax({
+					type: 'PUT',
+					url: 'api/clinic/addDoctor/'+ clinic.name +'/' + data.email,
+					complete: function(e)
+					{
+						
+					}
+					
+				})//KRAJ AJAXA ZA DODAVANJE NOVOG DOKTORA U KLINIKU ADMINA
+			}
+			
+		}) //KRAJ AJAXA ZA IZMENU ULOGE
+		
+		
+	})
+	
 	
 }
 

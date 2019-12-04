@@ -263,6 +263,40 @@
           </div>
   </div>
          <!-- ZAKAZIVANJE PREGLEDA END--> 
+<!-- ----------------MODAL ZA PREBACIVANJE U LEKARA--------------------- -->      
+<div class="modal fade" id="addShiftModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">New message</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="form-group">
+            <label for="recipient-name" class="col-form-label">Pocetak smene:</label>
+  				<input type="time" id="shiftStart_input" class="form-control">
+ 				<label for="inputMDEx1">Izaberite pocetak radnog vremena</label>
+          </div>
+          <div class="form-group">
+            <label for="message-text" class="col-form-label">Kraj smene:</label>
+  				<input type="time" id="shiftEnd_input" class="form-control">
+  				<label for="inputMDEx1">Izaberite kraj radnog vremena</label>
+          </div>
+        </form>    
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Odustani</button>
+        <button type="button" class="btn btn-primary" data-dismiss="modal" id = "addShift_btn">Zapamti izmene</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- --------------------KRAJ MODALA--------------------- -->         
+
    
   		<div class="container-fluid" id="MedicalRecordContainer">
   			<p>Osnovni podaci</p>
