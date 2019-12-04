@@ -88,7 +88,7 @@ public class AppointmentController
 		return new ResponseEntity<>(new AppointmentDTO(appointmentReq),HttpStatus.OK);
 	}
 	
-	@GetMapping(value="/clinic/getAll/{clinicName}")
+	@GetMapping(value="/clinic/getAllRequests/{clinicName}")
 	public ResponseEntity<List<AppointmentDTO>> getAppointmentRequests(@PathVariable("clinicName") String clinic)
 	{
 		List<AppointmentRequest> list = appointmentRequestService.getAllByClinic(clinic);
