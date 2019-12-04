@@ -252,7 +252,7 @@ function listClinic(data,i)
 		$('#MedicalRecordContainer').hide()
 		
 		$('#inputClinicName').val(data.name)
-		$('#inputClinicAddress').val(data.address+", "+data.city)
+		$('#inputClinicAddress').val(data.address+", "+data.city+", "+data.state)
 		
 		
 		$.ajax({
@@ -265,7 +265,7 @@ function listClinic(data,i)
 				let index = 0
 				for(let d of doctors)
 				{
-					listDoctor(d,index)
+					listDoctor(d,index,doctors.length)
 					index++
 				}
 				
@@ -277,7 +277,7 @@ function listClinic(data,i)
 	
 }
 
-function listDoctor(data,i)
+function listDoctor(data,i,doctorCount)
 {
 	let tr=$('<tr></tr>');
 	let tdName=$('<td>'+ data.user.name +'</td>');
@@ -286,6 +286,22 @@ function listDoctor(data,i)
 	let tdSelect = $("<td> <label class='label'><input class='label__checkbox' type='checkbox' id='checkDoctor"+i+"'><span class='label__text'><span class='label__check'><i class='fa fa-check icon'></i></span></span></label>" )
 	tr.append(tdName).append(tdSurname).append(tdRating).append(tdSelect)
 	$('#tableDoctors tbody').append(tr)
+	
+	$('#checkDoctor'+i).click(function(e){
+		console.log(i)
+		for(let j = 0 ; j < doctorCount ; j++)
+		{
+			if(j == i)
+			{
+				$("#checkDoctor"+j).prop('checked',true)
+			}
+			else
+			{
+				$("#checkDoctor"+j).prop('checked',false)
+			}
+		}
+		
+	})
 	
 }
 
