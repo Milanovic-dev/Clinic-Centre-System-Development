@@ -9,7 +9,7 @@ import javax.persistence.*;
 
 
 @Entity
-public class Patient extends User{
+public class 	Patient extends User{
 	
 	@Column(name = "insuranceId", nullable = true)
 	private String insuranceId;

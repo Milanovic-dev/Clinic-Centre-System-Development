@@ -14,6 +14,10 @@
 <link href="css/grid.css" rel ="stylesheet">
 <link href="css/checkbox.css" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<!-- dataTable -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.12/js/jquery.dataTables.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.12/css/dataTables.bootstrap4.min.css" rel="stylesheet"/>
 <!-- SCRIPT ORDER NE MENJATI -->
 <script src="js/home_page/patientHome.js"></script>
 <script src="js/home_page/doctorHome.js"></script>
@@ -22,7 +26,7 @@
 <script src="js/index.js"></script>
 <!-- ! -->
 <meta charset="ISO-8859-1">
-<title>Insert title here</title>
+<title>Index</title>
 </head>
 <body>
 
@@ -55,7 +59,6 @@
     					<a class="dropdown-item" href="index.html" id="dropdown-item_logout">Odjavi se</a>
   					</div>
 					</div>
-  					</div>
                 </form>
               </div>
          </nav>
@@ -268,6 +271,36 @@
           </div>
           </div>
   </div>
+
+          <!-- LISTA PACIJENATA -->
+          <div class="card mb-3" id = "showPatientsContainer" style="display:none">
+              <div class="card-header">
+                  <i class="fas fa-table"></i>
+                  Lista pacijenata</div>
+              <div class="card-body">
+                  <div class="table-responsive">
+                      <table class="table table-bordered" id="tablePatients" width="100%" cellspacing="0">
+                          <thead>
+                          <tr>
+                              <th scope="col" >Ime</th>
+                              <th scope="col" >Prezime</th>
+                              <th scope="col" >Adresa</th>
+                              <th scope="col" >Grad</th>
+                              <th scope="col" >Drzava</th>
+                              <th scope="col" >Telefon</th>
+                              <th scope="col" >Email</th>
+                          </tr>
+                          </thead>
+                          <tbody>
+                          </tbody>
+                      </table>
+                  </div>
+              </div>
+          </div>
+      </div>
+
+
+
          <!-- ZAKAZIVANJE PREGLEDA END--> 
 <!-- ----------------MODAL ZA PREBACIVANJE U LEKARA--------------------- -->      
 <div class="modal fade" id="addShiftModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">

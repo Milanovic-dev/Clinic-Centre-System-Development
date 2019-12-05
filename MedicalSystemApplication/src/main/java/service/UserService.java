@@ -83,7 +83,16 @@ public class UserService {
 				hallRepository.save(hall2);
 				
 				userRepository.save(new ClinicAdmin("username",hash,"clinicAdmin@gmail.com","Admin","Admin","Novi Sad","Karadjordjeva 8","Srbija","2423423432",clinic));
-				
+
+				Patient patient1 = new Patient("username",hash,"nikola1@gmail.com","Nikola1","Milanovic1","Novi Sad","Karadjorjdeva 8","Srbija","4123432");
+				Patient patient2 = new Patient("username",hash,"nikola2@gmail.com","Nikola2","Milanovic2","Novi Sad","Karadjorjdeva 8","Srbija","4123432");
+				Patient patient3 = new Patient("username",hash,"nikola3@gmail.com","Nikola3","Milanovic3","Novi Sad","Karadjorjdeva 8","Srbija","4123432");
+				patient1.setInsuranceId("id1");
+				patient2.setInsuranceId("id2");
+				patient3.setInsuranceId("id3");
+				userRepository.save(patient1);
+				userRepository.save(patient2);
+				userRepository.save(patient3);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
