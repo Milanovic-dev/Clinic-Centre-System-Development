@@ -286,17 +286,16 @@ function listUser(data,i,clinic)
 		
 	})
 	
-	let startShift = $('#shiftStart_input').val()
-	let endShift = $('#shiftEnd_input').val()
-	
 	
 	$('#addShift_btn').click(function(e)
 	{
 		e.preventDefault()
-		
+		let startShift = $('#shiftStart_input').val()
+		let endShift = $('#shiftEnd_input').val()
+
 		$.ajax({
 			type:'POST',
-			url: 'api/doctors/makeDoctor/' + data.email + '/' + '08:00' + '/' + '18:00',
+			url: 'api/doctors/makeDoctor/' + data.email + '/' + startShift + '/' + endShift,
 			complete: function(response)
 			{
 				$.ajax({
@@ -304,7 +303,7 @@ function listUser(data,i,clinic)
 					url: 'api/clinic/addDoctor/'+ clinic.name +'/' + data.email,
 					complete: function(e)
 					{
-						
+						makeUserTable(clinic)
 					}
 					
 				})//KRAJ AJAXA ZA DODAVANJE NOVOG DOKTORA U KLINIKU ADMINA
