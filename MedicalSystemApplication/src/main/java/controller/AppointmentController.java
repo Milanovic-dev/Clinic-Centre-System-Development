@@ -155,7 +155,7 @@ public class AppointmentController
 		}
 		
 		appointment.setClinic(request.getClinic());
-		appointment.setHall(request.getHall());
+		appointment.setHall(request.getHall());//TODO: Admin treba da izabere salu
 		appointment.setPatient(request.getPatient());
 		appointment.setDate(request.getDate());
 		for(Doctor doc : request.getDoctors())
