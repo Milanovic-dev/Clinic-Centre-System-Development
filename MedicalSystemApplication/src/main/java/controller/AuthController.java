@@ -57,7 +57,7 @@ public class AuthController
 		
 		if(u == null)
 		{
-			header.set("Response","User with that email doesn't exist!");
+			header.set("responseText","User with that email doesn't exist!");
 			return new ResponseEntity<>(header,HttpStatus.NOT_FOUND);
 		}
 		
