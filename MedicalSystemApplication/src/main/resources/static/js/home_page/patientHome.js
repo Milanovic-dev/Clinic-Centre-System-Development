@@ -35,7 +35,7 @@ function setUpPatientPage(user)
 				$('#tableClinics tbody').empty()
 				for(let c of clinics)
 				{
-					listClinic(c,i)
+					listClinic(c,i,user)
 					i++
 				}
 			}
@@ -80,7 +80,7 @@ function makeMedicalRecord(data)
 	}
 }
 
-function listClinic(data,i)
+function listClinic(data,i,user)
 {
 	let tr=$('<tr></tr>');
 	let tdName=$('<td>'+ data.name +'</td>');
@@ -112,14 +112,39 @@ function listClinic(data,i)
 				let doctors = data.responseJSON
 				
 				let index = 0
+				$('#tableDoctors tbody').empty()
 				for(let d of doctors)
 				{
 					listDoctor(d,index,doctors.length)
 					index++
 				}
 				
-			}
+			
+				$('#submitAppointmentRequest').click(function(e){
+					e.preventDefault()
+					
+					let clinicName = $('#inputClinicName').val()
+					let patientEmail = user.email
+					let doctorArray = []
+					
+					for(let i = 0 ; i < doctors.length ; i++)
+					{
+						if($('#checkDoctor'+i).is(":checked"))
+						{
+							doctorArray.push(doctors[i].user.email)
+						}
+					}
+					
+					let json = JSON.stringify({"clinicName":clinicName,"patientEmail":patientEmail,"doctors":doctorArray})
+					console.log(json)
+					//SEND REQUEST
+				})
+			
+			
+			}		
+				
 		})
+		
 		
 		
 	})
