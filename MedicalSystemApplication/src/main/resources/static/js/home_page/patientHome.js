@@ -102,7 +102,7 @@ function listClinic(data,i,user)
 		
 		$('#inputClinicName').val(data.name)
 		$('#inputClinicAddress').val(data.address+", "+data.city+", "+data.state)
-		
+		$('#inputAppointmentType').val("Examination")
 		
 		$.ajax({
 			type:'GET',
@@ -119,6 +119,15 @@ function listClinic(data,i,user)
 					index++
 				}
 				
+				$('#inputAppointmentType').change(function(e){
+					
+					for(let j = 0 ; j < doctors.length ; j++)
+					{
+						$("#checkDoctor"+j).prop('checked',false)
+					}
+					
+				})
+				
 			
 				$('#submitAppointmentRequest').click(function(e){
 					e.preventDefault()
@@ -126,7 +135,7 @@ function listClinic(data,i,user)
 					let clinicName = $('#inputClinicName').val()
 					let patientEmail = user.email
 					let doctorArray = []
-					
+										
 					for(let i = 0 ; i < doctors.length ; i++)
 					{
 						if($('#checkDoctor'+i).is(":checked"))
@@ -157,12 +166,17 @@ function listDoctor(data,i,doctorCount)
 	let tdName=$('<td>'+ data.user.name +'</td>');
 	let tdSurname=$('<td>'+ data.user.name +'</td>');
 	let tdRating=$('<td>'+ data.avarageRating +'</td>');
+	let tdCalendar =$("<span class='input-group-addon'><span class='glyphicon glyphicon-calendar'></span></span>");
 	let tdSelect = $("<td> <label class='label'><input class='label__checkbox' type='checkbox' id='checkDoctor"+i+"'><span class='label__text'><span class='label__check'><i class='fa fa-check icon'></i></span></span></label>" )
-	tr.append(tdName).append(tdSurname).append(tdRating).append(tdSelect)
+	
+	tr.append(tdName).append(tdSurname).append(tdRating).append(tdCalendar).append(tdSelect)
 	$('#tableDoctors tbody').append(tr)
 	
 	$('#checkDoctor'+i).click(function(e){
-		console.log(i)
+		
+		
+		if($('#inputAppointmentType').val() == "Surgery") return
+		
 		for(let j = 0 ; j < doctorCount ; j++)
 		{
 			if(j == i)

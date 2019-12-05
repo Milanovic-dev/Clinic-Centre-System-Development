@@ -13,6 +13,9 @@ public class User
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 	
+	@Column(name="deleted",nullable = true)
+	private Boolean deleted;
+	
 	@Column(name = "isFirstLog", nullable = false)
 	private Boolean isFirstLog;
 	
@@ -49,6 +52,7 @@ public class User
 	public User()
 	{
 		super();
+		this.deleted = false;
 	}
 
 	public User(String username, String password, String email, String name, String surname, String city,
@@ -64,7 +68,7 @@ public class User
 		this.state = state;
 		this.phone = phone;
 		this.role = role;
-		
+		this.deleted = false;
 	}
 	
 	public User(RegistrationRequest request, UserRole role)
@@ -80,6 +84,7 @@ public class User
 		this.state = request.getState();
 		this.phone = request.getPhone();
 		this.role = role;
+		this.deleted = false;
 	}
 	
 	
@@ -95,6 +100,17 @@ public class User
 		this.state = user.getState();
 		this.phone = user.getPhone();
 		this.role = user.getRole();
+		this.deleted = false;
+	}
+
+	
+	
+	public Boolean getDeleted() {
+		return deleted;
+	}
+
+	public void setDeleted(Boolean deleted) {
+		this.deleted = deleted;
 	}
 
 	public Boolean getIsFirstLog() {

@@ -14,11 +14,11 @@
 <link href="css/grid.css" rel ="stylesheet">
 <link href="css/checkbox.css" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
 <!-- dataTable -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.12/js/jquery.dataTables.min.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.12/css/dataTables.bootstrap4.min.css" rel="stylesheet"/>
 <!-- SCRIPT ORDER NE MENJATI -->
+<script src="js/bootstrap-datetimepicker.js"></script>
 <script src="js/home_page/patientHome.js"></script>
 <script src="js/home_page/doctorHome.js"></script>
 <script src="js/home_page/nurseHome.js"></script>
@@ -243,7 +243,14 @@
             <div class="form-label-group">        
               <input type="text" id="inputClinicAddress" class="form-control"  autofocus="autofocus" disabled>
             </div>
-          </div>      
+          </div>    
+          <div class="form-group">
+      		<label for="inputAppointmentType">Zelim</label>
+      		<select id="inputAppointmentType" class="form-control">
+        		<option value="Examination">Pregled</option>
+        		<option value="Surgery">Operaciju</option>
+     		</select>
+    	   </div>  
           <button type="button" class="btn btn-primary btn-block" id = "submitAppointmentRequest">Posalji</button>
         </form>
       </div>
@@ -262,6 +269,7 @@
 					<th scope="col">Ime</th>
       				<th scope="col">Prezime</th>
       				<th scope="col">Prosecna ocena</th>
+      				<th scope="col">Slobodni Termini</th>
       				<th scope="col"> </th>
             </tr>					
 					</thead>
@@ -337,7 +345,7 @@
 
 <!-- --------------------KRAJ MODALA--------------------- -->         
 
-   
+  
   		<div class="container-fluid" id="MedicalRecordContainer">
   			<p>Osnovni podaci</p>
   			<div class="row mb-3" id="basicData">
