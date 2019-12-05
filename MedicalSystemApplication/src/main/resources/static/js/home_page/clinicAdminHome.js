@@ -239,10 +239,25 @@ function listDoctor(data,i,clinic)
 	let tdCity=$('<td class="clinic" data-toggle="modal" data-target="#exampleModalLong">'+ data.user.city +'</td>');
 	let tdState=$('<td class="clinic" data-toggle="modal" data-target="#exampleModalLong">'+ data.user.state +'</td>');
 	
-	let tdChange=$('<td> <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addShiftModal" id = "changeUserRole_btn'+i+'">Promeni u lekara</button></td>');
+	let tdChange=$('<td> <button type="button" class="btn btn-danger" id = "deleteDoctor_btn'+i+'">Obrisi lekara</button></td>');
 
 	tr.append(tdName).append(tdSurname).append(tdEmail).append(tdPhone).append(tdAddress).append(tdCity).append(tdState).append(tdChange)
 	$('#tableUsers tbody').append(tr);
+	
+	$('#deleteDoctor_btn'+i).click(function(e){
+		
+		e.preventDefault()
+		$.ajax({
+			type:'DELETE',
+			url: 'api/doctors/removeDoctor/' + data.user.email,
+			complete: function(response)
+			{
+				makeDoctorTable(clinic)
+			
+			}
+		
+		})
+	})
 
 }
 

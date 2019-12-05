@@ -29,6 +29,9 @@ public class Doctor extends User
     
     @OneToMany(fetch = FetchType.LAZY)
 	private List<ReviewDoctor> review;
+    
+    @Column(name="deleted",nullable = false)
+	private Boolean deleted;
       
 	public Doctor() {
 		super();
