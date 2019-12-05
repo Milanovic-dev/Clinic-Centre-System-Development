@@ -10,7 +10,28 @@ function initClinicAdmin(user)
 	sideBar.append("<li class='nav-item active'><a class='nav-link' type='button'><span id='addHall'>Dodavanje sala</span></a></li>")	
 	sideBar.append("<li class='nav-item active'><a class='nav-link' type='button'><span id='showHalls'>Lista sala</span></a></li>")
 	sideBar.append("<li class='nav-item active'><a class='nav-link' type='button'><span id='addDoctor'>Dodaj lekara</span></a></li>")
+	sideBar.append("<li class='nav-item active'><a class='nav-link' type='button'><span id='showDoctor'>Lista lekara</span></a></li>")
 
+	
+	$('#showDoctor').click(function(e){
+		e.preventDefault()
+		
+		$("#addHallContainer").hide()
+		$("#showHallContainer").hide()
+		$("#changeHallContainer").hide()
+		$("#showUserContainer").show()
+		
+		$.ajax({
+			type: 'GET',
+			url: 'api/admins/clinic/getClinicFromAdmin/' + user.email,
+			complete: function(data)
+			{
+				let clinic = data.responseJSON
+				makeDoctorTable(clinic)
+			}
+		
+		
+	})
 	
 	
 	$('#addHall').click(function(e){
@@ -92,6 +113,7 @@ function initClinicAdmin(user)
 	
 	//KRAJ SUBMIT HALLS
 
+})
 }
 
 function listHall(data,i)
@@ -161,6 +183,29 @@ function listHall(data,i)
 	
 }
 
+function makeDoctorTable(clinic)
+{
+	$.ajax({
+		type: 'GET',
+		url: 'api/clinic/getDoctors/' + clinic.name,
+		complete: function(data)
+		{
+			console.log(data)
+			users = data.responseJSON
+			let i = 0
+			$('#tableUsers tbody').empty()
+			for(let u of users)
+            {
+				listDoctor(u,i,clinic);
+				i++;
+            }
+		}
+								
+	})
+
+
+}
+
 function makeUserTable(clinic)
 {
 	$.ajax({
@@ -180,6 +225,24 @@ function makeUserTable(clinic)
 		}
 								
 	})
+
+}
+
+function listDoctor(data,i,clinic)
+{
+	let tr=$('<tr></tr>');
+	let tdName=$('<td class="number" data-toggle="modal" data-target="#exampleModalLong">'+ data.user.name +'</td>');
+	let tdSurname=$('<td class="clinic" data-toggle="modal" data-target="#exampleModalLong">'+ data.user.surname +'</td>');
+	let tdEmail=$('<td class="clinic" data-toggle="modal" data-target="#exampleModalLong">'+ data.user.email +'</td>');
+	let tdPhone=$('<td class="clinic" data-toggle="modal" data-target="#exampleModalLong">'+ data.user.phone +'</td>');
+	let tdAddress=$('<td class="clinic" data-toggle="modal" data-target="#exampleModalLong">'+ data.user.address +'</td>');
+	let tdCity=$('<td class="clinic" data-toggle="modal" data-target="#exampleModalLong">'+ data.user.city +'</td>');
+	let tdState=$('<td class="clinic" data-toggle="modal" data-target="#exampleModalLong">'+ data.user.state +'</td>');
+	
+	let tdChange=$('<td> <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addShiftModal" id = "changeUserRole_btn'+i+'">Promeni u lekara</button></td>');
+
+	tr.append(tdName).append(tdSurname).append(tdEmail).append(tdPhone).append(tdAddress).append(tdCity).append(tdState).append(tdChange)
+	$('#tableUsers tbody').append(tr);
 
 }
 
