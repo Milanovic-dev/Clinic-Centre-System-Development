@@ -73,7 +73,7 @@ public class Appointment
 		this.price = price;
 		this.doctors = new ArrayList<Doctor>();
 		this.appointmentDescription = appointmentDescription;
-		this.appointmentType = appointmentType;
+		this.appointmentType = appointmentType; 
 	}
 
 

@@ -29,9 +29,14 @@ public class Doctor extends User
     
     @OneToMany(fetch = FetchType.LAZY)
 	private List<ReviewDoctor> review;
+    
+    @Column(name="deleted",nullable = false)
+	private Boolean deleted;
       
 	public Doctor() {
 		super();
+		deleted = false;
+
 		// TODO Auto-generated constructor stub
 	}
 
@@ -39,16 +44,27 @@ public class Doctor extends User
 			String address, String state, String phone) {
 		super(username, password, email, name, surname, city, address, state, phone, UserRole.Doctor);
 		this.setIsFirstLog(true);
+		this.deleted = false;
 	}
 
 	public Doctor(User user) {
 		super(user);
 		this.setRole(UserRole.Doctor);
 		this.setIsFirstLog(true);
+		this.deleted = false;
+
 	}
 
 	
 	
+	public Boolean getDeleted() {
+		return deleted;
+	}
+
+	public void setDeleted(Boolean deleted) {
+		this.deleted = deleted;
+	}
+
 	public String getShiftStart() {
 		return shiftStart;
 	}
