@@ -51,7 +51,7 @@ function initCalendar(user)
           var calendar = new FullCalendar.Calendar(calendarEl, {
             plugins: [ 'interaction', 'dayGrid', 'timeGrid', 'monthGrid', 'timeline' ],
             defaultView: 'dayGridMonth',
-            defaultDate: '2019-08-07',
+            defaultDate: '2019-12-07',
             header: {
               left: 'prev,next today',
               center: 'title',
@@ -75,50 +75,36 @@ function initCalendar(user)
                             },
             events: [
               {
-                title: 'All Day Event',
-                start: '2019-08-01'
+                title: 'Operacija 1',
+                start: '2019-12-01'
               },
               {
-                title: 'Long Event',
-                start: '2019-08-07',
-                end: '2019-08-10'
+                title: 'Pregled 1',
+                start: '2019-12-07'
               },
               {
-                groupId: '999',
-                title: 'Repeating Event',
-                start: '2019-08-09T16:00:00'
+                title: 'Rregled 2t',
+                start: '2019-12-09T16:00:00'
               },
               {
-                groupId: '999',
-                title: 'Repeating Event',
-                start: '2019-08-16T16:00:00'
+                title: 'Pregled 3',
+                start: '2019-12-16T16:00:00'
               },
               {
-                title: 'Conference',
-                start: '2019-08-11',
-                end: '2019-08-13'
+                title: 'Operacija 2',
+                start: '2019-12-11',
               },
               {
-                title: 'Meeting',
-                start: '2019-08-12T10:30:00',
-                end: '2019-08-12T12:30:00'
+                title: 'Operacija 3',
+                start: '2019-12-12T10:30:00',
               },
               {
-                title: 'Lunch',
-                start: '2019-08-12T12:00:00'
+                title: 'Operacija 4',
+                start: '2019-12-12T12:00:00'
               },
               {
-                title: 'Meeting',
-                start: '2019-08-12T14:30:00'
-              },
-              {
-                title: 'Birthday Party',
-                start: '2019-08-13T07:00:00'
-              },
-              {
-                title: 'Click for Google',
-                url: 'http://google.com/',
-                start: '2019-08-28'
+                title: 'Pregled 5',
+                start: '2019-12-12T14:30:00'
               }
             ]
           });
