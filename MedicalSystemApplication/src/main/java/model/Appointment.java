@@ -59,12 +59,11 @@ public class Appointment
 		this.doctors = new ArrayList<Doctor>();
 		// TODO Auto-generated constructor stub
 	}
-	
-		
-	public Appointment(Long id, Date date, Hall hall, Patient patient, Clinic clinic, long duration, double price,
+
+
+	public Appointment(Date date, Hall hall, Patient patient, Clinic clinic, long duration, double price,
 			String appointmentDescription, AppointmentType appointmentType) {
 		super();
-		this.id = id;
 		this.date = date;
 		this.hall = hall;
 		this.patient = patient;
