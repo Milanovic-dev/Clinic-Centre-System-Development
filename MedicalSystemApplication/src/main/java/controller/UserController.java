@@ -116,7 +116,7 @@ public class UserController
 	{
 		User ret = userService.findByEmail(email);
 		
-		if(ret == null)
+		if(ret == null || ret.getDeleted())
 		{
 			return new ResponseEntity<>(ret,HttpStatus.NOT_FOUND);
 		}
@@ -131,7 +131,10 @@ public class UserController
 		List<UserDTO> dtos = new ArrayList<UserDTO>();
 		for(User u : ret) 
 		{
-			dtos.add(new UserDTO(u));
+			if(!u.getDeleted())
+			{
+				dtos.add(new UserDTO(u));			
+			}
 		}
 		
 		if(ret == null)
@@ -151,7 +154,10 @@ public class UserController
 		List<UserDTO> dtos = new ArrayList<UserDTO>();
 		for(User u : ret) 
 		{
-			dtos.add(new UserDTO(u));
+			if(!u.getDeleted())
+			{
+				dtos.add(new UserDTO(u));				
+			}
 		}
 		
 		

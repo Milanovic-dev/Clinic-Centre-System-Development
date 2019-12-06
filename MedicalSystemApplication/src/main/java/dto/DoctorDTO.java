@@ -50,7 +50,14 @@ public class DoctorDTO {
 		dto.setUsername(d.getUsername());
 		this.user = dto;
 		
-		this.clinicName = d.getClinic().getName();
+		if(d.getClinic() != null)
+		{
+			this.clinicName = d.getClinic().getName();			
+		}
+		else
+		{
+			this.clinicName = "N/A";
+		}
 		this.avarageRating = d.getAvarageRating();
 		this.insuranceId = d.getInsuranceId();
 		this.shiftStart = d.getShiftStart();

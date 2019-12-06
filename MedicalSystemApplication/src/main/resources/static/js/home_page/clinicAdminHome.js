@@ -10,7 +10,28 @@ function initClinicAdmin(user)
 	sideBar.append("<li class='nav-item active'><a class='nav-link' type='button'><span id='addHall'>Dodavanje sala</span></a></li>")	
 	sideBar.append("<li class='nav-item active'><a class='nav-link' type='button'><span id='showHalls'>Lista sala</span></a></li>")
 	sideBar.append("<li class='nav-item active'><a class='nav-link' type='button'><span id='addDoctor'>Dodaj lekara</span></a></li>")
+	sideBar.append("<li class='nav-item active'><a class='nav-link' type='button'><span id='showDoctor'>Lista lekara</span></a></li>")
 
+	
+	$('#showDoctor').click(function(e){
+		e.preventDefault()
+		
+		$("#addHallContainer").hide()
+		$("#showHallContainer").hide()
+		$("#changeHallContainer").hide()
+		$("#showUserContainer").show()
+		
+		$.ajax({
+			type: 'GET',
+			url: 'api/admins/clinic/getClinicFromAdmin/' + user.email,
+			complete: function(data)
+			{
+				let clinic = data.responseJSON
+				makeDoctorTable(clinic)
+			}
+		
+		
+	})
 	
 	
 	$('#addHall').click(function(e){
@@ -92,6 +113,7 @@ function initClinicAdmin(user)
 	
 	//KRAJ SUBMIT HALLS
 
+})
 }
 
 function listHall(data,i)
@@ -161,6 +183,29 @@ function listHall(data,i)
 	
 }
 
+function makeDoctorTable(clinic)
+{
+	$.ajax({
+		type: 'GET',
+		url: 'api/clinic/getDoctors/' + clinic.name,
+		complete: function(data)
+		{
+			console.log(data)
+			users = data.responseJSON
+			let i = 0
+			$('#tableUsers tbody').empty()
+			for(let u of users)
+            {
+				listDoctor(u,i,clinic);
+				i++;
+            }
+		}
+								
+	})
+
+
+}
+
 function makeUserTable(clinic)
 {
 	$.ajax({
@@ -179,6 +224,39 @@ function makeUserTable(clinic)
             }
 		}
 								
+	})
+
+}
+
+function listDoctor(data,i,clinic)
+{
+	let tr=$('<tr></tr>');
+	let tdName=$('<td class="number" data-toggle="modal" data-target="#exampleModalLong">'+ data.user.name +'</td>');
+	let tdSurname=$('<td class="clinic" data-toggle="modal" data-target="#exampleModalLong">'+ data.user.surname +'</td>');
+	let tdEmail=$('<td class="clinic" data-toggle="modal" data-target="#exampleModalLong">'+ data.user.email +'</td>');
+	let tdPhone=$('<td class="clinic" data-toggle="modal" data-target="#exampleModalLong">'+ data.user.phone +'</td>');
+	let tdAddress=$('<td class="clinic" data-toggle="modal" data-target="#exampleModalLong">'+ data.user.address +'</td>');
+	let tdCity=$('<td class="clinic" data-toggle="modal" data-target="#exampleModalLong">'+ data.user.city +'</td>');
+	let tdState=$('<td class="clinic" data-toggle="modal" data-target="#exampleModalLong">'+ data.user.state +'</td>');
+	
+	let tdChange=$('<td> <button type="button" class="btn btn-danger" id = "deleteDoctor_btn'+i+'">Obrisi lekara</button></td>');
+
+	tr.append(tdName).append(tdSurname).append(tdEmail).append(tdPhone).append(tdAddress).append(tdCity).append(tdState).append(tdChange)
+	$('#tableUsers tbody').append(tr);
+	
+	$('#deleteDoctor_btn'+i).click(function(e){
+		
+		e.preventDefault()
+		$.ajax({
+			type:'DELETE',
+			url: 'api/doctors/removeDoctor/' + data.user.email,
+			complete: function(response)
+			{
+				makeDoctorTable(clinic)
+			
+			}
+		
+		})
 	})
 
 }
@@ -208,17 +286,16 @@ function listUser(data,i,clinic)
 		
 	})
 	
-	let startShift = $('#shiftStart_input').val()
-	let endShift = $('#shiftEnd_input').val()
-	
 	
 	$('#addShift_btn').click(function(e)
 	{
 		e.preventDefault()
-		
+		let startShift = $('#shiftStart_input').val()
+		let endShift = $('#shiftEnd_input').val()
+
 		$.ajax({
 			type:'POST',
-			url: 'api/doctors/makeDoctor/' + data.email + '/' + '08:00' + '/' + '18:00',
+			url: 'api/doctors/makeDoctor/' + data.email + '/' + startShift + '/' + endShift,
 			complete: function(response)
 			{
 				$.ajax({
@@ -226,7 +303,7 @@ function listUser(data,i,clinic)
 					url: 'api/clinic/addDoctor/'+ clinic.name +'/' + data.email,
 					complete: function(e)
 					{
-						
+						makeUserTable(clinic)
 					}
 					
 				})//KRAJ AJAXA ZA DODAVANJE NOVOG DOKTORA U KLINIKU ADMINA

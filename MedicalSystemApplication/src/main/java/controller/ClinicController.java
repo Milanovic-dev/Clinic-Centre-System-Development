@@ -98,8 +98,11 @@ public class ClinicController {
     	
     	for(Doctor doc : doctors)
     	{
-    		DoctorDTO dto = new DoctorDTO(doc);
-    		dtos.add(dto);
+    		if(doc.getDeleted() == false)
+    		{
+    			DoctorDTO dto = new DoctorDTO(doc);
+    			dtos.add(dto);	
+    		}
     	}
     	
     	return new ResponseEntity<>(dtos,HttpStatus.OK);
@@ -146,7 +149,9 @@ public class ClinicController {
     	}
     	
     	c.getDoctors().add(d);
+    	d.setClinic(c);
     	clinicService.save(c);
+    	userService.save(d);
     	return new ResponseEntity<>(HttpStatus.OK);
     }
     

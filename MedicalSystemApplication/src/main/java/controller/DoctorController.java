@@ -52,11 +52,11 @@ public class DoctorController
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 		
+		
 		Doctor doctor = new Doctor(user);
 		doctor.setShiftStart(start);
 		doctor.setShiftEnd(end);
-			
-		userService.delete(user);
+		userService.delete(user);//TODO:SetDeleted
 		userService.save(doctor);
 		return new ResponseEntity<>(HttpStatus.CREATED);
 	}
@@ -87,8 +87,8 @@ public class DoctorController
 		{
 			return new ResponseEntity<Void>(header,HttpStatus.CONFLICT);	
 		}
-		
-		userService.delete(doc);
+		doc.setDeleted(true);
+		userService.save(doc);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 	
