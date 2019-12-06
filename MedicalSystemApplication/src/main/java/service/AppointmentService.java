@@ -76,4 +76,9 @@ public class AppointmentService {
 	{
 		return appointmentRepository.findAllByHall(hall);
 	}
+	
+	public List<Appointment> findAllByClinic(Clinic c)
+	{
+		return appointmentRepository.findAllByClinic(c);
+	}
 }
