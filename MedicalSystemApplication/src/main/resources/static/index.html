@@ -14,6 +14,20 @@
 <link href="css/grid.css" rel ="stylesheet">
 <link href="css/checkbox.css" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<!----------------- kalendar ------------------------>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet"/>
+    <link href="https://unpkg.com/@fullcalendar/core@4.3.1/main.min.css" rel="stylesheet"/>
+    <link href="https://unpkg.com/@fullcalendar/daygrid@4.3.0/main.min.css" rel="stylesheet"/>
+    <link href="https://unpkg.com/@fullcalendar/timegrid@4.3.0/main.min.css" rel="stylesheet"/>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script src="https://unpkg.com/@fullcalendar/core@4.3.1/main.min.js"></script>
+    <script src="https://unpkg.com/@fullcalendar/interaction@4.3.0/main.min.js"></script>
+    <script src="https://unpkg.com/@fullcalendar/daygrid@4.3.0/main.min.js"></script>
+    <script src="https://unpkg.com/@fullcalendar/timegrid@4.3.0/main.min.js"></script>
+
+
 <!-- dataTable -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.12/js/jquery.dataTables.min.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.12/css/dataTables.bootstrap4.min.css" rel="stylesheet"/>
@@ -86,7 +100,7 @@
       <div class="container-fluid">
 
         <!-- Breadcrumbs-->
-        <ol class="breadcrumb">
+        <ol class="breadcrumb" id="breadcrump">
           <li class="breadcrumb-item">
             <a href="#">Pocetna</a>
           </li>
@@ -280,6 +294,7 @@
           </div>
           </div>
   </div>
+          <!-- ZAKAZIVANJE PREGLEDA END-->
 
           <!-- LISTA PACIJENATA -->
           <div class="card mb-3" id = "showPatientsContainer" style="display:none">
@@ -306,12 +321,21 @@
                   </div>
               </div>
           </div>
-      </div>
+        <!-- ----------------KALENDAR --------------------- -->
+        <div class="card mb-3" id = "showCalendarContainer" style="display:none">
+            <div class="card-header">
+                <i class="fas fa-table"></i>
+                Radni kalendar</div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <div id='calendar'></div>
+                </div>
+            </div>
+        </div>
 
 
-
-         <!-- ZAKAZIVANJE PREGLEDA END--> 
-<!-- ----------------MODAL ZA PREBACIVANJE U LEKARA--------------------- -->      
+        <!-- ----------------KALENDAR END--------------------- -->
+        <!-- ----------------MODAL ZA PREBACIVANJE U LEKARA--------------------- -->
 <div class="modal fade" id="addShiftModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">

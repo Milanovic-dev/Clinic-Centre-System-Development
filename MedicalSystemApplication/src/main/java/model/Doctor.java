@@ -29,9 +29,13 @@ public class Doctor extends User
     
     @OneToMany(fetch = FetchType.LAZY)
 	private List<ReviewDoctor> review;
-    
+  
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private List<Appointment> appointments;
+
     @Column(name="deleted",nullable = false)
 	private Boolean deleted;
+
       
 	public Doctor() {
 		super();
@@ -44,6 +48,7 @@ public class Doctor extends User
 			String address, String state, String phone) {
 		super(username, password, email, name, surname, city, address, state, phone, UserRole.Doctor);
 		this.setIsFirstLog(true);
+		this.appointments = new ArrayList<>();
 		this.deleted = false;
 	}
 
@@ -51,8 +56,8 @@ public class Doctor extends User
 		super(user);
 		this.setRole(UserRole.Doctor);
 		this.setIsFirstLog(true);
+		this.appointments = new ArrayList<>();
 		this.deleted = false;
-
 	}
 
 	
@@ -122,5 +127,12 @@ public class Doctor extends User
 	public void setReview(List<ReviewDoctor> review) {
 		this.review = review;
 	}
-	
+
+	public List<Appointment> getAppointments() {
+		return appointments;
+	}
+
+	public void setAppointments(List<Appointment> appointments) {
+		this.appointments = appointments;
+	}
 }

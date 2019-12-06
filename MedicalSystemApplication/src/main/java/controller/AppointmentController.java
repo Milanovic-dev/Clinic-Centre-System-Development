@@ -140,6 +140,41 @@ public class AppointmentController
 		return new ResponseEntity<>(appointments,HttpStatus.OK);
 		
 	}
+
+	@GetMapping(value="/doctor/getAllAppointments/{email}")
+	public ResponseEntity<List<Appointment>> getAppointmentsDoctor(@PathVariable("email") String email)
+	{
+		Doctor  d = null;
+
+		try {
+			d = (Doctor)userService.findByEmail(email);
+		}
+		catch(ClassCastException e)
+		{
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+
+		HttpHeaders header = new HttpHeaders();
+
+		if(d == null)
+		{
+			header.set("responseText","User not found : ("+email+")");
+			return new ResponseEntity<>(header,HttpStatus.NOT_FOUND);
+		}
+
+		List<Appointment> appointments = appointmentService.findAllByDoctors(d);
+
+		if(appointments == null)
+		{
+			header.set("responseText","Appointments not found : ("+email+")");
+			return new ResponseEntity<>(header,HttpStatus.NOT_FOUND);
+		}
+
+		return new ResponseEntity<>(appointments,HttpStatus.OK);
+
+	}
+
+
 	
 	@PostMapping(value="/confirmRequest")
 	public ResponseEntity<Void> confirmAppointmentRequest(@RequestBody AppointmentDTO dto)

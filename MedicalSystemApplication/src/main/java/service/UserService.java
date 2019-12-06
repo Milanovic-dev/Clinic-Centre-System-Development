@@ -1,9 +1,6 @@
 package service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import helpers.SecurePasswordHasher;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,7 +49,9 @@ public class UserService {
 				Doctor doctor = new Doctor("username",hash,"doktor1@gmail.com","Doktor1","Doktor","Novi Sad","Karadjordjeva 8","Srbija","42423423");
 				Doctor doctor2 = new Doctor("username",hash,"doktor2@gmail.com","Doktor2","Doktor","Novi Sad","Karadjordjeva 8","Srbija","42423423");
 				Doctor doctor3 = new Doctor("username",hash,"doktor3@gmail.com","Doktor3","Doktor","Novi Sad","Karadjordjeva 8","Srbija","42423423");
-				
+
+
+
 				Patient patient = new Patient("username",hash,"nikola@gmail.com","Nikola","Milanovic","Novi Sad","Karadjorjdeva 8","Srbija","4123432");
 				patient.getMedicalRecord().setBloodType(BloodType.AB);
 				patient.getMedicalRecord().setAlergies(Arrays.asList("Kikiriki","Secer"));
@@ -66,6 +65,14 @@ public class UserService {
 				doctor.setClinic(clinic);
 				doctor2.setClinic(clinic);
 				doctor3.setClinic(clinic);
+				Date date = new Date();
+				Appointment a1 = new Appointment(date, hall1, patient, clinic, 180, 12345, "Opis operacije1", Appointment.AppointmentType.Surgery  );
+				Appointment a2 = new Appointment(date, hall1, patient, clinic, 180, 12345, "Opis operacije2", Appointment.AppointmentType.Surgery  );
+				Appointment a3 = new Appointment(date, hall1, patient, clinic, 180, 12345, "Opis operacije3", Appointment.AppointmentType.Surgery  );
+				doctor.getAppointments().add(a1);
+				doctor.getAppointments().add(a2);
+				doctor.getAppointments().add(a3);
+
 				clinic.getDoctors().add(doctor);
 				clinic.getDoctors().add(doctor2);
 				clinic.getDoctors().add(doctor3);

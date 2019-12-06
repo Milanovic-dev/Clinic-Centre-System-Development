@@ -4,16 +4,7 @@ import java.util.ArrayList;
 
 import java.util.Date;
 import java.util.List;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
 
 
 @Entity
@@ -31,7 +22,7 @@ public class Appointment
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Hall hall;
 	
-	@OneToOne(fetch = FetchType.LAZY)
+	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
 	@JoinColumn(name = "patient_id")
 	private Patient patient;
 	
@@ -44,7 +35,7 @@ public class Appointment
 	
 	@Column(name = "price",nullable = true)
 	private double price;
-	
+
 	@ManyToMany(fetch = FetchType.LAZY)
 	private List<Doctor> doctors;
 	
@@ -59,12 +50,11 @@ public class Appointment
 		this.doctors = new ArrayList<Doctor>();
 		// TODO Auto-generated constructor stub
 	}
-	
-		
-	public Appointment(Long id, Date date, Hall hall, Patient patient, Clinic clinic, long duration, double price,
+
+
+	public Appointment(Date date, Hall hall, Patient patient, Clinic clinic, long duration, double price,
 			String appointmentDescription, AppointmentType appointmentType) {
 		super();
-		this.id = id;
 		this.date = date;
 		this.hall = hall;
 		this.patient = patient;
