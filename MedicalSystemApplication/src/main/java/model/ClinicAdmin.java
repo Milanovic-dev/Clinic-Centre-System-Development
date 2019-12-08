@@ -2,7 +2,12 @@
 package model;
 
 import javax.persistence.*;
+
+import helpers.UserBuilder;
+import model.Doctor.Builder;
+
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -23,14 +28,21 @@ public class ClinicAdmin extends User {
     	this.setIsFirstLog(true);
     }
 
-    public ClinicAdmin(String username, String password, String email, String name, String surname, String city, String address, String state, String phone, Clinic clinic) {
-        super(username, password, email, name, surname, city, address, state, phone, UserRole.ClinicAdmin);
+    public ClinicAdmin(String password, String email, String name, String surname, String city, String address, String state, String phone, Clinic clinic) {
+        super(password, email, name, surname, city, address, state, phone, UserRole.ClinicAdmin);
         this.clinic = clinic;
         this.appointmentRequests = new ArrayList<>();
         this.vacationRequests = new ArrayList<>();
         this.setIsFirstLog(true);
     }
 
+    public ClinicAdmin(User user)
+    {
+    	super(user);
+    	this.appointmentRequests = new ArrayList<>();
+        this.vacationRequests = new ArrayList<>();
+        this.setIsFirstLog(true);
+    }
 
     public Clinic getClinic() {
         return clinic;
@@ -54,6 +66,82 @@ public class ClinicAdmin extends User {
 
     public void setVacationRequests(List<VacationRequest> vacationRequests) {
         this.vacationRequests = vacationRequests;
+    }
+    
+    public static class Builder extends UserBuilder
+    {
+    	public Clinic clinic;
+		
+		public Builder(String email)
+		{
+			super(email);
+		}
+		
+
+		public Builder withPassword(String password)
+		{
+			super.withPassword(password);
+			
+			return this;
+		}
+
+		public Builder withName(String name)
+		{
+			super.withName(name);
+			
+			return this;
+		}
+	
+		public Builder withSurname(String surname)
+		{
+			super.withSurname(surname);
+			
+			return this;
+		}
+		
+		public Builder withCity(String city)
+		{
+			super.withCity(city);
+			
+			return this;
+		}
+		
+		public Builder withAddress(String address)
+		{
+			super.withAddress(address);
+			
+			return this;
+		}
+		
+		public Builder withState(String state)
+		{
+			super.withState(state);
+			
+			return this;
+		}
+		
+		public Builder withPhone(String phone)
+		{
+			super.withPhone(phone);
+			
+			return this;
+		}
+		
+		public Builder withClinic(Clinic clinic)
+		{
+			this.clinic = clinic;
+			
+			return this;
+		}
+		
+		public ClinicAdmin build()
+		{
+			super.withRole(UserRole.ClinicAdmin);
+			User user = super.build();
+			ClinicAdmin a = new ClinicAdmin(user);
+			a.setClinic(this.clinic);
+			return a;
+		}
     }
 }
 

@@ -35,7 +35,7 @@ function setUpPatientPage(user)
 				$('#tableClinics tbody').empty()
 				for(let c of clinics)
 				{
-					listClinic(c,i,user)
+					p_listClinic(c,i,user)
 					i++
 				}
 			}
@@ -80,7 +80,7 @@ function makeMedicalRecord(data)
 	}
 }
 
-function listClinic(data,i,user)
+function p_listClinic(data,i,user)
 {
 	let tr=$('<tr></tr>');
 	let tdName=$('<td>'+ data.name +'</td>');
@@ -115,8 +115,8 @@ function listClinic(data,i,user)
 				$('#tableDoctors tbody').empty()
 				for(let d of doctors)
 				{
-					listDoctor(d,index,doctors.length)
-					index++
+					p_listDoctor(d,index,doctors.length);
+					index++;
 				}
 				
 				$('#inputAppointmentType').change(function(e){
@@ -160,7 +160,7 @@ function listClinic(data,i,user)
 	
 }
 
-function listDoctor(data,i,doctorCount)
+function p_listDoctor(data,i,doctorCount)
 {
 	let tr=$('<tr></tr>');
 	let tdName=$('<td>'+ data.user.name +'</td>');

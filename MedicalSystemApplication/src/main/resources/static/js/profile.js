@@ -17,9 +17,10 @@ function addPersonalInformations(data)
 {
 	user = data.responseJSON
 	if(user == undefined)
-		{
-			console.log("nema data.")
-		}
+	{
+		window.location.href = "index.html"
+			return
+	}
 	
 	$("#pName").text(user.name);
 	$("#pSurname").text(user.surname);

@@ -122,7 +122,7 @@ $(document).ready(function(){
 		if(flag == false) return
 
 
-		let data = JSON.stringify({"username":"","password":"","email":email,"name":name,"surname":surname,"city":city,"address":address,"state":state,"phone":phone})
+		let data = JSON.stringify({"password":"","email":email,"name":name,"surname":surname,"city":city,"address":address,"state":state,"phone":phone})
 		console.log(data)
 		$.ajax({
 			type: 'POST',
