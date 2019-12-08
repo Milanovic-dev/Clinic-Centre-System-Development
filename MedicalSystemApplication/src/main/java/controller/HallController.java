@@ -128,14 +128,20 @@ public class HallController {
 	 
 	    
 	  @PostMapping(value ="/addHall", consumes = "application/json")
-	    public ResponseEntity<Void> add(@RequestBody Hall hall)
+	    public ResponseEntity<Void> add(@RequestBody HallDTO hall)
 	    {
 	        HttpHeaders header = new HttpHeaders();
 
 	        Hall h = hallService.findByNumber(hall.getNumber());
+	        Clinic clinic = clinicService.findByName(hall.getClinicName());
 
+	        if(clinic == null)
+	        {
+	        	return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+	        }
+	        		
 	        if(h == null) {
-	            Hall newHall = new Hall(hall.getClinic(),hall.getNumber());
+	            Hall newHall = new Hall(clinic,hall.getNumber());
 	            hallService.save(newHall);
 	            
 	        } else {

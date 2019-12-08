@@ -84,7 +84,8 @@ function initClinicAdmin(user)
 				complete: function(data){
 					
 					let clinic = data.responseJSON
-					let hall = JSON.stringify({"number" : idHall,"clinic" : clinic })
+					let hall = JSON.stringify({"clinicName":clinic.name,"number" : idHall})
+					console.log(hall)
 					$.ajax({
 						type: 'POST',
 						url: 'api/hall/addHall',

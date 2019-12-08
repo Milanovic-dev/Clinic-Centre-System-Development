@@ -11,6 +11,7 @@ $(document).ready(function(){
 			if(user.isFirstLog == true)
 			{
 				$('#inputPasswordChangeOld').hide()
+				$('#exitPasswordChange').hide()
 			}
 			
 			$('#submitPasswordChange').click(function(e){
@@ -39,7 +40,7 @@ $(document).ready(function(){
 })
 
 function firstLogPasswordChange(data)
-{
+{	
 	let email = data.email
 	let newPassword = $('#inputPasswordChangeNew').val()
 	let repeatNewPassword = $('#inputPasswordChangeRepeat').val()
