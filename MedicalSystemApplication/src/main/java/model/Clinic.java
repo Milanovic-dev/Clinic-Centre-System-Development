@@ -27,10 +27,10 @@ public class Clinic
     @Column(name = "description", nullable = true)
 	private String description;
 
-    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.EAGER)
     private List<Hall> halls;
 
-    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.LAZY)
     private List<Doctor> doctors;
 
     @OneToMany(fetch = FetchType.LAZY)

@@ -47,14 +47,20 @@ public class DoctorDTO {
 		dto.setPhone(d.getPhone());
 		dto.setState(d.getState());
 		dto.setRole(UserRole.Doctor);
-		dto.setUsername(d.getUsername());
 		this.user = dto;
 		
-		this.clinicName = d.getClinic().getName();
+		if(d.getClinic() != null)
+		{
+			this.clinicName = d.getClinic().getName();			
+		}
+		else
+		{
+			this.clinicName = "N/A";
+		}
 		this.avarageRating = d.getAvarageRating();
 		this.insuranceId = d.getInsuranceId();
-		this.shiftStart = d.getShiftStart();
-		this.shiftEnd = d.getShiftEnd();
+		this.shiftStart = d.getShiftStart().toString();
+		this.shiftEnd = d.getShiftEnd().toString();
 		this.type = d.getType();
 	}
 

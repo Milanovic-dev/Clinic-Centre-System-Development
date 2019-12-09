@@ -7,12 +7,16 @@ function initPatient(user)
 {
 	let sideBar = $("#sideBar")
 	sideBar.append("<li class='nav-item active'><a class='nav-link' href='userProfileNew.html'><i class='fas fa-fw fa-tachometer-alt'></i><span id='profileUser'>Profil</span></a></li>")	
-	sideBar.append("<li class='nav-item active'><a class='nav-link' type='button'><i class='fas fa-fw fa-tachometer-alt'></i><span id='clinicList'>Lista klinika</span></a></li>")	
-	sideBar.append("<li class='nav-item active'><a class='nav-link' type='button'><i class='fas fa-fw fa-tachometer-alt'></i><span id='historyOfOperation'>Istorija pregleda i operacija</span></a></li>")	
-	sideBar.append("<li class='nav-item active'><a class='nav-link' type='button'><i class='fas fa-fw fa-tachometer-alt'></i><span id='medicalRecord'>Zdravstveni karton</span></a></li>")	
+	sideBar.append("<li class='nav-item active'><a class='nav-link' type='button'><span id='clinicList'>Lista klinika</span></a></li>")	
+	sideBar.append("<li class='nav-item active'><a class='nav-link' type='button'><span id='historyOfOperation'>Istorija pregleda i operacija</span></a></li>")	
+	sideBar.append("<li class='nav-item active'><a class='nav-link' type='button'><span id='medicalRecord'>Zdravstveni karton</span></a></li>")	
 
 	setUpPatientPage(user)
 }
+
+function sleep(ms) {
+	  return new Promise(resolve => setTimeout(resolve, ms));
+	}
 
 function setUpPatientPage(user)
 {
@@ -22,26 +26,40 @@ function setUpPatientPage(user)
 		$('#showClinicContainer').show()
 		$('#MedicalRecordContainer').hide()
 		$('#makeAppointmentContainer').hide()
+	
 		
-		$.ajax({
-			type: 'GET',
-			url:"api/clinic/getAll",
-			complete: function(data)
-			{
-				let clinics = data.responseJSON
-				let i = 0
-				console.log(clinics.length)
-				
-				$('#tableClinics tbody').empty()
-				for(let c of clinics)
-				{
-					listClinic(c,i)
-					i++
-				}
-			}
-			
-		})
-		
+	})
+	
+	
+	var start = new Date(),
+        prevDay,
+        startHours = 9;
+
+    // 09:00 AM
+    start.setHours(9);
+    start.setMinutes(0);
+
+    // If today is Saturday or Sunday set 10:00 AM
+    if ([6, 0].indexOf(start.getDay()) != -1) {
+        start.setHours(10);
+        startHours = 10
+    }
+	
+	
+	$('#clinicDatePick').datepicker({
+		dateFormat: "dd-mm-yyyy",
+		onSelect: function(fd,d,picker){
+			if (!d) return;
+            var day = d.getDay();
+
+            // Trigger only if date is changed
+            if (prevDay != undefined && prevDay == day) return;
+            prevDay = day;
+            
+            picker.hide()
+           
+            getClinics($('#clinicDatePick').val()) 
+		}
 	})
 	
 	$('#medicalRecord').click(function(e){
@@ -65,6 +83,35 @@ function setUpPatientPage(user)
 
 }
 
+
+async function getClinics(date)
+{
+	$('#tableClinics tbody').empty()
+	$('#clinicSpinner').show()
+	await sleep(1000)
+	$('#clinicSpinner').hide()
+	
+	
+	$.ajax({
+		type: 'GET',
+		url:"api/clinic/getAll/"+date,
+		complete: function(data)
+		{
+			let clinics = data.responseJSON
+			let i = 0
+			
+			
+			$('#tableClinics tbody').empty()
+			for(let c of clinics)
+			{
+				p_listClinic(c,i,user)
+				i++
+			}
+		}
+		
+	})
+}
+
 function makeMedicalRecord(data)
 {
 	$('#height').text("Visina: " + data.height)
@@ -80,7 +127,7 @@ function makeMedicalRecord(data)
 	}
 }
 
-function listClinic(data,i)
+function p_listClinic(data,i,user)
 {
 	let tr=$('<tr></tr>');
 	let tdName=$('<td>'+ data.name +'</td>');
@@ -102,7 +149,7 @@ function listClinic(data,i)
 		
 		$('#inputClinicName').val(data.name)
 		$('#inputClinicAddress').val(data.address+", "+data.city+", "+data.state)
-		
+		$('#inputAppointmentType').val("Examination")
 		
 		$.ajax({
 			type:'GET',
@@ -112,32 +159,71 @@ function listClinic(data,i)
 				let doctors = data.responseJSON
 				
 				let index = 0
+				$('#tableDoctors tbody').empty()
 				for(let d of doctors)
 				{
-					listDoctor(d,index,doctors.length)
-					index++
+					p_listDoctor(d,index,doctors.length);
+					index++;
 				}
 				
-			}
+				$('#inputAppointmentType').change(function(e){
+					
+					for(let j = 0 ; j < doctors.length ; j++)
+					{
+						$("#checkDoctor"+j).prop('checked',false)
+					}
+					
+				})
+				
+			
+				$('#submitAppointmentRequest').click(function(e){
+					e.preventDefault()
+					
+					let clinicName = $('#inputClinicName').val()
+					let patientEmail = user.email
+					let doctorArray = []
+										
+					for(let i = 0 ; i < doctors.length ; i++)
+					{
+						if($('#checkDoctor'+i).is(":checked"))
+						{
+							doctorArray.push(doctors[i].user.email)
+						}
+					}
+					
+					let json = JSON.stringify({"clinicName":clinicName,"patientEmail":patientEmail,"doctors":doctorArray})
+					console.log(json)
+					//SEND REQUEST
+				})
+			
+			
+			}		
+				
 		})
+		
 		
 		
 	})
 	
 }
 
-function listDoctor(data,i,doctorCount)
+function p_listDoctor(data,i,doctorCount)
 {
 	let tr=$('<tr></tr>');
 	let tdName=$('<td>'+ data.user.name +'</td>');
 	let tdSurname=$('<td>'+ data.user.name +'</td>');
 	let tdRating=$('<td>'+ data.avarageRating +'</td>');
-	let tdSelect = $("<td> <label class='label'><input class='label__checkbox' type='checkbox' id='checkDoctor"+i+"'><span class='label__text'><span class='label__check'><i class='fa fa-check icon'></i></span></span></label>" )
-	tr.append(tdName).append(tdSurname).append(tdRating).append(tdSelect)
+	let tdCalendar =$("<td><span class='input-group-addon'><span class='glyphicon glyphicon-calendar'></span></span></td>");
+	let tdSelect = $("<td><input type='checkbox' id='checkDoctor"+i+"'><label for='checkDoctor"+i+"'></label></td>" )
+	
+	tr.append(tdName).append(tdSurname).append(tdRating).append(tdCalendar).append(tdSelect)
 	$('#tableDoctors tbody').append(tr)
 	
 	$('#checkDoctor'+i).click(function(e){
-		console.log(i)
+		
+		
+		if($('#inputAppointmentType').val() == "Surgery") return
+		
 		for(let j = 0 ; j < doctorCount ; j++)
 		{
 			if(j == i)

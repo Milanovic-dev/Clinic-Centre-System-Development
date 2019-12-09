@@ -153,8 +153,8 @@ $(document).ready(function(){
 		
 		if(flag == false) return
 		
-
-		let regReq = JSON.stringify({"username":"","password":password,"email":email,"name":name,"surname":surname,"city":city,"address":address,"state":state,"phone":phone})
+		
+		let regReq = JSON.stringify({"password":password,"email":email,"name":name,"surname":surname,"city":city,"address":address,"state":state,"phone":phone})
 		console.log(regReq)
 		$.ajax({
 			type: 'POST',

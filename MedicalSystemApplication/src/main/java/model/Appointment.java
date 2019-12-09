@@ -63,7 +63,7 @@ public class Appointment
 		this.price = price;
 		this.doctors = new ArrayList<Doctor>();
 		this.appointmentDescription = appointmentDescription;
-		this.appointmentType = appointmentType;
+		this.appointmentType = appointmentType; 
 	}
 
 
@@ -153,6 +153,85 @@ public class Appointment
 				+ ", duration=" + duration + ", price=" + price + ", hall=" + hall + "]";
 	}
 	
-	
+	public static class Builder
+	{
+		private Date date;
+		private Hall hall;
+		private Patient patient;
+		private Clinic clinic;
+		private double price;
+		private List<Doctor> doctors;
+		private String appointmentDescription;
+		private AppointmentType appointmentType;
+		
+		public Builder(Date date)
+		{
+			this.date = date;
+		}
+		
+		public Builder withHall(Hall hall)
+		{
+			this.hall = hall;
+			
+			return this;
+		}
+		
+		public Builder withPatient(Patient patient)
+		{
+			this.patient = patient;
+			
+			return this;
+		}
+		
+		public Builder withClinic(Clinic clinic)
+		{
+			this.clinic = clinic;
+			
+			return this;
+		}
+		
+		public Builder withPrice(double price)
+		{
+			this.price = price;
+			
+			return this;
+		}
+		
+		public Builder withDoctors(ArrayList<Doctor> doctors)
+		{
+			this.doctors = doctors;
+			
+			return this;
+		}
+		
+		public Builder withDescription(String appointmentDescription)
+		{
+			this.appointmentDescription = appointmentDescription;
+			
+			return this;
+		}
+		
+		public Builder withType(AppointmentType appointmentType)
+		{
+			this.appointmentType = appointmentType;
+			
+			return this;
+		}
+		
+		public Appointment build()
+		{
+			Appointment app = new Appointment();
+			app.setDate(this.date);
+			app.setPatient(this.patient);
+			app.setClinic(this.clinic);
+			app.setHall(this.hall);
+			app.setDoctors(this.doctors);
+			app.setPrice(this.price);
+			app.setAppointmentType(this.appointmentType);
+			app.setAppointmentType(this.appointmentType);
+			return app;
+		}
+		
+	}
 	
 }

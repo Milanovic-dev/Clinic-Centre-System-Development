@@ -17,13 +17,13 @@ public class CentreAdmin extends User {
         this.setPredefined(false);
     }
 
-    public CentreAdmin(String username, String password, String email, String name, String surname, String city, String address, String state, String phone) {
-        super(username, password, email, name, surname, city, address, state, phone, UserRole.CentreAdmin);
+    public CentreAdmin(String password, String email, String name, String surname, String city, String address, String state, String phone) {
+        super(password, email, name, surname, city, address, state, phone, UserRole.CentreAdmin);
         this.setIsFirstLog(true);
     }
 
-    public CentreAdmin(String username, String password, String email, String name, String surname, String city, String address, String state, String phone, boolean predefined) {
-        super(username, password, email, name, surname, city, address, state, phone, UserRole.CentreAdmin);
+    public CentreAdmin(String password, String email, String name, String surname, String city, String address, String state, String phone, boolean predefined) {
+        super(password, email, name, surname, city, address, state, phone, UserRole.CentreAdmin);
         this.setIsFirstLog(true);
         this.setPredefined(predefined);
     }

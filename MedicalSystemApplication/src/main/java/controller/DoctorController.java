@@ -20,9 +20,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import dto.AppointmentDTO;
+import dto.ClinicDTO;
 import model.*;
 import model.Appointment.AppointmentType;
 import model.User.UserRole;
+import repository.DoctorRepository;
 import service.AppointmentRequestService;
 import service.AppointmentService;
 import service.ClinicService;
@@ -40,6 +42,10 @@ public class DoctorController
 	@Autowired
 	private AppointmentService appointmentService;
 	
+	@Autowired 
+	private ClinicService clinicService;
+	
+	
 	@PostMapping(value="/makeDoctor/{email}/{startShift}/{endShift}")
 	public ResponseEntity<Void> addDoctor(@PathVariable("email") String email,
 										  @PathVariable("startShift") String start,
@@ -52,13 +58,42 @@ public class DoctorController
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 		
-		Doctor doctor = new Doctor(user);
-		doctor.setShiftStart(start);
-		doctor.setShiftEnd(end);
-			
-		userService.delete(user);
-		userService.save(doctor);
-		return new ResponseEntity<>(HttpStatus.CREATED);
+		DateFormat df = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+		
+		Date dateStart;
+		Date dateEnd;
+		try {
+			dateStart = df.parse(start);
+			dateEnd = df.parse(end);
+			Doctor doctor = new Doctor(user);
+			doctor.setShiftStart(dateStart);
+			doctor.setShiftEnd(dateEnd);
+			userService.delete(user);//TODO:SetDeleted
+			userService.save(doctor);
+			return new ResponseEntity<>(HttpStatus.CREATED);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+	}
+	
+	@GetMapping(value="/getClinic/{email}")
+	public ResponseEntity<ClinicDTO> getClinicByDoctor(@PathVariable("email") String email)
+	{
+		Doctor d = (Doctor) userService.findByEmail(email);
+		
+		if(d == null)
+		{
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+		}
+		
+		Clinic c = clinicService.findByDoctor(d);
+		ClinicDTO dto = new ClinicDTO(c);
+		return new ResponseEntity<>(dto,HttpStatus.OK);
+
 	}
 	
 	@DeleteMapping(value="/removeDoctor/{email}")
@@ -87,8 +122,8 @@ public class DoctorController
 		{
 			return new ResponseEntity<Void>(header,HttpStatus.CONFLICT);	
 		}
-		
-		userService.delete(doc);
+		doc.setDeleted(true);
+		userService.save(doc);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 	

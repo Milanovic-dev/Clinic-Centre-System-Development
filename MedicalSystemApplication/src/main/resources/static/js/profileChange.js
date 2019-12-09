@@ -55,7 +55,7 @@ $(document).ready(function(){
 		let phone = $("#inputPhoneChange").val();
 		let city = $("#inputCityChange").val();
 		
-		let changeReq = JSON.stringify({"username":"","password": "","email":email,"name":name,"surname":surname,"city":city,"address":address,"state":state,"phone":phone})	
+		let changeReq = JSON.stringify({"password": "","email":email,"name":name,"surname":surname,"city":city,"address":address,"state":state,"phone":phone})	
 		$.ajax({
 			type: 'PUT',
 			url: 'api/users/update/'+email,

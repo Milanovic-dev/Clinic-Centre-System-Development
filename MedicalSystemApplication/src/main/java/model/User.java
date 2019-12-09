@@ -13,11 +13,11 @@ public class User
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 	
+	@Column(name="deleted",nullable = true)
+	private Boolean deleted;
+	
 	@Column(name = "isFirstLog", nullable = false)
 	private Boolean isFirstLog;
-	
-	@Column(name = "username", nullable = true)
-	private String username;
 	
 	@Column(name = "password", nullable = false)
 	private String password;
@@ -49,12 +49,12 @@ public class User
 	public User()
 	{
 		super();
+		this.deleted = false;
 	}
 
-	public User(String username, String password, String email, String name, String surname, String city,
+	public User(String password, String email, String name, String surname, String city,
 			String address, String state, String phone, UserRole role) {
 		super();
-		this.username = username;
 		this.password = password;
 		this.email = email;
 		this.name = name;
@@ -64,13 +64,12 @@ public class User
 		this.state = state;
 		this.phone = phone;
 		this.role = role;
-		
+		this.deleted = false;
 	}
 	
 	public User(RegistrationRequest request, UserRole role)
 	{
 		super();
-		this.username = request.getUsername();
 		this.password = request.getPassword();
 		this.email = request.getEmail();
 		this.name = request.getName();
@@ -80,12 +79,12 @@ public class User
 		this.state = request.getState();
 		this.phone = request.getPhone();
 		this.role = role;
+		this.deleted = false;
 	}
 	
 	
 
 	public User(User user) {
-		this.username = user.getUsername();
 		this.password = user.getPassword();
 		this.email = user.getEmail();
 		this.name = user.getName();
@@ -95,6 +94,17 @@ public class User
 		this.state = user.getState();
 		this.phone = user.getPhone();
 		this.role = user.getRole();
+		this.deleted = false;
+	}
+
+	
+	
+	public Boolean getDeleted() {
+		return deleted;
+	}
+
+	public void setDeleted(Boolean deleted) {
+		this.deleted = deleted;
 	}
 
 	public Boolean getIsFirstLog() {
@@ -109,13 +119,6 @@ public class User
 		this.id = id;
 	}
 
-	public String getUsername() {
-		return username;
-	}
-
-	public void setUsername(String username) {
-		this.username = username;
-	}
 
 	public String getPassword() {
 		return password;

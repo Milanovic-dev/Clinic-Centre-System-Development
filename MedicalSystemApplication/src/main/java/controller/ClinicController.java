@@ -3,9 +3,14 @@ package controller;
 
 import dto.ClinicDTO;
 import dto.DoctorDTO;
+import dto.UserDTO;
+import model.Appointment;
 import model.Clinic;
 import model.Doctor;
+import model.Patient;
 import model.RegistrationRequest;
+import helpers.ListUtil;
+import helpers.UserSortingComparator;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -19,11 +24,17 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import service.AppointmentService;
 import service.ClinicService;
 import service.UserService;
 
 import javax.servlet.http.HttpServletRequest;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -35,6 +46,9 @@ public class ClinicController {
     
     @Autowired
     private UserService userService;
+    
+    @Autowired
+    private AppointmentService appointmentService;
 
     @PostMapping(value ="/registerClinic", consumes = "application/json")
     public ResponseEntity<Void> registerClinic(@RequestBody ClinicDTO dto, HttpServletRequest request)
@@ -83,6 +97,86 @@ public class ClinicController {
     	return new ResponseEntity<>(clinicsDTO,HttpStatus.OK);
     }
     
+    @GetMapping(value="/getAll/{date}")
+    public ResponseEntity<List<ClinicDTO>> getClinicsWithFilter(@PathVariable("date") String date)
+    {
+    	List<Clinic> clinics = clinicService.findAll();
+    	List<ClinicDTO> clinicsDTO = new ArrayList<ClinicDTO>();
+    	
+    	if(clinics == null)
+
+    	{
+    		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    	}
+  
+    	try {
+			Date realDate = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").parse(date);
+			
+			for(Clinic c: clinics)
+	    	{
+	    		List<Doctor> doctors = c.getDoctors();
+	    		
+	    		for(Doctor d: doctors)
+	    		{
+	    			if(d.IsFreeOn(realDate))
+	    			{
+	    				clinicsDTO.add(new ClinicDTO(c));
+	    			}
+	    		}
+	    	}
+			
+			return new ResponseEntity<>(clinicsDTO,HttpStatus.OK);
+			
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	   	
+    	return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+    
+    
+    
+  @GetMapping(value="/getPatients/{clinicName}")
+    public ResponseEntity<List<UserDTO>> getClinicPatients(@PathVariable("clinicName") String clinicName)
+    {
+    	Clinic c = clinicService.findByName(clinicName);
+    	
+    	if(c == null)
+      {
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+      }
+  
+    	List<Appointment> appointments = new ArrayList<Appointment>();
+    	ArrayList<UserDTO> patients = new ArrayList<UserDTO>();
+
+    	appointments = appointmentService.findAllByClinic(c);
+    	
+    	if(appointments.isEmpty())
+    	{
+    		System.out.println("Nema pregleda u toj klinici");
+    		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+    	}
+    	
+    	
+    	for(Appointment app: appointments)
+    	{   		
+    		if(!ListUtil.getInstance().ContainsWithEmail(patients,app.getPatient().getEmail()))
+    		{
+    			patients.add(new UserDTO(app.getPatient()));    			
+    		}
+    	}
+    	
+    	patients.sort(new UserSortingComparator());
+      	
+		System.out.println(patients.size());
+
+    	return new ResponseEntity<>(patients,HttpStatus.OK);
+    	
+    }
+    
+
     @GetMapping(value="/getDoctors/{name}")
     public ResponseEntity<List<DoctorDTO>> getClinicsDoctors(@PathVariable("name") String name)
     {
@@ -98,8 +192,11 @@ public class ClinicController {
     	
     	for(Doctor doc : doctors)
     	{
-    		DoctorDTO dto = new DoctorDTO(doc);
-    		dtos.add(dto);
+    		if(doc.getDeleted() == false)
+    		{
+    			DoctorDTO dto = new DoctorDTO(doc);
+    			dtos.add(dto);	
+    		}
     	}
     	
     	return new ResponseEntity<>(dtos,HttpStatus.OK);
@@ -146,7 +243,9 @@ public class ClinicController {
     	}
     	
     	c.getDoctors().add(d);
+    	d.setClinic(c);
     	clinicService.save(c);
+    	userService.save(d);
     	return new ResponseEntity<>(HttpStatus.OK);
     }
     
