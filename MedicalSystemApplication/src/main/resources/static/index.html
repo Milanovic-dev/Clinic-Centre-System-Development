@@ -37,6 +37,9 @@
 <script src="js/home_page/nurseHome.js"></script>
 <script src="js/home_page/clinicAdminHome.js"></script>
 <script src="js/index.js"></script>
+<link href="css/datepicker.min.css" rel="stylesheet" type="text/css">
+<script src="js/datepicker.min.js"></script>
+<script src="js/datepicker.en.js"></script>
 <!-- ! -->
 <meta charset="ISO-8859-1">
 <title>Index</title>
@@ -106,7 +109,6 @@
           </li>
           <li class="breadcrumb-item active">Prikaz</li>
 		</ol>
-		
 		
     <div class="container" id ="addHallContainer" style="display:none">
     <div class="card card-login mx-auto mt-5">
@@ -193,13 +195,16 @@
           <div class="card-header">
 			Lista Klinika
 			<br>
-			<div><br><input class="datepicker" data-date-format="mm/dd/yyyy"></div>   
+			<br>
+			<p>
+			<input class="form-control datepicker-here" data-language='en' style="width:20%" placeholder="Izaberite datum" id="clinicDatePick">
+			<div class="spinner-border text-info" role="status" id="clinicSpinner" style="display:none"><span class="sr-only">Loading...</span></div></p>
 		   </div>
           <div class="card-body">
             <div class="table-responsive">
               <table class="table table-bordered" id="tableClinics" width="100%" cellspacing="0">
-                <thead>
-					<tr>
+                <thead>               
+					<tr>					
 					<th scope="col">Ime Klinike</th>
       				<th scope="col">Adresa</th>
       				<th scope="col">Grad</th>
@@ -207,7 +212,8 @@
       				<th scope="col">Opis</th>
       				<th scope="col">Rejting</th>
       				<th scope="col"> </th>
-					</tr>					
+					</tr>	
+									
 					</thead>
 					<tbody>             	
                 </tbody>

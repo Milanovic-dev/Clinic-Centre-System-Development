@@ -14,6 +14,10 @@ function initPatient(user)
 	setUpPatientPage(user)
 }
 
+function sleep(ms) {
+	  return new Promise(resolve => setTimeout(resolve, ms));
+	}
+
 function setUpPatientPage(user)
 {
 	$("#clinicList").click(function(e){
@@ -22,26 +26,40 @@ function setUpPatientPage(user)
 		$('#showClinicContainer').show()
 		$('#MedicalRecordContainer').hide()
 		$('#makeAppointmentContainer').hide()
+	
 		
-		$.ajax({
-			type: 'GET',
-			url:"api/clinic/getAll",
-			complete: function(data)
-			{
-				let clinics = data.responseJSON
-				let i = 0
-				console.log(clinics.length)
-				
-				$('#tableClinics tbody').empty()
-				for(let c of clinics)
-				{
-					p_listClinic(c,i,user)
-					i++
-				}
-			}
-			
-		})
-		
+	})
+	
+	
+	var start = new Date(),
+        prevDay,
+        startHours = 9;
+
+    // 09:00 AM
+    start.setHours(9);
+    start.setMinutes(0);
+
+    // If today is Saturday or Sunday set 10:00 AM
+    if ([6, 0].indexOf(start.getDay()) != -1) {
+        start.setHours(10);
+        startHours = 10
+    }
+	
+	
+	$('#clinicDatePick').datepicker({
+		dateFormat: "dd-mm-yyyy",
+		onSelect: function(fd,d,picker){
+			if (!d) return;
+            var day = d.getDay();
+
+            // Trigger only if date is changed
+            if (prevDay != undefined && prevDay == day) return;
+            prevDay = day;
+            
+            picker.hide()
+           
+            getClinics($('#clinicDatePick').val()) 
+		}
 	})
 	
 	$('#medicalRecord').click(function(e){
@@ -63,6 +81,35 @@ function setUpPatientPage(user)
 		})
 	})
 
+}
+
+
+async function getClinics(date)
+{
+	$('#tableClinics tbody').empty()
+	$('#clinicSpinner').show()
+	await sleep(1000)
+	$('#clinicSpinner').hide()
+	
+	
+	$.ajax({
+		type: 'GET',
+		url:"api/clinic/getAll/"+date,
+		complete: function(data)
+		{
+			let clinics = data.responseJSON
+			let i = 0
+			
+			
+			$('#tableClinics tbody').empty()
+			for(let c of clinics)
+			{
+				p_listClinic(c,i,user)
+				i++
+			}
+		}
+		
+	})
 }
 
 function makeMedicalRecord(data)

@@ -8,7 +8,7 @@ $(document).ready(function(){
 		complete: function(data)
 		{
 			user = data.responseJSON
-
+			
 			if(user != undefined)
 			{
 				$("#uu_index").attr('hidden')

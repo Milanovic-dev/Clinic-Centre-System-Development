@@ -36,11 +36,13 @@ public class Doctor extends User
   
 	@OneToMany(fetch = FetchType.LAZY)
 	private List<Appointment> appointments;
-
+	
+	@OneToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
+	private List<Vacation> vacations;
   
 	public Doctor() {
 		super();
-
+		vacations = new ArrayList<Vacation>();
 		// TODO Auto-generated constructor stub
 	}
 
@@ -49,6 +51,7 @@ public class Doctor extends User
 		super(password, email, name, surname, city, address, state, phone, UserRole.Doctor);
 		this.setIsFirstLog(true);
 		this.appointments = new ArrayList<>();
+		vacations = new ArrayList<Vacation>();
 	}
 
 	public Doctor(User user) {
@@ -56,9 +59,32 @@ public class Doctor extends User
 		this.setRole(UserRole.Doctor);
 		this.setIsFirstLog(true);
 		this.appointments = new ArrayList<>();
+		vacations = new ArrayList<Vacation>();
 	}
 
+	public Boolean IsFreeOn(Date date)
+	{
+		for(Vacation v: vacations)
+		{
+			Date start = v.getStartDate();
+			Date end = v.getEndDate();
+			
+			if(date.after(start) && date.before(end))
+			{
+				return false;
+			}
+		}
+		
+		return true;
+	}
+	
+	public List<Vacation> getVacations() {
+		return vacations;
+	}
 
+	public void setVacations(List<Vacation> vacations) {
+		this.vacations = vacations;
+	}
 
 	public Date getShiftStart() {
 		return shiftStart;
