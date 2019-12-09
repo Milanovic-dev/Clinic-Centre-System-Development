@@ -59,7 +59,7 @@ public class ContainerInitialize {
 					.withCity("Novi Sad")
 					.withAddress("Karadjordjeva 8")
 					.withState("Srbija")
-					.withPhone("34023423")					
+					.withPhone("34023423")	
 					.build();
 			
 			patient.getMedicalRecord().setBloodType(BloodType.AB);
@@ -120,9 +120,9 @@ public class ContainerInitialize {
 			
 			userRepository.save(doctor2);
 			
-			Doctor doctor3 = new Doctor.Builder("doktor2@gmail.com")
+			Doctor doctor3 = new Doctor.Builder("doktor3@gmail.com")
 					.withPassword(hash)
-					.withName("Doktor2")
+					.withName("Doktor3")
 					.withSurname("Doktor")
 					.withCity("Novi Sad")
 					.withAddress("Kisacka")

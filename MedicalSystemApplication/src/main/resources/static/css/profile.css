@@ -35,7 +35,7 @@ body{
     color: #333;
 }
 .profile-head h6{
-    color: #0062cc;
+    color: #2f989d;
 }
 .profile-edit-btn{
     border: none;
@@ -91,5 +91,5 @@ body{
 }
 .profile-tab p{
     font-weight: 600;
-    color: #0062cc;
+    color: #2f989d;
 }

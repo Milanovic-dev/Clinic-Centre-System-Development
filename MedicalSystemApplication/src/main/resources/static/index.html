@@ -13,10 +13,7 @@
 <link href="css/grid.css" rel ="stylesheet">
 <link href="css/checkbox.css" rel="stylesheet">
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-
-            
+<link rel="stylesheet" href="css/custom.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <!----------------- kalendar ------------------------>
     <link href="https://unpkg.com/@fullcalendar/core@4.3.1/main.min.css" rel="stylesheet"/>
@@ -59,7 +56,7 @@
           <div class="collapse navbar-collapse" id="navbarsExampleDefault">
            	<ul class="navbar-nav mr-auto"></ul>
                 <form class="form-inline my-2 my-lg-0" id="log_buttons" hidden="true">
-                    <button type="button" class="btn btn-outline-light" id = "navbar_prijava_btn">Prijava</button>
+                    <button type="button" class="btn btn-primary" id = "navbar_prijava_btn">Prijava</button>
                     &nbsp&nbsp
                     <button type="button" class="btn btn-light" id = "navbar_registracija_btn">Registracija</button>
                 </form>
@@ -87,7 +84,8 @@
         <div class="container">
           <h2 class="display-2">Dobrodosli!</h2>
           <p>Pozdrav! Dobrodosli na glavnu stranicu klinickog centra, na kome mozete jednim klikom do zdravlja! Ukoliko nemate nalog, a zeleli biste da budete deo klinickog centra, kliknite na dugme za registraciju.</p>
-          <p><button class="btn btn-primary btn-lg" id="register_btn" >Registruj se</button></p>
+          <p><button class="btn btn-primary" id="register_btn" >Registruj se</button></p>
+          
         </div>      
 </div>
 
@@ -108,7 +106,6 @@
           </li>
           <li class="breadcrumb-item active">Prikaz</li>
 		</ol>
-		
 		
 		
     <div class="container" id ="addHallContainer" style="display:none">
@@ -192,10 +189,12 @@
     
 
 
-   		<div class="card mb-3" id = "showClinicContainer" style="display:none">
+   		<div class="card mb-3" id = "showClinicContainer" style="display:none">        
           <div class="card-header">
-            <i class="fas fa-table"></i>
-            Lista Klinika</div>
+			Lista Klinika
+			<br>
+			<div><br><input class="datepicker" data-date-format="mm/dd/yyyy"></div>   
+		   </div>
           <div class="card-body">
             <div class="table-responsive">
               <table class="table table-bordered" id="tableClinics" width="100%" cellspacing="0">
@@ -270,6 +269,7 @@
      		</select>
     	   </div>  
           <button type="button" class="btn btn-primary btn-block" id = "submitAppointmentRequest">Posalji</button>
+          
         </form>
       </div>
     </div>
@@ -277,7 +277,6 @@
     <br>
     <div class="card mb-3" id = "showDoctorsContainer">
           <div class="card-header">
-            <i class="fas fa-table"></i>
             Izaberite Doktora</div>
           <div class="card-body">
             <div class="table-responsive">
