@@ -30,7 +30,11 @@ import service.ClinicService;
 import service.UserService;
 
 import javax.servlet.http.HttpServletRequest;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -93,16 +97,56 @@ public class ClinicController {
     	return new ResponseEntity<>(clinicsDTO,HttpStatus.OK);
     }
     
-    @GetMapping(value="/getPatients/{clinicName}")
+    @GetMapping(value="/getAll/{date}")
+    public ResponseEntity<List<ClinicDTO>> getClinicsWithFilter(@PathVariable("date") String date)
+    {
+    	List<Clinic> clinics = clinicService.findAll();
+    	List<ClinicDTO> clinicsDTO = new ArrayList<ClinicDTO>();
+    	
+    	if(clinics == null)
+
+    	{
+    		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    	}
+  
+    	try {
+			Date realDate = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").parse(date);
+			
+			for(Clinic c: clinics)
+	    	{
+	    		List<Doctor> doctors = c.getDoctors();
+	    		
+	    		for(Doctor d: doctors)
+	    		{
+	    			if(d.IsFreeOn(realDate))
+	    			{
+	    				clinicsDTO.add(new ClinicDTO(c));
+	    			}
+	    		}
+	    	}
+			
+			return new ResponseEntity<>(clinicsDTO,HttpStatus.OK);
+			
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	   	
+    	return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+    
+    
+    
+  @GetMapping(value="/getPatients/{clinicName}")
     public ResponseEntity<List<UserDTO>> getClinicPatients(@PathVariable("clinicName") String clinicName)
     {
     	Clinic c = clinicService.findByName(clinicName);
     	
     	if(c == null)
-    	{
-    		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    	}
-    	
+      {
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+      }
+  
     	List<Appointment> appointments = new ArrayList<Appointment>();
     	ArrayList<UserDTO> patients = new ArrayList<UserDTO>();
 
@@ -132,6 +176,7 @@ public class ClinicController {
     	
     }
     
+
     @GetMapping(value="/getDoctors/{name}")
     public ResponseEntity<List<DoctorDTO>> getClinicsDoctors(@PathVariable("name") String name)
     {
