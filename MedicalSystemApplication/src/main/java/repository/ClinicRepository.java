@@ -9,7 +9,7 @@ public interface ClinicRepository extends JpaRepository<Clinic,Long> {
 
     public Clinic findByName(String name);
     
-    public Clinic findByDoctor(Doctor d);
+    public Clinic findByDoctors(Doctor d);
 
 }
 

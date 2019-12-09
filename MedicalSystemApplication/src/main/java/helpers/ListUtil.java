@@ -36,6 +36,19 @@ public class ListUtil {
 		return list;
 	}
 	
+	public Boolean ContainsWithEmail(ArrayList<UserDTO> list,String email)
+	{
+		for(int i = 0 ; i < list.size() ; i++)
+		{
+			if(list.get(i).getEmail().equals(email))
+			{
+				return true;
+			}
+		}
+		
+		return false;		
+	}
+	
 	public static ListUtil getInstance()
 	{
 		if(instance == null)

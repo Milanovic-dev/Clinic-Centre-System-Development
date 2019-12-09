@@ -118,12 +118,16 @@ public class ClinicController {
     	
     	for(Appointment app: appointments)
     	{   		
-    		patients.add(new UserDTO(app.getPatient()));
+    		if(!ListUtil.getInstance().ContainsWithEmail(patients,app.getPatient().getEmail()))
+    		{
+    			patients.add(new UserDTO(app.getPatient()));    			
+    		}
     	}
     	
     	patients.sort(new UserSortingComparator());
-    	patients = ListUtil.getInstance().distinct(patients);
       	
+		System.out.println(patients.size());
+
     	return new ResponseEntity<>(patients,HttpStatus.OK);
     	
     }
