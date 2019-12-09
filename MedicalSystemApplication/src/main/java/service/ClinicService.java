@@ -1,6 +1,7 @@
 package service;
 
 import model.Clinic;
+import model.Doctor;
 import model.RegistrationRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,10 @@ public class ClinicService {
 
     public Clinic findByName(String name) {
         return clinicRepository.findByName(name);
+    }
+    
+    public Clinic findByDoctor(Doctor d) {
+        return clinicRepository.findByDoctors(d);
     }
 
     public void save(Clinic clinic)

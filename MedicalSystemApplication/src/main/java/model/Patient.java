@@ -1,6 +1,7 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -65,6 +66,7 @@ public class Patient extends User{
 		this.medicalRecord = medicalRecord;
 	}
 	
+
 	public static class Builder extends UserBuilder
 	{
 		private String insuranceId;
@@ -141,5 +143,6 @@ public class Patient extends User{
 			return p;
 		}
 	}
+
 	
 }

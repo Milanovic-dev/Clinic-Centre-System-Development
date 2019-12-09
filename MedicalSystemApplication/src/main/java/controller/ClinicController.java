@@ -3,9 +3,14 @@ package controller;
 
 import dto.ClinicDTO;
 import dto.DoctorDTO;
+import dto.UserDTO;
+import model.Appointment;
 import model.Clinic;
 import model.Doctor;
+import model.Patient;
 import model.RegistrationRequest;
+import helpers.ListUtil;
+import helpers.UserSortingComparator;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -19,6 +24,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import service.AppointmentService;
 import service.ClinicService;
 import service.UserService;
 
@@ -35,6 +42,9 @@ public class ClinicController {
     
     @Autowired
     private UserService userService;
+    
+    @Autowired
+    private AppointmentService appointmentService;
 
     @PostMapping(value ="/registerClinic", consumes = "application/json")
     public ResponseEntity<Void> registerClinic(@RequestBody ClinicDTO dto, HttpServletRequest request)
@@ -81,6 +91,45 @@ public class ClinicController {
     	
     	
     	return new ResponseEntity<>(clinicsDTO,HttpStatus.OK);
+    }
+    
+    @GetMapping(value="/getPatients/{clinicName}")
+    public ResponseEntity<List<UserDTO>> getClinicPatients(@PathVariable("clinicName") String clinicName)
+    {
+    	Clinic c = clinicService.findByName(clinicName);
+    	
+    	if(c == null)
+    	{
+    		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    	}
+    	
+    	List<Appointment> appointments = new ArrayList<Appointment>();
+    	ArrayList<UserDTO> patients = new ArrayList<UserDTO>();
+
+    	appointments = appointmentService.findAllByClinic(c);
+    	
+    	if(appointments.isEmpty())
+    	{
+    		System.out.println("Nema pregleda u toj klinici");
+    		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+    	}
+    	
+    	
+    	for(Appointment app: appointments)
+    	{   		
+    		if(!ListUtil.getInstance().ContainsWithEmail(patients,app.getPatient().getEmail()))
+    		{
+    			patients.add(new UserDTO(app.getPatient()));    			
+    		}
+    	}
+    	
+    	patients.sort(new UserSortingComparator());
+      	
+		System.out.println(patients.size());
+
+    	return new ResponseEntity<>(patients,HttpStatus.OK);
+    	
     }
     
     @GetMapping(value="/getDoctors/{name}")
