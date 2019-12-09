@@ -167,7 +167,7 @@ function p_listDoctor(data,i,doctorCount)
 	let tdSurname=$('<td>'+ data.user.name +'</td>');
 	let tdRating=$('<td>'+ data.avarageRating +'</td>');
 	let tdCalendar =$("<span class='input-group-addon'><span class='glyphicon glyphicon-calendar'></span></span>");
-	let tdSelect = $("<td> <label class='label'><input class='label__checkbox' type='checkbox' id='checkDoctor"+i+"'><span class='label__text'><span class='label__check'><i class='fa fa-check icon'></i></span></span></label>" )
+	let tdSelect = $("<td> <label class='label'><input class='label__checkbox' type='checkbox' id='checkDoctor"+i+"'><span class='label__text'></span></label>" )
 	
 	tr.append(tdName).append(tdSurname).append(tdRating).append(tdCalendar).append(tdSelect)
 	$('#tableDoctors tbody').append(tr)
