@@ -165,7 +165,7 @@ public class AuthController
 	{
 		if(email == null || email == "none")
 		{
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 		}
 		
 		
@@ -173,7 +173,7 @@ public class AuthController
 		
 		if(user == null)
 		{
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 		}
 		
 		SessionUserDTO dto = new SessionUserDTO(user);

@@ -7,9 +7,9 @@ function initPatient(user)
 {
 	let sideBar = $("#sideBar")
 	sideBar.append("<li class='nav-item active'><a class='nav-link' href='userProfileNew.html'><i class='fas fa-fw fa-tachometer-alt'></i><span id='profileUser'>Profil</span></a></li>")	
-	sideBar.append("<li class='nav-item active'><a class='nav-link' type='button'><i class='fas fa-fw fa-tachometer-alt'></i><span id='clinicList'>Lista klinika</span></a></li>")	
-	sideBar.append("<li class='nav-item active'><a class='nav-link' type='button'><i class='fas fa-fw fa-tachometer-alt'></i><span id='historyOfOperation'>Istorija pregleda i operacija</span></a></li>")	
-	sideBar.append("<li class='nav-item active'><a class='nav-link' type='button'><i class='fas fa-fw fa-tachometer-alt'></i><span id='medicalRecord'>Zdravstveni karton</span></a></li>")	
+	sideBar.append("<li class='nav-item active'><a class='nav-link' type='button'><span id='clinicList'>Lista klinika</span></a></li>")	
+	sideBar.append("<li class='nav-item active'><a class='nav-link' type='button'><span id='historyOfOperation'>Istorija pregleda i operacija</span></a></li>")	
+	sideBar.append("<li class='nav-item active'><a class='nav-link' type='button'><span id='medicalRecord'>Zdravstveni karton</span></a></li>")	
 
 	setUpPatientPage(user)
 }
@@ -35,7 +35,7 @@ function setUpPatientPage(user)
 				$('#tableClinics tbody').empty()
 				for(let c of clinics)
 				{
-					listClinic(c,i,user)
+					p_listClinic(c,i,user)
 					i++
 				}
 			}
@@ -80,7 +80,7 @@ function makeMedicalRecord(data)
 	}
 }
 
-function listClinic(data,i,user)
+function p_listClinic(data,i,user)
 {
 	let tr=$('<tr></tr>');
 	let tdName=$('<td>'+ data.name +'</td>');
@@ -115,8 +115,8 @@ function listClinic(data,i,user)
 				$('#tableDoctors tbody').empty()
 				for(let d of doctors)
 				{
-					listDoctor(d,index,doctors.length)
-					index++
+					p_listDoctor(d,index,doctors.length);
+					index++;
 				}
 				
 				$('#inputAppointmentType').change(function(e){
@@ -160,14 +160,14 @@ function listClinic(data,i,user)
 	
 }
 
-function listDoctor(data,i,doctorCount)
+function p_listDoctor(data,i,doctorCount)
 {
 	let tr=$('<tr></tr>');
 	let tdName=$('<td>'+ data.user.name +'</td>');
 	let tdSurname=$('<td>'+ data.user.name +'</td>');
 	let tdRating=$('<td>'+ data.avarageRating +'</td>');
-	let tdCalendar =$("<span class='input-group-addon'><span class='glyphicon glyphicon-calendar'></span></span>");
-	let tdSelect = $("<td> <label class='label'><input class='label__checkbox' type='checkbox' id='checkDoctor"+i+"'><span class='label__text'><span class='label__check'><i class='fa fa-check icon'></i></span></span></label>" )
+	let tdCalendar =$("<td><span class='input-group-addon'><span class='glyphicon glyphicon-calendar'></span></span></td>");
+	let tdSelect = $("<td><input type='checkbox' id='checkDoctor"+i+"'><label for='checkDoctor"+i+"'></label></td>" )
 	
 	tr.append(tdName).append(tdSurname).append(tdRating).append(tdCalendar).append(tdSelect)
 	$('#tableDoctors tbody').append(tr)

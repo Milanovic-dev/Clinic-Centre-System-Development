@@ -42,7 +42,6 @@ public class UserController
 		if(user != null) {
 			user.setName(dto.getName());
 			user.setSurname(dto.getSurname());
-			user.setUsername(dto.getUsername());
 			user.setAddress(dto.getAddress());
 			user.setCity(dto.getCity());
 			user.setState(dto.getState());

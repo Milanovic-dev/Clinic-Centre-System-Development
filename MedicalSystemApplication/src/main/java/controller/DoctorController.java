@@ -58,13 +58,25 @@ public class DoctorController
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 		
+		DateFormat df = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
 		
-		Doctor doctor = new Doctor(user);
-		doctor.setShiftStart(start);
-		doctor.setShiftEnd(end);
-		userService.delete(user);//TODO:SetDeleted
-		userService.save(doctor);
-		return new ResponseEntity<>(HttpStatus.CREATED);
+		Date dateStart;
+		Date dateEnd;
+		try {
+			dateStart = df.parse(start);
+			dateEnd = df.parse(end);
+			Doctor doctor = new Doctor(user);
+			doctor.setShiftStart(dateStart);
+			doctor.setShiftEnd(dateEnd);
+			userService.delete(user);//TODO:SetDeleted
+			userService.save(doctor);
+			return new ResponseEntity<>(HttpStatus.CREATED);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 	}
 	
 	@GetMapping(value="/getClinic/{email}")

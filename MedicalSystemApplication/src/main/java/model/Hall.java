@@ -18,7 +18,7 @@ public class Hall
 	@GeneratedValue( strategy = GenerationType.AUTO)
 	private Long id;
 	
-	@OneToOne(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
+	@OneToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "clinic_id")
 	private Clinic clinic;
 	
