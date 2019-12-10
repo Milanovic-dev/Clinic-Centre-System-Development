@@ -36,6 +36,8 @@ public class RegistrationRequest{
 	
 	@Column(name = "phoneNumber", nullable = false)
 	private String phone;
+	@Column(name = "insurance", nullable = false)
+	private String insuranceId;
 
     public RegistrationRequest() {
     	super();
@@ -62,7 +64,26 @@ public class RegistrationRequest{
 		this.address = req.getAddress();
 		this.state = req.getState();
 		this.phone = req.getPhone();
+		this.insuranceId = req.getInsuranceId();
     }
+    
+    
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public String getInsuranceId() {
+		return insuranceId;
+	}
+
+	public void setInsuranceId(String insuranceId) {
+		this.insuranceId = insuranceId;
+	}
 
 	public String getPassword() {
 		return password;

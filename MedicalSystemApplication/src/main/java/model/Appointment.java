@@ -167,6 +167,7 @@ public class Appointment
 		public Builder(Date date)
 		{
 			this.date = date;
+			doctors = new ArrayList<Doctor>();
 		}
 		
 		public Builder withHall(Hall hall)
