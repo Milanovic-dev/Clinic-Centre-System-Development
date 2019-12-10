@@ -12,10 +12,7 @@ public class RegistrationRequest{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-      
-    @Column(name = "username", nullable = false)
-    private String username;
-    
+         
     @Column(name = "password", nullable = false)
 	private String password;
 	
@@ -45,7 +42,6 @@ public class RegistrationRequest{
     }
 
     public RegistrationRequest(String username, String password, String email, String name, String surname, String city, String address, String state, String phone) {
-    	this.username = username;
 		this.password = password;
 		this.email = email;
 		this.name = name;
@@ -58,7 +54,6 @@ public class RegistrationRequest{
     
     public RegistrationRequest(RegistrationRequest req)
     {
-    	this.username = req.getUsername();
 		this.password = req.getPassword();
 		this.email = req.getEmail();
 		this.name = req.getName();
@@ -68,14 +63,6 @@ public class RegistrationRequest{
 		this.state = req.getState();
 		this.phone = req.getPhone();
     }
-
-	public String getUsername() {
-		return username;
-	}
-
-	public void setUsername(String username) {
-		this.username = username;
-	}
 
 	public String getPassword() {
 		return password;

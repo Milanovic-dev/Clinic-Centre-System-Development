@@ -26,7 +26,8 @@ function setUpPatientPage(user)
 		$('#showClinicContainer').show()
 		$('#MedicalRecordContainer').hide()
 		$('#makeAppointmentContainer').hide()
-	
+		$('#breadcrumbCurrPage').removeAttr('hidden')
+		$('#breadcrumbCurrPage').text("Lista klinika")
 		
 	})
 	
@@ -68,6 +69,9 @@ function setUpPatientPage(user)
 		$('#showClinicContainer').hide()
 		$('#makeAppointmentContainer').hide()
 		$('#MedicalRecordContainer').show()
+		$('#breadcrumbCurrPage').removeAttr('hidden')
+		$('#breadcrumbCurrPage').text("Zdravstveni karton")
+		
 		
 		$.ajax({
 			type:'GET',
@@ -89,7 +93,6 @@ async function getClinics(date)
 	$('#tableClinics tbody').empty()
 	$('#clinicSpinner').show()
 	await sleep(1000)
-	$('#clinicSpinner').hide()
 	
 	
 	$.ajax({
@@ -99,6 +102,7 @@ async function getClinics(date)
 		{
 			let clinics = data.responseJSON
 			let i = 0
+			$('#clinicSpinner').hide()
 			
 			
 			$('#tableClinics tbody').empty()

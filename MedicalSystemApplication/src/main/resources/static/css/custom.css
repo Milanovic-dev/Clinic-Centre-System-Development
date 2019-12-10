@@ -206,3 +206,9 @@ input[type="checkbox"]:checked + label:before {
 	font-weight: 300;
 }
 
+.breadcrumb-item
+{
+	font-size:16px;
+	font-weight: 300;
+}
+
