@@ -37,7 +37,7 @@ public class Doctor extends User
 	@OneToMany(fetch = FetchType.LAZY)
 	private List<Appointment> appointments;
 	
-	@OneToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
+	@OneToMany(fetch = FetchType.LAZY)
 	private List<Vacation> vacations;
   
 	public Doctor() {
