@@ -16,8 +16,6 @@ import javax.persistence.*;
 @Entity
 public class Patient extends User{
 	
-	@Column(name = "insuranceId", nullable = true)
-	private String insuranceId;
 	
 	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinColumn(name = "medicalRecord_id", referencedColumnName = "id")
@@ -40,6 +38,7 @@ public class Patient extends User{
 	{
 		super(request,UserRole.Patient);
 		medicalRecord = new MedicalRecord();
+		super.setInsuranceId(request.getInsuranceId());
 		this.setIsFirstLog(false);
 	}
 	
@@ -47,15 +46,8 @@ public class Patient extends User{
 	{
 		super(user);
 		medicalRecord = new MedicalRecord();
+		super.setInsuranceId(user.getInsuranceId());
 		this.setIsFirstLog(false);
-	}
-
-	public String getInsuranceId() {
-		return insuranceId;
-	}
-
-	public void setInsuranceId(String insuranceId) {
-		this.insuranceId = insuranceId;
 	}
 
 	public MedicalRecord getMedicalRecord() {

@@ -13,6 +13,7 @@ public class SessionUserDTO
 	private String address;
 	private String state;
 	private String phone;
+	private String insuranceId;
 	private UserRole role;
 	
 	public SessionUserDTO()
@@ -31,15 +32,7 @@ public class SessionUserDTO
 		this.state = state;
 		this.phone = phone;
 		this.role = role;
-	}
-	
-	public Boolean getIsFirstLog() {
-		return isFirstLog;
-	}
-
-	public void setIsFirstLog(Boolean isFirstLog) {
-		this.isFirstLog = isFirstLog;
-	}
+	}	
 
 	public SessionUserDTO(User user)
 	{
@@ -52,9 +45,25 @@ public class SessionUserDTO
 		this.state = user.getState();
 		this.phone = user.getPhone();
 		this.role = user.getRole();
+		this.insuranceId = user.getInsuranceId();
 		this.isFirstLog = user.getIsFirstLog();
 	}
 
+	public String getInsuranceId() {
+		return insuranceId;
+	}
+	
+	public void setInsuranceId(String insuranceId) {
+		this.insuranceId = insuranceId;
+	}
+	
+	public Boolean getIsFirstLog() {
+		return isFirstLog;
+	}
+	
+	public void setIsFirstLog(Boolean isFirstLog) {
+		this.isFirstLog = isFirstLog;
+	}
 
 	public String getEmail() {
 		return email;

@@ -181,28 +181,30 @@ public class AppointmentController
 	{
 		HttpHeaders header = new HttpHeaders();
 		AppointmentRequest request = appointmentRequestService.findAppointmentRequest(dto.getDate(), dto.getHallNumber(), dto.getClinicName());
-		Appointment appointment = new Appointment();
-		
+		Clinic clinic = clinicService.findByName(dto.getClinicName());
 		if(request == null)
 		{
 			header.set("responseText","Request not found: " + dto.getDate() +" ,"+ dto.getHallNumber() +", "+ dto.getClinicName());
 			return new ResponseEntity<>(header,HttpStatus.NOT_FOUND);
 		}
 		
-		appointment.setClinic(request.getClinic());
-		appointment.setHall(request.getHall());//TODO: Admin treba da izabere salu
-		appointment.setPatient(request.getPatient());
-		appointment.setDate(request.getDate());
+		Appointment appointment = new Appointment.Builder(request.getDate())
+				.withClinic(request.getClinic())
+				.withHall(request.getHall())//TODO: Admin treba da bira salu
+				.withPatient(request.getPatient())
+				.withDescription(request.getAppointmentDescription())
+				.withType(request.getAppointmentType())
+				.build();
+
 		for(Doctor doc : request.getDoctors())
 		{
 			appointment.getDoctors().add(doc);
 		}		
-		appointment.setAppointmentDescription(request.getAppointmentDescription());
-		appointment.setAppointmentType(request.getAppointmentType());
-		
+		clinic.getAppointments().add(appointment);
 		//Send mail
 		appointmentRequestService.delete(request);
 		appointmentService.save(appointment);	
+		clinicService.save(clinic);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 	

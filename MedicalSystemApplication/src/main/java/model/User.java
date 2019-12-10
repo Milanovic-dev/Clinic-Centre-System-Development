@@ -13,6 +13,9 @@ public class User
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 	
+	@Column(name = "insuranceId", nullable = true)
+	private String insuranceId;
+	
 	@Column(name="deleted",nullable = true)
 	private Boolean deleted;
 	
@@ -78,6 +81,7 @@ public class User
 		this.address = request.getAddress();
 		this.state = request.getState();
 		this.phone = request.getPhone();
+		this.insuranceId = request.getInsuranceId();
 		this.role = role;
 		this.deleted = false;
 	}
@@ -94,11 +98,20 @@ public class User
 		this.state = user.getState();
 		this.phone = user.getPhone();
 		this.role = user.getRole();
+		this.insuranceId = user.getInsuranceId();
 		this.deleted = false;
 	}
 
 	
 	
+	public String getInsuranceId() {
+		return insuranceId;
+	}
+
+	public void setInsuranceId(String insuranceId) {
+		this.insuranceId = insuranceId;
+	}
+
 	public Boolean getDeleted() {
 		return deleted;
 	}

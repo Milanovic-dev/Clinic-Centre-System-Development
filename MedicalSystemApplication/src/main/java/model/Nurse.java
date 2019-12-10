@@ -12,9 +12,6 @@ import model.User.UserRole;
 @Entity
 public class Nurse extends User{
 	
-
-	@Column(name = "insuranceId", nullable = true)
-    private String insuranceID;
 	
 	@Column(name = "shiftStart", nullable = true)
     private Date shiftStart;
@@ -32,14 +29,14 @@ public class Nurse extends User{
     }
 
     public Nurse(String insuranceID) {
-        this.insuranceID = insuranceID;
+        super.setInsuranceId(insuranceID);
         this.prescriptions = new ArrayList<Prescription>();
         this.setIsFirstLog(true);
     }
 
     public Nurse(String password, String email, String name, String surname, String city, String address, String state, String phone, String insuranceID) {
         super(password, email, name, surname, city, address, state, phone, UserRole.Nurse);
-        this.insuranceID = insuranceID;
+        super.setInsuranceId(insuranceID);
         this.prescriptions = new ArrayList<Prescription>();
         this.setIsFirstLog(true);
     }
@@ -51,13 +48,6 @@ public class Nurse extends User{
         this.setIsFirstLog(true);
     }
 
-    public String getInsuranceID() {
-        return insuranceID;
-    }
-
-    public void setInsuranceID(String insuranceID) {
-        this.insuranceID = insuranceID;
-    }
 
 	public Date getShiftStart() {
 		return shiftStart;
@@ -187,7 +177,7 @@ public class Nurse extends User{
 			User user = super.build();
 			Nurse n = new Nurse(user);
 			n.setClinic(this.clinic);
-			n.setInsuranceID(this.insuranceId);
+			n.setInsuranceId(this.insuranceId);
 			n.setShiftStart(this.shiftStart);
 			n.setShiftEnd(this.shiftEnd);
 			return n;
