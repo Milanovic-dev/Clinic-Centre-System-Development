@@ -15,6 +15,7 @@ $(document).ready(function(){
 		let city = $('#inputCity').val()
 		let address = $('#inputAddress').val()
 		let phone = $('#inputPhone').val()
+		let insurance = $('#inputInsurance').val()
 		
 		flag = true
 		
@@ -101,6 +102,7 @@ $(document).ready(function(){
 			
 			input.addClass('is-invalid')
 			input.removeClass('is-valid')
+			flag = false
 		}
 		else
 		{
@@ -117,6 +119,7 @@ $(document).ready(function(){
 			
 			input.addClass('is-invalid')
 			input.removeClass('is-valid')
+			flag = false
 		}
 		else
 		{
@@ -132,10 +135,27 @@ $(document).ready(function(){
 			
 			input.addClass('is-invalid')
 			input.removeClass('is-valid')
+			flag = false
 		}
 		else
 		{
 			var input = $('#inputPhone')
+			
+			input.removeClass('is-invalid')
+			input.addClass('is-valid')
+		}
+		
+		if(insurance == "")
+		{
+			var input = $('#inputInsurance')
+			
+			input.addClass('is-invalid')
+			input.removeClass('is-valid')
+			flag = false
+		}
+		else
+		{
+			var input = $('#inputInsurance')
 			
 			input.removeClass('is-invalid')
 			input.addClass('is-valid')
@@ -145,6 +165,7 @@ $(document).ready(function(){
                 		    var input = $('#selectState')
                             input.addClass('is-invalid')
                             input.removeClass('is-valid')
+                            flag = false
                 		} else {
                 		    var input = $('#selectState')
                             input.removeClass('is-invalid')
@@ -154,7 +175,7 @@ $(document).ready(function(){
 		if(flag == false) return
 		
 		
-		let regReq = JSON.stringify({"password":password,"email":email,"name":name,"surname":surname,"city":city,"address":address,"state":state,"phone":phone})
+		let regReq = JSON.stringify({"password":password,"email":email,"name":name,"surname":surname,"city":city,"address":address,"state":state,"phone":phone,"insuranceId":insurance})
 		console.log(regReq)
 		$.ajax({
 			type: 'POST',
@@ -168,13 +189,14 @@ $(document).ready(function(){
 				
 				if(data.status == "208")
 				{
-					//TODO: Vec postoji sa tim emailom
+					var emailInput = $('#inputEmail')
+					
+					emailInput.addClass('is-invalid')
+					emailInput.removeClass('is-valid')
 				}
 				
 				if(data.status == "200")
-				{
-					
-											
+				{															
 					window.location.href = "registrationComplete.html"
 				}
 			}

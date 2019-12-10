@@ -8,7 +8,6 @@ function initPatient(user)
 	let sideBar = $("#sideBar")
 	sideBar.append("<li class='nav-item active'><a class='nav-link' href='userProfileNew.html'><i class='fas fa-fw fa-tachometer-alt'></i><span id='profileUser'>Profil</span></a></li>")	
 	sideBar.append("<li class='nav-item active'><a class='nav-link' type='button'><span id='clinicList'>Lista klinika</span></a></li>")	
-	sideBar.append("<li class='nav-item active'><a class='nav-link' type='button'><span id='historyOfOperation'>Istorija pregleda i operacija</span></a></li>")	
 	sideBar.append("<li class='nav-item active'><a class='nav-link' type='button'><span id='medicalRecord'>Zdravstveni karton</span></a></li>")	
 
 	setUpPatientPage(user)
@@ -26,7 +25,9 @@ function setUpPatientPage(user)
 		$('#showClinicContainer').show()
 		$('#MedicalRecordContainer').hide()
 		$('#makeAppointmentContainer').hide()
-	
+		$('#breadcrumbCurrPage').removeAttr('hidden')
+		$('#breadcrumbCurrPage').text("Lista klinika")
+		$('#breadcrumbCurrPage2').attr('hidden',true)
 		
 	})
 	
@@ -68,6 +69,9 @@ function setUpPatientPage(user)
 		$('#showClinicContainer').hide()
 		$('#makeAppointmentContainer').hide()
 		$('#MedicalRecordContainer').show()
+		$('#breadcrumbCurrPage').removeAttr('hidden')
+		$('#breadcrumbCurrPage').text("Zdravstveni karton")
+		$('#breadcrumbCurrPage2').attr('hidden',true)
 		
 		$.ajax({
 			type:'GET',
@@ -75,7 +79,7 @@ function setUpPatientPage(user)
 			complete: function(data)
 			{
 				let mr = data.responseJSON
-				makeMedicalRecord(mr)
+				makeMedicalRecord(mr,user)
 				
 			}
 		})
@@ -89,7 +93,6 @@ async function getClinics(date)
 	$('#tableClinics tbody').empty()
 	$('#clinicSpinner').show()
 	await sleep(1000)
-	$('#clinicSpinner').hide()
 	
 	
 	$.ajax({
@@ -99,6 +102,7 @@ async function getClinics(date)
 		{
 			let clinics = data.responseJSON
 			let i = 0
+			$('#clinicSpinner').hide()
 			
 			
 			$('#tableClinics tbody').empty()
@@ -112,8 +116,9 @@ async function getClinics(date)
 	})
 }
 
-function makeMedicalRecord(data)
+function makeMedicalRecord(data,user)
 {
+	$('#insuranceMR').text("Broj osiguranika: " + user.insuranceId)
 	$('#height').text("Visina: " + data.height)
 	$('#weight').text("Tezina: " + data.weight)
 	$('#bloodType').text("Krvna grupa: " + data.bloodType)
@@ -149,8 +154,10 @@ function p_listClinic(data,i,user)
 		
 		$('#inputClinicName').val(data.name)
 		$('#inputClinicAddress').val(data.address+", "+data.city+", "+data.state)
+		$('#inputDate').val($('#clinicDatePick').val())
 		$('#inputAppointmentType').val("Examination")
-		
+		$('#breadcrumbCurrPage2').removeAttr('hidden')
+		$('#breadcrumbCurrPage2').text("Zakazivanje")
 		$.ajax({
 			type:'GET',
 			url:"api/clinic/getDoctors/"+data.name,

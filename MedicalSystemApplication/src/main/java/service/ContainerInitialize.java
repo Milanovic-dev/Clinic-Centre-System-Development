@@ -60,6 +60,7 @@ public class ContainerInitialize {
 					.withAddress("Karadjordjeva 8")
 					.withState("Srbija")
 					.withPhone("34023423")	
+					.withInsuranceID("13858342343")
 					.build();
 			
 			patient.getMedicalRecord().setBloodType(BloodType.AB);

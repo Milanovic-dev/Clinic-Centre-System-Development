@@ -29,7 +29,7 @@ function addPersonalInformations(data)
 	$("#pCity").text(user.city);
 	$("#pState").text(user.state);
 	$("#pAddress").text(user.address);
-	
+	$('#pInsurance').text(user.insuranceId)
 	
 	
 	if(user.role == "Doctor")

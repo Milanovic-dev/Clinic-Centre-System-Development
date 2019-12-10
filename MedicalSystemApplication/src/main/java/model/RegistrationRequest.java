@@ -12,10 +12,7 @@ public class RegistrationRequest{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-      
-    @Column(name = "username", nullable = false)
-    private String username;
-    
+         
     @Column(name = "password", nullable = false)
 	private String password;
 	
@@ -39,13 +36,14 @@ public class RegistrationRequest{
 	
 	@Column(name = "phoneNumber", nullable = false)
 	private String phone;
+	@Column(name = "insurance", nullable = false)
+	private String insuranceId;
 
     public RegistrationRequest() {
     	super();
     }
 
     public RegistrationRequest(String username, String password, String email, String name, String surname, String city, String address, String state, String phone) {
-    	this.username = username;
 		this.password = password;
 		this.email = email;
 		this.name = name;
@@ -58,7 +56,6 @@ public class RegistrationRequest{
     
     public RegistrationRequest(RegistrationRequest req)
     {
-    	this.username = req.getUsername();
 		this.password = req.getPassword();
 		this.email = req.getEmail();
 		this.name = req.getName();
@@ -67,14 +64,25 @@ public class RegistrationRequest{
 		this.address = req.getAddress();
 		this.state = req.getState();
 		this.phone = req.getPhone();
+		this.insuranceId = req.getInsuranceId();
     }
+    
+    
 
-	public String getUsername() {
-		return username;
+	public Long getId() {
+		return id;
 	}
 
-	public void setUsername(String username) {
-		this.username = username;
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public String getInsuranceId() {
+		return insuranceId;
+	}
+
+	public void setInsuranceId(String insuranceId) {
+		this.insuranceId = insuranceId;
 	}
 
 	public String getPassword() {

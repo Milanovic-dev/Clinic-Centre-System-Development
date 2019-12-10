@@ -110,7 +110,7 @@ public class ClinicController {
     	}
   
     	try {
-			Date realDate = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").parse(date);
+			Date realDate = new SimpleDateFormat("dd-MM-yyyy").parse(date);
 			
 			for(Clinic c: clinics)
 	    	{
@@ -121,6 +121,7 @@ public class ClinicController {
 	    			if(d.IsFreeOn(realDate))
 	    			{
 	    				clinicsDTO.add(new ClinicDTO(c));
+	    				break;
 	    			}
 	    		}
 	    	}

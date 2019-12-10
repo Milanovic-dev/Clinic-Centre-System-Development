@@ -15,6 +15,7 @@ public class UserBuilder {
 	private String address;
 	private String state;
 	private String phone;
+	private String insuranceID;
 	private UserRole role;
 	
 	protected UserBuilder(String email)
@@ -74,6 +75,13 @@ public class UserBuilder {
 	protected UserBuilder withRole(UserRole role)
 	{
 		this.role = role;
+		
+		return this;
+	}
+	
+	protected UserBuilder withInsurance(String insuranceID)
+	{
+		this.insuranceID = insuranceID;
 		
 		return this;
 	}

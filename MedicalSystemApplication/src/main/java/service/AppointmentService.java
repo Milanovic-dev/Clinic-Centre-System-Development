@@ -37,6 +37,11 @@ public class AppointmentService {
 		return appointmentRepository.findByDateAndHallAndClinic(date, hall, clinic);
 	}
 	
+	public List<Appointment> findAll()
+	{
+		return appointmentRepository.findAll();
+	}
+	
 	public Appointment findAppointment(String date, int hallNumber, String clinic)
 	{
 		DateFormat df = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
