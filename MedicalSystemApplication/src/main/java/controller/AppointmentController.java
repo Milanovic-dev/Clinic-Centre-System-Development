@@ -71,6 +71,26 @@ public class AppointmentController
 		return new ResponseEntity<>(new AppointmentDTO(appointment),HttpStatus.OK);
 	}
 	
+	@GetMapping(value="/getAll")
+	public ResponseEntity<List<AppointmentDTO>> getAllAppointments()
+	{
+		List<Appointment> app = appointmentService.findAll();
+		List<AppointmentDTO> appDTO = new ArrayList<AppointmentDTO>();
+		
+		if(app == null)
+		{
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND); 
+
+		}
+		
+		for(Appointment a : app)
+		{
+			appDTO.add(new AppointmentDTO(a));
+		}
+			
+		return new ResponseEntity<>(appDTO,HttpStatus.OK); 
+	}
+	
 	@GetMapping(value="/getRequest")
 	public ResponseEntity<AppointmentDTO> getAppointmentRequest(@RequestBody AppointmentDTO dto)
 	{

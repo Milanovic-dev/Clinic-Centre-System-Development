@@ -20,17 +20,28 @@ public class Priceslist
 	@Column(name = "price", nullable = false)
 	private Long price;
 	
+	@Column(name = "deleted", nullable = false)
+	private Boolean deleted;
+	
 	
 	public Priceslist() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	public Priceslist(Long id, Clinic clinic, String typeOfExamination, Long price) {
+	public Priceslist(Clinic clinic, String typeOfExamination, Long price) {
 		super();
-		this.id = id;
 		this.clinic = clinic;
 		this.typeOfExamination = typeOfExamination;
 		this.price = price;
+		this.deleted = false;
+	}
+	
+	
+	public Boolean getDeleted() {
+		return deleted;
+	}
+	public void setDeleted(Boolean deleted) {
+		this.deleted = deleted;
 	}
 	public Long getId() {
 		return id;

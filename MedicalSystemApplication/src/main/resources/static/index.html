@@ -385,7 +385,37 @@
 </div>
 
 <!-- --------------------KRAJ MODALA--------------------- -->         
+<!-- -----------------------DODAVANJE TIPA PREGLEDA------------------------ ------->
+ <div class="container" id ="addTypeOfExaminationContainer" style="display:none">
+    <div class="card card-login mx-auto mt-5">
+      <div class="card-header" id="header">Dodavanje tipa pregleda</div>
+      <div class="card-body">
+        <form>
+          <div class="form-group">
+          <label>Ime tipa pregleda</label>
+            <div class="form-label-group">
+              <input type="text" id="inputTypeOfExamination" class="form-control" placeholder="Ime tipa pregleda" required="required" autofocus="autofocus">
+            </div>
+          </div>
+          <label>Cena tipa pregleda</label>
+            <div class="form-label-group">
+              <input type="text" id="inputTypeOfExaminationDescription" class="form-control" placeholder="Cena tipa pregleda" required="required" autofocus="autofocus">
+            </div>
+          </div>
+           <label>Cena tipa pregleda</label>
+            <div class="form-label-group">
+              <input type="text" id="inputTypeOfExaminationDescription" class="form-control" placeholder="Cena tipa pregleda" required="required" autofocus="autofocus">
+            </div>
+          </div>
+          
+          <span style="color:#FF1103" id="errorSpan"></span>
+          <button type="button" class="btn btn-primary btn-block" id = "submitHall">Dodaj</button>
+        </form>
+      </div>
+    </div>
+  </div>
 
+<!-- -----------------------KRAJ DODAVANJA TIPA PREGLEDA------------------------ -->
 
   		<div class="container-fluid" id="MedicalRecordContainer">
   			<p class="text-muted" id="insuranceMR"></p>
