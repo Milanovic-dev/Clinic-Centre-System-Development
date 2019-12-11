@@ -42,6 +42,7 @@ $(document).ready(function()
 				$('#drop_down_menu').attr('hidden')
 				$('#log_buttons').removeAttr('hidden')
 				$('#welcome-text').text("")
+				
 			}				
 					
 		}	
