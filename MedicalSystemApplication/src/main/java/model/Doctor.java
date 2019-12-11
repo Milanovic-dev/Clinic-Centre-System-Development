@@ -16,6 +16,9 @@ public class Doctor extends User
 	@Column(name = "type", nullable = true)
 	private String type;
 	
+	@Column(name = "insuranceId", nullable = true)
+	private String insuranceId;
+	
 	@Column(name = "shiftStart", nullable = true)
     private Date shiftStart;
 	
@@ -34,7 +37,7 @@ public class Doctor extends User
 	@OneToMany(fetch = FetchType.LAZY)
 	private List<Appointment> appointments;
 	
-	@OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+	@OneToMany(fetch = FetchType.LAZY)
 	private List<Vacation> vacations;
   
 	public Doctor() {
@@ -114,7 +117,16 @@ public class Doctor extends User
 	public void setType(String type) {
 		this.type = type;
 	}
-		
+	
+	
+	public String getInsuranceId() {
+		return insuranceId;
+	}
+
+	public void setInsuranceId(String insuranceId) {
+		this.insuranceId = insuranceId;
+	}
+	
 	
 	public float getAvarageRating() {
 		return avarageRating;

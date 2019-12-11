@@ -3,18 +3,18 @@
 <html>
 <head>
     <meta charset="utf-8">
-        <!-- Required meta tags -->
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-        <link rel="stylesheet" href = "css/login.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <script
+            src="https://code.jquery.com/jquery-3.4.1.js"
+            integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+            crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 
-        <script
-                src="https://code.jquery.com/jquery-3.4.1.js"
-                integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
-                crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-        <script src ="js/navbar.js"></script>
+    <script src ="js/navbar.js"></script>
+    <link href="css/sb-admin.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="css/custom.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
         <script src="js/centreAdminPage.js"></script>
     <link rel = "stylesheet" href="css/centreAdminPage.css">
     <title>Nalog</title>
@@ -23,37 +23,37 @@
 <!-- Navigation -->
 
 <header>
-    	<nav class="navbar navbar-expand navbar-dark bg-dark">
-    	<a class="navbar-brand" href="#">
-    		<img src="images/logo.png" width="30" height="30" alt="">
-  		</a>
-         <a class="navbar-brand" href="index.html">Klinicki Centar</a>
-         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
-         	<span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="collapse navbar-collapse" id="navbarsExampleDefault">
-           	<ul class="navbar-nav mr-auto"></ul>
-                <form class="form-inline my-2 my-lg-0" id="log_buttons" hidden="true">
-                    <button type="button" class="btn btn-outline-light" id = "navbar_prijava_btn">Prijava</button>
-                    &nbsp&nbsp
-                    <button type="button" class="btn btn-light" id = "navbar_registracija_btn">Registracija</button>
-                </form>
-        		<form class="form-inline my-2 my-lg-0" id="drop_down_menu" hidden="true">
-        			<span class="navbar-text" id="welcome-text"></span>
-        			&nbsp&nbsp
-              		<div class="btn-group">
-              		<button class="btn btn-warning" id="admin_btn">Admin</button>
-  						<button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
-  					<div class="dropdown-menu dropdown-menu-lg-right">
-    					<a class="dropdown-item" href="userProfileNew.html">Profil</a>
-    				<div class="dropdown-divider"></div>
-    					<a class="dropdown-item" href="index.html" id="dropdown-item_logout">Odjavi se</a>
-  					</div>
-					</div>
-                </form>
-              </div>
-         </nav>
-    </header>
+    <nav class="navbar navbar-expand navbar-dark bg-dark">
+        <a class="navbar-brand" href="#">
+            <img src="images/logo.png" width="30" height="30" alt="">
+        </a>
+        <a class="navbar-brand" href="centreAdminPage.html">Klinicki Centar</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+            <ul class="navbar-nav mr-auto"></ul>
+            <form class="form-inline my-2 my-lg-0" id="log_buttons" hidden="true">
+                <button type="button" class="btn btn-primary" id = "navbar_prijava_btn">Prijava</button>
+                &nbsp&nbsp
+                <button type="button" class="btn btn-light" id = "navbar_registracija_btn">Registracija</button>
+            </form>
+            <form class="form-inline my-2 my-lg-0" id="drop_down_menu" hidden="true">
+                <span class="navbar-text" id="welcome-text"></span>
+                &nbsp&nbsp
+                <div class="btn-group">
+                    <button class="btn btn-warning" id="admin_btn">Admin</button>
+                    <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
+                    <div class="dropdown-menu dropdown-menu-lg-right">
+                        <a class="dropdown-item" href="userProfileNew.html">Profil</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="index.html" id="dropdown-item_logout">Odjavi se</a>
+                    </div>
+                </div>
+        </form>
+        </div>
+    </nav>
+</header>
 
 <header>
     <div id="myNav" class="overlay">

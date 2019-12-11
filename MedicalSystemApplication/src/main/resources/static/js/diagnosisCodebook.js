@@ -5,8 +5,8 @@ function addDiagnosis(diagnosis)
 	let tdCode=$('<td style="width:100px;">'+ diagnosis.code +'</td>');
 	let tdTag=$('<td style="width:120px;">'+ diagnosis.tag +'</td>');
 	let tdName=$('<td>'+ diagnosis.name +'</td>');
-	let tdEdit=$('<td style="text-align:right;"><button type="button" class="btn btn-link" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo"><i class="fas fa-edit"></i></button></td>');
-	let tdDelete=$('<td style="text-align:right;width:10px"><button class="btn btn-link "><i class="fas fa-trash"></i></button></td>');
+	let tdEdit=$('<td style="text-align:right;"><button type="button" class="btn btn-link" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo"><i class="fas fa-edit fa-lg"></i></button></td>');
+	let tdDelete=$('<td style="text-align:right;width:10px"><button class="btn btn-link "><i class="fas fa-trash fa-lg"></i></button></td>');
 
     tdEdit.click(editDiagnosis(diagnosis));
     tdDelete.click(deleteDiagnosis(diagnosis));
@@ -68,12 +68,13 @@ $(document).ready(()=>{
            	let code = $('#code').val()
            	let tag = $('#tag').val()
 
+            let flag = true
             if(name == "")
             		{
             			var input = $('#name')
 
             			input.addClass('is-invalid')
-
+                        flag = false
             		}
             		else
             		{
@@ -88,7 +89,7 @@ $(document).ready(()=>{
             			var input = $('#code')
 
             			input.addClass('is-invalid')
-
+                        flag = false
             		}
             		else
             		{
@@ -101,12 +102,13 @@ $(document).ready(()=>{
             		if(tag == ""){
                         var input = $('#tag')
                          input.addClass('is-invalid')
+                         flag = false
                     } else {
                         var input = $('#tag')
                         input.removeClass('is-invalid')
                     }
 
-
+                    if(flag == false) return
 
            let data = JSON.stringify({"name":name,"code":code,"tag":tag})
            console.log(data)

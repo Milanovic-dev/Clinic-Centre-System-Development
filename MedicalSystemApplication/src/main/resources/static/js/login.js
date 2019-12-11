@@ -67,10 +67,18 @@ $(document).ready(function(){
 
 					if(user.isFirstLog)	{
 							window.location.href = "passwordChange.html"
-						}
+					}
 					else
-						{
-							window.location.href = "index.html"
+					{
+						let role = user.role
+
+                        if(role == "CentreAdmin")
+                        {
+                        	window.location.href = "centreAdminPage.html"
+                        } else {
+                             window.location.href = "index.html"
+                        }
+
 
 						}
 				}

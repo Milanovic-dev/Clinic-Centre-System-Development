@@ -5,8 +5,8 @@ function addDrug(drug)
 	let tr=$('<tr></tr>');
 	let tdCode=$('<td>'+ drug.code +'</td>');
 	let tdName=$('<td>'+ drug.name +'</td>');
-	let tdEdit=$('<td style="text-align:right;"><button type="button" class="btn btn-link" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo"><i class="fas fa-edit"></i></button></td>');
-	let tdDelete=$('<td style="text-align:right;width:10px"><button class="btn btn-link "><i class="fas fa-trash"></i></button></td>');
+	let tdEdit=$('<td style="text-align:right;"><button type="button" class="btn btn-link" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo"><i class="fas fa-edit fa-lg"></i></button></td>');
+	let tdDelete=$('<td style="text-align:right;width:10px"><button class="btn btn-link "><i class="fas fa-trash fa-lg"></i></button></td>');
 
     tdEdit.click(editDrug(drug));
     tdDelete.click(deleteDrug(drug));
@@ -63,11 +63,14 @@ $(document).ready(()=>{
     		let name = $('#name').val()
            	let code = $('#code').val()
 
+            let flag = true
+
             if(name == "")
             		{
             			var input = $('#name')
 
             			input.addClass('is-invalid')
+            			flag = false
 
             		}
             		else
@@ -83,7 +86,7 @@ $(document).ready(()=>{
             			var input = $('#code')
 
             			input.addClass('is-invalid')
-
+                        flag = false
             		}
             		else
             		{
@@ -92,6 +95,8 @@ $(document).ready(()=>{
             			input.removeClass('is-invalid')
 
             		}
+
+            	if(flag == false) return
 
            let data = JSON.stringify({"name":name,"code":code})
            console.log(data)

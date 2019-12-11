@@ -87,7 +87,15 @@ function firstLogPasswordChange(data)
 		{
 			if(data.status == 200)
 			{
-				window.location.href = "index.html"
+			   let role = user.role
+
+              if(role == "CentreAdmin")
+              {
+                   window.location.href = "centreAdminPage.html"
+              } else {
+                   window.location.href = "index.html"
+              }
+
 			}
 			else
 			{
