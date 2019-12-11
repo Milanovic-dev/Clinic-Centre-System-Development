@@ -1,6 +1,7 @@
 package helpers;
 
 import java.util.ArrayList;
+import model.*;
 import java.util.List;
 
 import dto.UserDTO;
@@ -36,7 +37,7 @@ public class ListUtil {
 		return list;
 	}
 	
-	public Boolean ContainsWithEmail(ArrayList<UserDTO> list,String email)
+	public Boolean containsWithEmail(ArrayList<UserDTO> list,String email)
 	{
 		for(int i = 0 ; i < list.size() ; i++)
 		{
@@ -47,6 +48,19 @@ public class ListUtil {
 		}
 		
 		return false;		
+	}
+	
+	public int containsWithType(List<Priceslist> list, String type)
+	{
+		for(int i = 0 ; i < list.size() ; i++)
+		{
+			if(list.get(i).getTypeOfExamination().equals(type))
+			{
+				return i;
+			}
+		}
+		
+		return -1;
 	}
 	
 	public static ListUtil getInstance()

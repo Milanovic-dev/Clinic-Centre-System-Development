@@ -352,7 +352,7 @@
 
 
         <!-- ----------------KALENDAR END--------------------- -->
-        <!-- ----------------MODAL ZA PREBACIVANJE U LEKARA--------------------- -->
+<!-- ----------------MODAL ZA PREBACIVANJE U LEKARA--------------------- -->
 <div class="modal fade" id="addShiftModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -384,7 +384,7 @@
   </div>
 </div>
 
-<!-- --------------------KRAJ MODALA--------------------- -->         
+<!-- --------------------KRAJ MODALA ZA PREBACIVANJE U LEKARA--------------------- -->         
 <!-- -----------------------DODAVANJE TIPA PREGLEDA------------------------ ------->
  <div class="container" id ="addTypeOfExaminationContainer" style="display:none">
     <div class="card card-login mx-auto mt-5">
@@ -396,26 +396,78 @@
             <div class="form-label-group">
               <input type="text" id="inputTypeOfExamination" class="form-control" placeholder="Ime tipa pregleda" required="required" autofocus="autofocus">
             </div>
-          </div>
+            </div>
+          <div class="form-group">
           <label>Cena tipa pregleda</label>
             <div class="form-label-group">
-              <input type="text" id="inputTypeOfExaminationDescription" class="form-control" placeholder="Cena tipa pregleda" required="required" autofocus="autofocus">
+              <input type="text" id="inputTypeOfExaminationPrice" class="form-control" placeholder="Cena tipa pregleda" required="required" autofocus="autofocus">
             </div>
-          </div>
-           <label>Cena tipa pregleda</label>
-            <div class="form-label-group">
-              <input type="text" id="inputTypeOfExaminationDescription" class="form-control" placeholder="Cena tipa pregleda" required="required" autofocus="autofocus">
-            </div>
-          </div>
-          
-          <span style="color:#FF1103" id="errorSpan"></span>
-          <button type="button" class="btn btn-primary btn-block" id = "submitHall">Dodaj</button>
+			</div>
+		  <span style="color:#FF1103" id="errorSpanTypeOfExamination"></span>
+          <button type="button" class="btn btn-primary btn-block" id = "submitTypeOfExamination">Dodaj</button>
         </form>
       </div>
     </div>
   </div>
 
 <!-- -----------------------KRAJ DODAVANJA TIPA PREGLEDA------------------------ -->
+<!-- --------------------------LISTA TIPOVA PREGLEDA---------------------------- -->
+<div class="card mb-3" id = "showTypeOfExaminationContainer" style="display:none">        
+     <div class="card-header">
+     <i class="fas fa-table"></i>
+			Lista Tipova pregleda
+		   </div>
+          <div class="card-body">
+            <div class="table-responsive">
+              <table class="table table-bordered" id="tableTypeOfExamination" width="100%" cellspacing="0">
+                <thead>               
+					<tr>					
+					<th scope="col">Ime tipa pregleda</th>
+      				<th scope="col">Klinika </th>
+      				<th scope="col">Cena tipa pregleda</th>
+      				<th scope="col"> </th>
+      				<th scope="col"> </th>
+					</tr>				
+					</thead>
+				<tbody>             	
+                </tbody>
+              </table>
+            </div>
+          </div>
+          </div>   
+<!-- --------------------------KRAJ LISTE TIPOVA PREGLEDA----------------------- -->
+<!-- -------------------------MODAL ZA IZMENU TIPA PREGLEDA--------------------- -->
+<div class="modal fade" id="changeTypeOfExaminationModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">New message</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="form-group">
+            <label for="recipient-name" class="col-form-label">Ime tipa pregleda</label>
+  				<input type="text" id="typeOfExamination_input" class="form-control">
+          </div>
+          <div class="form-group">
+            <label for="message-text" class="col-form-label">Cena tipa pregleda</label>
+  				<input type="time" id="typeOfExaminationPrice_input" class="form-control">
+          </div>
+        </form>    
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Odustani</button>
+        <button type="button" class="btn btn-primary" data-dismiss="modal" id = "changeTypeOfExam_btn">Zapamti izmene</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ----------------------KRAJ MODALA ZA IZMENU TIPA PREGLEDA------------------ -->
+
 
   		<div class="container-fluid" id="MedicalRecordContainer">
   			<p class="text-muted" id="insuranceMR"></p>
