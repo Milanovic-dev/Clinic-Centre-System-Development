@@ -95,10 +95,9 @@ function initClinicAdmin(user)
 	
 			
 		}) //KRAJ SUBMIT TYPE OF EXAMINATION
-		
-	
-	
+
 	//KRAJ DODAVANJA TIPA PREGLEDA
+	
 	
 	
 	$('#showDoctor').click(function(e){
@@ -253,7 +252,7 @@ function listHall(data,i)
 	$('#changeHall_btn'+i).click(function(e)
 	{
 		e.preventDefault()
-		console.log(data.number)
+
 		$('#addHallContainer').hide()
 		$('#showHallContainer').hide()
 		$('#changeHallContainer').show()
@@ -403,35 +402,40 @@ function listTypesOfExamination(t,i,clinic)
 	tr.append(tdName).append(tdClinic).append(tdPrice).append(tdChange).append(tdDelete)
 	$('#tableTypeOfExamination tbody').append(tr);
 	
-	$('#changeTypeOfExam_btn').click(function(e){
+	$('#changeTypeOfExamination_btn'+i).click(function(e){
 		e.preventDefault()
-		let typeOfExam = $('#typeOfExamination_input').val()
-		let typeOfExamPrice = $('#typeOfExaminationPrice_input').val()
-		let typeOfExamination = JSON.stringify({"clinicName":clinic.name,"typeOfExamination" : typeOfExamName,"price" : typeOfExamPrice})
 		
-		$.ajax({
-			type:'POST',
-			url: 'api/priceList/update/' + t.typeOfExamination,
-			data: typeOfExamination,
-			dataType: "json",
-			complete: function(response)
-			{
-				//TODO
-				$.ajax({
-					type: 'PUT',
-					url: 'api/clinic/addDoctor/'+ clinic.name +'/' + data.email,
-					complete: function(e)
+		$('#typeOfExamination_input').val(t.typeOfExamination)
+		$('#typeOfExaminationPrice_input').val(t.price)
+		
+		$('#changeTypeOfExam_btn').off('click')
+		$('#changeTypeOfExam_btn').click(function(e){
+			let typeOfExam = $('#typeOfExamination_input').val()
+			let typeOfExamPrice = $('#typeOfExaminationPrice_input').val()
+			let typeOfExamination = JSON.stringify({"clinicName":clinic.name,"typeOfExamination" : typeOfExam,"price" : typeOfExamPrice})
+			
+			console.log(typeOfExam)
+			console.log(typeOfExamPrice)
+			$.ajax({
+				type:'POST',
+				url: 'api/priceList/update/' + t.typeOfExamination,
+				data: typeOfExamination,
+				dataType: "json",
+				complete: function(response)
+				{
+					console.log(response.status)
+					if(response.status == "200")
 					{
-						
+						makeTypeOfExaminationTable()
 					}
-					
-				})
-			}
+				}
+			})	
+		})
+			
 			
 		}) 
 		
 		
-	})
 	
 	$('#deleteTypeOfExamination_btn'+i).click(function(e){
 		e.preventDefault()
