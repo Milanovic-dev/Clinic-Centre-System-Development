@@ -72,8 +72,32 @@ public class ContainerInitialize {
 			patient.getMedicalRecord().setAlergies(Arrays.asList("Polen","Secer"));
 			patient.getMedicalRecord().setHeight("195cm");
 			patient.getMedicalRecord().setWeight("90kg");
+
+			Patient patient2 = new Patient.Builder("patient1@gmail.com")
+					.withPassword(hash)
+					.withName("Pera")
+					.withSurname("Peric")
+					.withCity("Beograd")
+					.withAddress("Bulevar Oslobodjenja 8")
+					.withState("Srbija")
+					.withPhone("123456")
+					.withInsuranceID("78945612364")
+					.build();
+
+			Patient patient1 = new Patient.Builder("patient@gmail.com")
+					.withPassword(hash)
+					.withName("Sima")
+					.withSurname("Simic")
+					.withCity("Zagreb")
+					.withAddress("Ulcia 8")
+					.withState("Hrvatska")
+					.withPhone("44555656")
+					.withInsuranceID("35654645")
+					.build();
 			
 			userRepository.save(patient);
+			userRepository.save(patient1);
+			userRepository.save(patient2);
 			
 			Clinic clinic = new Clinic("KlinikaTest","Karajdorjdeva 8","Novi Sad","Srbija","Opis");
 						
@@ -91,7 +115,8 @@ public class ContainerInitialize {
 					.build();
 			
 			userRepository.save(clinicAdmin);
-			
+
+
 			Doctor doctor1 = new Doctor.Builder("doktor1@gmail.com")
 					.withPassword(hash)
 					.withName("Doktor1")
@@ -106,7 +131,7 @@ public class ContainerInitialize {
 					.withShiftStart(new Date())
 					.withShiftEnd(new Date())
 					.build();
-			
+
 			userRepository.save(doctor1);
 			
 			Doctor doctor2 = new Doctor.Builder("doktor2@gmail.com")
@@ -123,7 +148,7 @@ public class ContainerInitialize {
 					.withShiftStart(new Date())
 					.withShiftEnd(new Date())
 					.build();
-			
+
 			userRepository.save(doctor2);
 			
 			Doctor doctor3 = new Doctor.Builder("doktor3@gmail.com")
@@ -140,7 +165,7 @@ public class ContainerInitialize {
 					.withShiftStart(new Date())
 					.withShiftEnd(new Date())
 					.build();
-			
+
 			userRepository.save(doctor3);
 			
 			Hall hall1 = new Hall(clinic,1);
@@ -156,9 +181,10 @@ public class ContainerInitialize {
 			clinicRepository.save(clinic);
 			
 			Date date = new Date();
-			
+
 			Appointment app1 = new Appointment.Builder(date)
 					.withPatient(patient)
+					.withType(AppointmentType.Surgery)
 					.withHall(hall1)
 					.withClinic(clinic)
 					.withType(AppointmentType.Surgery)
@@ -167,9 +193,10 @@ public class ContainerInitialize {
 			app1.getDoctors().add(doctor1);
 			app1.getDoctors().add(doctor2);
 			appointmentRepository.save(app1);
-			
+
 			Appointment app2 = new Appointment.Builder(date)
 					.withPatient(patient)
+					.withType(AppointmentType.Surgery)
 					.withHall(hall2)
 					.withClinic(clinic)
 					.withType(AppointmentType.Surgery)
