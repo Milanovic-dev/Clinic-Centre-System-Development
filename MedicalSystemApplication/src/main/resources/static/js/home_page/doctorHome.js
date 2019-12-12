@@ -37,6 +37,19 @@ function initDoctor(user)
 		
 		
 	})
+
+    initCalendar(user)
+
+	$("#workCalendar").click(function(e){
+    		e.preventDefault()
+
+
+            $('#breadcrump').hide()
+            $('#showPatientsContainer').hide()
+    		$('#showCalendarContainer').show()
+
+        });
+
 }
 
 function findPatients(data)
@@ -81,4 +94,62 @@ function listPatient(data,i)
 	
 
 
+}
+
+
+function initCalendar(user)
+{
+console.log('INIT CALENDAR')
+ $.ajax({
+ 			type: 'GET',
+ 			url:"api/appointments/doctor/getAllAppointments/"+user.email,
+ 			complete: function(data)
+ 			{
+ 			
+ 				let appointments = data.responseJSON
+ 				console.log('APPOINTMENTS ',appointments);
+                 var calendarButton = document.getElementById('calendarButton');
+                  var calendarEl = document.getElementById('calendar');
+
+                  var calendar = new FullCalendar.Calendar(calendarEl, {
+                plugins: [ 'interaction', 'dayGrid', 'timeGrid', 'monthGrid', 'timeline' ],
+                defaultView: 'dayGridMonth',
+                defaultDate: '2019-12-07',
+                header: {
+                  left: 'prev,next today',
+                  center: 'title',
+                  right: 'dayGridMonth,timeGridWeek,timeGridDay,timelineCustom'
+                },
+                fixedWeekCount: false,
+                contentHeight: 650,
+                views: {
+                                    timelineCustom: {
+                                        type: 'timeline',
+                                        buttonText: 'year',
+                                        dateIncrement: { years: 1 },
+                                        slotDuration: { months: 1 },
+                                        visibleRange: function (currentDate) {
+                                            return {
+                                                start: currentDate.clone().startOf('year'),
+                                                end: currentDate.clone().endOf("year")
+                                            };
+                                        }
+                                    }
+                                },
+                events: [
+                  {
+                    title: appointments.appointmentType,
+                    start: appointments.date
+                  }
+                ]
+              });
+
+
+            calendar.render();
+             $('#workCalendar').click(function(){
+                  calendar.render();
+                });
+        }
+
+});
 }

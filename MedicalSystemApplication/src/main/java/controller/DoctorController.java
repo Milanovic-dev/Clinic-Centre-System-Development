@@ -126,5 +126,5 @@ public class DoctorController
 		userService.save(doc);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
-	
+
 }
