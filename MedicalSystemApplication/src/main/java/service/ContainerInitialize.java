@@ -172,9 +172,10 @@ public class ContainerInitialize {
 					.withPatient(patient)
 					.withHall(hall2)
 					.withClinic(clinic)
-					.withType(AppointmentType.Examination)
+					.withType(AppointmentType.Surgery)
 					.build();
 			
+			app2.getDoctors().add(doctor1);
 			app2.getDoctors().add(doctor3);
 			appointmentRepository.save(app2);
 			

@@ -49,7 +49,8 @@ public class AppointmentDTO {
 			doctors.add(doc.getEmail());
 		}
 		this.duration = appointment.getDuration();
-		this.typeOfExamination = appointment.getPriceslist().getTypeOfExamination();
+		if(appointment.getPriceslist() != null)
+			this.typeOfExamination = appointment.getPriceslist().getTypeOfExamination();
 		this.type = appointment.getAppointmentType();	
 	}
 	
