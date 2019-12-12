@@ -101,8 +101,8 @@ public class ClinicController {
     	return new ResponseEntity<>(clinicsDTO,HttpStatus.OK);
     }
     
-    @PostMapping(value="/getAll/{date}")
-    public ResponseEntity<List<ClinicDTO>> getClinicsWithFilter(@RequestBody ClinicFilterDTO dto, @PathVariable("date") String date)
+    @PostMapping(value="/getAll/{date}/{type}")
+    public ResponseEntity<List<ClinicDTO>> getClinicsWithFilter(@RequestBody ClinicFilterDTO dto, @PathVariable("date") String date,@PathVariable("type") String typeOfExamination)
     {
     	List<Clinic> clinics = clinicService.findAll();
     	List<ClinicDTO> clinicsDTO = new ArrayList<ClinicDTO>();
@@ -124,7 +124,7 @@ public class ClinicController {
 	    		
 	    		for(Doctor d: doctors)
 	    		{
-	    			if(d.IsFreeOn(realDate))
+	    			if(d.IsFreeOn(realDate) && d.getType().equalsIgnoreCase(typeOfExamination))
 	    			{
 	    				if(filter.test(c, dto))
 	    				{

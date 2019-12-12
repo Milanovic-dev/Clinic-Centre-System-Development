@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -141,7 +142,7 @@ public class PriceListControler {
 	    	return new ResponseEntity<>(pr,HttpStatus.OK);
 	    }
 	 	
-	 	@PostMapping(value="/update/{typeOfExamination}", consumes = "application/json")
+	 	@PutMapping(value="/update/{typeOfExamination}")
 	 	public ResponseEntity<Void> update(@RequestBody PriceListDTO pricesList,@PathVariable("typeOfExamination") String typeOfExamination)
 	 	{
 	 		Priceslist oldPricesList = priceListService.findByTypeOfExamination(typeOfExamination);
