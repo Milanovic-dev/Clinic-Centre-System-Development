@@ -13,7 +13,7 @@ function initNurse(user)
 
 
 	pageSetUp(user)
-    initCalendar(user)
+//    initCalendar(user)
     initTable(user)
 
 }
@@ -42,95 +42,95 @@ function pageSetUp(user)
 
 }
 
-function initCalendar(user)
-{
-
-        var calendarButton = document.getElementById('calendarButton');
-                        var calendarEl = document.getElementById('calendar');
-
-                        var calendar = new FullCalendar.Calendar(calendarEl, {
-                      plugins: [ 'interaction', 'dayGrid', 'timeGrid', 'monthGrid', 'timeline' ],
-                      defaultView: 'dayGridMonth',
-                      defaultDate: '2019-12-07',
-                      header: {
-                        left: 'prev,next today',
-                        center: 'title',
-                        right: 'dayGridMonth,timeGridWeek,timeGridDay,timelineCustom'
-                      },
-
-                      fixedWeekCount: false,
-                      contentHeight: 650,
-                      views: {
-                          timelineCustom: {
-                              type: 'timeline',
-                              buttonText: 'year',
-                              dateIncrement: { years: 1 },
-                              slotDuration: { months: 1 },
-                              visibleRange: function (currentDate) {
-                                  return {
-                                      start: currentDate.clone().startOf('year'),
-                                      end: currentDate.clone().endOf("year")
-                                  };
-                              }
-                          }
-                      },
-
-           eventRender: function(info) {
-
-             var tooltip = new Tooltip(info.el, {
-               title: info.event.title +
-                'Pocetak: '+ info.event.start +
-                'Trajanje: ' + info.event.extendedProps.duration +
-                'Tip pregleda: '+info.event.extendedProps.type +
-                'Pacijent: '+info.event.extendedProps.patientName +
-                  ' '+ info.event.extendedProps.patientSurname
-                ,
-
-
-               animated: 'fade',
-               placement: 'top',
-               trigger: 'hover',
-               container: 'body'
-
-             });
-           },
-           eventColor: '#2f989d',
-           events: [
-             {
-               title: 'Operacija',
-               duration: '1h',
-               start: '2019-11-01',
-               patientName: 'Mia',
-               patientSurname: 'Knezevic',
-               type: 'Operacija'
-
-             },
-             {
-               title: 'Pregled',
-               duration: '1h',
-               start: '2019-11-05',
-               patientName: 'Nikola',
-               patientSurname: 'Milanovic',
-               type: 'Pregled'
-             },
-             {
-               title: 'Operacija',
-               duration: '1h',
-               start: '2019-11-02',
-               patientName: 'Milana',
-               patientSurname: 'Tucakov',
-               type: 'Operacija'
-             }
-           ]
-         });
-
-         calendar.render();
-         $('#workCalendar').click(function(){
-              calendar.render();
-            });
-
-
-}
+//function initCalendar(user)
+//{
+//
+//        var calendarButton = document.getElementById('calendarButton');
+//                        var calendarEl = document.getElementById('calendar');
+//
+//                        var calendar = new FullCalendar.Calendar(calendarEl, {
+//                      plugins: [ 'interaction', 'dayGrid', 'timeGrid', 'monthGrid', 'timeline' ],
+//                      defaultView: 'dayGridMonth',
+//                      defaultDate: '2019-12-07',
+//                      header: {
+//                        left: 'prev,next today',
+//                        center: 'title',
+//                        right: 'dayGridMonth,timeGridWeek,timeGridDay,timelineCustom'
+//                      },
+//
+//                      fixedWeekCount: false,
+//                      contentHeight: 650,
+//                      views: {
+//                          timelineCustom: {
+//                              type: 'timeline',
+//                              buttonText: 'year',
+//                              dateIncrement: { years: 1 },
+//                              slotDuration: { months: 1 },
+//                              visibleRange: function (currentDate) {
+//                                  return {
+//                                      start: currentDate.clone().startOf('year'),
+//                                      end: currentDate.clone().endOf("year")
+//                                  };
+//                              }
+//                          }
+//                      },
+//
+//           eventRender: function(info) {
+//
+//             var tooltip = new Tooltip(info.el, {
+//               title: info.event.title +
+//                'Pocetak: '+ info.event.start +
+//                'Trajanje: ' + info.event.extendedProps.duration +
+//                'Tip pregleda: '+info.event.extendedProps.type +
+//                'Pacijent: '+info.event.extendedProps.patientName +
+//                  ' '+ info.event.extendedProps.patientSurname
+//                ,
+//
+//
+//               animated: 'fade',
+//               placement: 'top',
+//               trigger: 'hover',
+//               container: 'body'
+//
+//             });
+//           },
+//           eventColor: '#2f989d',
+//           events: [
+//             {
+//               title: 'Operacija',
+//               duration: '1h',
+//               start: '2019-11-01',
+//               patientName: 'Mia',
+//               patientSurname: 'Knezevic',
+//               type: 'Operacija'
+//
+//             },
+//             {
+//               title: 'Pregled',
+//               duration: '1h',
+//               start: '2019-11-05',
+//               patientName: 'Nikola',
+//               patientSurname: 'Milanovic',
+//               type: 'Pregled'
+//             },
+//             {
+//               title: 'Operacija',
+//               duration: '1h',
+//               start: '2019-11-02',
+//               patientName: 'Milana',
+//               patientSurname: 'Tucakov',
+//               type: 'Operacija'
+//             }
+//           ]
+//         });
+//
+//         calendar.render();
+//         $('#workCalendar').click(function(){
+//              calendar.render();
+//            });
+//
+//
+//}
 
 function initTable(user){
 

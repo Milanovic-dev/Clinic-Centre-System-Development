@@ -100,14 +100,13 @@ function listPatient(data,i)
 function initCalendar(user)
 {
 console.log('INIT CALENDAR')
- $.ajax({
- 			type: 'GET',
- 			url:"api/appointments/doctor/getAllAppointments/"+user.email,
- 			complete: function(data)
- 			{
- 			
- 				let appointments = data.responseJSON
- 				console.log('APPOINTMENTS ',appointments);
+// $.ajax({
+// 			type: 'GET',
+// 			url:"api/appointments/doctor/getAllAppointments/"+user.email,
+// 			complete: function(data)
+// 			{
+// 				let appointments = data.responseJSON
+
                  var calendarButton = document.getElementById('calendarButton');
                   var calendarEl = document.getElementById('calendar');
 
@@ -136,12 +135,45 @@ console.log('INIT CALENDAR')
                                         }
                                     }
                                 },
-                events: [
-                  {
-                    title: appointments.appointmentType,
-                    start: appointments.date
-                  }
-                ]
+//                events: [
+//                  {
+//                    title: appointments.appointmentType,
+//                    start: appointments.currentDate,
+//                    name: appointments.patient.name,
+//                    surname: appointments.patient.surname,
+//
+//                  }
+//                ]
+                    events: function( start, end, timezone, callback ) { //include the parameters fullCalendar supplies to you!
+
+                      var events = [];
+                    $.ajax({
+                         url:"api/appointments/doctor/getAllAppointments/"+user.email,
+                         type: 'GET',
+                         dataType: 'json',
+                         data: '',
+                         success: function (data) {
+
+                          for(d of data){
+                                console.log(d.type)
+                                console.log(d.date)
+                                console.log(d.clinic)
+
+                                events.push({
+
+                                title: d.type,
+                                start: d.date,
+
+                                // end: doc.to_date
+                             });
+                            }
+
+                            console.log(events)
+                         // callback(events); //you have to pass the list of events to fullCalendar!
+                        }
+                      });
+                    },
+
               });
 
 
@@ -149,7 +181,7 @@ console.log('INIT CALENDAR')
              $('#workCalendar').click(function(){
                   calendar.render();
                 });
-        }
+//        }
 
-});
+
 }
