@@ -164,12 +164,25 @@ public class ContainerInitialize {
 					.withType(AppointmentType.Surgery)
 					.build();
 			
+			app1.getDoctors().add(doctor1);
+			app1.getDoctors().add(doctor2);
+			appointmentRepository.save(app1);
+			
 			Appointment app2 = new Appointment.Builder(date)
 					.withPatient(patient)
 					.withHall(hall2)
 					.withClinic(clinic)
-					.withType(AppointmentType.Surgery)
+					.withType(AppointmentType.Examination)
 					.build();
+			
+			app2.getDoctors().add(doctor3);
+			appointmentRepository.save(app2);
+			
+			
+			doctor1.getAppointments().add(app1);
+			doctor1.getAppointments().add(app2);
+			
+			userRepository.save(doctor1);
 			
 			Nurse nurse = new Nurse.Builder("nurse@gmail.com")
 					.withPassword(hash)

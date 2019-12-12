@@ -201,6 +201,7 @@ function p_listClinic(data,i,user)
 					index++;
 				}
 				
+				/*
 				$('#inputAppointmentType').change(function(e){
 					
 					for(let j = 0 ; j < doctors.length ; j++)
@@ -209,6 +210,7 @@ function p_listClinic(data,i,user)
 					}
 					
 				})
+				*/
 				
 				$('#detailsAppointment_btn').click(function(e){
 					e.preventDefault()
@@ -244,11 +246,41 @@ function p_listClinic(data,i,user)
 					e.preventDefault()
 					
 					let clinicName = $('#inputClinicName').val()
+					let date =  $('#inputDate').val()
 					let patientEmail = user.email
+					let typeOfExamination = $('#selectAppointmentType').val()
 					
-					let json = JSON.stringify({"clinicName":clinicName,"patientEmail":patientEmail,"doctors":doctorsSelected})
+					let doctorArray = []
+					
+					for(let d of doctorsSelected)
+					{
+						doctorArray.push(d.user.email)
+					}
+					
+					let json = JSON.stringify({"date":date+" 14:00:00","clinicName":clinicName,"patientEmail":patientEmail,"doctors":doctorArray,"typeOfExamination":typeOfExamination,"type":"Examination"})
 					console.log(json)
+					$('#submitAppSpinner').show()
 					//SEND REQUEST
+					
+					$.ajax({
+						type:'POST',
+						url:'api/appointments/sendRequest',
+						data: json,
+						dataType : "json",
+						contentType : "application/json; charset=utf-8",
+						complete: function(data)
+						{
+							if(data.status == "201")
+							{
+								$('#submitAppSpinner').hide()
+							}
+							else
+							{
+								$('#submitAppSpinner').hide()
+								alert(data.status)								
+							}
+						}
+					})
 				})
 			
 			
@@ -275,9 +307,6 @@ function p_listDoctorActive(data,i,doctorCount)
 	$('#tableDoctorsActive tbody').append(tr)
 	
 	$('#checkDoctor'+i).click(function(e){
-		
-		
-		if($('#inputAppointmentType').val() == "Surgery") return
 		
 		for(let j = 0 ; j < doctorCount ; j++)
 		{
