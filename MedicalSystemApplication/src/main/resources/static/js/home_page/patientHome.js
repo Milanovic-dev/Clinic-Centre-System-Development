@@ -26,6 +26,7 @@ function setUpPatientPage(user)
 		$('#MedicalRecordContainer').hide()
 		$('#makeAppointmentContainer').hide()
 		$('#detailsAppointmentContainer').hide()
+		$('#showAppointmentRequestsPatient').hide()
 		$('#breadcrumbCurrPage').removeAttr('hidden')
 		$('#breadcrumbCurrPage').text("Lista klinika")
 		$('#breadcrumbCurrPage2').attr('hidden',true)
@@ -89,6 +90,7 @@ function setUpPatientPage(user)
 		$('#makeAppointmentContainer').hide()
 		$('#MedicalRecordContainer').show()
 		$('#detailsAppointmentContainer').hide()
+		$('#showAppointmentRequestsPatient').hide()
 		$('#breadcrumbCurrPage').removeAttr('hidden')
 		$('#breadcrumbCurrPage').text("Zdravstveni karton")
 		$('#breadcrumbCurrPage2').attr('hidden',true)
@@ -131,11 +133,14 @@ async function getClinics(date)
 	$('#clinicSpinner').show()
 	await sleep(1000)
 	
+	let type = $('#selectAppointmentType').val()
 	let json = JSON.stringify({"name":"Klinika","address":"","city":"","state":"","rating":""})
+	console.log(type)
+	console.log(json)
 
 	$.ajax({
 		type: 'POST',
-		url:"api/clinic/getAll/"+date,
+		url:"api/clinic/getAll/"+date+"/"+type,
 		data: json,
 		dataType : "json",
 		contentType : "application/json; charset=utf-8",
@@ -199,7 +204,7 @@ function p_listClinic(data,i,user)
 		$('#inputClinicName').val(data.name)
 		$('#inputClinicAddress').val(data.address+", "+data.city+", "+data.state)
 		$('#inputDate').val($('#clinicDatePick').val())
-		$('#inputAppointmentType').val("Examination")
+		$('#inputAppointmentType').val("Pregled")
 		$('#breadcrumbCurrPage2').removeAttr('hidden')
 		$('#breadcrumbCurrPage2').text("Zakazivanje")
 		$.ajax({

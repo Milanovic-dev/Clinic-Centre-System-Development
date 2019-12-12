@@ -18,7 +18,7 @@ public class Priceslist
 	private String typeOfExamination;
 
 	@Column(name = "price", nullable = false)
-	private Long price;
+	private float price;
 	
 	@Column(name = "deleted", nullable = false)
 	private Boolean deleted;
@@ -29,7 +29,7 @@ public class Priceslist
 		this.deleted = false;
 		// TODO Auto-generated constructor stub
 	}
-	public Priceslist(Clinic clinic, String typeOfExamination, Long price) {
+	public Priceslist(Clinic clinic, String typeOfExamination, float price) {
 		super();
 		this.clinic = clinic;
 		this.typeOfExamination = typeOfExamination;
@@ -62,10 +62,10 @@ public class Priceslist
 	public void setTypeOfExamination(String typeOfExamination) {
 		this.typeOfExamination = typeOfExamination;
 	}
-	public Long getPrice() {
+	public float getPrice() {
 		return price;
 	}
-	public void setPrice(Long price) {
+	public void setPrice(float price) {
 		this.price = price;
 	}
 	
