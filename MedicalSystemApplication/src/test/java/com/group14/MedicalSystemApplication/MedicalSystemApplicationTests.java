@@ -1,21 +1,14 @@
 package com.group14.MedicalSystemApplication;
-
-import static org.junit.Assert.*;
-
-import java.util.Arrays;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.servlet.MockMvc;
 
-import controller.AuthController;
-import model.User;
+import junit.framework.Assert;
+import model.Appointment;
+import model.Doctor;
+import service.AppointmentService;
 import service.UserService;
 
 
@@ -23,24 +16,21 @@ import service.UserService;
 class MedicalSystemApplicationTests {
 	
 	@Autowired
-	private UserService service;
+	private AppointmentService service;
+	
+	@Autowired
+	private UserService userService;
 
+	@SuppressWarnings("deprecation")
 	@Test
 	void contextLoads() {
 		
+		Doctor d = (Doctor)userService.findByEmail("doktor1@gmail.com");
+		
+		List<Appointment> list = service.findAllByDoctor(d.getId());
+		
+		Assert.assertEquals(2, list.size());
 	}
 	
-	@Test
-	public void whenFindByEmail_thenReturnUser()
-	  throws Exception {
-	     
-	    User user = new User();
-	    user.setEmail("nikola@gmail.com");
-	 
-	    User found = service.findByEmail(user.getEmail());
-	 	    
-	    assertTrue(found != null);
-	    assertTrue(found.getEmail().equals(user.getEmail()));
-	}
 	
 }

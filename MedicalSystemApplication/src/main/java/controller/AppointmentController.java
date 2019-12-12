@@ -186,7 +186,7 @@ public class AppointmentController
 			return new ResponseEntity<>(header,HttpStatus.NOT_FOUND);
 		}
 
-		List<Appointment> appointments = appointmentService.findAllByDoctors(d);
+		List<Appointment> appointments = appointmentService.findAllByDoctor(d.getId());
 
 		if(appointments == null)
 		{
@@ -301,8 +301,15 @@ public class AppointmentController
 		
 		Priceslist pl = priceslistService.findByTypeOfExamination(dto.getTypeOfExamination());
 		
+		if(pl == null)
+		{
+			header.set("responseText","Priceslist not found: " + dto.getTypeOfExamination());
+			return new ResponseEntity<>(header,HttpStatus.NOT_FOUND);
+		}
+		
 		request.setPriceslist(pl);
 		
+		/*
 		Hall hall = hallService.findByNumber(dto.getHallNumber());
 		
 		if(hall == null)
@@ -312,7 +319,7 @@ public class AppointmentController
 		}
 		
 		request.setHall(hall);
-	
+		 */ //TODO: Halu bira admin
 		
 		List<User> admins = userService.getAll(UserRole.ClinicAdmin);
 		

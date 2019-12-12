@@ -311,11 +311,8 @@
             </div>
           </div>   
           <div class="form-group">
-      		<label for="inputAppointmentType">Zelim</label>
-      		<select id="inputAppointmentType" class="form-control">
-        		<option value="Examination">Pregled</option>
-        		<option value="Surgery">Operaciju</option>
-     		</select>
+      		<label for="inputAppointmentType">Tip</label>
+      		<input type="text" id="inputAppointmentType" class="form-control"  autofocus="autofocus" disabled>
     	   </div>  
     	   <br>
     	   <div class="card mb-3" id = "showDoctorsContainerDisabled">
@@ -338,7 +335,7 @@
           </div>
           </div>
           <br>
-          <button type="button" class="btn btn-primary" id = "submitAppointmentRequest">Zakazi</button>         
+          <button type="button" class="btn btn-primary" id = "submitAppointmentRequest">Zakazi&nbsp<span class="spinner-border spinner-border-sm"  style="display:none" role="status" id="submitAppSpinner"  aria-hidden="true"></span></button>         
         </form>
       </div>
     </div>

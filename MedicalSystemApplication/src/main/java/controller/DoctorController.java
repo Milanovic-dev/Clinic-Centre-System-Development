@@ -107,7 +107,7 @@ public class DoctorController
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 		
-		List<Appointment> appointments = appointmentService.findAllByDoctors(doc);
+		List<Appointment> appointments = appointmentService.findAllByDoctor(doc);
 		
 		
 		if(appointments != null)

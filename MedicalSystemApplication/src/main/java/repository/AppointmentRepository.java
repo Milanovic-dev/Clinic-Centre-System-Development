@@ -19,8 +19,8 @@ public interface AppointmentRepository extends JpaRepository<Appointment,Long>{
 	
 	public List<Appointment> findAllByPatient(Patient p);
 	
-	
-	public List<Appointment> findAllByDoctors(Doctor d);
+	@Query(value = "select * from appointment where id = any(select appointments_id from doctor_appointments where doctor_id=?1)",nativeQuery = true)
+	public List<Appointment> findAllByDoctor(Long doctorID);
 	public List<Appointment> findAllByHall(Hall hall);
 	public List<Appointment> findAllByClinic(Clinic c);
 }

@@ -22,7 +22,7 @@ public class Appointment
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Hall hall;
 	
-	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "patient_id")
 	private Patient patient;
 	
