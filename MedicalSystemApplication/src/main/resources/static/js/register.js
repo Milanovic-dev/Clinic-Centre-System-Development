@@ -3,6 +3,8 @@
  */
 
 $(document).ready(function(){
+	$('#alreadyExists').hide()
+
 	
 	$('#submitRegister').click(function(e){
 		
@@ -189,14 +191,13 @@ $(document).ready(function(){
 				
 				if(data.status == "208")
 				{
-					var emailInput = $('#inputEmail')
-					
-					emailInput.addClass('is-invalid')
-					emailInput.removeClass('is-valid')
+					$('#alreadyExists').show()
+					$('#alreadyExists').text("Korisnik sa tim emailom vec postoji.")
 				}
 				
 				if(data.status == "200")
-				{															
+				{			
+					$('#alreadyExists').hide()
 					window.location.href = "registrationComplete.html"
 				}
 			}

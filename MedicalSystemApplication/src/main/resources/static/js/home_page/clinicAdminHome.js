@@ -404,7 +404,7 @@ function listTypesOfExamination(t,i,clinic)
 	
 	$('#changeTypeOfExamination_btn'+i).click(function(e){
 		e.preventDefault()
-		
+
 		$('#typeOfExamination_input').val(t.typeOfExamination)
 		$('#typeOfExaminationPrice_input').val(t.price)
 		
