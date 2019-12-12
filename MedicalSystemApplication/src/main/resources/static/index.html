@@ -428,6 +428,13 @@
 		   </div>
           <div class="card-body">
             <div class="table-responsive">
+            	<div class="dataTables_filter" id="filterTypeOfExamination">
+            		<label>
+            			Pretraga:
+            			<input class="" aria-controls="tableTypeOfExamination" type="search" placeholder=""/>
+            			<button class="btn btn-primary" type="button" id="searchClinics"><span id="searchBtnText">Trazi</span>&nbsp<span class="spinner-border spinner-border-sm"  style="display:none" role="status" id="clinicSpinner"  aria-hidden="true"></span></button>
+            		</label>
+            	</div>
               <table class="table table-bordered" id="tableTypeOfExamination" width="100%" cellspacing="0">
                 <thead>               
 					<tr>					
@@ -450,7 +457,7 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">New message</h5>
+        <h5 class="modal-title" id="exampleModalLabel">Izmena tipa pregleda</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
