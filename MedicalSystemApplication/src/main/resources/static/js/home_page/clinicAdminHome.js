@@ -7,11 +7,98 @@ function initClinicAdmin(user)
 {
 	let sideBar = $("#sideBar")
 	sideBar.append("<li class='nav-item active'><a class='nav-link' href='userProfileNew.html'><i class='fas fa-fw fa-tachometer-alt'></i><span id='profileUser'>Profil</span></a></li>")	
-	sideBar.append("<li class='nav-item active'><a class='nav-link' type='button'><span id='addHall'>Dodavanje sala</span></a></li>")	
+	sideBar.append("<li class='nav-item active'><a class='nav-link' type='button'><span id='addHall'>Dodaj salu</span></a></li>")	
 	sideBar.append("<li class='nav-item active'><a class='nav-link' type='button'><span id='showHalls'>Lista sala</span></a></li>")
 	sideBar.append("<li class='nav-item active'><a class='nav-link' type='button'><span id='addDoctor'>Dodaj lekara</span></a></li>")
 	sideBar.append("<li class='nav-item active'><a class='nav-link' type='button'><span id='showDoctor'>Lista lekara</span></a></li>")
+	sideBar.append("<li class='nav-item active'><a class='nav-link' type='button'><span id='addTypeOfExamination'>Dodaj tip pregleda</span></a></li>")
+	sideBar.append("<li class='nav-item active'><a class='nav-link' type='button'><span id='showTypeOfExamination'>Lista tipova pregleda</span></a></li>")
+	
+	//LISTA TIPOVA PREGLEDA
+	$('#showTypeOfExamination').click(function(e){
+		e.preventDefault()
+		$("#addHallContainer").hide()
+		$("#showHallContainer").hide()
+		$("#changeHallContainer").hide()
+		$("#showUserContainer").hide()
+		$('#addTypeOfExaminationContainer').hide()
+		$('#showTypeOfExaminationContainer').show()
 
+		
+		$.ajax({
+			type: 'GET',
+			url: 'api/admins/clinic/getClinicFromAdmin/' + user.email,
+			complete: function(data)
+			{
+				let clinic = data.responseJSON
+				makeTypeOfExaminationTable(clinic)
+			}
+		
+		
+	})
+		
+	})
+	//KRAJ LISTE TIPOVA PREGLEDA
+	
+	//DODAVANJE TIPA PREGLEDA
+	$('#addTypeOfExamination').click(function(e){
+		e.preventDefault()
+		$("#addHallContainer").hide()
+		$("#showHallContainer").hide()
+		$("#changeHallContainer").hide()
+		$("#showUserContainer").hide()
+		$('#addTypeOfExaminationContainer').show()
+		$('#showTypeOfExaminationContainer').hide()
+		$('#errorSpanTypeOfExamination').hide()
+
+	})
+		
+		$('#submitTypeOfExamination').click(function(e){
+			e.preventDefault()
+			
+			$.ajax({
+			type: 'GET',
+			url: 'api/admins/clinic/getClinicFromAdmin/' + user.email,
+			complete: function(data)
+			{
+				let clinic = data.responseJSON
+				let typeOfExaminationName = $('#inputTypeOfExamination').val()
+				let typeOfExaminationPrice = $('#inputTypeOfExaminationPrice').val()
+				let typeOfExamination = JSON.stringify({"clinicName":clinic.name,"typeOfExamination" : typeOfExaminationName,"price" : typeOfExaminationPrice})
+				console.log("Called")
+				$.ajax({
+					type: 'POST',
+					url: 'api/priceList/add',
+					data: typeOfExamination,
+					dataType : "json",
+					contentType : "application/json; charset=utf-8",
+					complete: function(data2)
+					{
+						
+						if(data2.status == "208")
+						{
+							$('#errorSpanTypeOfExamination').show()
+							$('#errorSpanTypeOfExamination').text("Tip pregleda koji zelite da unesete vec postoji")
+						}
+						else
+						{
+							$('#errorSpanTypeOfExamination').hide()
+							$('#addHTypeOfExamination').hide()
+							$('#showTypeOfExamination').show()
+						}
+					
+					}
+				})
+			}
+		
+			})
+	
+			
+		}) //KRAJ SUBMIT TYPE OF EXAMINATION
+
+	//KRAJ DODAVANJA TIPA PREGLEDA
+	
+	
 	
 	$('#showDoctor').click(function(e){
 		e.preventDefault()
@@ -20,6 +107,10 @@ function initClinicAdmin(user)
 		$("#showHallContainer").hide()
 		$("#changeHallContainer").hide()
 		$("#showUserContainer").show()
+		$('#addTypeOfExaminationContainer').hide()
+		$('#showTypeOfExaminationContainer').hide()
+
+
 		
 		$.ajax({
 			type: 'GET',
@@ -32,6 +123,7 @@ function initClinicAdmin(user)
 		
 		
 	})
+	})
 	
 	
 	$('#addHall').click(function(e){
@@ -41,6 +133,9 @@ function initClinicAdmin(user)
 		$("#showHallContainer").hide()
 		$("#changeHallContainer").hide()
 		$("#showUserContainer").hide()
+		$('#addTypeOfExaminationContainer').hide()
+		$('#showTypeOfExaminationContainer').hide()
+		
 	})
 	
 	$('#addDoctor').click(function(e){
@@ -50,6 +145,8 @@ function initClinicAdmin(user)
 		$("#showHallContainer").hide()
 		$("#changeHallContainer").hide()
 		$("#showUserContainer").show()
+		$('#addTypeOfExaminationContainer').hide()
+		$('#showTypeOfExaminationContainer').hide()
 		
 		$.ajax({
 			type: 'GET',
@@ -71,6 +168,10 @@ function initClinicAdmin(user)
 		$('#addHallContainer').hide()
 		$("#changeHallContainer").hide()
 		$("#showUserContainer").hide()
+		$('#addTypeOfExaminationContainer').hide()
+		$('#showTypeOfExaminationContainer').hide()
+		
+		
 		makeHallTable()
 
 		})
@@ -114,7 +215,7 @@ function initClinicAdmin(user)
 	
 	//KRAJ SUBMIT HALLS
 
-})
+
 }
 
 function listHall(data,i)
@@ -151,10 +252,13 @@ function listHall(data,i)
 	$('#changeHall_btn'+i).click(function(e)
 	{
 		e.preventDefault()
-		console.log(data.number)
+
 		$('#addHallContainer').hide()
 		$('#showHallContainer').hide()
 		$('#changeHallContainer').show()
+		$('#addTypeOfExaminationContainer').hide()
+		$('#showTypeOfExaminationContainer').hide()
+
 		
 		$('#inputChangeHall').val(data.number) 
 		
@@ -183,6 +287,29 @@ function listHall(data,i)
 	})
 	
 }
+
+function makeTypeOfExaminationTable(clinic)
+{
+	$.ajax({
+		type: 'GET',
+		url: 'api/priceList/getAll',
+		complete: function(data)
+		{
+			console.log(data)
+			types = data.responseJSON
+			let i = 0
+			$('#tableTypeOfExamination tbody').empty()
+			for(let t of types)
+            {
+				listTypesOfExamination(t,i,clinic);
+				i++;
+            }
+		}
+
+	})
+
+}
+
 
 function makeDoctorTable(clinic)
 {
@@ -259,6 +386,70 @@ function listDoctor(data,i,clinic)
 		
 		})
 	})
+
+}
+
+function listTypesOfExamination(t,i,clinic)
+{
+	let tr=$('<tr></tr>');
+	let tdName=$('<td class="number" data-toggle="modal" data-target="#exampleModalLong">'+ t.typeOfExamination +'</td>');
+	let tdClinic=$('<td class="number" data-toggle="modal" data-target="#exampleModalLong">'+ t.clinicName +'</td>');
+	let tdPrice=$('<td class="number" data-toggle="modal" data-target="#exampleModalLong">'+ t.price +'</td>');
+	let tdChange=$('<td> <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#changeTypeOfExaminationModal" id = "changeTypeOfExamination_btn'+i+'">Izmeni tip</button></td>');
+	let tdDelete=$('<td> <button type="button" class="btn btn-danger" id = "deleteTypeOfExamination_btn'+i+'">Obrisi</button></td>');
+
+	
+	tr.append(tdName).append(tdClinic).append(tdPrice).append(tdChange).append(tdDelete)
+	$('#tableTypeOfExamination tbody').append(tr);
+	
+	$('#changeTypeOfExamination_btn'+i).click(function(e){
+		e.preventDefault()
+
+		$('#typeOfExamination_input').val(t.typeOfExamination)
+		$('#typeOfExaminationPrice_input').val(t.price)
+		
+		$('#changeTypeOfExam_btn').off('click')
+		$('#changeTypeOfExam_btn').click(function(e){
+			let typeOfExam = $('#typeOfExamination_input').val()
+			let typeOfExamPrice = $('#typeOfExaminationPrice_input').val()
+			let typeOfExamination = JSON.stringify({"clinicName":clinic.name,"typeOfExamination" : typeOfExam,"price" : typeOfExamPrice})
+			
+			console.log(typeOfExam)
+			console.log(typeOfExamPrice)
+			$.ajax({
+				type:'POST',
+				url: 'api/priceList/update/' + t.typeOfExamination,
+				data: typeOfExamination,
+				dataType: "json",
+				complete: function(response)
+				{
+					console.log(response.status)
+					if(response.status == "200")
+					{
+						makeTypeOfExaminationTable()
+					}
+				}
+			})	
+		})
+			
+			
+		}) 
+		
+		
+	
+	$('#deleteTypeOfExamination_btn'+i).click(function(e){
+		e.preventDefault()
+		$.ajax({
+			type:'DELETE',
+			url: 'api/priceList/deletePriceList/' + t.typeOfExamination + "/" + clinic.name,
+			complete: function(response)
+			{
+				makeTypeOfExaminationTable(clinic)
+			}
+		
+		})
+	})
+	
 
 }
 

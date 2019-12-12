@@ -22,7 +22,7 @@ public class Appointment
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Hall hall;
 	
-	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "patient_id")
 	private Patient patient;
 	
@@ -32,15 +32,13 @@ public class Appointment
 	
 	@Column(name = "duration",nullable = true)
 	private long duration;
-	
-	@Column(name = "price",nullable = true)
-	private double price;
 
 	@ManyToMany(fetch = FetchType.LAZY)
 	private List<Doctor> doctors;
 	
-	@Column(name = "type", nullable = false)
-	private String appointmentDescription;
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "priceslist_id")
+	private Priceslist priceslist;
 	
 	@Column(name = "appointmentType",nullable = true)
 	private AppointmentType appointmentType;
@@ -52,17 +50,16 @@ public class Appointment
 	}
 
 
-	public Appointment(Date date, Hall hall, Patient patient, Clinic clinic, long duration, double price,
-			String appointmentDescription, AppointmentType appointmentType) {
+	public Appointment(Date date, Hall hall, Patient patient, Clinic clinic, long duration,
+			Priceslist priceslist, AppointmentType appointmentType) {
 		super();
 		this.date = date;
 		this.hall = hall;
 		this.patient = patient;
 		this.clinic = clinic;
 		this.duration = duration;
-		this.price = price;
 		this.doctors = new ArrayList<Doctor>();
-		this.appointmentDescription = appointmentDescription;
+		this.priceslist = priceslist;
 		this.appointmentType = appointmentType; 
 	}
 
@@ -115,14 +112,6 @@ public class Appointment
 		this.duration = duration;
 	}
 
-	public double getPrice() {
-		return price;
-	}
-
-	public void setPrice(double price) {
-		this.price = price;
-	}
-
 	public List<Doctor> getDoctors() {
 		return doctors;
 	}
@@ -131,12 +120,12 @@ public class Appointment
 		this.doctors = doctors;
 	}
 
-	public String getAppointmentDescription() {
-		return appointmentDescription;
+	public Priceslist getPriceslist() {
+		return priceslist;
 	}
 
-	public void setAppointmentDescription(String appointmentDescription) {
-		this.appointmentDescription = appointmentDescription;
+	public void setPricelist(Priceslist priceslist) {
+		this.priceslist = priceslist;
 	}
 
 	public AppointmentType getAppointmentType() {
@@ -147,21 +136,14 @@ public class Appointment
 		this.appointmentType = appointmentType;
 	}
 
-	@Override
-	public String toString() {
-		return "Appointment [appointmentID=" + id + ", startingDateAndTime=" + date
-				+ ", duration=" + duration + ", price=" + price + ", hall=" + hall + "]";
-	}
-	
 	public static class Builder
 	{
 		private Date date;
 		private Hall hall;
 		private Patient patient;
 		private Clinic clinic;
-		private double price;
+		private Priceslist priceslist;
 		private List<Doctor> doctors;
-		private String appointmentDescription;
 		private AppointmentType appointmentType;
 		
 		public Builder(Date date)
@@ -191,12 +173,6 @@ public class Appointment
 			return this;
 		}
 		
-		public Builder withPrice(double price)
-		{
-			this.price = price;
-			
-			return this;
-		}
 		
 		public Builder withDoctors(ArrayList<Doctor> doctors)
 		{
@@ -205,9 +181,9 @@ public class Appointment
 			return this;
 		}
 		
-		public Builder withDescription(String appointmentDescription)
+		public Builder withPriceslist(Priceslist priceslist)
 		{
-			this.appointmentDescription = appointmentDescription;
+			this.priceslist = priceslist;
 			
 			return this;
 		}
@@ -227,7 +203,7 @@ public class Appointment
 			app.setClinic(this.clinic);
 			app.setHall(this.hall);
 			app.setDoctors(this.doctors);
-			app.setPrice(this.price);
+			app.setPricelist(priceslist);
 			app.setAppointmentType(this.appointmentType);
 			app.setAppointmentType(this.appointmentType);
 			return app;

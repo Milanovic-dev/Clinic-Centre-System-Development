@@ -35,4 +35,7 @@ public class HallService {
 		public List<Hall> findAll() {
 			return hallRepository.findAll();
 		}
+		public List<Hall> findAllByClinic(Clinic c) {
+			return hallRepository.findByClinic(c);
+		}
 }

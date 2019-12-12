@@ -14,8 +14,8 @@ public class AppointmentDTO {
 	private int hallNumber;
 	private List<String> doctors;
 	private long duration;
-	private double price;
-	private String appointmentDescription;
+	private float price;
+	private String typeOfExamination;
 	private AppointmentType type;
 	
 	
@@ -25,7 +25,7 @@ public class AppointmentDTO {
 	}
 
 	public AppointmentDTO(String date, String patientEmail, String clinicName, int hallNumber, List<String> doctors,
-			long duration, double price, String appointmentDescription, AppointmentType type) {
+			long duration, String priceslist, AppointmentType type) {
 		super();
 		this.date = date;
 		this.patientEmail = patientEmail;
@@ -33,8 +33,7 @@ public class AppointmentDTO {
 		this.hallNumber = hallNumber;
 		this.doctors = doctors;
 		this.duration = duration;
-		this.price = price;
-		this.appointmentDescription = appointmentDescription;
+		this.typeOfExamination = priceslist;
 		this.type = type;
 	}
 	
@@ -50,8 +49,8 @@ public class AppointmentDTO {
 			doctors.add(doc.getEmail());
 		}
 		this.duration = appointment.getDuration();
-		this.price = appointment.getPrice();
-		this.appointmentDescription = appointment.getAppointmentDescription();
+		if(appointment.getPriceslist() != null)
+			this.typeOfExamination = appointment.getPriceslist().getTypeOfExamination();
 		this.type = appointment.getAppointmentType();	
 	}
 	
@@ -66,8 +65,18 @@ public class AppointmentDTO {
 		{
 			doctors.add(doc.getEmail());
 		}
-		this.appointmentDescription = appointment.getAppointmentDescription();
+		this.typeOfExamination = appointment.getPriceslist().getTypeOfExamination();
+		this.price = appointment.getPriceslist().getPrice();
 		this.type = appointment.getAppointmentType();	
+	}
+	
+	
+	public float getPrice() {
+		return price;
+	}
+
+	public void setPrice(float price) {
+		this.price = price;
 	}
 
 	public String getDate() {
@@ -117,21 +126,13 @@ public class AppointmentDTO {
 	public void setDuration(long duration) {
 		this.duration = duration;
 	}
-
-	public double getPrice() {
-		return price;
+	
+	public String getTypeOfExamination() {
+		return typeOfExamination;
 	}
 
-	public void setPrice(int price) {
-		this.price = price;
-	}
-
-	public String getAppointmentDescription() {
-		return appointmentDescription;
-	}
-
-	public void setAppointmentDescription(String appointmentDescription) {
-		this.appointmentDescription = appointmentDescription;
+	public void setTypeOfExamination(String priceslist) {
+		this.typeOfExamination = priceslist;
 	}
 
 	public AppointmentType getType() {

@@ -19,11 +19,13 @@ import model.Doctor;
 import model.Hall;
 import model.Nurse;
 import model.Patient;
+import model.Priceslist;
 import model.Appointment.AppointmentType;
 import model.MedicalRecord.BloodType;
 import repository.AppointmentRepository;
 import repository.ClinicRepository;
 import repository.HallRepository;
+import repository.PriceListRepository;
 import repository.UserRepository;
 
 @Component
@@ -40,6 +42,9 @@ public class ContainerInitialize {
 	
 	@Autowired
 	private AppointmentRepository appointmentRepository;
+	
+	@Autowired
+	private PriceListRepository pricelistRepository;
 	
 	@PostConstruct
 	public void init()
@@ -182,27 +187,31 @@ public class ContainerInitialize {
 					.withType(AppointmentType.Surgery)
 					.withHall(hall1)
 					.withClinic(clinic)
-					.withPrice(12345)
-					.withDescription("Opis operacije1")
+					.withType(AppointmentType.Surgery)
 					.build();
-
+			
+			app1.getDoctors().add(doctor1);
+			app1.getDoctors().add(doctor2);
 			appointmentRepository.save(app1);
-
 
 			Appointment app2 = new Appointment.Builder(date)
 					.withPatient(patient)
 					.withType(AppointmentType.Surgery)
 					.withHall(hall2)
 					.withClinic(clinic)
-					.withPrice(13445)
-					.withDescription("Opis operacije2")
+					.withType(AppointmentType.Surgery)
 					.build();
+			
+			app2.getDoctors().add(doctor1);
+			app2.getDoctors().add(doctor3);
 			appointmentRepository.save(app2);
-
+			
+			
 			doctor1.getAppointments().add(app1);
 			doctor1.getAppointments().add(app2);
+			
 			userRepository.save(doctor1);
-
+			
 			Nurse nurse = new Nurse.Builder("nurse@gmail.com")
 					.withPassword(hash)
 					.withName("Sestra1")
@@ -217,6 +226,21 @@ public class ContainerInitialize {
 					.build();
 			
 			userRepository.save(nurse);
+			
+			
+			Priceslist p1 = new Priceslist();
+			p1.setClinic(clinic);
+			p1.setTypeOfExamination("Opsti pregled");
+			p1.setPrice(500L);
+			
+			pricelistRepository.save(p1);
+			
+			Priceslist p2 = new Priceslist();
+			p2.setClinic(clinic);
+			p2.setTypeOfExamination("Stomatoloski");
+			p2.setPrice(1000L);
+			
+			pricelistRepository.save(p2);
 			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block

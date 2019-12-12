@@ -1,5 +1,6 @@
 package controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import dto.HallDTO;
 import dto.PriceListDTO;
+import helpers.ListUtil;
 import model.Appointment;
 import model.Clinic;
 import model.Hall;
@@ -57,7 +59,7 @@ public class PriceListControler {
 			
 			for(Appointment app : c.getAppointments())
 			{
-				if(app.getAppointmentDescription() == priceList.getTypeOfExamination())
+				if(app.getPriceslist().getTypeOfExamination() == priceList.getTypeOfExamination())
 				{
 					return new ResponseEntity<>(HttpStatus.BAD_REQUEST);	
 				}
@@ -68,8 +70,60 @@ public class PriceListControler {
 			return new ResponseEntity<>(HttpStatus.OK);
 
 		}
+		@GetMapping(value="/getAllByClinic/{clinicName}")
+		public ResponseEntity<List<PriceListDTO>> getAllTypeExaminationByClinic(@PathVariable("clinicName") String clinicName)
+		{
+			Clinic c  = clinicService.findByName(clinicName);
+			
+			if(c == null)
+			{
+				   return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			}
+			
+			List<Priceslist> pricesList = priceListService.findAllByClinic(c);
+			List<PriceListDTO> priceListDTO = new ArrayList<PriceListDTO>();
+			
+			if(pricesList == null)
+			{
+				   return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			}
+			
+			for(Priceslist pr : pricesList)
+			{
+				if(!pr.getDeleted())
+				{
+					PriceListDTO dto = new PriceListDTO(pr);
+					priceListDTO.add(dto);
+				}
+			}
+			
+			return new ResponseEntity<>(priceListDTO,HttpStatus.OK);
+		}
+		
+		@GetMapping(value="/getAll")
+		public ResponseEntity<List<PriceListDTO>> getAllTypeExamination()
+		{
+			List<Priceslist> pricesList = priceListService.findAll();
+			List<PriceListDTO> priceListDTO = new ArrayList<PriceListDTO>();
+			
+			if(pricesList == null)
+			{
+				   return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			}
+			
+			for(Priceslist pr : pricesList)
+			{
+				if(!pr.getDeleted())
+				{
+					PriceListDTO dto = new PriceListDTO(pr);
+					priceListDTO.add(dto);
+				}
+			}
+			
+			return new ResponseEntity<>(priceListDTO,HttpStatus.OK);
+		}
 	
-	 	@GetMapping(value="/getTypeOfExamination/{typeOfExamination}")
+	 	@GetMapping(value="/get/{typeOfExamination}")
 	    public ResponseEntity<PriceListDTO> getTypeOfExamination(@PathVariable("typeOfExamination") String typeOfExamination)
 	    {
 	    	Priceslist priceList= priceListService.findByTypeOfExamination(typeOfExamination);
@@ -104,22 +158,36 @@ public class PriceListControler {
 	    	return new ResponseEntity<>(HttpStatus.OK);
 	 	}
 	 	@PostMapping(value ="/add", consumes = "application/json")
-	    public ResponseEntity<Void> add(@RequestBody PriceListDTO pricesList)
+	    public ResponseEntity<Void> add(@RequestBody PriceListDTO dto)
 	    {
-	       Clinic c = clinicService.findByName(pricesList.getClinicName());
+	 		System.out.println("Called");
+	       Clinic c = clinicService.findByName(dto.getClinicName());
+	       Priceslist pl = priceListService.findByTypeOfExamination(dto.getTypeOfExamination());
 	       
 	       if(c == null)
 	       {
-		        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+	        	return new ResponseEntity<>(HttpStatus.NOT_FOUND); 
 	       }
 	       
-	       if(pricesList == null)
+	       if(pl == null)
 	       {
-		        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+	    	   Priceslist newPl = new Priceslist(c,dto.getTypeOfExamination(),dto.getPrice());
+	    	   priceListService.save(newPl);
 	       }
-	        
-	       Priceslist pr = new Priceslist(c,pricesList.getTypeOfExamination(),pricesList.getPrice());
-	       priceListService.save(pr);
+	       else
+	       {
+	    	   if(pl.getDeleted() == false) 
+	    	   {
+	    		   return new ResponseEntity<>(HttpStatus.ALREADY_REPORTED);    
+	    	   }
+	    	   else
+	    	   {
+	    		   Priceslist newPl = new Priceslist(c,dto.getTypeOfExamination(),dto.getPrice());
+		    	   priceListService.save(newPl);
+	    	   }
+
+	       }
+       
 	       return new ResponseEntity<>(HttpStatus.OK);
 	    }
 	 

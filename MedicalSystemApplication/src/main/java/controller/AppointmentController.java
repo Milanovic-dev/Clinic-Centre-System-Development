@@ -26,6 +26,7 @@ import service.AppointmentService;
 import service.ClinicService;
 import service.HallService;
 import service.NotificationService;
+import service.PriceListService;
 import service.UserService;
 
 @RestController
@@ -50,6 +51,9 @@ public class AppointmentController
 	
 	@Autowired
 	private HallService hallService;
+	
+	@Autowired
+	private PriceListService priceslistService;
 	
 	@GetMapping(value="/get")
 	public ResponseEntity<AppointmentDTO> getAppointment(@RequestBody AppointmentDTO dto)
@@ -129,7 +133,7 @@ public class AppointmentController
 	}
 	
 	@GetMapping(value="/patient/getAll/{email}")
-	public ResponseEntity<List<Appointment>> getAppointments(@PathVariable("email") String email)
+	public ResponseEntity<List<AppointmentDTO>> getAppointments(@PathVariable("email") String email)
 	{
 		Patient  p = null;
 		
@@ -150,6 +154,12 @@ public class AppointmentController
 		}
 		
 		List<Appointment> appointments = appointmentService.findAllByPatient(p);	
+		List<AppointmentDTO> dto = new ArrayList<AppointmentDTO>();
+		
+		for(Appointment app : appointments)
+		{
+			dto.add(new AppointmentDTO(app));
+		}
 		
 		if(appointments == null)
 		{
@@ -157,12 +167,12 @@ public class AppointmentController
 			return new ResponseEntity<>(header,HttpStatus.NOT_FOUND);
 		}
 		
-		return new ResponseEntity<>(appointments,HttpStatus.OK);
+		return new ResponseEntity<>(dto,HttpStatus.OK);
 		
 	}
 
 	@GetMapping(value="/doctor/getAllAppointments/{email}")
-	public ResponseEntity<List<Appointment>> getAppointmentsDoctor(@PathVariable("email") String email)
+	public ResponseEntity<List<AppointmentDTO>> getAppointmentsDoctor(@PathVariable("email") String email)
 	{
 		Doctor  d = null;
 
@@ -181,8 +191,14 @@ public class AppointmentController
 			header.set("responseText","User not found : ("+email+")");
 			return new ResponseEntity<>(header,HttpStatus.NOT_FOUND);
 		}
-
-		List<Appointment> appointments = appointmentService.findAllByDoctors(d);
+	
+		List<Appointment> appointments = d.getAppointments();
+		List<AppointmentDTO> dto = new ArrayList<AppointmentDTO>();
+		
+		for(Appointment app : appointments)
+		{
+			dto.add(new AppointmentDTO(app));
+		}
 
 		if(appointments == null)
 		{
@@ -190,7 +206,7 @@ public class AppointmentController
 			return new ResponseEntity<>(header,HttpStatus.NOT_FOUND);
 		}
 
-		return new ResponseEntity<>(appointments,HttpStatus.OK);
+		return new ResponseEntity<>(dto,HttpStatus.OK);
 
 	}
 
@@ -212,7 +228,6 @@ public class AppointmentController
 				.withClinic(request.getClinic())
 				.withHall(request.getHall())//TODO: Admin treba da bira salu
 				.withPatient(request.getPatient())
-				.withDescription(request.getAppointmentDescription())
 				.withType(request.getAppointmentType())
 				.build();
 
@@ -296,9 +311,17 @@ public class AppointmentController
 			request.getDoctors().add(doctor);	
 		}
 		
-		request.setAppointmentDescription(dto.getAppointmentDescription());
+		Priceslist pl = priceslistService.findByTypeOfExamination(dto.getTypeOfExamination());
 		
+		if(pl == null)
+		{
+			header.set("responseText","Priceslist not found: " + dto.getTypeOfExamination());
+			return new ResponseEntity<>(header,HttpStatus.NOT_FOUND);
+		}
 		
+		request.setPriceslist(pl);
+		
+		/*
 		Hall hall = hallService.findByNumber(dto.getHallNumber());
 		
 		if(hall == null)
@@ -308,7 +331,7 @@ public class AppointmentController
 		}
 		
 		request.setHall(hall);
-	
+		 */ //TODO: Halu bira admin
 		
 		List<User> admins = userService.getAll(UserRole.ClinicAdmin);
 		

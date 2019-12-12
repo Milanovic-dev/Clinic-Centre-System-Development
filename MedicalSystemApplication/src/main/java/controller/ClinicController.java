@@ -2,8 +2,12 @@ package controller;
 
 
 import dto.ClinicDTO;
+import dto.ClinicFilterDTO;
 import dto.DoctorDTO;
 import dto.UserDTO;
+import filters.ClinicFilter;
+import filters.Filter;
+import filters.FilterFactory;
 import model.Appointment;
 import model.Clinic;
 import model.Doctor;
@@ -97,20 +101,22 @@ public class ClinicController {
     	return new ResponseEntity<>(clinicsDTO,HttpStatus.OK);
     }
     
-    @GetMapping(value="/getAll/{date}")
-    public ResponseEntity<List<ClinicDTO>> getClinicsWithFilter(@PathVariable("date") String date)
+    @PostMapping(value="/getAll/{date}")
+    public ResponseEntity<List<ClinicDTO>> getClinicsWithFilter(@RequestBody ClinicFilterDTO dto, @PathVariable("date") String date)
     {
     	List<Clinic> clinics = clinicService.findAll();
     	List<ClinicDTO> clinicsDTO = new ArrayList<ClinicDTO>();
     	
     	if(clinics == null)
-
     	{
     		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     	}
   
     	try {
 			Date realDate = new SimpleDateFormat("dd-MM-yyyy").parse(date);
+			
+			
+			Filter filter = FilterFactory.getInstance().get("clinic");
 			
 			for(Clinic c: clinics)
 	    	{
@@ -120,8 +126,11 @@ public class ClinicController {
 	    		{
 	    			if(d.IsFreeOn(realDate))
 	    			{
-	    				clinicsDTO.add(new ClinicDTO(c));
-	    				break;
+	    				if(filter.test(c, dto))
+	    				{
+	    					clinicsDTO.add(new ClinicDTO(c));
+	    					break;				
+	    				}
 	    			}
 	    		}
 	    	}
@@ -138,7 +147,7 @@ public class ClinicController {
     
     
     
-  @GetMapping(value="/getPatients/{clinicName}")
+    @GetMapping(value="/getPatients/{clinicName}")
     public ResponseEntity<List<UserDTO>> getClinicPatients(@PathVariable("clinicName") String clinicName)
     {
     	Clinic c = clinicService.findByName(clinicName);
@@ -163,7 +172,7 @@ public class ClinicController {
     	
     	for(Appointment app: appointments)
     	{   		
-    		if(!ListUtil.getInstance().ContainsWithEmail(patients,app.getPatient().getEmail()))
+    		if(!ListUtil.getInstance().containsWithEmail(patients,app.getPatient().getEmail()))
     		{
     			patients.add(new UserDTO(app.getPatient()));    			
     		}

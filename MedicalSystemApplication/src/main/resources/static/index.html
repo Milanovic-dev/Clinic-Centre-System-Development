@@ -199,11 +199,19 @@
    		<div class="card mb-3" id = "showClinicContainer" style="display:none">        
           <div class="card-header">
 			Lista Klinika
-			<br>
-			<br>
-			<p>
-			<input class="form-control datepicker-here" data-language='en' style="width:20%" placeholder="Izaberite datum" id="clinicDatePick">
-			<div class="spinner-border text-info" role="status" id="clinicSpinner" style="display:none"><span class="sr-only">Loading...</span></div></p>
+			<br><br>
+			<form>
+			<div class="form-group row">
+			&nbsp&nbsp&nbsp
+				<input class="form-control datepicker-here" data-language='en' style="width:20%" placeholder="Izaberite datum" id="clinicDatePick">
+				&nbsp&nbsp
+				<select class="form-control" style="width:20%" id="selectAppointmentType">
+					<option selected disabled>Tip pregleda</option>
+				</select>
+				&nbsp&nbsp
+			</div>
+				<button class="btn btn-primary" type="button" id="searchClinics"><span id="searchBtnText">Trazi</span>&nbsp<span class="spinner-border spinner-border-sm"  style="display:none" role="status" id="clinicSpinner"  aria-hidden="true"></span></button>				
+			</form>
 		   </div>
           <div class="card-body">
             <div class="table-responsive">
@@ -252,12 +260,64 @@
             </div>
           </div>
           </div>
+          
+          
+     <div class="container" id="showAppointmentRequestsPatient" style="display:none">
+    	  <div class="card mb-3">
+          <div class="card-header">
+            Zahtevi na cekanju</div>
+          <div class="card-body">
+            <div class="table-responsive">
+              <table class="table table-bordered" id="tablePendingApps" width="100%" cellspacing="0">
+                <thead>
+					<tr>
+					<th scope="col">Ime</th>
+      				<th scope="col">Prezime</th>
+      				<th scope="col">Prosecna ocena</th>
+      				<th scope="col">Slobodni Termini</th>
+      				<th scope="col"> </th>
+            </tr>					
+					</thead>
+					<tbody>             	
+                </tbody>
+              </table>
+            </div>     
+          </div>
+          </div>
+    </div>
 
      <!-- ZAKAZIVANJE PREGLEDA -->
     <div class="container" id ="makeAppointmentContainer" style="display:none">
-    
-    <div class="card card-login mx-auto mt-5">
-      <div class="card-header" id="header">Zakazite pregled</div>
+       
+    	  <div class="card mb-3" id = "showDoctorsContainer">
+          <div class="card-header">
+            Izaberite Doktora</div>
+          <div class="card-body">
+            <div class="table-responsive">
+              <table class="table table-bordered" id="tableDoctorsActive" width="100%" cellspacing="0">
+                <thead>
+					<tr>
+					<th scope="col">Ime</th>
+      				<th scope="col">Prezime</th>
+      				<th scope="col">Prosecna ocena</th>
+      				<th scope="col">Slobodni Termini</th>
+      				<th scope="col"> </th>
+            </tr>					
+					</thead>
+					<tbody>             	
+                </tbody>
+              </table>
+            </div>
+          <button type="button" class="btn btn-primary" id = "detailsAppointment_btn">Pregled</button>         
+          </div>
+          </div>
+          <br>
+      </div>
+
+  
+  <div class="container" id ="detailsAppointmentContainer" style="display:none">   
+    <div class="card">
+      <div class="card-header" id="header">Pregled</div>
       <div class="card-body">
         <form>
           <div class="form-group">
@@ -279,33 +339,22 @@
             </div>
           </div>   
           <div class="form-group">
-      		<label for="inputAppointmentType">Zelim</label>
-      		<select id="inputAppointmentType" class="form-control">
-        		<option value="Examination">Pregled</option>
-        		<option value="Surgery">Operaciju</option>
-     		</select>
+      		<label for="inputAppointmentType">Tip</label>
+      		<input type="text" id="inputAppointmentType" class="form-control"  autofocus="autofocus" disabled>
     	   </div>  
-          <button type="button" class="btn btn-primary btn-block" id = "submitAppointmentRequest">Posalji</button>
-          
-        </form>
-      </div>
-    </div>
-    <br>
-    <br>
-    <div class="card mb-3" id = "showDoctorsContainer">
+    	   <br>
+    	   <div class="card mb-3" id = "showDoctorsContainerDisabled">
           <div class="card-header">
-            Izaberite Doktora</div>
+            Izabrani Doktori</div>
           <div class="card-body">
             <div class="table-responsive">
-              <table class="table table-bordered" id="tableDoctors" width="100%" cellspacing="0">
+              <table class="table table-hover" id="tableDoctorsDisabled" width="100%" cellspacing="0">
                 <thead>
 					<tr>
 					<th scope="col">Ime</th>
       				<th scope="col">Prezime</th>
       				<th scope="col">Prosecna ocena</th>
-      				<th scope="col">Slobodni Termini</th>
-      				<th scope="col"> </th>
-            </tr>					
+            		</tr>					
 					</thead>
 					<tbody>             	
                 </tbody>
@@ -313,7 +362,17 @@
             </div>
           </div>
           </div>
+          <br>
+          <button type="button" class="btn btn-primary" id = "submitAppointmentRequest">Zakazi&nbsp<span class="spinner-border spinner-border-sm"  style="display:none" role="status" id="submitAppSpinner"  aria-hidden="true"></span></button>         
+        </form>
+      </div>
+    </div>
   </div>
+  
+  
+  
+  
+  
           <!-- ZAKAZIVANJE PREGLEDA END-->
 
           <!-- LISTA PACIJENATA -->
@@ -355,7 +414,7 @@
 
 
         <!-- ----------------KALENDAR END--------------------- -->
-        <!-- ----------------MODAL ZA PREBACIVANJE U LEKARA--------------------- -->
+<!-- ----------------MODAL ZA PREBACIVANJE U LEKARA--------------------- -->
 <div class="modal fade" id="addShiftModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -387,7 +446,7 @@
   </div>
 </div>
 
-<!-- --------------------KRAJ MODALA--------------------- -->         
+<!-- --------------------KRAJ MODALA ZA PREBACIVANJE U LEKARA--------------------- -->         
 <!-- -----------------------DODAVANJE TIPA PREGLEDA------------------------ ------->
  <div class="container" id ="addTypeOfExaminationContainer" style="display:none">
     <div class="card card-login mx-auto mt-5">
@@ -399,26 +458,162 @@
             <div class="form-label-group">
               <input type="text" id="inputTypeOfExamination" class="form-control" placeholder="Ime tipa pregleda" required="required" autofocus="autofocus">
             </div>
-          </div>
+            </div>
+          <div class="form-group">
           <label>Cena tipa pregleda</label>
             <div class="form-label-group">
-              <input type="text" id="inputTypeOfExaminationDescription" class="form-control" placeholder="Cena tipa pregleda" required="required" autofocus="autofocus">
+              <input type="number" pattern="[0-9.]+" id="inputTypeOfExaminationPrice" class="form-control" placeholder="Cena tipa pregleda" required="required" autofocus="autofocus">
             </div>
-          </div>
-           <label>Cena tipa pregleda</label>
-            <div class="form-label-group">
-              <input type="text" id="inputTypeOfExaminationDescription" class="form-control" placeholder="Cena tipa pregleda" required="required" autofocus="autofocus">
-            </div>
-          </div>
-          
-          <span style="color:#FF1103" id="errorSpan"></span>
-          <button type="button" class="btn btn-primary btn-block" id = "submitHall">Dodaj</button>
+			</div>
+		  <span style="color:#FF1103" id="errorSpanTypeOfExamination"></span>
+          <button type="button" class="btn btn-primary btn-block" id = "submitTypeOfExamination">Dodaj</button>
         </form>
       </div>
     </div>
   </div>
 
 <!-- -----------------------KRAJ DODAVANJA TIPA PREGLEDA------------------------ -->
+<!-- --------------------------LISTA TIPOVA PREGLEDA---------------------------- -->
+<div class="card mb-3" id = "showTypeOfExaminationContainer" style="display:none">        
+     <div class="card-header">
+     <i class="fas fa-table"></i>
+			Lista Tipova pregleda
+		   </div>
+          <div class="card-body">
+            <div class="table-responsive">
+            	<div class="dataTables_filter" id="filterTypeOfExamination">
+            		<label>
+            			Pretraga:
+            			<input class="" aria-controls="tableTypeOfExamination" type="search" placeholder=""/>
+            			<button class="btn btn-primary" type="button" id="searchClinics"><span id="searchBtnText">Trazi</span>&nbsp<span class="spinner-border spinner-border-sm"  style="display:none" role="status" id="clinicSpinner"  aria-hidden="true"></span></button>
+            		</label>
+            	</div>
+              <table class="table table-bordered" id="tableTypeOfExamination" width="100%" cellspacing="0">
+                <thead>               
+					<tr>					
+					<th scope="col">Ime tipa pregleda</th>
+      				<th scope="col">Klinika </th>
+      				<th scope="col">Cena tipa pregleda</th>
+      				<th scope="col"> </th>
+      				<th scope="col"> </th>
+					</tr>				
+					</thead>
+				<tbody>             	
+                </tbody>
+              </table>
+            </div>
+          </div>
+          </div>   
+<!-- --------------------------KRAJ LISTE TIPOVA PREGLEDA----------------------- -->
+<!-- -------------------------MODAL ZA IZMENU TIPA PREGLEDA--------------------- -->
+<div class="modal fade" id="changeTypeOfExaminationModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Izmena tipa pregleda</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="form-group">
+            <label for="recipient-name" class="col-form-label">Ime tipa pregleda</label>
+  				<input type="text" id="typeOfExamination_input" class="form-control">
+          </div>
+          <div class="form-group">
+            <label for="message-text" class="col-form-label">Cena tipa pregleda</label>
+  				<input type="number" pattern="[0-9.]+" id="typeOfExaminationPrice_input" class="form-control">
+          </div>
+        </form>    
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Odustani</button>
+        <button type="button" class="btn btn-primary" data-dismiss="modal" id = "changeTypeOfExam_btn">Zapamti izmene</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ----------------------KRAJ MODALA ZA IZMENU TIPA PREGLEDA------------------ -->
+<!-- ----------------------------PREDEFINISANI PREGLEDI------------------------- -->
+<div class="container" id ="AppointmentContainer" style="display:none">   
+    <div class="card">
+      <div class="card-header" id="header">Pregled</div>
+      <div class="card-body">
+        <form>
+          <div class="form-group">
+          <label>Klinika</label>
+            <div class="form-label-group">        
+              <input type="text" id="inputClinicNameAppointment" class="form-control"  autofocus="autofocus" disabled>
+            </div>
+          </div>
+          <div class="form-group">
+          <label>Adresa</label>
+            <div class="form-label-group">        
+              <input type="text" id="inputClinicAddressAppointment" class="form-control"  autofocus="autofocus" disabled>
+            </div>
+          </div>   
+          <div class="form-group">
+          <label>Datum</label>
+            <div class="form-label-group">        
+              <input type="date" id="inputDate" class="form-control"  autofocus="autofocus" >
+            </div>
+          </div>
+          <div class="form-group">
+          <label>Vreme pocetka pregleda</label>
+            <div class="form-label-group">        
+              <input type="time" id="inputTimeBegin" class="form-control"  autofocus="autofocus" >
+            </div>
+            <label>Vreme kraja pregleda</label>
+            <div class="form-label-group">        
+              <input type="time" id="inputTimeEnd" class="form-control"  autofocus="autofocus" >
+            </div>
+          </div>
+            <div class="form-group">
+      		<label for="inputAppointmentT">Tip pregleda</label>
+      		<select id="inputAppointmentTypeSelect" class="form-control">
+        		
+     		</select>
+    	   </div>
+          <div class="form-group">
+      		<label for="inputAppointmentH">Sala</label>
+      		<select id="inputAppointmentHall" class="form-control">
+     		</select>
+    	   </div>
+    	   <div class="form-group">
+          <label>Cena</label>
+            <div class="form-label-group">        
+              <input type="number" id="inputPrice" class="form-control"  autofocus="autofocus" >
+            </div>
+          </div>   
+    	   <br>
+    	   <div class="card mb-3" id = "showDoctorsContainerDisabled">
+          <div class="card-header">
+            Izabrani Doktori</div>
+          <div class="card-body">
+            <div class="table-responsive">
+              <table class="table table-hover" id="tableDoctorsDisabled" width="100%" cellspacing="0">
+                <thead>
+					<tr>
+					<th scope="col">Ime</th>
+      				<th scope="col">Prezime</th>
+      				<th scope="col">Prosecna ocena</th>
+            		</tr>					
+					</thead>
+					<tbody>             	
+                </tbody>
+              </table>
+            </div>
+          </div>
+          </div>
+          <br>
+          <button type="button" class="btn btn-primary" id = "submitAppointmentRequest">Zakazi</button>         
+        </form>
+      </div>
+    </div>
+  </div>
+<!-- -----------------------KRAJ PREDEFINISANIH PREGLEDA------------------------ -->
 
   		<div class="container-fluid" id="MedicalRecordContainer">
   			<p class="text-muted" id="insuranceMR"></p>
