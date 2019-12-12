@@ -5,7 +5,7 @@ import model.Priceslist;
 public class PriceListDTO {
 	private String clinicName;
 	private String typeOfExamination;
-	private Long price;
+	private float price;
 	
 	public  PriceListDTO(Priceslist pr)
 	{
@@ -19,7 +19,7 @@ public class PriceListDTO {
 		// TODO Auto-generated constructor stub
 	}
 
-	public PriceListDTO(String clinicName, String typeOfExamination, Long price) {
+	public PriceListDTO(String clinicName, String typeOfExamination, float price) {
 		super();
 		this.clinicName = clinicName;
 		this.typeOfExamination = typeOfExamination;
@@ -38,10 +38,10 @@ public class PriceListDTO {
 	public void setTypeOfExamination(String typeOfExamination) {
 		this.typeOfExamination = typeOfExamination;
 	}
-	public Long getPrice() {
+	public float getPrice() {
 		return price;
 	}
-	public void setPrice(Long price) {
+	public void setPrice(float price) {
 		this.price = price;
 	}
 	
