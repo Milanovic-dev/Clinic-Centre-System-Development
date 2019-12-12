@@ -40,8 +40,9 @@ public class AppointmentRequest {
 	@ManyToMany(fetch = FetchType.LAZY)
 	private List<Doctor> doctors;
 	
-	@Column(name = "type", nullable = false)
-	private String appointmentDescription;
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "priceslist_id")
+	private Priceslist priceslist;
 	
 	@Column(name = "appointmentType",nullable = true)
 	private AppointmentType appointmentType;
@@ -54,7 +55,7 @@ public class AppointmentRequest {
 	}
 		
 	public AppointmentRequest(Long id, Date date,Hall hall, Patient patient, Clinic clinic,
-			String appointmentDescription, AppointmentType appointmentType) {
+			Priceslist priceslist, AppointmentType appointmentType) {
 		super();
 		this.id = id;
 		this.date = date;
@@ -62,7 +63,7 @@ public class AppointmentRequest {
 		this.patient = patient;
 		this.clinic = clinic;
 		this.doctors = new ArrayList<Doctor>();
-		this.appointmentDescription = appointmentDescription;
+		this.priceslist = priceslist;
 		this.appointmentType = appointmentType;
 	}
 
@@ -116,12 +117,12 @@ public class AppointmentRequest {
 		this.doctors = doctors;
 	}
 
-	public String getAppointmentDescription() {
-		return appointmentDescription;
+	public Priceslist getPriceslist() {
+		return priceslist;
 	}
 
-	public void setAppointmentDescription(String appointmentDescription) {
-		this.appointmentDescription = appointmentDescription;
+	public void setPriceslist(Priceslist priceslist) {
+		this.priceslist = priceslist;
 	}
 
 	public AppointmentType getAppointmentType() {

@@ -260,9 +260,36 @@
 
      <!-- ZAKAZIVANJE PREGLEDA -->
     <div class="container" id ="makeAppointmentContainer" style="display:none">
-    
+       
+    	  <div class="card mb-3" id = "showDoctorsContainer">
+          <div class="card-header">
+            Izaberite Doktora</div>
+          <div class="card-body">
+            <div class="table-responsive">
+              <table class="table table-bordered" id="tableDoctorsActive" width="100%" cellspacing="0">
+                <thead>
+					<tr>
+					<th scope="col">Ime</th>
+      				<th scope="col">Prezime</th>
+      				<th scope="col">Prosecna ocena</th>
+      				<th scope="col">Slobodni Termini</th>
+      				<th scope="col"> </th>
+            </tr>					
+					</thead>
+					<tbody>             	
+                </tbody>
+              </table>
+            </div>
+          <button type="button" class="btn btn-primary" id = "detailsAppointment_btn">Pregled</button>         
+          </div>
+          </div>
+          <br>
+      </div>
+
+  
+  <div class="container" id ="detailsAppointmentContainer" style="display:none">   
     <div class="card">
-      <div class="card-header" id="header">Zakazite pregled</div>
+      <div class="card-header" id="header">Pregled</div>
       <div class="card-body">
         <form>
           <div class="form-group">
@@ -291,20 +318,18 @@
      		</select>
     	   </div>  
     	   <br>
-    	   <div class="card mb-3" id = "showDoctorsContainer">
+    	   <div class="card mb-3" id = "showDoctorsContainerDisabled">
           <div class="card-header">
-            Izaberite Doktora</div>
+            Izabrani Doktori</div>
           <div class="card-body">
             <div class="table-responsive">
-              <table class="table table-hover" id="tableDoctors" width="100%" cellspacing="0">
+              <table class="table table-hover" id="tableDoctorsDisabled" width="100%" cellspacing="0">
                 <thead>
 					<tr>
 					<th scope="col">Ime</th>
       				<th scope="col">Prezime</th>
       				<th scope="col">Prosecna ocena</th>
-      				<th scope="col">Slobodni Termini</th>
-      				<th scope="col"> </th>
-            </tr>					
+            		</tr>					
 					</thead>
 					<tbody>             	
                 </tbody>
@@ -313,13 +338,16 @@
           </div>
           </div>
           <br>
-          <button type="button" class="btn btn-primary" id = "submitAppointmentRequest">Posalji</button>         
+          <button type="button" class="btn btn-primary" id = "submitAppointmentRequest">Zakazi</button>         
         </form>
       </div>
     </div>
-    <br>
-    <br>
   </div>
+  
+  
+  
+  
+  
           <!-- ZAKAZIVANJE PREGLEDA END-->
 
           <!-- LISTA PACIJENATA -->
