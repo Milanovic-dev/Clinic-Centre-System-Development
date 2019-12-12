@@ -20,17 +20,20 @@ class MedicalSystemApplicationTests {
 	
 	@Autowired
 	private UserService userService;
-
-	@SuppressWarnings("deprecation")
 	@Test
 	void contextLoads() {
 		
+		
+	}
+	
+	@SuppressWarnings("deprecation")
+	@Test
+	void whenSelectByDoctor_ReturnAppointments()
+	{
 		Doctor d = (Doctor)userService.findByEmail("doktor1@gmail.com");
 		
 		List<Appointment> list = service.findAllByDoctor(d.getId());
 		
 		Assert.assertEquals(2, list.size());
 	}
-	
-	
 }

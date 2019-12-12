@@ -9,7 +9,7 @@ function initPatient(user)
 	sideBar.append("<li class='nav-item active'><a class='nav-link' href='userProfileNew.html'><i class='fas fa-fw fa-tachometer-alt'></i><span id='profileUser'>Profil</span></a></li>")	
 	sideBar.append("<li class='nav-item active'><a class='nav-link' type='button'><span id='clinicList'>Lista klinika</span></a></li>")	
 	sideBar.append("<li class='nav-item active'><a class='nav-link' type='button'><span id='medicalRecord'>Zdravstveni karton</span></a></li>")	
-
+	sideBar.append("<li class='nav-item active'><a class='nav-link' type='button'><span id='appRequests'>Zahtevi za pregled</span></a></li>")	
 	setUpPatientPage(user)
 }
 
@@ -104,6 +104,21 @@ function setUpPatientPage(user)
 			}
 		})
 	})
+	
+	$('#appRequests').click(function(e){
+		e.preventDefault()
+		
+		$('#showAppointmentRequestsPatient').show()
+		$('#showClinicContainer').hide()
+		$('#makeAppointmentContainer').hide()
+		$('#MedicalRecordContainer').hide()
+		$('#detailsAppointmentContainer').hide()
+		$('#breadcrumbCurrPage').removeAttr('hidden')
+		$('#breadcrumbCurrPage').text("Zahtevi za pregled")
+		$('#breadcrumbCurrPage2').attr('hidden',true)
+		
+		
+	})
 
 }
 
@@ -173,6 +188,7 @@ function p_listClinic(data,i,user)
 	tr.append(tdName).append(tdAdress).append(tdCity).append(tdState).append(tdDesc).append(tdRating).append(tdAppointment);
 	$('#tableClinics tbody').append(tr);
 	
+	$('#makeAppointment_btn'+i).off('click')
 	$('#makeAppointment_btn'+i).click(function(e){
 		e.preventDefault()
 		$('#makeAppointmentContainer').show()
@@ -241,7 +257,7 @@ function p_listClinic(data,i,user)
 					
 				})
 				
-			
+				$('#submitAppointmentRequest').off('click')
 				$('#submitAppointmentRequest').click(function(e){
 					e.preventDefault()
 					
@@ -277,8 +293,8 @@ function p_listClinic(data,i,user)
 							else
 							{
 								$('#submitAppSpinner').hide()
-								alert(data.status)								
 							}
+							alert(data.status)								
 						}
 					})
 				})
