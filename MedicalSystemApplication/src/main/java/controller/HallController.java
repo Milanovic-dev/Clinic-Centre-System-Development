@@ -63,6 +63,35 @@ public class HallController {
 	   return new ResponseEntity<>(ret,HttpStatus.OK);
 	}
 	
+	@GetMapping(value = "/getAllByClinic/{clinicName}")
+	public ResponseEntity<List<HallDTO>> getHalls(@PathVariable("clinicName") String clinicName)
+	{
+		Clinic c = clinicService.findByName(clinicName);
+		
+		if(c == null)
+		{
+			   return new ResponseEntity<>(HttpStatus.NOT_FOUND);			
+		}
+		
+	   List<Hall> halls = hallService.findAllByClinic(c);
+	   List<HallDTO> ret = new ArrayList<HallDTO>();
+	   if(halls == null)
+	   {
+		   return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+	   }
+	   
+	   for(Hall hall : halls)
+	   {
+		   if(!hall.getDeleted())
+		   {
+			   HallDTO dto = new HallDTO(hall);
+			   ret.add(dto);
+		   }		   
+	   }
+
+	   return new ResponseEntity<>(ret,HttpStatus.OK);
+	}
+	
 	@DeleteMapping(value="/deleteHall/{number}")
 	public ResponseEntity<Void> deleteHall(@PathVariable ("number") int number)
 	{

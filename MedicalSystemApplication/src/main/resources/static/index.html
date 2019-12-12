@@ -508,7 +508,84 @@
 </div>
 
 <!-- ----------------------KRAJ MODALA ZA IZMENU TIPA PREGLEDA------------------ -->
-
+<!-- ----------------------------PREDEFINISANI PREGLEDI------------------------- -->
+<div class="container" id ="AppointmentContainer" style="display:none">   
+    <div class="card">
+      <div class="card-header" id="header">Pregled</div>
+      <div class="card-body">
+        <form>
+          <div class="form-group">
+          <label>Klinika</label>
+            <div class="form-label-group">        
+              <input type="text" id="inputClinicNameAppointment" class="form-control"  autofocus="autofocus" disabled>
+            </div>
+          </div>
+          <div class="form-group">
+          <label>Adresa</label>
+            <div class="form-label-group">        
+              <input type="text" id="inputClinicAddressAppointment" class="form-control"  autofocus="autofocus" disabled>
+            </div>
+          </div>   
+          <div class="form-group">
+          <label>Datum</label>
+            <div class="form-label-group">        
+              <input type="date" id="inputDate" class="form-control"  autofocus="autofocus" >
+            </div>
+          </div>
+          <div class="form-group">
+          <label>Vreme pocetka pregleda</label>
+            <div class="form-label-group">        
+              <input type="time" id="inputTimeBegin" class="form-control"  autofocus="autofocus" >
+            </div>
+            <label>Vreme kraja pregleda</label>
+            <div class="form-label-group">        
+              <input type="time" id="inputTimeEnd" class="form-control"  autofocus="autofocus" >
+            </div>
+          </div>
+            <div class="form-group">
+      		<label for="inputAppointmentT">Tip pregleda</label>
+      		<select id="inputAppointmentTypeSelect" class="form-control">
+        		
+     		</select>
+    	   </div>
+          <div class="form-group">
+      		<label for="inputAppointmentH">Sala</label>
+      		<select id="inputAppointmentHall" class="form-control">
+     		</select>
+    	   </div>
+    	   <div class="form-group">
+          <label>Cena</label>
+            <div class="form-label-group">        
+              <input type="number" id="inputPrice" class="form-control"  autofocus="autofocus" >
+            </div>
+          </div>   
+    	   <br>
+    	   <div class="card mb-3" id = "showDoctorsContainerDisabled">
+          <div class="card-header">
+            Izabrani Doktori</div>
+          <div class="card-body">
+            <div class="table-responsive">
+              <table class="table table-hover" id="tableDoctorsDisabled" width="100%" cellspacing="0">
+                <thead>
+					<tr>
+					<th scope="col">Ime</th>
+      				<th scope="col">Prezime</th>
+      				<th scope="col">Prosecna ocena</th>
+            		</tr>					
+					</thead>
+					<tbody>             	
+                </tbody>
+              </table>
+            </div>
+          </div>
+          </div>
+          <br>
+          <button type="button" class="btn btn-primary" id = "submitAppointmentRequest">Zakazi</button>         
+        </form>
+      </div>
+    </div>
+  </div>
+<!-- -----------------------KRAJ PREDEFINISANIH PREGLEDA------------------------ -->
 
   		<div class="container-fluid" id="MedicalRecordContainer">
   			<p class="text-muted" id="insuranceMR"></p>

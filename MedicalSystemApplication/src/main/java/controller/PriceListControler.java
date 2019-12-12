@@ -70,6 +70,35 @@ public class PriceListControler {
 			return new ResponseEntity<>(HttpStatus.OK);
 
 		}
+		@GetMapping(value="/getAllByClinic/{clinicName}")
+		public ResponseEntity<List<PriceListDTO>> getAllTypeExaminationByClinic(@PathVariable("clinicName") String clinicName)
+		{
+			Clinic c  = clinicService.findByName(clinicName);
+			
+			if(c == null)
+			{
+				   return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			}
+			
+			List<Priceslist> pricesList = priceListService.findAllByClinic(c);
+			List<PriceListDTO> priceListDTO = new ArrayList<PriceListDTO>();
+			
+			if(pricesList == null)
+			{
+				   return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			}
+			
+			for(Priceslist pr : pricesList)
+			{
+				if(!pr.getDeleted())
+				{
+					PriceListDTO dto = new PriceListDTO(pr);
+					priceListDTO.add(dto);
+				}
+			}
+			
+			return new ResponseEntity<>(priceListDTO,HttpStatus.OK);
+		}
 		
 		@GetMapping(value="/getAll")
 		public ResponseEntity<List<PriceListDTO>> getAllTypeExamination()
