@@ -32,6 +32,29 @@ function setUpPatientPage(user)
 	})
 	
 	
+	$.ajax({
+		type:'GET',
+		url:'api/priceList/getAll',
+		complete: function(data)
+		{
+			
+			let pricelists = data.responseJSON
+						
+			for(let p of pricelists)
+			{
+				$('#selectAppointmentType').append($('<option>',{
+					value: p.typeOfExamination,
+					text: p.typeOfExamination
+				}))
+				
+			}
+			
+		}
+	})
+	
+	
+	
+	
 	var start = new Date(),
         prevDay,
         startHours = 9;
@@ -45,23 +68,18 @@ function setUpPatientPage(user)
         start.setHours(10);
         startHours = 10
     }
-	
-	
-	$('#clinicDatePick').datepicker({
-		dateFormat: "dd-mm-yyyy",
-		onSelect: function(fd,d,picker){
-			if (!d) return;
-            var day = d.getDay();
-
-            // Trigger only if date is changed
-            if (prevDay != undefined && prevDay == day) return;
-            prevDay = day;
-            
-            picker.hide()
-           
-            getClinics($('#clinicDatePick').val()) 
-		}
+    
+    $('#clinicDatePick').datepicker({
+    	dateFormat: "dd-mm-yyyy"   	
 	})
+	
+    $('#searchClinics').click(function(e){
+    	e.preventDefault()
+    	
+    	let picker = $('#clinicDatePick').val()
+    	getClinics(picker)
+    })
+	
 	
 	$('#medicalRecord').click(function(e){
 		e.preventDefault()
@@ -91,19 +109,26 @@ function setUpPatientPage(user)
 async function getClinics(date)
 {
 	$('#tableClinics tbody').empty()
+	$('#searchClinics').attr('disabled',true)
+	$('#searchBtnText').text("Trazim...")
 	$('#clinicSpinner').show()
 	await sleep(1000)
 	
-	
+	let json = JSON.stringify({"name":"Klinika","address":"","city":"","state":"","rating":""})
+
 	$.ajax({
-		type: 'GET',
+		type: 'POST',
 		url:"api/clinic/getAll/"+date,
+		data: json,
+		dataType : "json",
+		contentType : "application/json; charset=utf-8",
 		complete: function(data)
 		{
 			let clinics = data.responseJSON
 			let i = 0
 			$('#clinicSpinner').hide()
-			
+			$('#searchClinics').removeAttr('disabled')
+			$('#searchBtnText').text("Trazi")
 			
 			$('#tableClinics tbody').empty()
 			for(let c of clinics)

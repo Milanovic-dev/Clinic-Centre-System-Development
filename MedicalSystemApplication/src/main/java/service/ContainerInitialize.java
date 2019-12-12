@@ -19,11 +19,13 @@ import model.Doctor;
 import model.Hall;
 import model.Nurse;
 import model.Patient;
+import model.Priceslist;
 import model.Appointment.AppointmentType;
 import model.MedicalRecord.BloodType;
 import repository.AppointmentRepository;
 import repository.ClinicRepository;
 import repository.HallRepository;
+import repository.PriceListRepository;
 import repository.UserRepository;
 
 @Component
@@ -40,6 +42,9 @@ public class ContainerInitialize {
 	
 	@Autowired
 	private AppointmentRepository appointmentRepository;
+	
+	@Autowired
+	private PriceListRepository pricelistRepository;
 	
 	@PostConstruct
 	public void init()
@@ -184,6 +189,21 @@ public class ContainerInitialize {
 					.build();
 			
 			userRepository.save(nurse);
+			
+			
+			Priceslist p1 = new Priceslist();
+			p1.setClinic(clinic);
+			p1.setTypeOfExamination("Opsti pregled");
+			p1.setPrice(500L);
+			
+			pricelistRepository.save(p1);
+			
+			Priceslist p2 = new Priceslist();
+			p2.setClinic(clinic);
+			p2.setTypeOfExamination("Stomatoloski");
+			p2.setPrice(1000L);
+			
+			pricelistRepository.save(p2);
 			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block

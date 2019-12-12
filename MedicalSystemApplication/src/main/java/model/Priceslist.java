@@ -26,6 +26,7 @@ public class Priceslist
 	
 	public Priceslist() {
 		super();
+		this.deleted = false;
 		// TODO Auto-generated constructor stub
 	}
 	public Priceslist(Clinic clinic, String typeOfExamination, Long price) {

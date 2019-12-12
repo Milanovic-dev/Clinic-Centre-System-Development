@@ -27,6 +27,12 @@
   border-radius: 6px;
 }
 
+.btn-primary.btn-sm{
+	font-size:12px;
+	line-height: 0.8;
+	border-radius:3px;
+}
+
 .btn-primary {
   color: #fff;
   background-color: #428bca;
