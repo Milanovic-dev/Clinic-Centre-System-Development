@@ -26,6 +26,7 @@ import service.AppointmentService;
 import service.ClinicService;
 import service.HallService;
 import service.NotificationService;
+import service.PriceListService;
 import service.UserService;
 
 @RestController
@@ -50,6 +51,9 @@ public class AppointmentController
 	
 	@Autowired
 	private HallService hallService;
+	
+	@Autowired
+	private PriceListService priceslistService;
 	
 	@GetMapping(value="/get")
 	public ResponseEntity<AppointmentDTO> getAppointment(@RequestBody AppointmentDTO dto)
@@ -212,7 +216,6 @@ public class AppointmentController
 				.withClinic(request.getClinic())
 				.withHall(request.getHall())//TODO: Admin treba da bira salu
 				.withPatient(request.getPatient())
-				.withDescription(request.getAppointmentDescription())
 				.withType(request.getAppointmentType())
 				.build();
 
@@ -296,8 +299,9 @@ public class AppointmentController
 			request.getDoctors().add(doctor);	
 		}
 		
-		request.setAppointmentDescription(dto.getAppointmentDescription());
+		Priceslist pl = priceslistService.findByTypeOfExamination(dto.getTypeOfExamination());
 		
+		request.setPriceslist(pl);
 		
 		Hall hall = hallService.findByNumber(dto.getHallNumber());
 		

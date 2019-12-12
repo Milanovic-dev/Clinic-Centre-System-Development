@@ -25,6 +25,7 @@ function setUpPatientPage(user)
 		$('#showClinicContainer').show()
 		$('#MedicalRecordContainer').hide()
 		$('#makeAppointmentContainer').hide()
+		$('#detailsAppointmentContainer').hide()
 		$('#breadcrumbCurrPage').removeAttr('hidden')
 		$('#breadcrumbCurrPage').text("Lista klinika")
 		$('#breadcrumbCurrPage2').attr('hidden',true)
@@ -87,6 +88,7 @@ function setUpPatientPage(user)
 		$('#showClinicContainer').hide()
 		$('#makeAppointmentContainer').hide()
 		$('#MedicalRecordContainer').show()
+		$('#detailsAppointmentContainer').hide()
 		$('#breadcrumbCurrPage').removeAttr('hidden')
 		$('#breadcrumbCurrPage').text("Zdravstveni karton")
 		$('#breadcrumbCurrPage2').attr('hidden',true)
@@ -176,6 +178,7 @@ function p_listClinic(data,i,user)
 		$('#makeAppointmentContainer').show()
 		$('#showClinicContainer').hide()
 		$('#MedicalRecordContainer').hide()
+		$('#detailsAppointmentContainer').hide()
 		
 		$('#inputClinicName').val(data.name)
 		$('#inputClinicAddress').val(data.address+", "+data.city+", "+data.state)
@@ -191,10 +194,10 @@ function p_listClinic(data,i,user)
 				let doctors = data.responseJSON
 				
 				let index = 0
-				$('#tableDoctors tbody').empty()
+				$('#tableDoctorsActive tbody').empty()
 				for(let d of doctors)
 				{
-					p_listDoctor(d,index,doctors.length);
+					p_listDoctorActive(d,index,doctors.length);
 					index++;
 				}
 				
@@ -207,23 +210,43 @@ function p_listClinic(data,i,user)
 					
 				})
 				
+				$('#detailsAppointment_btn').click(function(e){
+					e.preventDefault()
+					
+					$('#makeAppointmentContainer').hide()
+					$('#showClinicContainer').hide()
+					$('#MedicalRecordContainer').hide()
+					$('#detailsAppointmentContainer').show()
+					
+					
+					doctorsSelected = []
+					
+					for(let j = 0 ; j < doctors.length ; j++)
+					{
+						if($("#checkDoctor"+j).is(":checked"))
+						{
+							doctorsSelected.push(doctors[j])
+						}
+						
+					}
+					
+					$('#tableDoctorsDisabled tbody').empty()
+					for(let d of doctorsSelected)
+					{
+						p_listDoctorDisabled(d,index,doctors.length);
+						index++;
+					}
+					
+				})
+				
 			
 				$('#submitAppointmentRequest').click(function(e){
 					e.preventDefault()
 					
 					let clinicName = $('#inputClinicName').val()
 					let patientEmail = user.email
-					let doctorArray = []
-										
-					for(let i = 0 ; i < doctors.length ; i++)
-					{
-						if($('#checkDoctor'+i).is(":checked"))
-						{
-							doctorArray.push(doctors[i].user.email)
-						}
-					}
 					
-					let json = JSON.stringify({"clinicName":clinicName,"patientEmail":patientEmail,"doctors":doctorArray})
+					let json = JSON.stringify({"clinicName":clinicName,"patientEmail":patientEmail,"doctors":doctorsSelected})
 					console.log(json)
 					//SEND REQUEST
 				})
@@ -239,7 +262,7 @@ function p_listClinic(data,i,user)
 	
 }
 
-function p_listDoctor(data,i,doctorCount)
+function p_listDoctorActive(data,i,doctorCount)
 {
 	let tr=$('<tr></tr>');
 	let tdName=$('<td>'+ data.user.name +'</td>');
@@ -249,7 +272,7 @@ function p_listDoctor(data,i,doctorCount)
 	let tdSelect = $("<td><input type='checkbox' id='checkDoctor"+i+"'><label for='checkDoctor"+i+"'></label></td>" )
 	
 	tr.append(tdName).append(tdSurname).append(tdRating).append(tdCalendar).append(tdSelect)
-	$('#tableDoctors tbody').append(tr)
+	$('#tableDoctorsActive tbody').append(tr)
 	
 	$('#checkDoctor'+i).click(function(e){
 		
@@ -270,4 +293,15 @@ function p_listDoctor(data,i,doctorCount)
 		
 	})
 	
+}
+
+function p_listDoctorDisabled(data,i,doctorCount)
+{
+	let tr=$('<tr></tr>');
+	let tdName=$('<td>'+ data.user.name +'</td>');
+	let tdSurname=$('<td>'+ data.user.name +'</td>');
+	let tdRating=$('<td>'+ data.avarageRating +'</td>');
+	
+	tr.append(tdName).append(tdSurname).append(tdRating)
+	$('#tableDoctorsDisabled tbody').append(tr)
 }

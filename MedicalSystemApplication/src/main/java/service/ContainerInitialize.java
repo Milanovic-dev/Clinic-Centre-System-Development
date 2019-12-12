@@ -161,8 +161,6 @@ public class ContainerInitialize {
 					.withPatient(patient)
 					.withHall(hall1)
 					.withClinic(clinic)
-					.withPrice(12345)
-					.withDescription("Opis operacije1")
 					.withType(AppointmentType.Surgery)
 					.build();
 			
@@ -170,8 +168,6 @@ public class ContainerInitialize {
 					.withPatient(patient)
 					.withHall(hall2)
 					.withClinic(clinic)
-					.withPrice(13445)
-					.withDescription("Opis operacije2")
 					.withType(AppointmentType.Surgery)
 					.build();
 			

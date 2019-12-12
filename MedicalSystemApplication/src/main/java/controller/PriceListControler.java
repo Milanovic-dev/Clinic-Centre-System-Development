@@ -59,7 +59,7 @@ public class PriceListControler {
 			
 			for(Appointment app : c.getAppointments())
 			{
-				if(app.getAppointmentDescription() == priceList.getTypeOfExamination())
+				if(app.getPriceslist().getTypeOfExamination() == priceList.getTypeOfExamination())
 				{
 					return new ResponseEntity<>(HttpStatus.BAD_REQUEST);	
 				}
