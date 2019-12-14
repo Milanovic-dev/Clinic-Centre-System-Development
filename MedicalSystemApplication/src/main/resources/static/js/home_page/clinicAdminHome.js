@@ -427,7 +427,7 @@ function listTypesOfExamination(t,i,clinic)
 					console.log(response.status)
 					if(response.status == "200")
 					{
-						makeTypeOfExaminationTable()
+						makeTypeOfExaminationTable(clinic)
 					}
 				}
 			})	
