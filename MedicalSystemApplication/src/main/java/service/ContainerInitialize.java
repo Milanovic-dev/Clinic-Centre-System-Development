@@ -11,6 +11,7 @@ import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import helpers.DateUtil;
 import helpers.SecurePasswordHasher;
 import model.Appointment;
 import model.CentreAdmin;
@@ -49,7 +50,7 @@ public class ContainerInitialize {
 	
 	@PostConstruct
 	public void init()
-	{
+	{	
 		String token = "admin1234";
 		String hash;
 		try {
@@ -129,8 +130,8 @@ public class ContainerInitialize {
 					.withInsuranceID("")
 					.withType("Stomatoloski")
 					.withClinic(clinic)
-					.withShiftStart(new Date())
-					.withShiftEnd(new Date())
+					.withShiftStart(DateUtil.getInstance().GetDate("08:00","HH:mm"))
+					.withShiftEnd(DateUtil.getInstance().GetDate("14:00","HH:mm"))
 					.build();
 
 			userRepository.save(doctor1);
@@ -143,11 +144,11 @@ public class ContainerInitialize {
 					.withAddress("Kisacka")
 					.withState("Srbija")
 					.withPhone("5435435")
-					.withInsuranceID("")
+					.withInsuranceID("12345674864")
 					.withType("Opsti pregled")
 					.withClinic(clinic)
-					.withShiftStart(new Date())
-					.withShiftEnd(new Date())
+					.withShiftStart(DateUtil.getInstance().GetDate("09:00","HH:mm"))
+					.withShiftEnd(DateUtil.getInstance().GetDate("18:00","HH:mm"))
 					.build();
 
 			userRepository.save(doctor2);
@@ -160,11 +161,11 @@ public class ContainerInitialize {
 					.withAddress("Kisacka")
 					.withState("Srbija")
 					.withPhone("5435435")
-					.withInsuranceID("")
+					.withInsuranceID("1897654856456")
 					.withType("Opsti pregled")
 					.withClinic(clinic)
-					.withShiftStart(new Date())
-					.withShiftEnd(new Date())
+					.withShiftStart(DateUtil.getInstance().GetDate("08:00","HH:mm"))
+					.withShiftEnd(DateUtil.getInstance().GetDate("18:00","HH:mm"))
 					.build();
 
 			userRepository.save(doctor3);
