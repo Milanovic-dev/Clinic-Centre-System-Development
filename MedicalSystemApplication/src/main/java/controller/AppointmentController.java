@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import dto.AppointmentDTO;
+import helpers.DateUtil;
 import model.*;
 import model.User.UserRole;
 import service.AppointmentRequestService;
@@ -285,15 +286,9 @@ public class AppointmentController
 		}
 		request.setPatient(patient);
 		
-		try {
-			Date date = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").parse(dto.getDate());
-			request.setDate(date);
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-		}
+		Date date = DateUtil.getInstance().GetDate(dto.getDate(), "dd-MM-yyyy HH:mm");
 		
+		request.setDate(date);
 		request.setAppointmentType(dto.getType());
 		
 				

@@ -13,6 +13,7 @@ import model.Clinic;
 import model.Doctor;
 import model.Patient;
 import model.RegistrationRequest;
+import helpers.DateUtil;
 import helpers.ListUtil;
 import helpers.UserSortingComparator;
 
@@ -112,37 +113,28 @@ public class ClinicController {
     		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     	}
   
-    	try {
-			Date realDate = new SimpleDateFormat("dd-MM-yyyy").parse(date);
+    	Date realDate = DateUtil.getInstance().GetDate(date, "dd-MM-yyyy");
+						
+		Filter filter = FilterFactory.getInstance().get("clinic");
 			
-			
-			Filter filter = FilterFactory.getInstance().get("clinic");
-			
-			for(Clinic c: clinics)
-	    	{
-	    		List<Doctor> doctors = c.getDoctors();
+		for(Clinic c: clinics)
+	    {
+	    	List<Doctor> doctors = c.getDoctors();
 	    		
-	    		for(Doctor d: doctors)
+	    	for(Doctor d: doctors)
+	    	{
+	    		if(d.IsFreeOn(realDate) && d.getType().equalsIgnoreCase(typeOfExamination))
 	    		{
-	    			if(d.IsFreeOn(realDate) && d.getType().equalsIgnoreCase(typeOfExamination))
+	    			if(filter.test(c, dto))
 	    			{
-	    				if(filter.test(c, dto))
-	    				{
-	    					clinicsDTO.add(new ClinicDTO(c));
-	    					break;				
-	    				}
+	    				clinicsDTO.add(new ClinicDTO(c));
+	    				break;				
 	    			}
 	    		}
 	    	}
+	    }
 			
-			return new ResponseEntity<>(clinicsDTO,HttpStatus.OK);
-			
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-    	   	
-    	return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		return new ResponseEntity<>(clinicsDTO,HttpStatus.OK);		
     }
     
     

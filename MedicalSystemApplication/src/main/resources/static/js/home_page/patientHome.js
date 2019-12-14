@@ -75,6 +75,8 @@ function setUpPatientPage(user)
     	dateFormat: "dd-mm-yyyy"   	
 	})
 	
+	
+	
     $('#searchClinics').click(function(e){
     	e.preventDefault()
     	
@@ -205,6 +207,7 @@ function p_listClinic(data,i,user)
 		$('#inputClinicAddress').val(data.address+", "+data.city+", "+data.state)
 		$('#inputDate').val($('#clinicDatePick').val())
 		$('#inputAppointmentType').val("Pregled")
+		
 		$('#breadcrumbCurrPage2').removeAttr('hidden')
 		$('#breadcrumbCurrPage2').text("Zakazivanje")
 		$.ajax({
@@ -218,6 +221,7 @@ function p_listClinic(data,i,user)
 				$('#tableDoctorsActive tbody').empty()
 				for(let d of doctors)
 				{
+					console.log(d)
 					p_listDoctorActive(d,index,doctors.length);
 					index++;
 				}
@@ -249,6 +253,8 @@ function p_listClinic(data,i,user)
 						if($("#checkDoctor"+j).is(":checked"))
 						{
 							doctorsSelected.push(doctors[j])
+							$('#inputStartTime').prop('min',doctors[j].shiftStart)
+							$('#inputStartTime').prop('max',doctors[j].shiftEnd)
 						}
 						
 					}
@@ -270,7 +276,8 @@ function p_listClinic(data,i,user)
 					let date =  $('#inputDate').val()
 					let patientEmail = user.email
 					let typeOfExamination = $('#selectAppointmentType').val()
-					
+					let time = $('#inputStartTime').val()
+
 					let doctorArray = []
 					
 					for(let d of doctorsSelected)
@@ -278,7 +285,7 @@ function p_listClinic(data,i,user)
 						doctorArray.push(d.user.email)
 					}
 					
-					let json = JSON.stringify({"date":date+" 14:00:00","clinicName":clinicName,"patientEmail":patientEmail,"doctors":doctorArray,"typeOfExamination":typeOfExamination,"type":"Examination"})
+					let json = JSON.stringify({"date":date+" "+time,"clinicName":clinicName,"patientEmail":patientEmail,"doctors":doctorArray,"typeOfExamination":typeOfExamination,"type":"Examination"})
 					console.log(json)
 					$('#submitAppSpinner').show()
 					//SEND REQUEST
@@ -321,7 +328,7 @@ function p_listDoctorActive(data,i,doctorCount)
 	let tdName=$('<td>'+ data.user.name +'</td>');
 	let tdSurname=$('<td>'+ data.user.name +'</td>');
 	let tdRating=$('<td>'+ data.avarageRating +'</td>');
-	let tdCalendar =$("<td><span class='input-group-addon'><span class='glyphicon glyphicon-calendar'></span></span></td>");
+	let tdCalendar =$('<td>'+data.shiftStart+' : '+data.shiftEnd+'</td>')
 	let tdSelect = $("<td><input type='checkbox' id='checkDoctor"+i+"'><label for='checkDoctor"+i+"'></label></td>" )
 	
 	tr.append(tdName).append(tdSurname).append(tdRating).append(tdCalendar).append(tdSelect)
