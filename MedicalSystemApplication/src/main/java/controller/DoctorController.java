@@ -49,11 +49,11 @@ public class DoctorController
 	@Autowired 
 	private ClinicService clinicService;
 	
-	@PostMapping(value="/makeNewDoctor/{clinicName}", consumes = "application/json")
-	public ResponseEntity<Void> addNewDoctor(@RequestBody DoctorDTO dto,@PathVariable("clinicName") String clinicName)
+	@PostMapping(value="/makeNewDoctor", consumes = "application/json")
+	public ResponseEntity<Void> addNewDoctor(@RequestBody DoctorDTO dto)
 	{
 		Doctor d = (Doctor) userService.findByEmailAndDeleted(dto.getUser().getEmail(),false);
-		Clinic c = clinicService.findByName(clinicName);
+		Clinic c = clinicService.findByName(dto.getClinicName());
 		
 		if(d != null)
 		{

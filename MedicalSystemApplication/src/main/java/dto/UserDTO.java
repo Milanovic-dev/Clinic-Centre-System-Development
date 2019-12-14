@@ -5,7 +5,6 @@ import model.User.UserRole;
 
 public class UserDTO 
 {
-	private String username;
 	private String password;
 	private String email;
 	private String name;
@@ -25,7 +24,6 @@ public class UserDTO
 	public UserDTO(String username, String password, String email, String name, String surname, String city,
 			String address, String state, String phone,UserRole role) {
 		super();
-		this.username = username;
 		this.password = password;
 		this.email = email;
 		this.name = name;
@@ -53,7 +51,6 @@ public class UserDTO
 	}
 	
 	
-	
 	public String getInsuranceId() {
 		return insuranceId;
 	}
@@ -70,12 +67,6 @@ public class UserDTO
 		this.role = role;
 	}
 
-	public String getUsername() {
-		return username;
-	}
-	public void setUsername(String username) {
-		this.username = username;
-	}
 	public String getPassword() {
 		return password;
 	}

@@ -7,6 +7,7 @@ import java.util.List;
 import javax.persistence.*;
 
 import dto.DoctorDTO;
+import helpers.DateUtil;
 import helpers.UserBuilder;
 import model.Patient.Builder;
 
@@ -67,6 +68,8 @@ public class Doctor extends User
 		super(dto.getUser());
 		this.setRole(UserRole.Doctor);
 		this.setIsFirstLog(true);
+		this.shiftStart = DateUtil.getInstance().GetDate(dto.getShiftStart(), "HH:mm");
+		this.shiftEnd = DateUtil.getInstance().GetDate(dto.getShiftEnd(), "HH:mm");
 		this.appointments = new ArrayList<Appointment>();
 		this.vacations = new ArrayList<Vacation>();
 		this.reviews = new ArrayList<ReviewDoctor>();
