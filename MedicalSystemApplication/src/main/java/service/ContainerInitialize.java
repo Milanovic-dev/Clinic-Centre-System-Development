@@ -4,6 +4,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 
 import javax.annotation.PostConstruct;
 
@@ -181,13 +182,14 @@ public class ContainerInitialize {
 			clinicRepository.save(clinic);
 			
 			Date date = new Date();
+			Date date2 = new GregorianCalendar(2019, Calendar.DECEMBER, 11).getTime();
 
-			Appointment app1 = new Appointment.Builder(date)
+			Appointment app1 = new Appointment.Builder(date2)
 					.withPatient(patient)
-					.withType(AppointmentType.Surgery)
+					.withType(AppointmentType.Examination)
 					.withHall(hall1)
 					.withClinic(clinic)
-					.withType(AppointmentType.Surgery)
+					.withDuration(2)
 					.build();
 			
 			app1.getDoctors().add(doctor1);
@@ -199,7 +201,7 @@ public class ContainerInitialize {
 					.withType(AppointmentType.Surgery)
 					.withHall(hall2)
 					.withClinic(clinic)
-					.withType(AppointmentType.Surgery)
+					.withDuration(1)
 					.build();
 			
 			app2.getDoctors().add(doctor1);
