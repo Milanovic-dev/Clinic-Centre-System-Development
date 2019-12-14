@@ -30,7 +30,7 @@ class MedicalSystemApplicationTests {
 	@Test
 	void whenSelectByDoctor_ReturnAppointments()
 	{
-		Doctor d = (Doctor)userService.findByEmail("doktor1@gmail.com");
+		Doctor d = (Doctor)userService.findByEmailAndDeleted("doktor1@gmail.com",false);
 		
 		List<Appointment> list = service.findAllByDoctor(d.getId());
 
