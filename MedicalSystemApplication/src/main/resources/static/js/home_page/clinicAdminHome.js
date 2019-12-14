@@ -23,6 +23,8 @@ function initClinicAdmin(user)
 		$("#showUserContainer").hide()
 		$('#addTypeOfExaminationContainer').hide()
 		$('#showTypeOfExaminationContainer').show()
+		$('#registrationConteiner').hide()
+
 
 		
 		$.ajax({
@@ -50,6 +52,8 @@ function initClinicAdmin(user)
 		$('#addTypeOfExaminationContainer').show()
 		$('#showTypeOfExaminationContainer').hide()
 		$('#errorSpanTypeOfExamination').hide()
+		$('#registrationConteiner').hide()
+
 
 	})
 		
@@ -109,6 +113,7 @@ function initClinicAdmin(user)
 		$("#showUserContainer").show()
 		$('#addTypeOfExaminationContainer').hide()
 		$('#showTypeOfExaminationContainer').hide()
+		$('#registrationConteiner').hide()
 
 
 		
@@ -135,6 +140,8 @@ function initClinicAdmin(user)
 		$("#showUserContainer").hide()
 		$('#addTypeOfExaminationContainer').hide()
 		$('#showTypeOfExaminationContainer').hide()
+		$('#registrationConteiner').hide()
+
 		
 	})
 	
@@ -144,20 +151,50 @@ function initClinicAdmin(user)
 		$("#addHallContainer").hide()
 		$("#showHallContainer").hide()
 		$("#changeHallContainer").hide()
-		$("#showUserContainer").show()
+		$('#registrationConteiner').show()
+		$("#showUserContainer").hide()
 		$('#addTypeOfExaminationContainer').hide()
 		$('#showTypeOfExaminationContainer').hide()
-		
+			
 		$.ajax({
 			type: 'GET',
 			url: 'api/admins/clinic/getClinicFromAdmin/' + user.email,
 			complete: function(data)
 			{
 				let clinic = data.responseJSON
-				makeUserTable(clinic)
-			}
-			
+				
+				$.ajax({
+					type:'GET',
+					url:"api/priceList/getAllByClinic/"+clinic.name,
+					complete: function(data)
+					{
+						let prices = data.responseJSON
+						
+						$('#selectTypeOfExam').empty()
+						for(let p of prices)
+						{
+							$('#selectTypeOfExam').append($('<option>',{
+								value: p.typeOfExamination,
+								text: p.typeOfExamination
+							}))
+								
+						}
+						
+					}
+				})
+				
+				
+				$('#submitDoctor').off('click')
+				$('#submitDoctor').click(function(e){
+					e.preventDefault()
+
+					submitDoctorForm(clinic)									
+				})								
+			}		
 		})
+
+		
+		
 
 	})
 	
@@ -170,7 +207,8 @@ function initClinicAdmin(user)
 		$("#showUserContainer").hide()
 		$('#addTypeOfExaminationContainer').hide()
 		$('#showTypeOfExaminationContainer').hide()
-		
+		$('#registrationConteiner').hide()
+
 		
 		makeHallTable()
 
@@ -218,6 +256,177 @@ function initClinicAdmin(user)
 
 }
 
+
+function submitDoctorForm(clinic)
+{
+	let email = $('#inputEmailDoctor').val()
+	let name = $('#inputNameDoctor').val()
+	let surname = $('#inputSurnameDoctor').val()
+	let state = $('#selectStateDoctor').val()
+	let city = $('#inputCityDoctor').val()
+	let address = $('#inputAddressDoctor').val()
+	let phone = $('#inputPhoneDoctor').val()
+	let insurance = $('#inputInsuranceDoctor').val()
+	
+	let flag = true
+	
+	if(email.indexOf("@gmail.com") == -1)
+	{
+		var emailInput = $('#inputEmailDoctor')
+		
+		emailInput.addClass('is-invalid')
+		emailInput.removeClass('is-valid')
+		flag = false
+	}
+	else
+	{
+		var emailInput = $('#inputEmailDoctor')
+		
+		emailInput.addClass('is-valid')
+		emailInput.removeClass('is-invalid')
+	}
+	
+	if(/^[a-zA-Z]+$/.test(name) == false || name == "")
+	{
+		var nameInput = $('#inputNameDoctor')
+		
+		nameInput.addClass('is-invalid')
+		nameInput.removeClass('is-valid')
+		flag = false
+	}
+	else
+	{
+		var nameInput = $('#inputNameDoctor')
+		
+		nameInput.addClass('is-valid')
+		nameInput.removeClass('is-invalid')
+	}
+	
+	
+	if(/^[a-zA-Z]+$/.test(surname) == false || surname == "")
+	{
+		var nameInput = $('#inputSurnameDoctor')
+		
+		nameInput.addClass('is-invalid')
+		nameInput.removeClass('is-valid')
+		flag = false
+	}
+	else
+	{
+		var nameInput = $('#inputSurnameDoctor')
+		
+		nameInput.addClass('is-valid')
+		nameInput.removeClass('is-invalid')
+	}
+			
+		
+	if(city == "")
+	{
+		var input = $('#inputCityDoctor')
+		
+		input.addClass('is-invalid')
+		input.removeClass('is-valid')
+		flag = false
+	}
+	else
+	{
+		var input = $('#inputCityDoctor')
+		
+		input.removeClass('is-invalid')
+		input.addClass('is-valid')
+	}
+	
+	
+	if(address == "")
+	{
+		var input = $('#inputAddressDoctor')
+		
+		input.addClass('is-invalid')
+		input.removeClass('is-valid')
+		flag = false
+	}
+	else
+	{
+		var input = $('#inputAddressDoctor')
+		
+		input.removeClass('is-invalid')
+		input.addClass('is-valid')
+	}
+	
+	if(phone == "")
+	{
+		var input = $('#inputPhoneDoctor')
+		
+		input.addClass('is-invalid')
+		input.removeClass('is-valid')
+		flag = false
+	}
+	else
+	{
+		var input = $('#inputPhoneDoctor')
+		
+		input.removeClass('is-invalid')
+		input.addClass('is-valid')
+	}
+	
+	if(insurance == "")
+	{
+		var input = $('#inputInsuranceDoctor')
+		
+		input.addClass('is-invalid')
+		input.removeClass('is-valid')
+		flag = false
+	}
+	else
+	{
+		var input = $('#inputInsuranceDoctor')
+		
+		input.removeClass('is-invalid')
+		input.addClass('is-valid')
+	}
+
+	if($('#selectStateDoctor').find(':selected').prop('disabled')){
+            		    var input = $('#selectStateDoctor')
+                        input.addClass('is-invalid')
+                        input.removeClass('is-valid')
+                        flag = false
+            		} else {
+            		    var input = $('#selectStateDoctor')
+                        input.removeClass('is-invalid')
+                        input.addClass('is-valid')
+            		}
+	
+	if(flag == false) return
+	
+
+    let type = $('#selectTypeOfExam').val()
+    let start = $('#inputStartShiftDoctor').val()
+    let end = $('#inputEndShiftDoctor').val()
+    
+    
+	let userJ = {"password":"","email":email,"name":name,"surname":surname,"city":city,"address":address,"state":state,"phone":phone,"insuranceId":insurance}
+	let json = JSON.stringify({"user":userJ,"type":type,"shiftStart":start,"shiftEnd":end,"clinicName":clinic.name,"averageRating":"0"})
+	$.ajax({
+		type: 'POST',
+		url:"api/doctors/makeNewDoctor",
+		data : json,
+		dataType : "json",
+		contentType : "application/json; charset=utf-8",
+		complete: function(data)
+		{
+			if(data.status == "208")
+			{
+				//TODO:Error
+			}
+			else
+			{
+				
+			}
+		}
+	})
+	
+}
+
 function listHall(data,i)
 {
 	
@@ -258,6 +467,7 @@ function listHall(data,i)
 		$('#changeHallContainer').show()
 		$('#addTypeOfExaminationContainer').hide()
 		$('#showTypeOfExaminationContainer').hide()
+		$('#registrationConteiner').hide()
 
 		
 		$('#inputChangeHall').val(data.number) 
