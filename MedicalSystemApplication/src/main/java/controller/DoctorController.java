@@ -1,5 +1,6 @@
 package controller;
 
+import java.security.NoSuchAlgorithmException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -15,12 +16,15 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import dto.AppointmentDTO;
 import dto.ClinicDTO;
+import dto.DoctorDTO;
+import helpers.SecurePasswordHasher;
 import model.*;
 import model.Appointment.AppointmentType;
 import model.User.UserRole;
@@ -45,44 +49,46 @@ public class DoctorController
 	@Autowired 
 	private ClinicService clinicService;
 	
-	
-	@PostMapping(value="/makeDoctor/{email}/{startShift}/{endShift}")
-	public ResponseEntity<Void> addDoctor(@PathVariable("email") String email,
-										  @PathVariable("startShift") String start,
-										  @PathVariable("endShift") String end)
+	@PostMapping(value="/makeNewDoctor/{clinicName}", consumes = "application/json")
+	public ResponseEntity<Void> addNewDoctor(@RequestBody DoctorDTO dto,@PathVariable("clinicName") String clinicName)
 	{
-		User user = userService.findByEmail(email);
+		Doctor d = (Doctor) userService.findByEmailAndDeleted(dto.getUser().getEmail(),false);
+		Clinic c = clinicService.findByName(clinicName);
 		
-		if(user == null)
+		if(d != null)
 		{
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			return new ResponseEntity<>(HttpStatus.ALREADY_REPORTED);
 		}
 		
-		DateFormat df = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
 		
-		Date dateStart;
-		Date dateEnd;
+		if(c == null)
+		{
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);	
+		}
+		
+		String pass = "";
 		try {
-			dateStart = df.parse(start);
-			dateEnd = df.parse(end);
-			Doctor doctor = new Doctor(user);
-			doctor.setShiftStart(dateStart);
-			doctor.setShiftEnd(dateEnd);
-			userService.delete(user);//TODO:SetDeleted
-			userService.save(doctor);
-			return new ResponseEntity<>(HttpStatus.CREATED);
-		} catch (ParseException e) {
+			pass = SecurePasswordHasher.getInstance().encode("123");
+		} catch (NoSuchAlgorithmException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+				
+		Doctor doctor = new Doctor(dto);
+		doctor.setPassword(pass);
+		doctor.setClinic(c);
+		userService.save(doctor);
 		
-		return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		c.getDoctors().add(doctor);
+		clinicService.save(c);
+		
+		return new ResponseEntity<>(HttpStatus.CREATED);
 	}
-	
+		
 	@GetMapping(value="/getClinic/{email}")
 	public ResponseEntity<ClinicDTO> getClinicByDoctor(@PathVariable("email") String email)
 	{
-		Doctor d = (Doctor) userService.findByEmail(email);
+		Doctor d = (Doctor) userService.findByEmailAndDeleted(email,false);
 		
 		if(d == null)
 		{
@@ -100,7 +106,8 @@ public class DoctorController
 	public ResponseEntity<Void> removeDoctor(@PathVariable("email") String email)
 	{
 		HttpHeaders header = new HttpHeaders();
-		Doctor doc = (Doctor)userService.findByEmail(email);
+		Doctor doc = (Doctor)userService.findByEmailAndDeleted(email,false);
+		
 		
 		if(doc == null)
 		{

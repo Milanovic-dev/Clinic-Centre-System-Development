@@ -138,7 +138,7 @@ public class AppointmentController
 		Patient  p = null;
 		
 		try {
-			p = (Patient)userService.findByEmail(email);		
+			p = (Patient)userService.findByEmailAndDeleted(email,false);		
 		}
 		catch(ClassCastException e)
 		{
@@ -177,7 +177,7 @@ public class AppointmentController
 		Doctor  d = null;
 
 		try {
-			d = (Doctor)userService.findByEmail(email);
+			d = (Doctor)userService.findByEmailAndDeleted(email,false);
 		}
 		catch(ClassCastException e)
 		{
@@ -276,7 +276,7 @@ public class AppointmentController
 		request.setClinic(clinic);
 	
 		
-		Patient patient = (Patient) userService.findByEmail(dto.getPatientEmail());
+		Patient patient = (Patient) userService.findByEmailAndDeleted(dto.getPatientEmail(),false);
 		
 		if(patient == null)
 		{
@@ -299,7 +299,7 @@ public class AppointmentController
 				
 		for(String email : dto.getDoctors())
 		{
-			Doctor doctor = (Doctor) userService.findByEmail(email);
+			Doctor doctor = (Doctor) userService.findByEmailAndDeleted(email,false);
 				
 				
 			if(doctor == null)

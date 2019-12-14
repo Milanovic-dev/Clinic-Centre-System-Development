@@ -161,7 +161,7 @@ public class PriceListControler {
 	 	@PostMapping(value ="/add", consumes = "application/json")
 	    public ResponseEntity<Void> add(@RequestBody PriceListDTO dto)
 	    {
-	 		System.out.println("Called");
+	 		
 	       Clinic c = clinicService.findByName(dto.getClinicName());
 	       Priceslist pl = priceListService.findByTypeOfExamination(dto.getTypeOfExamination());
 	       
@@ -183,6 +183,8 @@ public class PriceListControler {
 	    	   }
 	    	   else
 	    	   {
+	    		   //pl.setDeleted(false)
+	    		   //priceListService.save(pl);
 	    		   Priceslist newPl = new Priceslist(c,dto.getTypeOfExamination(),dto.getPrice());
 		    	   priceListService.save(newPl);
 	    	   }

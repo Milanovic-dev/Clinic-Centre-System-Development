@@ -52,9 +52,9 @@ public class UserService {
 		
 	}
 	
-	public User findByEmail(String email)
+	public User findByEmailAndDeleted(String email,Boolean deleted)
 	{
-		return userRepository.findByEmail(email);
+		return userRepository.findByEmailAndDeleted(email,deleted);
 	}
 	
 	public void save(User user)

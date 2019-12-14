@@ -53,7 +53,7 @@ public class AuthController
 		HttpHeaders header = new HttpHeaders();
 		
 		User u = userService.
-				findByEmail(dto.getEmail());
+				findByEmailAndDeleted(dto.getEmail(),false);
 		
 		if(u == null)
 		{
@@ -87,7 +87,7 @@ public class AuthController
 		RegistrationRequest req = authService.
 				findByEmail(request.getEmail());
 		
-		User u = userService.findByEmail(request.getEmail());
+		User u = userService.findByEmailAndDeleted(request.getEmail(),false);
 		
 		if(req != null || u != null)
 		{
@@ -169,7 +169,7 @@ public class AuthController
 		}
 		
 		
-		User user = userService.findByEmail(email);
+		User user = userService.findByEmailAndDeleted(email,false);
 		
 		if(user == null)
 		{
