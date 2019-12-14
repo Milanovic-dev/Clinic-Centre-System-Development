@@ -22,15 +22,16 @@
     <link href="https://unpkg.com/@fullcalendar/daygrid@4.3.0/main.min.css" rel="stylesheet"/>
     <link href="https://unpkg.com/@fullcalendar/timegrid@4.3.0/main.min.css" rel="stylesheet"/>
 
+
     <script src="https://unpkg.com/@fullcalendar/core@4.3.1/main.min.js"></script>
     <script src="https://unpkg.com/@fullcalendar/interaction@4.3.0/main.min.js"></script>
     <script src="https://unpkg.com/@fullcalendar/daygrid@4.3.0/main.min.js"></script>
     <script src="https://unpkg.com/@fullcalendar/timegrid@4.3.0/main.min.js"></script>
 
 
-<!-- dataTable -->
+    <!-- dataTable -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.12/js/jquery.dataTables.min.js"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.12/css/dataTables.bootstrap4.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css">
 <!-- SCRIPT ORDER NE MENJATI -->
 <script src="js/moment.js"></script>
 <script src="js/bootstrap-datetimepicker.js"></script>
@@ -342,6 +343,10 @@
       		<label for="inputAppointmentType">Tip</label>
       		<input type="text" id="inputAppointmentType" class="form-control"  autofocus="autofocus" disabled>
     	   </div>  
+    	   <div class="form-group">
+      		<label for="inputAppointmentType">Izaberite vreme</label>
+    	   <input type="time" id="inputStartTime" class="form-control">
+    	   </div> 
     	   <br>
     	   <div class="card mb-3" id = "showDoctorsContainerDisabled">
           <div class="card-header">
@@ -967,6 +972,36 @@
     </div>
   </div>
 <!-- -----------------------KRAJ PREDEFINISANIH PREGLEDA------------------------ -->
+
+<!-- -----------------------MODAL ZA KALENDAR----------------------- -->
+<div class="modal fade" id="modalCalendar" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h5 class="modal-title" >Zakazan termin</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+              </button>
+          </div>
+          <div class="modal-body">
+
+              <label class="form-control-label" id="typeId">Tip pregleda: </label> <br>
+              <label class="form-control-label" id="startId">Pocetak: </label> <br>
+              <label class="form-control-label" id="durationId">Trajanje: </label> <br>
+              <label class="form-control-label" id="patientId">Pacijent: </label> <br>
+              <label class="form-control-label" id="clinicId">Klinika: </label> <br>
+              <label class="form-control-label" id="hallId">Broj sale: </label>
+
+
+          </div>
+          <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Odustani</button>
+              <button type="button" class="btn btn-primary">Zapocni pregled</button>
+          </div>
+      </div>
+  </div>
+</div>
+<!-- -----------------------KRAJ MODALA ZA KALENDAR------------------------ -->
 
   		<div class="container-fluid" id="MedicalRecordContainer">
   			<p class="text-muted" id="insuranceMR"></p>

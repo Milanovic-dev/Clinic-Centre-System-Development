@@ -5,6 +5,7 @@ import javax.persistence.Column;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
 
+import helpers.DateUtil;
 import model.Clinic;
 import model.Doctor;
 import model.User.UserRole;
@@ -56,9 +57,10 @@ public class DoctorDTO {
 			this.clinicName = "N/A";
 		}
 		this.avarageRating = d.getAvarageRating();
-		this.shiftStart = d.getShiftStart().toString();
-		this.shiftEnd = d.getShiftEnd().toString();
+		this.insuranceId = d.getInsuranceId();
 		this.type = d.getType();
+		this.shiftStart = DateUtil.getInstance().GetString(d.getShiftStart(),"HH:mm");
+		this.shiftEnd = DateUtil.getInstance().GetString(d.getShiftEnd(),"HH:mm");
 	}
 
 	public UserDTO getUser() {

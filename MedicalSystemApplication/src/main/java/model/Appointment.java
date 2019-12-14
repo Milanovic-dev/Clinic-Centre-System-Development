@@ -145,6 +145,7 @@ public class Appointment
 		private Priceslist priceslist;
 		private List<Doctor> doctors;
 		private AppointmentType appointmentType;
+		private long duration;
 		
 		public Builder(Date date)
 		{
@@ -194,6 +195,11 @@ public class Appointment
 			
 			return this;
 		}
+
+		public Builder withDuration(long duration) {
+			this.duration = duration;
+			return this;
+		}
 		
 		public Appointment build()
 		{
@@ -206,9 +212,11 @@ public class Appointment
 			app.setPricelist(priceslist);
 			app.setAppointmentType(this.appointmentType);
 			app.setAppointmentType(this.appointmentType);
+			app.setDuration(this.duration);
 			return app;
 		}
-		
-	}
+
+
+    }
 	
 }

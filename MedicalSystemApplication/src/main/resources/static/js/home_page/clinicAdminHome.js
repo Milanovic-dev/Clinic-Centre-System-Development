@@ -412,21 +412,22 @@ function listTypesOfExamination(t,i,clinic)
 		$('#changeTypeOfExam_btn').click(function(e){
 			let typeOfExam = $('#typeOfExamination_input').val()
 			let typeOfExamPrice = $('#typeOfExaminationPrice_input').val()
-			let typeOfExamination = JSON.stringify({"clinicName":clinic.name,"typeOfExamination" : typeOfExam,"price" : typeOfExamPrice})
+			let data = JSON.stringify({"clinicName":clinic.name,"typeOfExamination" : typeOfExam,"price" : typeOfExamPrice})
 			
 			console.log(typeOfExam)
 			console.log(typeOfExamPrice)
 			$.ajax({
-				type:'POST',
+				type:'PUT',
 				url: 'api/priceList/update/' + t.typeOfExamination,
-				data: typeOfExamination,
-				dataType: "json",
+				data: data,
+				dataType : "json",
+				contentType : "application/json; charset=utf-8",
 				complete: function(response)
 				{
 					console.log(response.status)
 					if(response.status == "200")
 					{
-						makeTypeOfExaminationTable()
+						makeTypeOfExaminationTable(clinic)
 					}
 				}
 			})	

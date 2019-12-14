@@ -10,6 +10,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import helpers.DateUtil;
 import model.Appointment;
 import model.Clinic;
 import model.Doctor;
@@ -44,23 +45,13 @@ public class AppointmentService {
 	}
 	
 	public Appointment findAppointment(String date, int hallNumber, String clinic)
-	{
-		DateFormat df = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
-		
-		try {
-			Date d = df.parse(date);
+	{	
+		Date d = DateUtil.getInstance().GetDate(date, "dd-MM-yyyy HH:mm");
 			
-			Hall h = hallRepository.findByNumber(hallNumber);
-			Clinic c = clinicRepository.findByName(clinic);
+		Hall h = hallRepository.findByNumber(hallNumber);
+		Clinic c = clinicRepository.findByName(clinic);
 			
-			return findAppointment(d,h,c);
-			
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		return null;
+		return findAppointment(d,h,c);
 	}
 	
 	public void save(Appointment appointment)

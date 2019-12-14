@@ -4,12 +4,14 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 
 import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import helpers.DateUtil;
 import helpers.SecurePasswordHasher;
 import model.Appointment;
 import model.CentreAdmin;
@@ -48,7 +50,7 @@ public class ContainerInitialize {
 	
 	@PostConstruct
 	public void init()
-	{
+	{	
 		String token = "admin1234";
 		String hash;
 		try {
@@ -128,8 +130,8 @@ public class ContainerInitialize {
 					.withInsuranceID("")
 					.withType("Stomatoloski")
 					.withClinic(clinic)
-					.withShiftStart(new Date())
-					.withShiftEnd(new Date())
+					.withShiftStart(DateUtil.getInstance().GetDate("08:00","HH:mm"))
+					.withShiftEnd(DateUtil.getInstance().GetDate("14:00","HH:mm"))
 					.build();
 
 			userRepository.save(doctor1);
@@ -142,11 +144,11 @@ public class ContainerInitialize {
 					.withAddress("Kisacka")
 					.withState("Srbija")
 					.withPhone("5435435")
-					.withInsuranceID("")
+					.withInsuranceID("12345674864")
 					.withType("Opsti pregled")
 					.withClinic(clinic)
-					.withShiftStart(new Date())
-					.withShiftEnd(new Date())
+					.withShiftStart(DateUtil.getInstance().GetDate("09:00","HH:mm"))
+					.withShiftEnd(DateUtil.getInstance().GetDate("18:00","HH:mm"))
 					.build();
 
 			userRepository.save(doctor2);
@@ -159,11 +161,11 @@ public class ContainerInitialize {
 					.withAddress("Kisacka")
 					.withState("Srbija")
 					.withPhone("5435435")
-					.withInsuranceID("")
+					.withInsuranceID("1897654856456")
 					.withType("Opsti pregled")
 					.withClinic(clinic)
-					.withShiftStart(new Date())
-					.withShiftEnd(new Date())
+					.withShiftStart(DateUtil.getInstance().GetDate("08:00","HH:mm"))
+					.withShiftEnd(DateUtil.getInstance().GetDate("18:00","HH:mm"))
 					.build();
 
 			userRepository.save(doctor3);
@@ -181,13 +183,14 @@ public class ContainerInitialize {
 			clinicRepository.save(clinic);
 			
 			Date date = new Date();
+			Date date2 = new GregorianCalendar(2019, Calendar.DECEMBER, 11).getTime();
 
-			Appointment app1 = new Appointment.Builder(date)
+			Appointment app1 = new Appointment.Builder(date2)
 					.withPatient(patient)
-					.withType(AppointmentType.Surgery)
+					.withType(AppointmentType.Examination)
 					.withHall(hall1)
 					.withClinic(clinic)
-					.withType(AppointmentType.Surgery)
+					.withDuration(2)
 					.build();
 			
 			app1.getDoctors().add(doctor1);
@@ -199,7 +202,7 @@ public class ContainerInitialize {
 					.withType(AppointmentType.Surgery)
 					.withHall(hall2)
 					.withClinic(clinic)
-					.withType(AppointmentType.Surgery)
+					.withDuration(1)
 					.build();
 			
 			app2.getDoctors().add(doctor1);
