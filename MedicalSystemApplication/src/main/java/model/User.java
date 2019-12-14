@@ -2,6 +2,8 @@ package model;
 
 import javax.persistence.*;
 
+import dto.UserDTO;
+
 @Entity(name = "users")
 @Table
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
@@ -104,6 +106,21 @@ public class User
 
 	
 	
+	public User(UserDTO user) {
+		// TODO Auto-generated constructor stub
+		this.password = user.getPassword();
+		this.email = user.getEmail();
+		this.name = user.getName();
+		this.surname = user.getSurname();
+		this.city = user.getCity();
+		this.address = user.getAddress();
+		this.state = user.getState();
+		this.phone = user.getPhone();
+		this.role = user.getRole();
+		this.insuranceId = user.getInsuranceId();
+		this.deleted = false;
+	}
+
 	public String getInsuranceId() {
 		return insuranceId;
 	}

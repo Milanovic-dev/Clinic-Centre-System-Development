@@ -35,7 +35,7 @@ public class ClinicAdminController {
     @GetMapping(value = "/getClinicFromAdmin/{email}")
     public ResponseEntity<ClinicDTO>getClinicFromAdmin(@PathVariable("email") String email)
     {
-    	ClinicAdmin ca = (ClinicAdmin) userService.findByEmail(email);
+    	ClinicAdmin ca = (ClinicAdmin) userService.findByEmailAndDeleted(email,false);
     	if(ca == null)
     	{
     		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -49,7 +49,7 @@ public class ClinicAdminController {
     @PostMapping(value = "/registerClinicAdmin/{clinicName}")
     public ResponseEntity<Void> registerClinicAdmin(@RequestBody UserDTO dto,@PathVariable("clinicName") String clinicName)
     {
-        ClinicAdmin ca = (ClinicAdmin) userService.findByEmail(dto.getEmail());
+        ClinicAdmin ca = (ClinicAdmin) userService.findByEmailAndDeleted(dto.getEmail(),false);
         
         Clinic clinic = clinicService.findByName(clinicName);
         HttpHeaders header = new HttpHeaders();

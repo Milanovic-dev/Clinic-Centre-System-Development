@@ -38,7 +38,7 @@ public class UserController
 	@PutMapping(value = "/update/{email}")
 	public ResponseEntity<Void> updateUser(@RequestBody UserDTO dto,@PathVariable("email")String email)
 	{	
-		User user = userService.findByEmail(email);
+		User user = userService.findByEmailAndDeleted(email,false);
 		if(user != null) {
 			user.setName(dto.getName());
 			user.setSurname(dto.getSurname());
@@ -57,7 +57,7 @@ public class UserController
 	public ResponseEntity<Void> updatePassword(@PathVariable("email") String email,@RequestBody PasswordDTO dto)
 	{
 		System.out.println(email);
-		User user = userService.findByEmail(email);
+		User user = userService.findByEmailAndDeleted(email,false);
 		
 		if(user != null)
 		{		
@@ -90,7 +90,7 @@ public class UserController
 	@PutMapping(value = "/update/firstPassword/{email}" ,consumes = "application/json")
 	public ResponseEntity<Void> updateFirstPassword(@PathVariable("email") String email,@RequestBody PasswordDTO dto)
 	{
-		User user = userService.findByEmail(email);
+		User user = userService.findByEmailAndDeleted(email,false);
 		if(user != null)
 		{
 			String newPassword = dto.getNewPassword();
@@ -113,7 +113,7 @@ public class UserController
 	@GetMapping(value = "/getUser/{email}")
 	public ResponseEntity<User> getUser(@PathVariable("email") String email)
 	{
-		User ret = userService.findByEmail(email);
+		User ret = userService.findByEmailAndDeleted(email,false);
 		
 		if(ret == null || ret.getDeleted())
 		{
@@ -171,7 +171,7 @@ public class UserController
 	@GetMapping(value="/patient/getMedicalRecord/{email}")
 	public ResponseEntity<MedicalRecordDTO> getMedicalRecord(@PathVariable("email")String email)
 	{
-		Patient patient = (Patient)userService.findByEmail(email);
+		Patient patient = (Patient)userService.findByEmailAndDeleted(email,false);
 		
 		if(patient == null)
 		{
@@ -189,7 +189,7 @@ public class UserController
 	@PutMapping(value="/patient/updateMedicalReport/{email}")
 	public ResponseEntity<Void> updateMedicalRecord(@PathVariable("email") String email,@RequestBody MedicalRecordDTO dto)
 	{
-		Patient patient = (Patient)userService.findByEmail(email);
+		Patient patient = (Patient)userService.findByEmailAndDeleted(email,false);
 		
 		if(patient == null)
 		{

@@ -234,39 +234,7 @@ public class ClinicController {
     		
     }
     
-    @PutMapping(value="/addDoctor/{clinic}/{email}")
-    public ResponseEntity<Void> addDoctor(@PathVariable("email") String email,@PathVariable("clinic") String clinic)
-    {
-    	Doctor d= (Doctor)userService.findByEmail(email);
-    	Clinic c = clinicService.findByName(clinic);
-    	if(d== null || c==null)
-    	{
-    		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    	}
-    	
-    	c.getDoctors().add(d);
-    	d.setClinic(c);
-    	clinicService.save(c);
-    	userService.save(d);
-    	return new ResponseEntity<>(HttpStatus.OK);
-    }
-    
-    @DeleteMapping(value="/removeDoctor/{clinic}/{email}")
-    public ResponseEntity<Void> deleteDoctor(@PathVariable("email") String email,@PathVariable("clinic") String clinic)
-    {
-    	Doctor d= (Doctor)userService.findByEmail(email);
-    	Clinic c = clinicService.findByName(clinic);
-    	if(d== null || c==null)
-    	{
-    		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    	}
-    	
-    	c.getDoctors().remove(d);
-    	clinicService.save(c);
-    	return new ResponseEntity<>(HttpStatus.OK);
-    }
-    
-    
+  
     @GetMapping(value="/{name}")
     public ResponseEntity<ClinicDTO> getClinicByName(@PathVariable("name") String name)
     {

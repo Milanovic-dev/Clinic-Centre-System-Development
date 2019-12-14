@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.persistence.*;
 
+import dto.DoctorDTO;
 import helpers.UserBuilder;
 import model.Patient.Builder;
 
@@ -15,10 +16,7 @@ public class Doctor extends User
 
 	@Column(name = "type", nullable = true)
 	private String type;
-	
-	@Column(name = "insuranceId", nullable = true)
-	private String insuranceId;
-	
+		
 	@Column(name = "shiftStart", nullable = true)
     private Date shiftStart;
 	
@@ -29,10 +27,10 @@ public class Doctor extends User
     private float avarageRating;
     
     @ManyToOne(fetch = FetchType.EAGER)
-    public Clinic clinic;
+    private Clinic clinic;
     
     @OneToMany(fetch = FetchType.LAZY)
-	private List<ReviewDoctor> review;
+	private List<ReviewDoctor> reviews;
   
 	@OneToMany(fetch = FetchType.LAZY)
 	private List<Appointment> appointments;
@@ -51,7 +49,8 @@ public class Doctor extends User
 		super(password, email, name, surname, city, address, state, phone, UserRole.Doctor);
 		this.setIsFirstLog(true);
 		this.appointments = new ArrayList<>();
-		vacations = new ArrayList<Vacation>();
+		this.vacations = new ArrayList<Vacation>();
+		this.reviews = new ArrayList<ReviewDoctor>();
 	}
 
 	public Doctor(User user) {
@@ -59,7 +58,18 @@ public class Doctor extends User
 		this.setRole(UserRole.Doctor);
 		this.setIsFirstLog(true);
 		this.appointments = new ArrayList<>();
-		vacations = new ArrayList<Vacation>();
+		this.vacations = new ArrayList<Vacation>();
+		this.reviews = new ArrayList<ReviewDoctor>();
+	}
+	
+	public Doctor(DoctorDTO dto)
+	{
+		super(dto.getUser());
+		this.setRole(UserRole.Doctor);
+		this.setIsFirstLog(true);
+		this.appointments = new ArrayList<Appointment>();
+		this.vacations = new ArrayList<Vacation>();
+		this.reviews = new ArrayList<ReviewDoctor>();
 	}
 
 	public Boolean IsFreeOn(Date date)
@@ -77,7 +87,7 @@ public class Doctor extends User
 		
 		return true;
 	}
-	
+		
 	public List<Vacation> getVacations() {
 		return vacations;
 	}
@@ -117,17 +127,7 @@ public class Doctor extends User
 	public void setType(String type) {
 		this.type = type;
 	}
-	
-	
-	public String getInsuranceId() {
-		return insuranceId;
-	}
-
-	public void setInsuranceId(String insuranceId) {
-		this.insuranceId = insuranceId;
-	}
-	
-	
+			
 	public float getAvarageRating() {
 		return avarageRating;
 	}
@@ -136,12 +136,12 @@ public class Doctor extends User
 		this.avarageRating = avarageRating;
 	}
 
-	public List<ReviewDoctor> getReview() {
-		return review;
+	public List<ReviewDoctor> getReviews() {
+		return reviews;
 	}
 
-	public void setReview(List<ReviewDoctor> review) {
-		this.review = review;
+	public void setReviews(List<ReviewDoctor> reviews) {
+		this.reviews = reviews;
 	}
 
 	public List<Appointment> getAppointments() {

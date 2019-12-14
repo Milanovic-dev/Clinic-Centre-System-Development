@@ -14,6 +14,7 @@ public class UserDTO
 	private String address;
 	private String state;
 	private String phone;
+	private String insuranceId;
 	private UserRole role;
 	
 	public UserDTO()
@@ -48,9 +49,19 @@ public class UserDTO
 		state = dto.getState();
 		phone = dto.getPhone();
 		role = dto.getRole();
+		insuranceId = dto.getInsuranceId();
 	}
 	
 	
+	
+	public String getInsuranceId() {
+		return insuranceId;
+	}
+
+	public void setInsuranceId(String insuranceId) {
+		this.insuranceId = insuranceId;
+	}
+
 	public UserRole getRole() {
 		return role;
 	}

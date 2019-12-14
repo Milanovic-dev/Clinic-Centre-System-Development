@@ -22,7 +22,7 @@ public class CentreAdminController {
     @PostMapping(value = "/registerCentreAdmin")
     public ResponseEntity<Void> registerCentreAdmin(@RequestBody UserDTO dto)
     {
-        CentreAdmin ca = (CentreAdmin) userService.findByEmail(dto.getEmail());
+        CentreAdmin ca = (CentreAdmin) userService.findByEmailAndDeleted(dto.getEmail(),false);
         HttpHeaders header = new HttpHeaders();
 
         if(ca == null) {

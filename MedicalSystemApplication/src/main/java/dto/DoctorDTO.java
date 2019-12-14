@@ -13,8 +13,7 @@ import model.User.UserRole;
 public class DoctorDTO {
 
 	private UserDTO user;
-	private String type;	
-	private String insuranceId;
+	private String type;
     private String shiftStart;
     private String shiftEnd;
     private String clinicName;
@@ -30,7 +29,6 @@ public class DoctorDTO {
 		super();
 		this.user = user;
 		this.type = type;
-		this.insuranceId = insuranceId;
 		this.shiftStart = shiftStart;
 		this.shiftEnd = shiftEnd;
 		this.clinicName = clinicName;
@@ -81,13 +79,6 @@ public class DoctorDTO {
 		this.type = type;
 	}
 
-	public String getInsuranceId() {
-		return insuranceId;
-	}
-
-	public void setInsuranceId(String insuranceId) {
-		this.insuranceId = insuranceId;
-	}
 
 	public String getShiftStart() {
 		return shiftStart;
