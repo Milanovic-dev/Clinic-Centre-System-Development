@@ -48,9 +48,11 @@ public class ClinicFilter implements Filter{
 				}
 			}
 			
+			
+			
 			if(d.getRating() != 0)
 			{
-				if(Math.ceil(c.calculateRating()) != Math.ceil(d.getRating()))
+				if(Math.abs(c.calculateRating() - d.getRating()) > 1f)
 				{
 					flag = false;
 				}			

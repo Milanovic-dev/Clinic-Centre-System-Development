@@ -210,6 +210,9 @@
 					<option selected disabled>Tip pregleda</option>
 				</select>
 				&nbsp&nbsp
+				<input class="form-control" type="text" placeholder="Unesite adresu" style="width:20%" id="clinicAdressPick">
+				&nbsp&nbsp
+				<input class="form-control" type="number" placeholder="Unesite ocenu" style="width:20%" id="clinicRatingPick">
 			</div>
 				<button class="btn btn-primary" type="button" id="searchClinics"><span id="searchBtnText">Trazi</span>&nbsp<span class="spinner-border spinner-border-sm"  style="display:none" role="status" id="clinicSpinner"  aria-hidden="true"></span></button>				
 			</form>
@@ -272,10 +275,11 @@
               <table class="table table-bordered" id="tablePendingApps" width="100%" cellspacing="0">
                 <thead>
 					<tr>
-					<th scope="col">Ime</th>
-      				<th scope="col">Prezime</th>
-      				<th scope="col">Prosecna ocena</th>
-      				<th scope="col">Slobodni Termini</th>
+					<th scope="col">Datum</th>
+      				<th scope="col">Doktor</th>
+      				<th scope="col">Tip</th>
+      				<th scope="col">Adresa</th>
+      				<th scope="col">Klinika</th>     				
       				<th scope="col"> </th>
             </tr>					
 					</thead>
@@ -298,10 +302,11 @@
               <table class="table table-bordered" id="tableDoctorsActive" width="100%" cellspacing="0">
                 <thead>
 					<tr>
+					<th scope="col">Email</th>
 					<th scope="col">Ime</th>
       				<th scope="col">Prezime</th>
       				<th scope="col">Prosecna ocena</th>
-      				<th scope="col">Slobodni Termini</th>
+      				<th scope="col">Radno vreme</th>
       				<th scope="col"> </th>
             </tr>					
 					</thead>
@@ -356,9 +361,11 @@
               <table class="table table-hover" id="tableDoctorsDisabled" width="100%" cellspacing="0">
                 <thead>
 					<tr>
+					<th scope="col">Email</th>
 					<th scope="col">Ime</th>
       				<th scope="col">Prezime</th>
       				<th scope="col">Prosecna ocena</th>
+      				<th scope="col">Radno vreme</th>
             		</tr>					
 					</thead>
 					<tbody>             	

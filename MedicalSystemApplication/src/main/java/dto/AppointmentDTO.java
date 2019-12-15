@@ -59,7 +59,8 @@ public class AppointmentDTO {
 		this.date = appointment.getDate().toString();
 		this.patientEmail = appointment.getPatient().getEmail();
 		this.clinicName = appointment.getClinic().getName();
-		this.hallNumber = appointment.getHall().getNumber();
+		if(appointment.getHall() != null)
+			this.hallNumber = appointment.getHall().getNumber();
 		this.doctors = new ArrayList<String>();
 		for(Doctor doc : appointment.getDoctors())
 		{

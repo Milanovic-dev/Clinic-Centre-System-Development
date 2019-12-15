@@ -13,6 +13,7 @@ import model.Appointment;
 import model.AppointmentRequest;
 import model.Clinic;
 import model.Hall;
+import model.Patient;
 import repository.AppointmentRequestRepository;
 import repository.ClinicRepository;
 import repository.HallRepository;
@@ -36,6 +37,10 @@ public class AppointmentRequestService {
 		return appointmentRequestRepository.findAllByClinic(c);
 	}
 	
+	public List<AppointmentRequest> getAllByPatient(Patient p)
+	{
+		return appointmentRequestRepository.findAllByPatient(p);
+	}
 	
 	public AppointmentRequest findAppointmentRequest(Date date, Hall hall,Clinic clinic)
 	{
