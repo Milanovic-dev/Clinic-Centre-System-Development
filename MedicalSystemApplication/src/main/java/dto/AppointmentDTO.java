@@ -40,7 +40,8 @@ public class AppointmentDTO {
 	public AppointmentDTO(Appointment appointment)
 	{
 		this.date = appointment.getDate().toString();
-		this.patientEmail = appointment.getPatient().getEmail();
+		if(appointment.getPatient() != null)
+			this.patientEmail = appointment.getPatient().getEmail();
 		this.clinicName = appointment.getClinic().getName();
 		this.hallNumber = appointment.getHall().getNumber();
 		this.doctors = new ArrayList<String>();
