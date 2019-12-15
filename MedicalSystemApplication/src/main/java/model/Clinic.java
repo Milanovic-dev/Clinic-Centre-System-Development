@@ -3,6 +3,7 @@ package model;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 @Entity
 public class Clinic 
@@ -146,9 +147,8 @@ public class Clinic
 
 	public float calculateRating() {
 		// TODO Auto-generated method stub
-		
-		
-		return 0;
+		Random r = new Random(42);
+		return r.nextFloat() * 10f;
 	}
 
 }

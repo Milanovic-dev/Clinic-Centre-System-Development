@@ -112,14 +112,7 @@ function setUpPatientPage(user)
 	$('#appRequests').click(function(e){
 		e.preventDefault()
 		
-		$('#showAppointmentRequestsPatient').show()
-		$('#showClinicContainer').hide()
-		$('#makeAppointmentContainer').hide()
-		$('#MedicalRecordContainer').hide()
-		$('#detailsAppointmentContainer').hide()
-		$('#breadcrumbCurrPage').removeAttr('hidden')
-		$('#breadcrumbCurrPage').text("Zahtevi za pregled")
-		$('#breadcrumbCurrPage2').attr('hidden',true)
+		listAppRequests(user)
 		
 		
 	})
@@ -128,18 +121,19 @@ function setUpPatientPage(user)
 
 
 async function getClinics(date)
-{
+{	
 	$('#tableClinics tbody').empty()
 	$('#searchClinics').attr('disabled',true)
-	$('#searchBtnText').text("Trazim...")
+	$('#searchBtnText').text("Trazi...")
 	$('#clinicSpinner').show()
 	await sleep(1000)
 	
+	let address = $('#clinicAdressPick').val()
+	let rating = $('#clinicRatingPick').val()
+	
 	let type = $('#selectAppointmentType').val()
-	let json = JSON.stringify({"name":"Klinika","address":"","city":"","state":"","rating":""})
-	console.log(type)
-	console.log(json)
-
+	let json = JSON.stringify({"name":"","address":address,"city":"","state":"","rating":rating})
+	
 	$.ajax({
 		type: 'POST',
 		url:"api/clinic/getAll/"+date+"/"+type,
@@ -181,6 +175,63 @@ function makeMedicalRecord(data,user)
 	}
 }
 
+
+function listAppRequests()
+{
+	$('#showAppointmentRequestsPatient').show()
+	$('#showClinicContainer').hide()
+	$('#makeAppointmentContainer').hide()
+	$('#MedicalRecordContainer').hide()
+	$('#detailsAppointmentContainer').hide()
+	$('#breadcrumbCurrPage').removeAttr('hidden')
+	$('#breadcrumbCurrPage').text("Zahtevi za pregled")
+	$('#breadcrumbCurrPage2').attr('hidden',true)	
+	
+	
+	$.ajax({
+		type:'GET',
+		url:"api/appointments/patient/getAllRequests/"+user.email,
+		complete: function(data)
+		{
+			
+			let reqs = data.responseJSON
+			let index = 0
+			$('#tablePendingApps tbody').empty()
+			for(let req of reqs)
+			{
+				p_listRequest(req,index)
+				index++
+			}
+		}
+	})
+}
+
+
+function p_listRequest(req,i)
+{ 
+	$.ajax({
+		type:'GET',
+		url:"api/clinic/"+req.clinicName,
+		complete: function(data)
+		{
+			let clinic = data.responseJSON
+			
+			let tr = $('<tr></tr>')
+			let tdDateAndTime=$('<td>'+ req.date +'</td>');	
+			let tdDoctor=$('<td>'+ req.doctors[0] +'</td>');
+			let tdType=$('<td>'+ req.typeOfExamination +'</td>');
+			let tdClinic=$('<td>'+ req.clinicName +'</td>');	
+			let tdAddress=$('<td>' + clinic.address + ', ' + clinic.city + ', ' + clinic.state + '</td>')
+			let tdDelete = $('<td><button class="btn btn-danger">Otkazi</button></td>')
+			
+			tr.append(tdDateAndTime).append(tdDoctor).append(tdType).append(tdClinic).append(tdAddress).append(tdDelete)
+			
+			$('#tablePendingApps tbody').append(tr)
+		}
+	})
+}
+
+
 function p_listClinic(data,i,user)
 {
 	let tr=$('<tr></tr>');
@@ -202,11 +253,12 @@ function p_listClinic(data,i,user)
 		$('#showClinicContainer').hide()
 		$('#MedicalRecordContainer').hide()
 		$('#detailsAppointmentContainer').hide()
+		showTypeOfExaminationContainer
 		
 		$('#inputClinicName').val(data.name)
 		$('#inputClinicAddress').val(data.address+", "+data.city+", "+data.state)
 		$('#inputDate').val($('#clinicDatePick').val())
-		$('#inputAppointmentType').val("Pregled")
+		$('#inputAppointmentType').val($('#selectAppointmentType').val() + " (Pregled)")
 		
 		$('#breadcrumbCurrPage2').removeAttr('hidden')
 		$('#breadcrumbCurrPage2').text("Zakazivanje")
@@ -244,6 +296,7 @@ function p_listClinic(data,i,user)
 					$('#showClinicContainer').hide()
 					$('#MedicalRecordContainer').hide()
 					$('#detailsAppointmentContainer').show()
+					$('#addTypeOfExaminationContainer').hide()
 					
 					
 					doctorsSelected = []
@@ -298,15 +351,12 @@ function p_listClinic(data,i,user)
 						contentType : "application/json; charset=utf-8",
 						complete: function(data)
 						{
+							$('#submitAppSpinner').hide()
 							if(data.status == "201")
 							{
-								$('#submitAppSpinner').hide()
+								listAppRequests(user)
 							}
-							else
-							{
-								$('#submitAppSpinner').hide()
-							}
-							alert(data.status)								
+														
 						}
 					})
 				})
@@ -325,13 +375,14 @@ function p_listClinic(data,i,user)
 function p_listDoctorActive(data,i,doctorCount)
 {
 	let tr=$('<tr></tr>');
+	let tdEmail = $('<td>' + data.user.email + '</td>')
 	let tdName=$('<td>'+ data.user.name +'</td>');
 	let tdSurname=$('<td>'+ data.user.name +'</td>');
 	let tdRating=$('<td>'+ data.avarageRating +'</td>');
 	let tdCalendar =$('<td>'+data.shiftStart+' : '+data.shiftEnd+'</td>')
 	let tdSelect = $("<td><input type='checkbox' id='checkDoctor"+i+"'><label for='checkDoctor"+i+"'></label></td>" )
 	
-	tr.append(tdName).append(tdSurname).append(tdRating).append(tdCalendar).append(tdSelect)
+	tr.append(tdEmail).append(tdName).append(tdSurname).append(tdRating).append(tdCalendar).append(tdSelect)
 	$('#tableDoctorsActive tbody').append(tr)
 	
 	$('#checkDoctor'+i).click(function(e){
@@ -355,10 +406,12 @@ function p_listDoctorActive(data,i,doctorCount)
 function p_listDoctorDisabled(data,i,doctorCount)
 {
 	let tr=$('<tr></tr>');
+	let tdEmail = $('<td>' + data.user.email + '</td>')
 	let tdName=$('<td>'+ data.user.name +'</td>');
 	let tdSurname=$('<td>'+ data.user.name +'</td>');
 	let tdRating=$('<td>'+ data.avarageRating +'</td>');
+	let tdTime=$('<td>'+ data.shiftStart + ' : ' + data.shiftEnd + '</td>')
 	
-	tr.append(tdName).append(tdSurname).append(tdRating)
+	tr.append(tdEmail).append(tdName).append(tdSurname).append(tdRating).append(tdTime)
 	$('#tableDoctorsDisabled tbody').append(tr)
 }

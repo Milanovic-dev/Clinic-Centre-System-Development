@@ -133,6 +133,28 @@ public class AppointmentController
 		return new ResponseEntity<>(dtos,HttpStatus.OK);
 	}
 	
+	@GetMapping(value="/patient/getAllRequests/{email}")
+	public ResponseEntity<List<AppointmentDTO>> getPatientRequests(@PathVariable("email") String email)
+	{
+		Patient p = (Patient) userService.findByEmailAndDeleted(email, false);
+		
+		if(p == null)
+		{
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+		
+		List<AppointmentRequest> list = appointmentRequestService.getAllByPatient(p);
+		
+		List<AppointmentDTO> dtos = new ArrayList<AppointmentDTO>();
+		
+		for(AppointmentRequest req : list)
+		{
+			dtos.add(new AppointmentDTO(req));
+		}
+		
+		return new ResponseEntity<>(dtos,HttpStatus.OK);
+	}
+	
 	@GetMapping(value="/patient/getAll/{email}")
 	public ResponseEntity<List<AppointmentDTO>> getAppointments(@PathVariable("email") String email)
 	{

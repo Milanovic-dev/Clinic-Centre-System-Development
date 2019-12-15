@@ -102,7 +102,7 @@ public class ContainerInitialize {
 			userRepository.save(patient2);
 			
 			Clinic clinic = new Clinic("KlinikaTest","Karajdorjdeva 8","Novi Sad","Srbija","Opis");
-						
+				
 			clinicRepository.save(clinic);
 					
 			ClinicAdmin clinicAdmin = new ClinicAdmin.Builder("clinicAdmin@gmail.com")
@@ -113,7 +113,7 @@ public class ContainerInitialize {
 					.withAddress("Karadjordjeva 8")
 					.withState("Srbija")
 					.withPhone("42332423")
-					.withClinic(clinic)
+					.withClinic(clinic)					
 					.build();
 			
 			userRepository.save(clinicAdmin);
@@ -129,11 +129,12 @@ public class ContainerInitialize {
 					.withPhone("5435435")
 					.withInsuranceID("")
 					.withType("Stomatoloski")
-					.withClinic(clinic)
+					.withClinic(clinic)					
 					.withShiftStart(DateUtil.getInstance().GetDate("08:00","HH:mm"))
 					.withShiftEnd(DateUtil.getInstance().GetDate("14:00","HH:mm"))
 					.build();
 
+			doctor1.setAvarageRating(8.81f);
 			userRepository.save(doctor1);
 			
 			Doctor doctor2 = new Doctor.Builder("doktor2@gmail.com")
@@ -146,11 +147,12 @@ public class ContainerInitialize {
 					.withPhone("5435435")
 					.withInsuranceID("12345674864")
 					.withType("Opsti pregled")
-					.withClinic(clinic)
+					.withClinic(clinic)					
 					.withShiftStart(DateUtil.getInstance().GetDate("09:00","HH:mm"))
 					.withShiftEnd(DateUtil.getInstance().GetDate("18:00","HH:mm"))
 					.build();
-
+			
+			doctor2.setAvarageRating(6.4f);
 			userRepository.save(doctor2);
 			
 			Doctor doctor3 = new Doctor.Builder("doktor3@gmail.com")
@@ -168,6 +170,7 @@ public class ContainerInitialize {
 					.withShiftEnd(DateUtil.getInstance().GetDate("18:00","HH:mm"))
 					.build();
 
+			doctor3.setAvarageRating(9.91f);
 			userRepository.save(doctor3);
 			
 			Hall hall1 = new Hall(clinic,1);
