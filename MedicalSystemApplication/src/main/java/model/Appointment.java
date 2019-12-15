@@ -43,6 +43,9 @@ public class Appointment
 	@Column(name = "appointmentType",nullable = true)
 	private AppointmentType appointmentType;
 	
+	@Column(name="predefined",nullable = true)
+	private Boolean predefined = false;
+	
 	public Appointment() {
 		super();
 		this.doctors = new ArrayList<Doctor>();
@@ -61,6 +64,22 @@ public class Appointment
 		this.doctors = new ArrayList<Doctor>();
 		this.priceslist = priceslist;
 		this.appointmentType = appointmentType; 
+	}
+
+	
+
+	public Boolean getPredefined() {
+		return predefined;
+	}
+
+
+	public void setPredefined(Boolean predefined) {
+		this.predefined = predefined;
+	}
+
+
+	public void setPriceslist(Priceslist priceslist) {
+		this.priceslist = priceslist;
 	}
 
 

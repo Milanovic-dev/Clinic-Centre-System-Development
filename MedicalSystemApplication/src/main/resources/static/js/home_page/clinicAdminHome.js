@@ -56,7 +56,19 @@ function initClinicAdmin(user)
 		$('#showTypeOfExaminationContainer').show()
 		$('#registrationConteiner').hide()
 
-
+		$('#submitPredefinedAppointmentRequest').click(function(e){
+			e.preventDefault()
+			
+			$.ajax({
+				type: 'POST',
+				url: 'api/appointments/makePredefined',
+				complete: function(data)
+				{
+					alert(data.status)
+				}
+				
+			})
+		})
 		
 		$.ajax({
 			type: 'GET',

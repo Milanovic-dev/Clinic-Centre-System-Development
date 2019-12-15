@@ -233,6 +233,66 @@ public class AppointmentController
 
 	}
 
+	
+	@PostMapping(value="/makePredefined")
+	public ResponseEntity<Void> makePredefined(@RequestBody AppointmentDTO dto)
+	{		
+		HttpHeaders header = new HttpHeaders();
+		Clinic clinic = clinicService.findByName(dto.getClinicName());
+		
+		if(clinic == null)
+		{
+			header.set("responseText","Clinic " + dto.getClinicName() +" is not found");
+			return new ResponseEntity<>(header,HttpStatus.NOT_FOUND);
+		}
+		
+		Hall hall = hallService.findByNumber(dto.getHallNumber());
+		
+		if(hall == null)
+		{
+			header.set("responseText","Hall " + dto.getHallNumber() +" is not found");
+
+			return new ResponseEntity<>(header,HttpStatus.NOT_FOUND);
+		}
+		
+		Priceslist p = priceslistService.findByTypeOfExamination(dto.getTypeOfExamination());
+		
+		if(p == null)
+		{
+			header.set("responseText","Priceslist " + dto.getTypeOfExamination() +" is not found");
+			return new ResponseEntity<>(header,HttpStatus.NOT_FOUND);
+		}
+		
+		ArrayList<Doctor> doctors = new ArrayList<Doctor>();
+		
+		for(String email : dto.getDoctors())
+		{
+			Doctor d = (Doctor) userService.findByEmailAndDeleted(email, false);
+			
+			doctors.add(d);
+		}
+		
+		Date date = DateUtil.getInstance().GetDate(dto.getDate(), "dd-mm-yyyy HH:mm");
+		
+		
+		Appointment a = appointmentService.findAppointment(date, hall, clinic);
+		
+		if(a != null)
+		{
+			return new ResponseEntity<>(HttpStatus.ALREADY_REPORTED);
+		}
+		
+		Appointment app = new Appointment.Builder(date)
+				.withClinic(clinic)
+				.withHall(hall)
+				.withType(dto.getType())
+				.withPriceslist(p)
+				.withDoctors(doctors)				
+				.build();
+		
+		appointmentService.save(app);
+		return new ResponseEntity<>(HttpStatus.CREATED);
+	}
 
 	
 	@PostMapping(value="/confirmRequest")
