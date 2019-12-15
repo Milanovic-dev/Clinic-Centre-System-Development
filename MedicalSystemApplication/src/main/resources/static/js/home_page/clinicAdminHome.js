@@ -13,6 +13,37 @@ function initClinicAdmin(user)
 	sideBar.append("<li class='nav-item active'><a class='nav-link' type='button'><span id='showDoctor'>Lista lekara</span></a></li>")
 	sideBar.append("<li class='nav-item active'><a class='nav-link' type='button'><span id='addTypeOfExamination'>Dodaj tip pregleda</span></a></li>")
 	sideBar.append("<li class='nav-item active'><a class='nav-link' type='button'><span id='showTypeOfExamination'>Lista tipova pregleda</span></a></li>")
+	sideBar.append("<li class='nav-item active'><a class='nav-link' type='button'><span id='addPredefinedAppointment'>Dodaj predefinisani pregled</span></a></li>")
+
+	//DODAVANJE PREDEFINISANOG PREGLEDA
+	
+	$('#addPredefinedAppointment').click(function(e){
+		e.preventDefault()
+		$("#addHallContainer").hide()
+		$("#showHallContainer").hide()
+		$("#changeHallContainer").hide()
+		$("#showUserContainer").hide()
+		$('#addTypeOfExaminationContainer').hide()
+		$('#showTypeOfExaminationContainer').hide()
+		$('#registrationConteiner').hide()
+		$('#AppointmentContainer').show()
+		
+		$.ajax({
+			type: 'GET',
+			url: 'api/admins/clinic/getClinicFromAdmin/' + user.email,
+			complete: function(data)
+			{
+				let clinic = data.responseJSON
+				makeAppointment(clinic)
+			}
+		
+		
+	})
+
+		
+	})
+	
+	//KRAJ DODAVANJA PREDEFINISANOG PREGLEDA
 	
 	//LISTA TIPOVA PREGLEDA
 	$('#showTypeOfExamination').click(function(e){
@@ -84,11 +115,11 @@ function initClinicAdmin(user)
 							$('#errorSpanTypeOfExamination').show()
 							$('#errorSpanTypeOfExamination').text("Tip pregleda koji zelite da unesete vec postoji")
 						}
-						else
+						if(data2.status == "200")
 						{
 							$('#errorSpanTypeOfExamination').hide()
-							$('#addHTypeOfExamination').hide()
-							$('#showTypeOfExamination').show()
+							$('#addTypeOfExaminationContainer').hide()
+							$('#showTypeOfExaminationContainer').show()
 						}
 					
 					}
@@ -416,10 +447,14 @@ function submitDoctorForm(clinic)
 		{
 			if(data.status == "208")
 			{
-				//TODO:Error
+				$('#alreadyExistsD').text("Lekar sa tim emailom vec postoji.")
 			}
 			else
 			{
+				$('#alreadyExistsD').hide()
+				$('#registrationConteiner').hide()
+				$("#showUserContainer").show()
+				makeDoctorTable(clinic)
 				
 			}
 		}
@@ -742,5 +777,79 @@ function makeHallTable()
 	})
 }
 
+function makeAppointment(clinic)
+{
+	$('#inputClinicNameAppointment').val(clinic.name)
+	$('#inputClinicAddressAppointment').val(clinic.address)
+	
+	$.ajax({
+		type: 'GET',
+		url: 'api/hall/getAllByClinic/' + clinic.name,
+		complete: function(data)
+		{
+			let halls = data.responseJSON
+			for(let h of halls)
+			{
+				$('#inputAppointmentHall').append($('<option>',{
+					value: h.number,
+					text: h.number
+				}))
+			}
+		}
+		
+	})
+	
+	$.ajax({
+		type: 'GET',
+		url: 'api/priceList/getAllByClinic/' + clinic.name,
+		complete: function(data)
+		{
+			let types = data.responseJSON
+			for(let t of types)
+			{
+				$('#inputAppointmentTypeSelect').append($('<option>',{
+					value: t.typeOfExamination,
+					text: t.typeOfExamination
+				}))
+			}
+			
+		}
 
+	})
+	
+	$('#inputAppointmentTypeSelect').change(function(e){
+		$.ajax({
+			type: 'GET',
+			url: 'api/doctors/getAll/' + $('#inputAppointmentTypeSelect').val() + "/" + clinic.name,
+			complete: function(data)
+			{
+				let doctors = data.responseJSON
+				$('#tableDoctorsList tbody').empty()
+				let i=0
+				for(let d of doctors)
+				{
+					console.log(d)
+					makeDoctor(d,i)
+					i++;
+				}
+				
+			}
+		})
+	})
+
+}
+function makeDoctor(d,i)
+{
+	let tr=$('<tr></tr>');
+	let tdName=$('<td class="number" data-toggle="modal" data-target="#exampleModalLong">'+ d.user.name +'</td>');
+	let tdSurname=$('<td class="clinic" data-toggle="modal" data-target="#exampleModalLong">'+ d.user.surname +'</td>');
+	let tdEmail=$('<td class="clinic" data-toggle="modal" data-target="#exampleModalLong">'+ d.user.email +'</td>');
+	let tdPhone=$('<td class="clinic" data-toggle="modal" data-target="#exampleModalLong">'+ d.user.phone +'</td>');
+	let tdSelect = $("<td><input type='checkbox' id='checkDoctor"+i+"'><label for='checkDoctor"+i+"'></label></td>" )
+
+	
+	tr.append(tdName).append(tdSurname).append(tdEmail).append(tdPhone).append(tdSelect)
+	$('#tableDoctorsList tbody').append(tr);
+
+}
 
