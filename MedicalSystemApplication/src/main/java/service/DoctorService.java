@@ -1,5 +1,7 @@
 package service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,5 +17,10 @@ public class DoctorService {
 
     public Doctor findByEmail(String email) {
         return doctorRepository.findByEmail(email);
+    }
+    
+    public List<Doctor> findByType(String type)
+    {
+    	return doctorRepository.findByType(type);
     }
 }
