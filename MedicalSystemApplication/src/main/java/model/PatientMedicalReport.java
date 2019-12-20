@@ -28,12 +28,19 @@ public class PatientMedicalReport {
     private Clinic clinic;
 	
 	@ManyToMany
-    @JoinTable(joinColumns = @JoinColumn(name = "patientMedicalReport_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "prescription_id", referencedColumnName = "id"))
+	@JoinTable(joinColumns = @JoinColumn(name = "patientMedicalReport_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "prescription_id", referencedColumnName = "id"))
 	private List<Prescription> prescription;
+
+	@ManyToMany
+	@JoinTable(joinColumns = @JoinColumn(name = "patientMedicalReport_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "diagnosis_id", referencedColumnName = "id"))
+	private List<Diagnosis> diagnosis;
 	
 	public PatientMedicalReport()
 	{
 		super();
+		this.prescription = new ArrayList<>();
+		this.diagnosis = new ArrayList<>();
+
 	}
 	
 	public PatientMedicalReport(String description, Date dateAndTime, Doctor doctor, Clinic clinic) {
@@ -42,7 +49,8 @@ public class PatientMedicalReport {
 		this.dateAndTime = dateAndTime;
 		this.doctor = doctor;
 		this.clinic = clinic;
-		this.prescription = new ArrayList<Prescription>();
+		this.prescription = new ArrayList<>();
+		this.diagnosis = new ArrayList<>();
 	}
 
 	public Long getId() {
@@ -92,5 +100,12 @@ public class PatientMedicalReport {
 	public void setClinic(Clinic clinic) {
 		this.clinic = clinic;
 	}
-		
+
+	public List<Diagnosis> getDiagnosis() {
+		return diagnosis;
+	}
+
+	public void setDiagnosis(List<Diagnosis> diagnosis) {
+		this.diagnosis = diagnosis;
+	}
 }

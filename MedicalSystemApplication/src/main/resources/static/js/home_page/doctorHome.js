@@ -74,8 +74,6 @@ function initDoctor(user)
         $('#submitReport').click(function(e){
             e.preventDefault()
 
-            $('#submitReportSpinner').show()
-
             let drugs = []
             $('#selectDrug option:selected').each(function() {
                 drugs.push($(this).val())
@@ -91,6 +89,47 @@ function initDoctor(user)
            console.log(diagnosis)
            console.log(drugs)
            console.log(description)
+
+           let perscription = JSON.stringify({"description":description,"drugs":drugs,"nurse":"","isValid":false, "validationDate":""})
+
+
+           console.log(json)
+           $('#submitReportSpinner').show()
+
+                $.ajax({
+                    type:'POST',
+                    url:'api/prescriptions/addPrescription',
+                    data: perscription,
+                    dataType : "json",
+                    contentType : "application/json; charset=utf-8",
+                    complete: function(data)
+                    {
+                        if(data.status == "201")
+                        {
+
+                        }
+
+                    }
+                })
+
+//                $.ajax({
+//                    type:'POST',
+//                    url:'api/prescriptions/addPrescription',
+//                    data: json,
+//                    dataType : "json",
+//                    contentType : "application/json; charset=utf-8",
+//                    complete: function(data)
+//                    {
+//                        $('#submitReportSpinner').hide()
+//                        if(data.status == "201")
+//                        {
+//
+//                        }
+//
+//                    }
+//                })
+
+
         })
 
 }
