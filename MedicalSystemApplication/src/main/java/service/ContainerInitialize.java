@@ -8,27 +8,15 @@ import java.util.GregorianCalendar;
 
 import javax.annotation.PostConstruct;
 
+import model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import helpers.DateUtil;
 import helpers.SecurePasswordHasher;
-import model.Appointment;
-import model.CentreAdmin;
-import model.Clinic;
-import model.ClinicAdmin;
-import model.Doctor;
-import model.Hall;
-import model.Nurse;
-import model.Patient;
-import model.Priceslist;
 import model.Appointment.AppointmentType;
 import model.MedicalRecord.BloodType;
-import repository.AppointmentRepository;
-import repository.ClinicRepository;
-import repository.HallRepository;
-import repository.PriceListRepository;
-import repository.UserRepository;
+import repository.*;
 
 @Component
 public class ContainerInitialize {
@@ -47,6 +35,12 @@ public class ContainerInitialize {
 	
 	@Autowired
 	private PriceListRepository pricelistRepository;
+
+	@Autowired
+	private DrugRepository drugRepository;
+
+	@Autowired
+	private DiagnosisRepository diagnosisRepository;
 	
 	@PostConstruct
 	public void init()
@@ -58,7 +52,21 @@ public class ContainerInitialize {
 			userRepository.save(new CentreAdmin(hash, "klinickicentartest@gmail.com", "Admin", "Adminic","Novi Sad","Trg Dositeja Obradovica 6", "Srbija", "011100100", true));
 			
 			hash = SecurePasswordHasher.getInstance().encode("123");
-						
+
+			Drug drug = new Drug("paracetamol", "123");
+			drugRepository.save(drug);
+			Drug drug2 = new Drug("kafetin", "456");
+			drugRepository.save(drug2);
+			Drug drug3 = new Drug("analgin", "789");
+			drugRepository.save(drug3);
+
+			Diagnosis diagnosis = new Diagnosis("333", "1234", "prehlada");
+			diagnosisRepository.save(diagnosis);
+			Diagnosis diagnosis2 = new Diagnosis("111", "6565", "kasalj");
+			diagnosisRepository.save(diagnosis2);
+			Diagnosis diagnosis3 = new Diagnosis("222", "787", "grip");
+			diagnosisRepository.save(diagnosis3);
+
 			Patient patient = new Patient.Builder("nikola@gmail.com")
 					.withPassword(hash)
 					.withName("Nikola")

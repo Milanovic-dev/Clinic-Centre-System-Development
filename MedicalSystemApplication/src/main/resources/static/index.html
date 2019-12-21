@@ -46,7 +46,16 @@
     <script type="text/javascript" src="https://unpkg.com/popper.js/dist/umd/popper.min.js"></script>
     <script type="text/javascript" src="https://unpkg.com/tooltip.js/dist/umd/tooltip.min.js"></script>
 <!-- ! -->
-<meta charset="ISO-8859-1">
+
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/css/bootstrap-select.css" />
+
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/bootstrap-select.min.js"></script>
+
+
+
+    <meta charset="ISO-8859-1">
 <title>Index</title>
 </head>
 <body>
@@ -426,6 +435,60 @@
 
 
 <!-- ----------------KALENDAR END--------------------- -->
+  <!-- PREGLED U TOKU -->
+  <div class="card mb-3" id = "showExaminationContainer" style="display:none">
+      <div class="card-header">
+          <i class="fas fa-table"></i>
+          Informacije o pregledu pacijenta</div>
+      <div class="card-body">
+          <label class="form-control-label" id="patientExamin">Pacijent: </label> <br>
+          <label class="form-control-label" id="typeExamin">Tip pregleda: </label> <br>
+          <label class="form-control-label" id="startExamin">Pocetak: </label> <br>
+          <label class="form-control-label" id="doctorExamin">Doktor: </label> <br>
+          <label class="form-control-label" id="clinicExamin">Klinika: </label> <br>
+          <hr>
+
+          <select title="Dijagnoze" class="selectpicker" id="selectDiagnosis" style="height: 40px !important;" multiple data-live-search="true">
+              <option>dijagnoza1</option>
+              <option>dijagnoza2</option>
+              <option>dijagnoza3</option>
+          </select>
+
+          <select title="Lekovi za recept" class="selectpicker" id="selectDrug" style="height: 40px !important;" multiple data-live-search="true">
+              <option>paracetamol</option>
+              <option>kafetin</option>
+              <option>analgin</option>
+          </select>
+            <hr>
+          <div class="form-group">
+              <textarea class="form-control" rows="10" id="description"></textarea>
+          </div>
+
+          <div class="card">
+              <div class="card-header" id="headingThree">
+                  <h5 class="mb-0">
+                      <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree" >
+                          Zakazivanje novog termina
+                      </button>
+                  </h5>
+              </div>
+              <div id="collapseThree" class="collapse show" aria-labelledby="headingThree" data-parent="#accordion">
+                  <div class="card-body">
+                      //TODO: 2_3.11 Kreiranje zahteva za pregled/operaciju
+                  </div>
+              </div>
+          </div>
+
+          <button type="button" style="margin:20 0 0" class="btn btn-primary" id = "submitReport">Sacuvaj&nbsp<span class="spinner-border spinner-border-sm"  style="display:none;" role="status" id="submitReportSpinner"  aria-hidden="true"></span></button>
+
+      </div>
+
+      </div>
+
+
+
+  </div>
+
 <!-- -----------------------REGISTRACIJA LEKARA------------------------- -->
 <div class="container" id="registrationConteiner" style="display:none" >
     <div class="card card-register mx-auto mt-5" >
@@ -1005,7 +1068,7 @@
           </div>
           <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-dismiss="modal">Odustani</button>
-              <button type="button" class="btn btn-primary">Zapocni pregled</button>
+              <button type="button" class="btn btn-primary" id="startExamination">Zapocni pregled</button>
           </div>
       </div>
   </div>
