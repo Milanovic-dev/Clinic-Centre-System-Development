@@ -1,11 +1,10 @@
 package dto;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import model.Clinic;
-import model.PatientMedicalReport;
-import model.Prescription;
+import model.*;
 
 public class PatientMedicalReportDTO {
 
@@ -13,7 +12,9 @@ public class PatientMedicalReportDTO {
     private Date dateAndTime;
     private String doctorEmail;
     private String clinicName;
-	private List<Prescription> prescription;
+    private List<String> diagnosis = new ArrayList<>();
+	private PrescriptionDTO prescription;
+	private String patientEmail;
 	
 	
 	public PatientMedicalReportDTO() {
@@ -22,22 +23,30 @@ public class PatientMedicalReportDTO {
 	}
 
 	public PatientMedicalReportDTO(String description, Date dateAndTime, String doctorEmail, String clinicEmail,
-			List<Prescription> prescription) {
+			PrescriptionDTO prescription, String patientEmail) {
 		super();
 		this.description = description;
 		this.dateAndTime = dateAndTime;
 		this.doctorEmail = doctorEmail;
 		this.clinicName = clinicEmail;
 		this.prescription = prescription;
+		this.patientEmail = patientEmail;
 	}
 	
 	public PatientMedicalReportDTO(PatientMedicalReport report)
 	{
+		PrescriptionDTO dto = new PrescriptionDTO();
 		this.description = report.getDescription();
 		this.dateAndTime = report.getDateAndTime();
 		this.clinicName = report.getClinic().getName();
 		this.doctorEmail = report.getDoctor().getEmail();
-		this.prescription = report.getPrescription();
+		this.prescription = dto;
+		this.diagnosis = new ArrayList<>();
+		for(Diagnosis d : report.getDiagnosis())
+		{
+			diagnosis.add(d.getName());
+		}
+		this.patientEmail = report.getPatient().getEmail();
 	}
 
 	public String getDescription() {
@@ -64,11 +73,11 @@ public class PatientMedicalReportDTO {
 		this.doctorEmail = doctorEmail;
 	}
 
-	public List<Prescription> getPrescription() {
+	public PrescriptionDTO getPrescription() {
 		return prescription;
 	}
 
-	public void setPrescription(List<Prescription> prescription) {
+	public void setPrescription(PrescriptionDTO prescription) {
 		this.prescription = prescription;
 	}
 
@@ -79,7 +88,20 @@ public class PatientMedicalReportDTO {
 	public void setClinicName(String clinicName) {
 		this.clinicName = clinicName;
 	}
-	
-	
-	
+
+	public List<String> getDiagnosis() {
+		return diagnosis;
+	}
+
+	public void setDiagnosis(List<String> diagnosis) {
+		this.diagnosis = diagnosis;
+	}
+
+	public String getPatientEmail() {
+		return patientEmail;
+	}
+
+	public void setPatientEmail(String patientEmail) {
+		this.patientEmail = patientEmail;
+	}
 }

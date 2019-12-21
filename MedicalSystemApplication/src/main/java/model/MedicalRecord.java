@@ -13,7 +13,7 @@ public class MedicalRecord {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	
+
 	@OneToMany(fetch = FetchType.LAZY)
 	private List<PatientMedicalReport> reports;
 	
@@ -97,5 +97,10 @@ public class MedicalRecord {
 		this.reports = reports;
 	}
 	
-	
+	public void addReport(PatientMedicalReport report){
+		if(this.reports == null){
+			reports = new ArrayList<>();
+			reports.add(report);
+		}
+	}
 }
