@@ -8,7 +8,9 @@ import java.util.List;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
+import dto.PatientMedicalReportDTO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CookieValue;
@@ -26,7 +28,7 @@ import dto.UserDTO;
 import helpers.SecurePasswordHasher;
 import model.*;
 import model.User.UserRole;
-import service.UserService;
+import service.*;
 
 @RestController
 @RequestMapping(value = "api/users")
@@ -34,6 +36,21 @@ public class UserController
 {
 	@Autowired
 	private UserService userService;
+
+	@Autowired
+	private ClinicService clinicService;
+
+	@Autowired
+	private DiagnosisService diagnosisService;
+
+	@Autowired
+	private PatientMedicalReportService patientMedicalReportService;
+
+	@Autowired
+	private PrescriptionService prescriptionService;
+
+	@Autowired
+	private DrugService drugService;
 	
 	@PutMapping(value = "/update/{email}")
 	public ResponseEntity<Void> updateUser(@RequestBody UserDTO dto,@PathVariable("email")String email)
@@ -203,5 +220,82 @@ public class UserController
 		userService.save(patient);
 		
 		return new ResponseEntity<>(HttpStatus.OK);
+	}
+
+	@PostMapping(value="/patient/addPatientMedicalReport/{email}")
+	public ResponseEntity<Void> addPatientMedicalReport(@PathVariable("email") String email,@RequestBody PatientMedicalReportDTO dto)
+	{
+		HttpHeaders header = new HttpHeaders();
+
+		Patient patient = (Patient)userService.findByEmailAndDeleted(email,false);
+		if(patient == null)
+		{
+			header.set("responseText","patient not found: " + email);
+			return new ResponseEntity<>(header,HttpStatus.NOT_FOUND);
+		}
+
+		Doctor doctor = (Doctor)userService.findByEmailAndDeleted(dto.getDoctorEmail(),false);
+		if(doctor == null)
+		{
+			header.set("responseText","doctor not found: " + dto.getDoctorEmail());
+			return new ResponseEntity<>(header,HttpStatus.NOT_FOUND);
+		}
+
+		Clinic clinic = clinicService.findByName(dto.getClinicName());
+		if(clinic == null)
+		{
+			header.set("responseText","clinic not found: " + dto.getClinicName());
+			return new ResponseEntity<>(header, HttpStatus.NOT_FOUND);
+		}
+
+
+
+		Prescription pr = new Prescription();
+		pr.setDescription(dto.getPrescription().getDescription());
+		for(String name : dto.getPrescription().getDrugs())
+		{
+			Drug drug = drugService.findByName(name);
+
+			if(drug == null)
+			{
+				header.set("responseText","Drug not found: " + name);
+				return new ResponseEntity<>(header,HttpStatus.NOT_FOUND);
+			}
+
+			pr.getDrugs().add(drug);
+
+		}
+		pr.setValid(false);
+		prescriptionService.save(pr);
+
+		PatientMedicalReport report = new PatientMedicalReport();
+		report.setClinic(clinic);
+		report.setDescription(dto.getDescription());
+		report.setDoctor(doctor);
+		report.setPrescription(pr);
+		report.setDateAndTime(dto.getDateAndTime());
+		report.setPatient(patient);
+
+		for(String name : dto.getDiagnosis())
+		{
+			Diagnosis diagnosis = diagnosisService.findByName(name);
+
+			if(diagnosis == null)
+			{
+				header.set("responseText","Diagnosis not found: " + name);
+				return new ResponseEntity<>(header,HttpStatus.NOT_FOUND);
+			}
+
+
+			report.getDiagnosis().add(diagnosis);
+		}
+
+		patientMedicalReportService.save(report);
+
+		patient.getMedicalRecord().getReports().add(report);
+
+		userService.save(patient);
+
+		return new ResponseEntity<>(HttpStatus.CREATED);
 	}
 }

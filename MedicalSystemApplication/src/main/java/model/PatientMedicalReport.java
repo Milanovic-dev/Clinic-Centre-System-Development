@@ -26,23 +26,34 @@ public class PatientMedicalReport {
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "clinic_id")
     private Clinic clinic;
-	
-	@ManyToMany
-    @JoinTable(joinColumns = @JoinColumn(name = "patientMedicalReport_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "prescription_id", referencedColumnName = "id"))
-	private List<Prescription> prescription;
+
+	@OneToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "patient_id")
+	private Patient patient;
+
+	@OneToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "prescription_id", nullable = true)
+	private Prescription prescription;
+
+	@ManyToMany(fetch = FetchType.LAZY)
+	private List<Diagnosis> diagnosis;
 	
 	public PatientMedicalReport()
 	{
 		super();
+		this.diagnosis = new ArrayList<>();
+
 	}
 	
-	public PatientMedicalReport(String description, Date dateAndTime, Doctor doctor, Clinic clinic) {
+	public PatientMedicalReport(String description, Date dateAndTime, Doctor doctor, Clinic clinic, Patient patient, Prescription prescription) {
 		super();
 		this.description = description;
 		this.dateAndTime = dateAndTime;
 		this.doctor = doctor;
 		this.clinic = clinic;
-		this.prescription = new ArrayList<Prescription>();
+		this.patient = patient;
+		this.prescription = prescription;
+		this.diagnosis = new ArrayList<>();
 	}
 
 	public Long getId() {
@@ -61,11 +72,11 @@ public class PatientMedicalReport {
 		this.description = description;
 	}
 
-	public List<Prescription> getPrescription() {
+	public Prescription getPrescription() {
 		return prescription;
 	}
 
-	public void setPrescription(List<Prescription> prescription) {
+	public void setPrescription(Prescription prescription) {
 		this.prescription = prescription;
 	}
 
@@ -92,5 +103,20 @@ public class PatientMedicalReport {
 	public void setClinic(Clinic clinic) {
 		this.clinic = clinic;
 	}
-		
+
+	public List<Diagnosis> getDiagnosis() {
+		return diagnosis;
+	}
+
+	public void setDiagnosis(List<Diagnosis> diagnosis) {
+		this.diagnosis = diagnosis;
+	}
+
+	public Patient getPatient() {
+		return patient;
+	}
+
+	public void setPatient(Patient patient) {
+		this.patient = patient;
+	}
 }

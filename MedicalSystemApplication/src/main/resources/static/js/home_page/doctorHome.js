@@ -33,23 +33,93 @@ function initDoctor(user)
 		$("#changeHallContainer").hide()
 		$("#showUserContainer").show()
 
-
-
-
 	})
 
     initCalendarDoc(user)
 
 	$("#workCalendar").click(function(e){
-    		e.preventDefault()
+        e.preventDefault()
 
-            $('#breadcrumbCurrPage').removeAttr('hidden')
-            $('#breadcrumbCurrPage').text("Radni kalendar")
-            $('#breadcrumbCurrPage2').attr('hidden',true)
-            $('#showPatientsContainer').hide()
-    		$('#showCalendarContainer').show()
+           $('#breadcrumbCurrPage').removeAttr('hidden')
+           $('#breadcrumbCurrPage').text("Radni kalendar")
+           $('#breadcrumbCurrPage2').attr('hidden',true)
+           $('#showPatientsContainer').hide()
+           $("#showUserContainer").hide()
+           $('#showCalendarContainer').show()
 
-        });
+     });
+
+     $("#startExamination").click(function(e){
+         		e.preventDefault()
+
+                 setUpCodebooks()
+
+                 $('#breadcrumbCurrPage2').removeAttr('hidden')
+                 $('#breadcrumbCurrPage2').text("Pregled u toku")
+              //   $('#breadcrumbCurrPage2').attr('hidden',true)
+                 $("#modalCalendar").modal('toggle')
+
+                 $('#showPatientsContainer').hide()
+                 $("#showUserContainer").hide()
+         		 $('#showCalendarContainer').hide()
+         		 $('#showExaminationContainer').show()
+
+              //   $('select').selectpicker();
+                 $('#collapseThree').collapse('toggle')
+
+     });
+
+
+        $('#submitReport').off('click')
+        $('#submitReport').click(function(e){
+            e.preventDefault()
+
+            let drugs = []
+            $('#selectDrug option:selected').each(function() {
+                drugs.push($(this).val())
+            });
+
+            let diagnosis = []
+            $('#selectDiagnosis option:selected').each(function() {
+                diagnosis.push($(this).val())
+            });
+
+           let description = $('#description').val()
+           let report = $('#report').val()
+           let patEmail = $('#patientExaminEmail').text()
+
+           let clinicNameExamin = $('#clinicExamin').text()
+           let res = clinicNameExamin.split(": ")
+           let cname = res[1]
+           let today = new Date();
+
+           let prescriptionDTO = {"description":description,"drugs":drugs,"nurse":"","isValid":false, "validationDate":""}
+           let prescription = JSON.stringify({"description":description,"drugs":drugs,"nurse":"","isValid":false, "validationDate":""})
+           let reportJson = JSON.stringify({"description":report,"diagnosis":diagnosis,"doctorEmail":user.email,"clinicName":cname,"dateAndTime":today,"patient":patEmail,"prescription":prescriptionDTO})
+           console.log(reportJson)
+           $('#submitReportSpinner').show()
+
+                $.ajax({
+                    type:'POST',
+                    url:'api/users/patient/addPatientMedicalReport/' + patEmail,
+                    data: reportJson,
+                    dataType : "json",
+                    contentType : "application/json; charset=utf-8",
+                    complete: function(data)
+                    {
+                        $('#submitReportSpinner').hide()
+                         if(data.status == "201")
+                          {
+                              alert('kreiran izvestaj')
+                          }
+                    }
+                })
+
+
+
+
+
+        })
 
 }
 
@@ -102,115 +172,112 @@ function initCalendarDoc(user)
 {
 
         var calendarButton = document.getElementById('calendarButton');
-                        var calendarEl = document.getElementById('calendar');
+                  var calendarEl = document.getElementById('calendar');
 
-                        var calendar = new FullCalendar.Calendar(calendarEl, {
-                      plugins: [ 'interaction', 'dayGrid', 'timeGrid', 'monthGrid', 'timeline' ],
-                      defaultView: 'dayGridMonth',
-                      defaultDate: '2019-12-07',
-                      buttonText: {
-                             today:    'danas',
-                             month:    'mesec',
-                             week:     'nedelja',
-                             day:      'dan',
-                             list:     'list'
-                           },
-                      monthNames: ['Januar', 'Februar', 'Mart', 'April', 'Maj', 'Jun', 'Jul',
-                                    'Avgust', 'Septembar', 'Oktobar', 'Novembar', 'Decembar'],
-                      monthNamesShort: ['Jan','Feb','Mar','Apr','Maj','Jun','Jul','Avg','Sep','Okt','Nov','Dec'],
-                      dayNames: ['Nedelja','Ponedeljak','Utorak','Sreda','Cetvrtak','Petak','Subota'],
-                      dayNamesShort: ['Ned','Pon','Uto','Sre','Cet','Pet','Sub'],
+                  var calendar = new FullCalendar.Calendar(calendarEl, {
+                  plugins: [ 'interaction', 'dayGrid', 'timeGrid', 'monthGrid', 'timeline' ],
+                  defaultView: 'dayGridMonth',
+                  defaultDate: '2019-12-07',
+                  buttonText: {
+                         today:    'danas',
+                         month:    'mesec',
+                         week:     'nedelja',
+                         day:      'dan',
+                         list:     'list'
+                       },
+                  monthNames: ['Januar', 'Februar', 'Mart', 'April', 'Maj', 'Jun', 'Jul',
+                                'Avgust', 'Septembar', 'Oktobar', 'Novembar', 'Decembar'],
+                  monthNamesShort: ['Jan','Feb','Mar','Apr','Maj','Jun','Jul','Avg','Sep','Okt','Nov','Dec'],
+                  dayNames: ['Nedelja','Ponedeljak','Utorak','Sreda','Cetvrtak','Petak','Subota'],
+                  dayNamesShort: ['Ned','Pon','Uto','Sre','Cet','Pet','Sub'],
 
-                      selectable:true,
-                      eventClick: function(info)
-                      {
-                          var type
-                          if(info.event.extendedProps.type == 'Surgery'){
-                                type = 'Operacija'
-                           }else if (info.event.extendedProps.type == 'Examination'){
-                                type = 'Pregled'
-                           }
+                  selectable:true,
+                  eventClick: function(info)
+                  {
+                      var type
+                      if(info.event.extendedProps.type == 'Surgery'){
+                            type = 'Operacija'
+                       }else if (info.event.extendedProps.type == 'Examination'){
+                            type = 'Pregled'
+                       }
 
-                           var sd=info.event.start
-                               sd=formatDateHours(sd)
+                       var sd=info.event.start
+                           sd=formatDateHours(sd)
 
-                            $.ajax({
-                           		    type: 'GET',
-                           		    url: 'api/users/getUser/' + info.event.extendedProps.patientEmail,
-                           		    complete: function(data){
-                           		       var patient = data.responseJSON
-                                       var patientName = patient.name
-                                       var patientSurname = patient.surname
-                                        $("#patientId").text('Pacijent: ' + patientName + ' ' + patientSurname);
-                           		    },
+                        $.ajax({
+                                type: 'GET',
+                                url: 'api/users/getUser/' + info.event.extendedProps.patientEmail,
+                                complete: function(data){
+                                   var patient = data.responseJSON
+                                   var patientName = patient.name
+                                   var patientSurname = patient.surname
+                                    $("#patientId").text('Pacijent: ' + patientName + ' ' + patientSurname + ' ' + info.event.extendedProps.patientEmail);
+                                    $("#patientExamin").text('Pacijent: ' + patientName + ' ' + patientSurname);
+                                    $("#patientExaminEmail").text(info.event.extendedProps.patientEmail)
+                                },
 
-                           	 })
-
-
-
-
-                          console.log(info.event.extendedProps)
-                          $("#durationId").text('Trajanje: ' + info.event.extendedProps.duration + 'h');
-                          $("#typeId").text('Tip pregleda: ' + type);
-                          $("#clinicId").text('Klinika: ' + info.event.extendedProps.clinicName);
-                          $("#hallId").text('Broj sale: ' + info.event.extendedProps.hallNumber);
-                          $("#startId").text('Pocetak: ' + sd);
+                         })
 
 
-                          $('#modalCalendar').modal('show');
+                      console.log(info.event.extendedProps)
+                      $("#durationId").text('Trajanje: ' + info.event.extendedProps.duration + 'h');
+                      $("#typeId").text('Tip pregleda: ' + type);
+                      $("#clinicId").text('Klinika: ' + info.event.extendedProps.clinicName);
+                      $("#hallId").text('Broj sale: ' + info.event.extendedProps.hallNumber);
+                      $("#startId").text('Pocetak: ' + sd);
+
+                      //podaci u izvestaju
+                      $("#startExamin").text('Pocetak: ' + sd);
+                      $("#typeExamin").text('Tip pregleda: ' + type);
+                      $("#clinicExamin").text('Klinika: ' + info.event.extendedProps.clinicName);
+                      $("#doctorExamin").text('Doktor: ' + user.name + ' ' + user.surname);
+
+                      $('#modalCalendar').modal('show');
                       },
-
-
-
-                      header: {
-                        left: 'prev,next today',
-                        center: 'title',
-                        right: 'dayGridMonth,timeGridWeek,timeGridDay'
-                      },
-
-                      fixedWeekCount: false,
-                      contentHeight: 650,
-                      views: {
-                          timelineCustom: {
-                              type: 'timeline',
-                              buttonText: 'year',
-                              dateIncrement: { years: 1 },
-                              slotDuration: { months: 1 },
-                              visibleRange: function (currentDate) {
-                                  return {
-                                      start: currentDate.clone().startOf('year'),
-                                      end: currentDate.clone().endOf("year")
-                                  };
-                              }
+                  header: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'dayGridMonth,timeGridWeek,timeGridDay'
+                  },
+                  fixedWeekCount: false,
+                  contentHeight: 650,
+                  views: {
+                      timelineCustom: {
+                          type: 'timeline',
+                          buttonText: 'year',
+                          dateIncrement: { years: 1 },
+                          slotDuration: { months: 1 },
+                          visibleRange: function (currentDate) {
+                              return {
+                                  start: currentDate.clone().startOf('year'),
+                                  end: currentDate.clone().endOf("year")
+                              };
                           }
-                      },
+
+                      }
+                  },
+                   eventColor: '#2f989d',
+                   eventSources: [
+                         {
+                           url: 'api/appointments/doctor/getAllAppointments/'+user.email,
+                           method: 'GET',
+                           extraParams: {
 
 
+                           },
 
-           eventColor: '#2f989d',
-           eventSources: [
-                 {
-                   url: 'api/appointments/doctor/getAllAppointments/'+user.email,
-                   method: 'GET',
-                   extraParams: {
+                           failure: function() {
+                             alert('there was an error while fetching events!');
+                           },
 
-                   },
-
-                   failure: function() {
-                     
-                   },
-
-                 },
-
-
-               ]
-
-         });
+                         },
+                       ]
+                });
 
          calendar.render();
          $('#workCalendar').click(function(){
               calendar.render();
-            });
+         });
 
 
 }
@@ -226,4 +293,44 @@ function formatDateHours (dateObj) {
       var strTime = hours + ':' + minutes + ' ' + ampm;
       var month = date.getMonth()+1
       return date.getDate() + "." + month+ "." + date.getFullYear() + ".   " + strTime;
+}
+
+function setUpCodebooks(){
+
+    $.ajax({
+        type: 'GET',
+        url:"api/drug/getAllDrugs",
+        complete: function(data)
+        {
+           let select = $('#selectDrug').val()
+
+           			$.each(data.responseJSON, function (i, item) {
+           			    console.log(item)
+           			    console.log(item.name)
+           			    $('#selectDrug').append($('<option>', {
+           			        value: item.name,
+           			        text : item.name
+           			    }));
+           			});
+        }
+    });
+
+
+     $.ajax({
+            type: 'GET',
+            url:"api/diagnosis/getAllDiagnosis",
+            complete: function(data)
+            {
+               let select = $('#selectDiagnosis').val()
+
+               			$.each(data.responseJSON, function (i, item) {
+               			    console.log(item)
+               			    console.log(item.name)
+               			    $('#selectDiagnosis').append($('<option>', {
+               			        value: item.name,
+               			        text : item.name
+               			    }));
+               			});
+            }
+        })
 }

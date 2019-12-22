@@ -5,3 +5,10 @@
   padding-top: 3.5rem;
 }
 
+.bootstrap-select:not([class*="col-"]):not([class*="form-control"]):not(.input-group-btn) {
+    width: 300px !important;
+}
+
+.bootstrap-select .dropdown-toggle:before {
+    height: 21px !important;
+}

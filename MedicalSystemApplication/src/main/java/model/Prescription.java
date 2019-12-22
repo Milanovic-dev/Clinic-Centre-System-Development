@@ -1,15 +1,10 @@
 package model;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
 
 @Entity
 public class Prescription {
@@ -17,15 +12,21 @@ public class Prescription {
 	@Id
     @GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
-	@OneToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "recipe_id")
-	private Recipe recipe;
-	@Column(name = "date", nullable = false)
+
+	@Column(name = "description", nullable = true)
+	private String description;
+
+	@ManyToMany(fetch = FetchType.LAZY)
+	private List<Drug> drugs = new ArrayList<>();
+
+	@Column(name = "date", nullable = true)
 	private Date validationDate;
+
 	@Column(name = "valid", nullable = false)
-	private Boolean isValid;
+	private Boolean isValid = false;
+
 	@OneToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "nurse_id")
+	@JoinColumn(name = "nurse_id",  nullable = true)
 	private Nurse nurse;
 	
 	
@@ -33,35 +34,26 @@ public class Prescription {
 	{
 		super();
 	}
-	
-	public Prescription(Recipe recipe, Date validationDate) {
-		super();
-		this.recipe = recipe;
-		this.validationDate = validationDate;
+
+	public Prescription(String description, List<Drug> drugs){
+		this.description =  description;
+		this.drugs = drugs;
 		this.isValid = false;
 	}
-	
+
+	public Prescription(String description, Date validationDate, Nurse nurse) {
+		this.description = description;
+		this.drugs = new ArrayList<>();
+		this.validationDate = validationDate;
+		this.isValid = false;
+		this.nurse = nurse;
+	}
+
 	public void validate(Nurse nurse)
 	{
 		nurse.getPrescriptions().add(this);
 		this.nurse = nurse;
 		isValid = true;
-	}
-	
-	public Long getId() {
-		return id;
-	}
-	
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public Recipe getRecipe() {
-		return recipe;
-	}
-
-	public void setRecipe(Recipe recipe) {
-		this.recipe = recipe;
 	}
 
 	public Date getValidationDate() {
@@ -79,5 +71,32 @@ public class Prescription {
 	public Nurse getNurse() {
 		return nurse;
 	}
-	
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public List<Drug> getDrugs() {
+		return drugs;
+	}
+
+	public void setDrugs(List<Drug> drugs) {
+		this.drugs = drugs;
+	}
+
+	public Boolean getValid() {
+		return isValid;
+	}
+
+	public void setValid(Boolean valid) {
+		isValid = valid;
+	}
+
+	public void setNurse(Nurse nurse) {
+		this.nurse = nurse;
+	}
 }
