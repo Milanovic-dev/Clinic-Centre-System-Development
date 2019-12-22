@@ -44,6 +44,20 @@ function initClinicAdmin(user)
 	})
 	
 	//KRAJ DODAVANJA PREDEFINISANOG PREGLEDA
+	$('#submitPredefinedAppointmentRequest').off('click')
+	$('#submitPredefinedAppointmentRequest').click(function(e){
+		e.preventDefault()
+		
+		$.ajax({
+			type: 'POST',
+			url: 'api/appointments/makePredefined',
+			complete: function(data)
+			{
+				alert(data.status)
+			}
+		
+		})
+	})
 	
 	//LISTA TIPOVA PREGLEDA
 	$('#showTypeOfExamination').click(function(e){
@@ -55,20 +69,8 @@ function initClinicAdmin(user)
 		$('#addTypeOfExaminationContainer').hide()
 		$('#showTypeOfExaminationContainer').show()
 		$('#registrationConteiner').hide()
+		$('#AppointmentContainer').hide()
 
-		$('#submitPredefinedAppointmentRequest').click(function(e){
-			e.preventDefault()
-			
-			$.ajax({
-				type: 'POST',
-				url: 'api/appointments/makePredefined',
-				complete: function(data)
-				{
-					alert(data.status)
-				}
-				
-			})
-		})
 		
 		$.ajax({
 			type: 'GET',
@@ -96,6 +98,7 @@ function initClinicAdmin(user)
 		$('#showTypeOfExaminationContainer').hide()
 		$('#errorSpanTypeOfExamination').hide()
 		$('#registrationConteiner').hide()
+		$('#AppointmentContainer').hide()
 
 
 	})
@@ -157,7 +160,7 @@ function initClinicAdmin(user)
 		$('#addTypeOfExaminationContainer').hide()
 		$('#showTypeOfExaminationContainer').hide()
 		$('#registrationConteiner').hide()
-
+		$('#AppointmentContainer').hide()
 
 		
 		$.ajax({
@@ -184,7 +187,7 @@ function initClinicAdmin(user)
 		$('#addTypeOfExaminationContainer').hide()
 		$('#showTypeOfExaminationContainer').hide()
 		$('#registrationConteiner').hide()
-
+		$('#AppointmentContainer').hide()
 		
 	})
 	
@@ -198,7 +201,8 @@ function initClinicAdmin(user)
 		$("#showUserContainer").hide()
 		$('#addTypeOfExaminationContainer').hide()
 		$('#showTypeOfExaminationContainer').hide()
-			
+		$('#AppointmentContainer').hide()
+		
 		$.ajax({
 			type: 'GET',
 			url: 'api/admins/clinic/getClinicFromAdmin/' + user.email,
@@ -251,7 +255,7 @@ function initClinicAdmin(user)
 		$('#addTypeOfExaminationContainer').hide()
 		$('#showTypeOfExaminationContainer').hide()
 		$('#registrationConteiner').hide()
-
+		$('#AppointmentContainer').hide()
 		
 		makeHallTable()
 
@@ -515,7 +519,7 @@ function listHall(data,i)
 		$('#addTypeOfExaminationContainer').hide()
 		$('#showTypeOfExaminationContainer').hide()
 		$('#registrationConteiner').hide()
-
+		$('#AppointmentContainer').hide()
 		
 		$('#inputChangeHall').val(data.number) 
 		
