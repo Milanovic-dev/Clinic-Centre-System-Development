@@ -85,49 +85,38 @@ function initDoctor(user)
             });
 
            let description = $('#description').val()
+           let report = $('#report').val()
+           let patEmail = $('#patientExaminEmail').text()
 
-           console.log(diagnosis)
-           console.log(drugs)
-           console.log(description)
+           let clinicNameExamin = $('#clinicExamin').text()
+           let res = clinicNameExamin.split(": ")
+           let cname = res[1]
+           let today = new Date();
 
-           let perscription = JSON.stringify({"description":description,"drugs":drugs,"nurse":"","isValid":false, "validationDate":""})
-
-
-           console.log(json)
+           let prescriptionDTO = {"description":description,"drugs":drugs,"nurse":"","isValid":false, "validationDate":""}
+           let prescription = JSON.stringify({"description":description,"drugs":drugs,"nurse":"","isValid":false, "validationDate":""})
+           let reportJson = JSON.stringify({"description":report,"diagnosis":diagnosis,"doctorEmail":user.email,"clinicName":cname,"dateAndTime":today,"patient":patEmail,"prescription":prescriptionDTO})
+           console.log(reportJson)
            $('#submitReportSpinner').show()
 
                 $.ajax({
                     type:'POST',
-                    url:'api/prescriptions/addPrescription',
-                    data: perscription,
+                    url:'api/users/patient/addPatientMedicalReport/' + patEmail,
+                    data: reportJson,
                     dataType : "json",
                     contentType : "application/json; charset=utf-8",
                     complete: function(data)
                     {
-                        if(data.status == "201")
-                        {
-
-                        }
-
+                        $('#submitReportSpinner').hide()
+                         if(data.status == "201")
+                          {
+                              alert('kreiran izvestaj')
+                          }
                     }
                 })
 
-//                $.ajax({
-//                    type:'POST',
-//                    url:'api/prescriptions/addPrescription',
-//                    data: json,
-//                    dataType : "json",
-//                    contentType : "application/json; charset=utf-8",
-//                    complete: function(data)
-//                    {
-//                        $('#submitReportSpinner').hide()
-//                        if(data.status == "201")
-//                        {
-//
-//                        }
-//
-//                    }
-//                })
+
+
 
 
         })
@@ -222,8 +211,9 @@ function initCalendarDoc(user)
                                    var patient = data.responseJSON
                                    var patientName = patient.name
                                    var patientSurname = patient.surname
-                                    $("#patientId").text('Pacijent: ' + patientName + ' ' + patientSurname);
+                                    $("#patientId").text('Pacijent: ' + patientName + ' ' + patientSurname + ' ' + info.event.extendedProps.patientEmail);
                                     $("#patientExamin").text('Pacijent: ' + patientName + ' ' + patientSurname);
+                                    $("#patientExaminEmail").text(info.event.extendedProps.patientEmail)
                                 },
 
                          })
