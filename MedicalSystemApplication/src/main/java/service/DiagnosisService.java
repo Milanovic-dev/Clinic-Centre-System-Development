@@ -18,6 +18,10 @@ public class DiagnosisService {
         return diagnosisRepository.findByCode(code);
     }
 
+    public Diagnosis findByName(String name) {
+        return diagnosisRepository.findByName(name);
+    }
+
     public void save(Diagnosis diagnosis)
     {
         diagnosisRepository.save(diagnosis);

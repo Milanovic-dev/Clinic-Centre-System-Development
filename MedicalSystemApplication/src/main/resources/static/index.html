@@ -34,6 +34,7 @@
     <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css">
 <!-- SCRIPT ORDER NE MENJATI -->
 <script src="js/moment.js"></script>
+<script src="js/table_manager.js"></script>
 <script src="js/bootstrap-datetimepicker.js"></script>
 <script src="js/home_page/patientHome.js"></script>
 <script src="js/home_page/doctorHome.js"></script>
@@ -384,7 +385,7 @@
           </div>
           </div>
           <br>
-          <button type="button" class="btn btn-primary" id = "submitPredefinedAppointmentRequest">Zakazi&nbsp<span class="spinner-border spinner-border-sm"  style="display:none" role="status" id="submitAppSpinner"  aria-hidden="true"></span></button>         
+          <button type="button" class="btn btn-primary" id = "submitAppointmentRequest">Zakazi&nbsp<span class="spinner-border spinner-border-sm"  style="display:none" role="status" id="submitAppSpinner"  aria-hidden="true"></span></button>         
         </form>
       </div>
     </div>
@@ -440,6 +441,7 @@
           Informacije o pregledu pacijenta</div>
       <div class="card-body">
           <label class="form-control-label" id="patientExamin">Pacijent: </label> <br>
+          <label class="form-control-label" id="patientExaminEmail"> </label> <br>
           <label class="form-control-label" id="typeExamin">Tip pregleda: </label> <br>
           <label class="form-control-label" id="startExamin">Pocetak: </label> <br>
           <label class="form-control-label" id="doctorExamin">Doktor: </label> <br>
@@ -447,9 +449,9 @@
           <hr>
 
           <select title="Dijagnoze" class="selectpicker" id="selectDiagnosis" style="height: 40px !important;" multiple data-live-search="true">
-              <option>dijagnoza1</option>
-              <option>dijagnoza2</option>
-              <option>dijagnoza3</option>
+              <option>kasalj</option>
+              <option>prehlada</option>
+              <option>grip</option>
           </select>
 
           <select title="Lekovi za recept" class="selectpicker" id="selectDrug" style="height: 40px !important;" multiple data-live-search="true">
@@ -458,8 +460,13 @@
               <option>analgin</option>
           </select>
             <hr>
+          <label class="form-control-label" style="opacity: 0.8">Terapija uz recept: </label> <br>
           <div class="form-group">
-              <textarea class="form-control" rows="10" id="description"></textarea>
+              <textarea class="form-control" rows="4" id="description"></textarea>
+          </div>
+          <label class="form-control-label" style="opacity:0.8">Informacije o pregledu: </label> <br>
+          <div class="form-group">
+              <textarea class="form-control" rows="10" id="report"></textarea>
           </div>
 
           <div class="card">
@@ -1119,7 +1126,7 @@
           </div>
           </div>
           <br>
-          <button type="button" class="btn btn-primary" id = "submitAppointmentRequest">Zakazi</button>         
+          <button type="button" class="btn btn-primary" id="submitPredefinedAppointmentRequest">Zakazi</button>         
         </form>
       </div>
     </div>

@@ -68,6 +68,20 @@ function initClinicAdmin(user)
 	})
 	
 	//KRAJ DODAVANJA PREDEFINISANOG PREGLEDA
+	$('#submitPredefinedAppointmentRequest').off('click')
+	$('#submitPredefinedAppointmentRequest').click(function(e){
+		e.preventDefault()
+		
+		$.ajax({
+			type: 'POST',
+			url: 'api/appointments/makePredefined',
+			complete: function(data)
+			{
+				alert(data.status)
+			}
+		
+		})
+	})
 	
 	//LISTA TIPOVA PREGLEDA
 	$('#showTypeOfExamination').click(function(e){
@@ -82,20 +96,6 @@ function initClinicAdmin(user)
 		$('#AppointmentContainer').hide()
 		$("#changeProfileClinicContainer").hide()
 
-
-		$('#submitPredefinedAppointmentRequest').click(function(e){
-			e.preventDefault()
-			
-			$.ajax({
-				type: 'POST',
-				url: 'api/appointments/makePredefined',
-				complete: function(data)
-				{
-					alert(data.status)
-				}
-				
-			})
-		})
 		
 		$.ajax({
 			type: 'GET',
@@ -125,6 +125,7 @@ function initClinicAdmin(user)
 		$('#registrationConteiner').hide()
 		$('#AppointmentContainer').hide()
 		$("#changeProfileClinicContainer").hide()
+
 
 	})
 		
@@ -214,6 +215,7 @@ function initClinicAdmin(user)
 		$('#showTypeOfExaminationContainer').hide()
 		$('#registrationConteiner').hide()
 		$('#AppointmentContainer').hide()
+
 		$("#changeProfileClinicContainer").hide()
 
 		
