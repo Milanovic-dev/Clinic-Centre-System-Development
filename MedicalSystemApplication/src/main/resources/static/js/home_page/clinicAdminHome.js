@@ -2,6 +2,8 @@
  * 
  */
 
+var clinic = null
+
 //ULAZNA FUNKCIJA
 function initClinicAdmin(user)
 {
@@ -16,8 +18,18 @@ function initClinicAdmin(user)
 	sideBar.append("<li class='nav-item active'><a class='nav-link' type='button'><span id='addTypeOfExamination'>Dodaj tip pregleda</span></a></li>")
 	sideBar.append("<li class='nav-item active'><a class='nav-link' type='button'><span id='showTypeOfExamination'>Lista tipova pregleda</span></a></li>")
 	sideBar.append("<li class='nav-item active'><a class='nav-link' type='button'><span id='addPredefinedAppointment'>Dodaj predefinisani pregled</span></a></li>")
-	sideBar.append("<li class='nav-item active'><a class='nav-link' type='button'><span id='changeProfileClinic'>Izmeni profil klinike</span></a></li>")
 	
+	$.ajax({
+		type:'GET',
+		url:"api/admins/clinic/getClinicFromAdmin/" + user.email,
+		complete: function(data)
+		{
+			clinic = data.responseJSON
+		}
+	})
+	
+	
+	clearViews()
 	addView("addHallContainer")
 	addView("showHallContainer")
 	addView("changeHallContainer")
@@ -51,112 +63,95 @@ function initClinicAdmin(user)
 		getTableDiv("listPricesTable").show()
 
 		
+		$('#inputNameClinicProfile').val(clinic.name)
+		$('#inputAddressClinicProfile').val(clinic.address)
+		$('#inputDescriptionClinicProfile').val(clinic.description)
+				
 		$.ajax({
 			type: 'GET',
-			url: 'api/admins/clinic/getClinicFromAdmin/' + user.email,
+			url: 'api/clinic/getDoctors/' + clinic.name,
 			complete: function(data)
 			{
-				let clinic = data.responseJSON
-				
-				$('#inputNameClinicProfile').val(clinic.name)
-				$('#inputAddressClinicProfile').val(clinic.address)
-				$('#inputDescriptionClinicProfile').val(clinic.description)
-				
-				$.ajax({
-					type: 'GET',
-					url: 'api/clinic/getDoctors/' + clinic.name,
-					complete: function(data)
-					{
-						doctors = data.responseJSON
-						emptyTable("listDoctorsTable")
-						for(d of doctors)
-						{
-							let values = [d.user.name,d.user.surname,d.user.email,d.user.phone,d.type,d.user.address,d.user.city,d.user.state]
-							insertTableData("listDoctorsTable",values)
-						}
-					}
-				
-				})
-				$.ajax({
-					type: 'GET',
-					url: 'api/hall/getAllByClinic/' + clinic.name,
-					complete: function(data)
-					{
-						halls = data.responseJSON
-						
-						emptyTable("listHallsTable")
-						for(h of halls )
-						{
-							let values = [h.number , h.clinicName]
-							insertTableData("listHallsTable",values)
-						}
-					}
-				})
-				
-				$.ajax({
-					type: 'GET',
-					url: 'api/priceList/getAllByClinic/' + clinic.name,
-					complete: function(data)
-					{
-						prices = data.responseJSON
-						
-						emptyTable("listPricesTable")
-						for(p of prices)
-						{
-							let values = [p.typeOfExamination , p.price]
-							insertTableData("listPricesTable",values)
-						}
-					}
-				})
-				
+				doctors = data.responseJSON
+				emptyTable("listDoctorsTable")
+				for(d of doctors)
+				{
+					let values = [d.user.name,d.user.surname,d.user.email,d.user.phone,d.type,d.user.address,d.user.city,d.user.state]
+					insertTableData("listDoctorsTable",values)
+				}
 			}
+				
+		})
+		
+		$.ajax({
+			type: 'GET',
+			url: 'api/hall/getAllByClinic/' + clinic.name,
+			complete: function(data)
+			{
+				halls = data.responseJSON
+						
+				emptyTable("listHallsTable")
+				for(h of halls )
+				{
+					let values = [h.number , h.clinicName]
+					insertTableData("listHallsTable",values)
+				}
+			}
+		})
+				
+		$.ajax({
+			type: 'GET',
+			url: 'api/priceList/getAllByClinic/' + clinic.name,
+			complete: function(data)
+			{
+				prices = data.responseJSON
+						
+				emptyTable("listPricesTable")
+				for(p of prices)
+				{
+					let values = [p.typeOfExamination , p.price]
+					insertTableData("listPricesTable",values)
+				}
+			}
+		})
+				
 
-	})
 	$('#submitChangesClinicProfile').click(function(e){
 		let nameClinic = $('#inputNameClinicProfile').val()
 		let addressClinic = $('#inputAddressClinicProfile').val()
 		let descriptionClinic = $('#inputDescriptionClinicProfile').val()
 		
-		
+					
+		let c = {"name": nameClinic,"address": addressClinic,"city": clinic.city,"state": clinic.state,"description": descriptionClinic,"rating": clinic.rating}
+		clinicJSON = JSON.stringify(c)
+				
 		$.ajax({
-			type: 'GET',
-			url: 'api/admins/clinic/getClinicFromAdmin/' + user.email,
+			type: 'PUT',
+			url: 'api/clinic/update/' + clinic.name,
+			data: clinicJSON,
+			dataType: "json",
+			contentType : "application/json; charset=utf-8",
 			complete: function(data)
 			{
-				let clinic = data.responseJSON
-				
-				let c = {"name": nameClinic,"address": addressClinic,"city": clinic.city,"state": clinic.state,"description": descriptionClinic,"rating": clinic.rating}
-				clinicJSON = JSON.stringify(c)
-				
-				$.ajax({
-					type: 'PUT',
-					url: 'api/clinic/update/' + clinic.name,
-					data: clinicJSON,
-					dataType: "json",
-					contentType : "application/json; charset=utf-8",
-					complete: function(data)
-					{
-						if(data.status == "200")
-						{
-							$('#successSubmit').text("Uspesno ste izmenili profil klinike")
-							$('#successSubmit').show()
-						}
-						else
-						{
-							$('#successSubmit').text("Izmena klinike nije uspela")
-							$('#successSubmit').show()
+				if(data.status == "200")
+				{
+					$('#successSubmit').text("Uspesno ste izmenili profil klinike")
+					$('#successSubmit').show()
+				}
+				else
+				{
+					$('#successSubmit').text("Izmena klinike nije uspela")
+					$('#successSubmit').show()
 
-						}
-					}
-					
-				})
+				}
 			}
+					
 		})
+		
 		
 	})
 	
 	})
-	
 	
 	//KRAJ IZMENE PROFILA KLINIKE
 	
@@ -166,23 +161,11 @@ function initClinicAdmin(user)
 		e.preventDefault()
 		
 		showView("AppointmentContainer")
-		
-		$.ajax({
-			type: 'GET',
-			url: 'api/admins/clinic/getClinicFromAdmin/' + user.email,
-			complete: function(data)
-			{
-				let clinic = data.responseJSON
-				makeAppointment(clinic)
-			}
-		
-		
+		makeAppointment(clinic)	
 	})
-
-		
-	})
-	
 	//KRAJ DODAVANJA PREDEFINISANOG PREGLEDA
+	
+	
 	$('#submitPredefinedAppointmentRequest').off('click')
 	$('#submitPredefinedAppointmentRequest').click(function(e){
 		e.preventDefault()
@@ -190,6 +173,7 @@ function initClinicAdmin(user)
 		$.ajax({
 			type: 'POST',
 			url: 'api/appointments/makePredefined',
+			data
 			complete: function(data)
 			{
 				alert(data.status)
@@ -201,19 +185,8 @@ function initClinicAdmin(user)
 	//LISTA TIPOVA PREGLEDA
 	$('#showTypeOfExamination').click(function(e){
 		e.preventDefault()
-		showView("showTypeOfExaminationContainer")
-
-		$.ajax({
-			type: 'GET',
-			url: 'api/admins/clinic/getClinicFromAdmin/' + user.email,
-			complete: function(data)
-			{
-				let clinic = data.responseJSON
-				makeTypeOfExaminationTable(clinic)
-			}
-		
-		
-	})
+		showView("showTypeOfExaminationContainer")		
+		makeTypeOfExaminationTable(clinic)	
 		
 	})
 	//KRAJ LISTE TIPOVA PREGLEDA
@@ -223,51 +196,38 @@ function initClinicAdmin(user)
 		e.preventDefault()
 		showView("addTypeOfExaminationContainer")
 		$('#errorSpanTypeOfExamination').hide()
-
-
 	})
 		
 		$('#submitTypeOfExamination').click(function(e){
 			e.preventDefault()
+
+			let typeOfExaminationName = $('#inputTypeOfExamination').val()
+			let typeOfExaminationPrice = $('#inputTypeOfExaminationPrice').val()
+			let typeOfExamination = JSON.stringify({"clinicName":clinic.name,"typeOfExamination" : typeOfExaminationName,"price" : typeOfExaminationPrice})
 			
 			$.ajax({
-			type: 'GET',
-			url: 'api/admins/clinic/getClinicFromAdmin/' + user.email,
-			complete: function(data)
-			{
-				let clinic = data.responseJSON
-				let typeOfExaminationName = $('#inputTypeOfExamination').val()
-				let typeOfExaminationPrice = $('#inputTypeOfExaminationPrice').val()
-				let typeOfExamination = JSON.stringify({"clinicName":clinic.name,"typeOfExamination" : typeOfExaminationName,"price" : typeOfExaminationPrice})
-				console.log("Called")
-				$.ajax({
-					type: 'POST',
-					url: 'api/priceList/add',
-					data: typeOfExamination,
-					dataType : "json",
-					contentType : "application/json; charset=utf-8",
-					complete: function(data2)
-					{
+				type: 'POST',
+				url: 'api/priceList/add',
+				data: typeOfExamination,
+				dataType : "json",
+				contentType : "application/json; charset=utf-8",
+				complete: function(data2)
+				{
 						
-						if(data2.status == "208")
-						{
-							$('#errorSpanTypeOfExamination').show()
-							$('#errorSpanTypeOfExamination').text("Tip pregleda koji zelite da unesete vec postoji")
-						}
-						if(data2.status == "200")
-						{
-							$('#errorSpanTypeOfExamination').hide()
-							$('#addTypeOfExaminationContainer').hide()
-							$('#showTypeOfExaminationContainer').show()
-						}
-					
+					if(data2.status == "208")
+					{
+						$('#errorSpanTypeOfExamination').show()
+						$('#errorSpanTypeOfExamination').text("Tip pregleda koji zelite da unesete vec postoji")
 					}
-				})
-			}
-		
-			})
-	
-			
+					if(data2.status == "200")
+					{
+						$('#errorSpanTypeOfExamination').hide()
+						showView("showTypeOfExaminationContainer")
+						makeTypeOfExaminationTable(clinic)
+					}
+					
+				}
+			})		
 		}) //KRAJ SUBMIT TYPE OF EXAMINATION
 
 	//KRAJ DODAVANJA TIPA PREGLEDA
@@ -278,15 +238,7 @@ function initClinicAdmin(user)
 		e.preventDefault()
 		showView("showUserContainer")
 		
-		$.ajax({
-			type: 'GET',
-			url: 'api/admins/clinic/getClinicFromAdmin/' + user.email,
-			complete: function(data)
-			{
-				let clinic = data.responseJSON
-				makeDoctorTable(clinic)
-			}
-	})
+		makeDoctorTable(clinic)
 	})
 	
 	
@@ -300,46 +252,33 @@ function initClinicAdmin(user)
 		
 		e.preventDefault()
 		showView("registrationConteiner")
-		
+						
 		$.ajax({
-			type: 'GET',
-			url: 'api/admins/clinic/getClinicFromAdmin/' + user.email,
+			type:'GET',
+			url:"api/priceList/getAllByClinic/"+clinic.name,
 			complete: function(data)
 			{
-				let clinic = data.responseJSON
-				
-				$.ajax({
-					type:'GET',
-					url:"api/priceList/getAllByClinic/"+clinic.name,
-					complete: function(data)
-					{
-						let prices = data.responseJSON
+				let prices = data.responseJSON
 						
-						$('#selectTypeOfExam').empty()
-						for(let p of prices)
-						{
-							$('#selectTypeOfExam').append($('<option>',{
-								value: p.typeOfExamination,
-								text: p.typeOfExamination
-							}))
+				$('#selectTypeOfExam').empty()
+				for(let p of prices)
+				{
+					$('#selectTypeOfExam').append($('<option>',{
+						value: p.typeOfExamination,
+						text: p.typeOfExamination
+					}))
 								
-						}
+				}
 						
-					}
-				})
-				
-				
-				$('#submitDoctor').off('click')
-				$('#submitDoctor').click(function(e){
-					e.preventDefault()
-
-					submitDoctorForm(clinic)									
-				})								
-			}		
+			}
 		})
-
-		
-		
+				
+				
+		$('#submitDoctor').off('click')
+		$('#submitDoctor').click(function(e){
+			e.preventDefault()
+			submitDoctorForm(clinic)									
+		})								
 
 	})
 	
@@ -348,44 +287,31 @@ function initClinicAdmin(user)
 		e.preventDefault()
 		showView("showHallContainer")
 		makeHallTable()
-
-		})
+	})
+	
 	let email = user.email
 	$('#submitHall').click(function(e){
 			e.preventDefault()
 			let idHall = $('#inputHall').val()
+			let nameHall = $('#inputHallName').val()
+			
+			let hall = JSON.stringify({"clinicName":clinic.name,"number" : idHall , "name": nameHall})
 			$.ajax({
-				type: 'GET',
-				url: 'api/admins/clinic/getClinicFromAdmin/'+email,
-				complete: function(data){
-					
-					let clinic = data.responseJSON
-					let hall = JSON.stringify({"clinicName":clinic.name,"number" : idHall})
-					console.log(hall)
-					$.ajax({
-						type: 'POST',
-						url: 'api/hall/addHall',
-						data: hall,
-						dataType : "json",
-						contentType : "application/json; charset=utf-8",
-						complete: function(data)
-						{
-							console.log(data.status)
+				type: 'POST',
+				url: 'api/hall/addHall',
+				data: hall,
+				dataType : "json",
+				contentType : "application/json; charset=utf-8",
+				complete: function(data)
+				{
 							
-							if(data.status == "200")
-							{
-								$("#showHallContainer").show()
-								$('#addHallContainer').hide()
-								makeHallTable()
-							}
-						}
-							
-					})
-				}
-					
-			})
-			
-			
+					if(data.status == "200")
+					{
+						showView("showHallContainer")
+						makeHallTable()
+					}
+				}						
+			})	
 	})
 	
 	//KRAJ SUBMIT HALLS
@@ -573,11 +499,12 @@ function listHall(data,i)
 	
 	let tr=$('<tr></tr>');
 	let tdNumber=$('<td class="number" data-toggle="modal" data-target="#exampleModalLong">'+ data.number +'</td>');
+	let tdName=$('<td class="name" data-toggle="modal" data-target="#exampleModalLong">'+ data.name +'</td>');
 	let tdClinic=$('<td class="clinic" data-toggle="modal" data-target="#exampleModalLong">'+ data.clinicName +'</td>');
 	let tdChange=$('<td> <button type="button" class="btn btn-primary" id = "changeHall_btn'+i+'">Izmeni</button></td>');
 	let tdDelete=$('<td> <button type="button" class="btn btn-danger" id = "deleteHall_btn'+i+'">Izbrisi</button></td>');
 	
-	tr.append(tdNumber).append(tdClinic).append(tdChange).append(tdDelete);
+	tr.append(tdNumber).append(tdName).append(tdClinic).append(tdChange).append(tdDelete);
 	$('#tableRequests tbody').append(tr);
 	
 	$('#deleteHall_btn'+i).click(function(e)
@@ -604,22 +531,21 @@ function listHall(data,i)
 		e.preventDefault()
 		showView("changeHallContainer")
 		
-		$('#inputChangeHall').val(data.number) 
+		$('#inputChangeHall').val(data.number)
+		$('#inputChangeHallName').val(data.name)
 		
 		$('#submitChangeHall').click(function(e)
 		{
 			let newNumber = $('#inputChangeHall').val()
+			let newName = $('#inputChangeHallName').val()
 			$.ajax({
 				type: 'PUT',
-				url: 'api/hall/changeHall/'+data.number+"/"+newNumber,
+				url: 'api/hall/changeHall/'+data.number+"/"+newNumber + "/" +newName,
 				complete: function(data2)
 				{
-					console.log(data2.status)
 					if(data2.status == "200")
 					{
-						console.log(data)
-						$('#changeHallContainer').hide()
-						$('#showHallContainer').show()
+						showView("showHallContainer")
 						makeHallTable(data.clinicName)
 					}
 				}
@@ -859,7 +785,7 @@ function makeHallTable()
 {
 	$.ajax({
 		type: 'GET',
-		url: 'api/hall/getAllByClinic/',
+		url: 'api/hall/getAllByClinic/'+clinic.name,
 		complete: function(data)
 		{
 			console.log(data)

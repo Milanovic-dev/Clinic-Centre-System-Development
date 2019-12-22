@@ -126,9 +126,8 @@
           <li class="breadcrumb-item active" id="breadcrumbCurrPage2" hidden="true">Prikaz</li>
 		</ol>
 
-		
     <div class="container" id ="addHallContainer" style="display:none">
-    <div class="card card-login mx-auto mt-5">
+    <div class="card card-register mx-auto mt-5">
       <div class="card-header" id="header">Dodavanje sale</div>
       <div class="card-body">
         <form>
@@ -139,6 +138,12 @@
               <input type="text" id="inputHall" class="form-control" placeholder="Identifikacioni broj sale" required="required" autofocus="autofocus">
             </div>
           </div>
+          <div class="form-group">
+          <label>Ime sale</label>
+            <div class="form-label-group">
+              <input type="text" id="inputHallName" class="form-control" placeholder="Ime sale" required="required" autofocus="autofocus">
+            </div>
+          </div>
           <span style="color:#FF1103" id="errorSpan"></span>
           <button type="button" class="btn btn-primary btn-block" id = "submitHall">Dodaj</button>
         </form>
@@ -147,7 +152,7 @@
   </div>
   
   <div class="container" id ="changeHallContainer" style="display:none">
-    <div class="card card-login mx-auto mt-5">
+    <div class="card card-register mx-auto mt-5">
       <div class="card-header" id="header">Izmena sale</div>
       <div class="card-body">
         <form>
@@ -158,6 +163,12 @@
               <input type="text" id="inputChangeHall" class="form-control" placeholder="Identifikacioni broj sale" required="required" autofocus="autofocus">
             </div>
           </div>
+           <div class="form-group">
+          <label>Ime sale</label>
+            <div class="form-label-group">
+              <input type="text" id="inputChangeHallName" class="form-control" placeholder="Ime sale" required="required" autofocus="autofocus">
+            </div>
+          </div>
           <span style="color:#FF1103" id="errorSpan"></span>
           <button type="button" class="btn btn-primary btn-block" id = "submitChangeHall">Sacuvaj</button>
         </form>
@@ -166,12 +177,13 @@
   </div>
   
    <div class="container" id ="showHallContainer" style="display:none"> 
-    <div class="card card-login mx-auto mt-5">
+    <div class="card card-register mx-auto mt-5">
        <div class="card-header">Lista postojecih sala</div>
             <table id="tableRequests" class="table table-borderless">
                 <thead>
     				<tr>
       				<th scope="col">Broj sale</th>
+      				<th scope="col">Ime sale</th>
       				<th scope="col">Klinika</th>
       				<th scope="col"></th>
       				<th scope="col"></th>

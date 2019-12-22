@@ -30,7 +30,11 @@ public class PriceListService {
 	 {
 		return priceListRepository.findAllByPrice(price);
 	 }
-
+	 
+	public Priceslist findByTypeOfExaminationAndDeleted(String typeOfExamination, Boolean deleted)
+	{
+		return priceListRepository.findByTypeOfExaminationAndDeleted(typeOfExamination, deleted);
+	}
 
     public void save(Priceslist pricesList)
     {
