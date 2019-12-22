@@ -421,7 +421,7 @@
                   </div>
               </div>
           </div>
-        <!-- ----------------KALENDAR --------------------- -->
+<!-- ----------------KALENDAR --------------------- -->
         <div class="card mb-3" id = "showCalendarContainer" style="display:none">
             <div class="card-header">
                 <i class="fas fa-table"></i>
@@ -432,8 +432,6 @@
                 </div>
             </div>
         </div>
-
-
 <!-- ----------------KALENDAR END--------------------- -->
   <!-- PREGLED U TOKU -->
   <div class="card mb-3" id = "showExaminationContainer" style="display:none">
@@ -484,11 +482,93 @@
       </div>
 
       </div>
-
-
-
   </div>
+<!-- -----------------------IZMENA PROFILA KLINIKE---------------------- -->
+<div class="container" id="changeProfileClinicContainer" style="display:none" >
+    <div class="card card-register mx-auto mt-5" >
+      <div class="card-header">Izmena profila klinike</div>
+      <div class="card-body">
+        <form id="changeCLinicForm">
+          <div class="form-group">
+               <label>Ime klinike:</label>
+                <div class="form-label-group">
+                  <input type="text" id="inputNameClinic" class="form-control" autofocus="autofocus" >
+                  <div class="valid-feedback">Izgleda dobro!</div>
+                  <div class="invalid-feedback">Ime moze sadrzati samo slova.</div>
+                </div>
+            </div>
+          <div class="form-group">
+          	<label>Adresa klinike:</label>
+            <div class="form-label-group">
+              <input type="Izmena adrese klinike" id="inputAddressClinic" class="form-control">
+            </div>
+          </div>
+          <div class="form-group">
+          		<label>Adresa prikazana pomocu google mapa:</label>
+        			<!--Google map-->
+					<div id="map-container-google-1" class="z-depth-1-half map-container">
+  						<iframe src="https://maps.google.com/maps?q=manhatan&t=&z=13&ie=UTF8&iwloc=&output=embed" frameborder="0"
+    					style="border:0" allowfullscreen></iframe>
+					</div>
+					<!--Google Maps-->
+          </div>
+          <div class="form-group">
+            <div class="form-row">
+              <div class="col-md-6">
+               <label>Opis klinike:</label>
+               <textarea name="message" rows="5" cols="65"> </textarea>
+              </div>
+              <div class="col-md-6">
+              </div>
+            </div>
+          </div>
 
+		  <span style="color:#FF1103" id="alreadyExistsD"></span>
+          <button type="button" class="btn btn-primary btn-block" id = "submitDoctor">Registruj lekara</button>
+        </form>
+      </div>
+    <div class="card mb-3" id = "showDoctorContainer">
+          <div class="card-header">
+            <i class="fas fa-table"></i>
+            Lista lekara klinike </div>
+          <div class="card-body">
+            <div class="table-responsive">
+              <table class="table table-bordered" id="tableUsers" width="100%" cellspacing="0">
+                <thead>
+					<tr>
+					<th scope="col">Ime </th>
+      				<th scope="col">Prezime </th>
+      				<th scope="col">Email </th>
+      				<th scope="col">Telefon</th>
+      				<th scope="col">Adresa</th>
+      				<th scope="col">Grad</th>
+      				<th scope="col">Drzava</th>
+           </tr>					
+					</thead>
+					<tbody>             	
+                </tbody>
+              </table>
+            </div>
+          </div>
+          </div>
+ 
+  <div class="container" id ="showHallContainer" > 
+    <div class="card card-login mx-auto mt-5">
+       <div class="card-header">Lista postojecih sala</div>
+            <table id="tableRequests" class="table table-borderless">
+                <thead>
+    				<tr>
+      				<th scope="col">Broj sale</th>
+      				<th scope="col">Klinika</th>
+      				<th scope="col"></th>
+      				<th scope="col"></th>
+    				</tr>
+  				</thead>
+                <tbody>
+ </div>
+ </div>
+<!-- ------------------KRAJ IZMENE PROFILA KLINIKE---------------------- -->
+  
 <!-- -----------------------REGISTRACIJA LEKARA------------------------- -->
 <div class="container" id="registrationConteiner" style="display:none" >
     <div class="card card-register mx-auto mt-5" >
@@ -962,6 +1042,7 @@
     </div>
   </div>
 </div>
+
 
 <!-- ----------------------KRAJ MODALA ZA IZMENU TIPA PREGLEDA------------------ -->
 <!-- ----------------------------PREDEFINISANI PREGLEDI------------------------- -->
