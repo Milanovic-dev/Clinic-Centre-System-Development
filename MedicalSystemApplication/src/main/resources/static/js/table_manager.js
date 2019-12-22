@@ -48,3 +48,8 @@ function getTableDiv(id)
 {
 	return $('#'+id)
 }
+
+function emptyTable(id)
+{
+	$('#table_'+id+' tbody').empty()
+}

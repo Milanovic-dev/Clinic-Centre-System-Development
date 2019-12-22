@@ -499,7 +499,7 @@
           <div class="form-group">
                <label>Ime klinike:</label>
                 <div class="form-label-group">
-                  <input type="text" id="inputNameClinic" class="form-control" autofocus="autofocus" >
+                  <input type="text" id="inputNameClinicProfile" class="form-control" autofocus="autofocus" >
                   <div class="valid-feedback">Izgleda dobro!</div>
                   <div class="invalid-feedback">Ime moze sadrzati samo slova.</div>
                 </div>
@@ -507,7 +507,7 @@
           <div class="form-group">
           	<label>Adresa klinike:</label>
             <div class="form-label-group">
-              <input type="Izmena adrese klinike" id="inputAddressClinic" class="form-control">
+              <input type="Izmena adrese klinike" id="inputAddressClinicProfile" class="form-control">
             </div>
           </div>
           <div class="form-group">
@@ -521,12 +521,8 @@
           </div>
           <div class="form-group">
             <div class="form-row">
-              <div class="col-md-6">
                <label>Opis klinike:</label>
-               <textarea name="message" rows="5" cols="65"> </textarea>
-              </div>
-              <div class="col-md-6">
-              </div>
+               <textarea class="form-control" id="inputDescriptionClinicProfile" > </textarea>
             </div>
           </div>
 
@@ -534,44 +530,10 @@
           <button type="button" class="btn btn-primary btn-block" id = "submitDoctor">Registruj lekara</button>
         </form>
       </div>
-    <div class="card mb-3" id = "showDoctorContainer">
-          <div class="card-header">
-            <i class="fas fa-table"></i>
-            Lista lekara klinike </div>
-          <div class="card-body">
-            <div class="table-responsive">
-              <table class="table table-bordered" id="tableUsers" width="100%" cellspacing="0">
-                <thead>
-					<tr>
-					<th scope="col">Ime </th>
-      				<th scope="col">Prezime </th>
-      				<th scope="col">Email </th>
-      				<th scope="col">Telefon</th>
-      				<th scope="col">Adresa</th>
-      				<th scope="col">Grad</th>
-      				<th scope="col">Drzava</th>
-           </tr>					
-					</thead>
-					<tbody>             	
-                </tbody>
-              </table>
-            </div>
-          </div>
-          </div>
- 
-  <div class="container" id ="showHallContainer" > 
-    <div class="card card-login mx-auto mt-5">
-       <div class="card-header">Lista postojecih sala</div>
-            <table id="tableRequests" class="table table-borderless">
-                <thead>
-    				<tr>
-      				<th scope="col">Broj sale</th>
-      				<th scope="col">Klinika</th>
-      				<th scope="col"></th>
-      				<th scope="col"></th>
-    				</tr>
-  				</thead>
-                <tbody>
+    <div id = "doctorContainer"></div>
+ 	<div id = "hallContainer"></div>
+ 	<div id = "pricesContainer"></div>
+
  </div>
  </div>
 <!-- ------------------KRAJ IZMENE PROFILA KLINIKE---------------------- -->

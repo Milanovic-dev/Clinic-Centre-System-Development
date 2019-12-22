@@ -17,6 +17,17 @@ function initClinicAdmin(user)
 	sideBar.append("<li class='nav-item active'><a class='nav-link' type='button'><span id='addPredefinedAppointment'>Dodaj predefinisani pregled</span></a></li>")
 	sideBar.append("<li class='nav-item active'><a class='nav-link' type='button'><span id='changeProfileClinic'>Izmeni profil klinike</span></a></li>")
 
+	let headersDoctors = ["Ime","Prezime","Email","Telefon","Tip pregleda koji obavlja","Adresa","Grad","Drzava"]
+	let handleDoctors = createTable("listDoctorsTable","Lista lekara",headersDoctors)
+	insertTableInto("doctorContainer",handleDoctors)
+	
+	let headersHalls = ["Broj sale","Klinika kojoj pripada"]
+	let handleHalls = createTable("listHallsTable","Lista Sala",headersHalls)
+	insertTableInto("hallContainer",handleHalls)
+	
+	let headersPrices = ["Tip pregleda" ,"Cena pregleda"]
+	let handlePrices = createTable("listPricesTable","Cenovnik",headersPrices)
+	insertTableInto("pricesContainer",handlePrices)
 	
 	//IZMENA PROFILA KLINIKE
 	$('#changeProfileClinic').click(function(e){
@@ -32,6 +43,73 @@ function initClinicAdmin(user)
 		$('#registrationConteiner').hide()
 		$('#AppointmentContainer').hide()
 		
+		//tables
+		getTableDiv("listDoctorsTable").show()
+		getTableDiv("listHallsTable").show()
+		getTableDiv("listPricesTable").show()
+
+		
+		$.ajax({
+			type: 'GET',
+			url: 'api/admins/clinic/getClinicFromAdmin/' + user.email,
+			complete: function(data)
+			{
+				let clinic = data.responseJSON
+				
+				$('#inputNameClinicProfile').val(clinic.name)
+				$('#inputAddressClinicProfile').val(clinic.address)
+				$('#inputDescriptionClinicProfile').val(clinic.description)
+				
+				$.ajax({
+					type: 'GET',
+					url: 'api/clinic/getDoctors/' + clinic.name,
+					complete: function(data)
+					{
+						doctors = data.responseJSON
+						emptyTable("listDoctorsTable")
+						for(d of doctors)
+						{
+							let values = [d.user.name,d.user.surname,d.user.email,d.user.phone,d.type,d.user.address,d.user.city,d.user.state]
+							insertTableData("listDoctorsTable",values)
+						}
+					}
+				
+				})
+				$.ajax({
+					type: 'GET',
+					url: 'api/hall/getAllByClinic/' + clinic.name,
+					complete: function(data)
+					{
+						halls = data.responseJSON
+						
+						emptyTable("listHallsTable")
+						for(h of halls )
+						{
+							let values = [h.number , h.clinicName]
+							insertTableData("listHallsTable",values)
+						}
+					}
+				})
+				
+				$.ajax({
+					type: 'GET',
+					url: 'api/priceList/getAllByClinic/' + clinic.name,
+					complete: function(data)
+					{
+						prices = data.responseJSON
+						
+						emptyTable("listPricesTable")
+						for(p of prices)
+						{
+							let values = [p.typeOfExamination , p.price]
+							insertTableData("listPricesTable",values)
+						}
+					}
+				})
+				
+			}
+
+	})
 	})
 	
 	
