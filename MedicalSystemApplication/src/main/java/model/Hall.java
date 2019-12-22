@@ -25,6 +25,9 @@ public class Hall
 	@Column(name= "number",nullable = false)
 	private int number; 	
 	
+	@Column(name= "name",nullable = false)
+	private String name;
+	
 	@Column(name="deleted",nullable = false)
 	private Boolean deleted;
 
@@ -35,14 +38,25 @@ public class Hall
 	}
 	
 	
-	public Hall(Clinic clinic, int number) {
+	public Hall(Clinic clinic, int number,String name) {
 		super();
 		this.clinic = clinic;
 		this.number = number;
+		this.name=name;
 		deleted = false;
 	}
 
 	
+
+	public String getName() {
+		return name;
+	}
+
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
 
 	public Boolean getDeleted() {
 		return deleted;

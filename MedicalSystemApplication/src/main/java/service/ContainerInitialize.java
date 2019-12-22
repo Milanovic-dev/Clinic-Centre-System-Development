@@ -185,8 +185,8 @@ public class ContainerInitialize {
 			doctor3.setAvarageRating(9.91f);
 			userRepository.save(doctor3);
 			
-			Hall hall1 = new Hall(clinic,1);
-			Hall hall2 = new Hall(clinic,2);			
+			Hall hall1 = new Hall(clinic,1,"Prva sala");
+			Hall hall2 = new Hall(clinic,2,"Druga sala");			
 			hallRepository.save(hall1);
 			hallRepository.save(hall2);
 			

@@ -118,8 +118,8 @@ public class HallController {
 		
 	}
 	
-	@PutMapping(value="/changeHall/{oldNumber}/{newNumber}")
-	public ResponseEntity<Void> changeHall(@PathVariable("oldNumber") int oldNumber,@PathVariable("newNumber") int newNumber)
+	@PutMapping(value="/changeHall/{oldNumber}/{newNumber}/{newName}")
+	public ResponseEntity<Void> changeHall(@PathVariable("oldNumber") int oldNumber,@PathVariable("newNumber") int newNumber,@PathVariable("newName") String newName)
 	{
 		Hall hall = hallService.findByNumber(oldNumber);
 		
@@ -129,7 +129,9 @@ public class HallController {
 		}
 		
 		hall.setNumber(newNumber);
+		hall.setName(newName);
 		hallService.save(hall);
+		
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 	
@@ -166,8 +168,10 @@ public class HallController {
 	        }
 	        		
 	        if(h == null) {
-	            Hall newHall = new Hall(clinic,hall.getNumber());
+	            Hall newHall = new Hall(clinic,hall.getNumber(),hall.getName());
 	            hallService.save(newHall);
+	            clinic.getHalls().add(newHall);
+	            clinicService.save(clinic);
 	            
 	        } else {
 	            return new ResponseEntity<>(HttpStatus.ALREADY_REPORTED);
