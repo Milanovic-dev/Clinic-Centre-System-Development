@@ -229,7 +229,7 @@ public class ClinicController {
     	
     	if(dto.getState() != "")
     		clinic.setState(dto.getState());
-    	
+    	clinicService.save(clinic);
     	return new ResponseEntity<>(HttpStatus.OK);
     		
     }
