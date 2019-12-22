@@ -6,7 +6,8 @@
 function initClinicAdmin(user)
 {
 	let sideBar = $("#sideBar")
-	sideBar.append("<li class='nav-item active'><a class='nav-link' href='userProfileNew.html'><i class='fas fa-fw fa-tachometer-alt'></i><span id='profileUser'>Profil</span></a></li>")	
+	sideBar.append("<li class='nav-item active'><a class='nav-link' href='userProfileNew.html'><i class='fas fa-fw fa-tachometer-alt'></i><span id='profileUser'>Profil</span></a></li>")
+	sideBar.append("<li class='nav-item active'><a class='nav-link' type='button'><span id='changeProfileClinic'>Uredi profil klinike</span></a></li>")
 	sideBar.append("<li class='nav-item active'><a class='nav-link' type='button'><span id='addHall'>Dodaj salu</span></a></li>")	
 	sideBar.append("<li class='nav-item active'><a class='nav-link' type='button'><span id='showHalls'>Lista sala</span></a></li>")
 	sideBar.append("<li class='nav-item active'><a class='nav-link' type='button'><span id='addDoctor'>Dodaj lekara</span></a></li>")
@@ -14,7 +15,28 @@ function initClinicAdmin(user)
 	sideBar.append("<li class='nav-item active'><a class='nav-link' type='button'><span id='addTypeOfExamination'>Dodaj tip pregleda</span></a></li>")
 	sideBar.append("<li class='nav-item active'><a class='nav-link' type='button'><span id='showTypeOfExamination'>Lista tipova pregleda</span></a></li>")
 	sideBar.append("<li class='nav-item active'><a class='nav-link' type='button'><span id='addPredefinedAppointment'>Dodaj predefinisani pregled</span></a></li>")
+	sideBar.append("<li class='nav-item active'><a class='nav-link' type='button'><span id='changeProfileClinic'>Izmeni profil klinike</span></a></li>")
 
+	
+	//IZMENA PROFILA KLINIKE
+	$('#changeProfileClinic').click(function(e){
+		e.preventDefault()
+		$("#changeProfileClinicContainer").show()
+
+		$("#addHallContainer").hide()
+		$("#showHallContainer").hide()
+		$("#changeHallContainer").hide()
+		$("#showUserContainer").hide()
+		$('#addTypeOfExaminationContainer').hide()
+		$('#showTypeOfExaminationContainer').hide()
+		$('#registrationConteiner').hide()
+		$('#AppointmentContainer').hide()
+		
+	})
+	
+	
+	//KRAJ IZMENE PROFILA KLINIKE
+	
 	//DODAVANJE PREDEFINISANOG PREGLEDA
 	
 	$('#addPredefinedAppointment').click(function(e){
@@ -27,6 +49,8 @@ function initClinicAdmin(user)
 		$('#showTypeOfExaminationContainer').hide()
 		$('#registrationConteiner').hide()
 		$('#AppointmentContainer').show()
+		$("#changeProfileClinicContainer").hide()
+
 		
 		$.ajax({
 			type: 'GET',
@@ -70,6 +94,7 @@ function initClinicAdmin(user)
 		$('#showTypeOfExaminationContainer').show()
 		$('#registrationConteiner').hide()
 		$('#AppointmentContainer').hide()
+		$("#changeProfileClinicContainer").hide()
 
 		
 		$.ajax({
@@ -99,6 +124,7 @@ function initClinicAdmin(user)
 		$('#errorSpanTypeOfExamination').hide()
 		$('#registrationConteiner').hide()
 		$('#AppointmentContainer').hide()
+		$("#changeProfileClinicContainer").hide()
 
 
 	})
@@ -161,6 +187,7 @@ function initClinicAdmin(user)
 		$('#showTypeOfExaminationContainer').hide()
 		$('#registrationConteiner').hide()
 		$('#AppointmentContainer').hide()
+		$("#changeProfileClinicContainer").hide()
 
 		
 		$.ajax({
@@ -188,6 +215,9 @@ function initClinicAdmin(user)
 		$('#showTypeOfExaminationContainer').hide()
 		$('#registrationConteiner').hide()
 		$('#AppointmentContainer').hide()
+
+		$("#changeProfileClinicContainer").hide()
+
 		
 	})
 	
@@ -202,7 +232,9 @@ function initClinicAdmin(user)
 		$('#addTypeOfExaminationContainer').hide()
 		$('#showTypeOfExaminationContainer').hide()
 		$('#AppointmentContainer').hide()
-		
+		$("#changeProfileClinicContainer").hide()
+
+				
 		$.ajax({
 			type: 'GET',
 			url: 'api/admins/clinic/getClinicFromAdmin/' + user.email,
@@ -256,6 +288,8 @@ function initClinicAdmin(user)
 		$('#showTypeOfExaminationContainer').hide()
 		$('#registrationConteiner').hide()
 		$('#AppointmentContainer').hide()
+		$("#changeProfileClinicContainer").hide()
+
 		
 		makeHallTable()
 
@@ -520,6 +554,8 @@ function listHall(data,i)
 		$('#showTypeOfExaminationContainer').hide()
 		$('#registrationConteiner').hide()
 		$('#AppointmentContainer').hide()
+		$("#changeProfileClinicContainer").hide()
+
 		
 		$('#inputChangeHall').val(data.number) 
 		
