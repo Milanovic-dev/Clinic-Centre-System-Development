@@ -49,7 +49,7 @@ public class ContainerInitialize {
 		String hash;
 		try {
 			hash = SecurePasswordHasher.getInstance().encode(token);
-			userRepository.save(new CentreAdmin(hash, "klinickicentartest@gmail.com", "Admin", "Adminic","Novi Sad","Trg Dositeja Obradovica 6", "Srbija", "011100100", true));
+			userRepository.save(new CentreAdmin(hash, "adminCentra@gmail.com", "Steva", "Stevic","Novi Sad","Trg Dositeja Obradovica 6", "Srbija", "011100100", true));
 			
 			hash = SecurePasswordHasher.getInstance().encode("123");
 
@@ -81,7 +81,7 @@ public class ContainerInitialize {
 			patient.getMedicalRecord().setBloodType(BloodType.AB);
 			patient.getMedicalRecord().setAlergies(Arrays.asList("Polen","Secer"));
 			patient.getMedicalRecord().setHeight("195cm");
-			patient.getMedicalRecord().setWeight("90kg");
+			patient.getMedicalRecord().setWeight("85kg");
 
 			Patient patient2 = new Patient.Builder("patient1@gmail.com")
 					.withPassword(hash)
@@ -109,46 +109,50 @@ public class ContainerInitialize {
 			userRepository.save(patient1);
 			userRepository.save(patient2);
 			
-			Clinic clinic = new Clinic("KlinikaTest","Karajdorjdeva 8","Novi Sad","Srbija","Opis");
+			Clinic clinic = new Clinic("KlinikaA","Bulevar Osl. 10","Novi Sad","Srbija","Opis");
+			Clinic clinic2 = new Clinic("KlinikaB","Kisacka 5","Beogard","Srbija","Opis");
 				
 			clinicRepository.save(clinic);
-					
-			ClinicAdmin clinicAdmin = new ClinicAdmin.Builder("clinicAdmin@gmail.com")
+			clinicRepository.save(clinic2);
+			
+			ClinicAdmin clinicAdmin = new ClinicAdmin.Builder("adminKlinike@gmail.com")
 					.withPassword(hash)
-					.withName("ClinicAdmin1")
-					.withSurname("ClinicAdmin")
+					.withName("Marko")
+					.withSurname("Markovic")
 					.withCity("Novi Sad")
-					.withAddress("Karadjordjeva 8")
+					.withAddress("Kisacka")
 					.withState("Srbija")
 					.withPhone("42332423")
 					.withClinic(clinic)					
 					.build();
 			
+			clinicAdmin.setIsFirstLog(false);
 			userRepository.save(clinicAdmin);
 
 
 			Doctor doctor1 = new Doctor.Builder("doktor1@gmail.com")
 					.withPassword(hash)
-					.withName("Doktor1")
-					.withSurname("Doktor")
+					.withName("Steva")
+					.withSurname("Stevic")
 					.withCity("Novi Sad")
 					.withAddress("Kisacka")
 					.withState("Srbija")
 					.withPhone("5435435")
-					.withInsuranceID("")
+					.withInsuranceID("123484654324")
 					.withType("Stomatoloski")
 					.withClinic(clinic)					
 					.withShiftStart(DateUtil.getInstance().GetDate("08:00","HH:mm"))
 					.withShiftEnd(DateUtil.getInstance().GetDate("14:00","HH:mm"))
 					.build();
-
+			
+			doctor1.setIsFirstLog(false);
 			doctor1.setAvarageRating(8.81f);
 			userRepository.save(doctor1);
 			
 			Doctor doctor2 = new Doctor.Builder("doktor2@gmail.com")
 					.withPassword(hash)
-					.withName("Doktor2")
-					.withSurname("Doktor")
+					.withName("Nikola")
+					.withSurname("Nikolic")
 					.withCity("Novi Sad")
 					.withAddress("Kisacka")
 					.withState("Srbija")
@@ -165,8 +169,8 @@ public class ContainerInitialize {
 			
 			Doctor doctor3 = new Doctor.Builder("doktor3@gmail.com")
 					.withPassword(hash)
-					.withName("Doktor3")
-					.withSurname("Doktor")
+					.withName("Petar")
+					.withSurname("Pertrovic")
 					.withCity("Novi Sad")
 					.withAddress("Kisacka")
 					.withState("Srbija")
@@ -228,7 +232,7 @@ public class ContainerInitialize {
 			
 			Nurse nurse = new Nurse.Builder("nurse@gmail.com")
 					.withPassword(hash)
-					.withName("Sestra1")
+					.withName("Sestra")
 					.withSurname("Sestra")
 					.withCity("Novi Sad")
 					.withAddress("Bulevar")
@@ -239,6 +243,7 @@ public class ContainerInitialize {
 					.withShiftEnd(new Date())
 					.build();
 			
+			nurse.setIsFirstLog(false);
 			userRepository.save(nurse);
 			
 			

@@ -253,6 +253,7 @@ function initCalendarDoc(user)
                                   end: currentDate.clone().endOf("year")
                               };
                           }
+
                       }
                   },
                    eventColor: '#2f989d',
@@ -261,6 +262,7 @@ function initCalendarDoc(user)
                            url: 'api/appointments/doctor/getAllAppointments/'+user.email,
                            method: 'GET',
                            extraParams: {
+
 
                            },
 

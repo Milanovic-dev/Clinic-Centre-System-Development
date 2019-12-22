@@ -166,7 +166,7 @@ function initCalendar(user)
                    },
 
                    failure: function() {
-                     alert('there was an error while fetching events!');
+                     
                    },
 
                  },
