@@ -5,6 +5,7 @@
 //ULAZNA FUNKCIJA
 function initClinicAdmin(user)
 {
+
 	let sideBar = $("#sideBar")
 	sideBar.append("<li class='nav-item active'><a class='nav-link' href='userProfileNew.html'><i class='fas fa-fw fa-tachometer-alt'></i><span id='profileUser'>Profil</span></a></li>")
 	sideBar.append("<li class='nav-item active'><a class='nav-link' type='button'><span id='changeProfileClinic'>Uredi profil klinike</span></a></li>")
@@ -16,7 +17,18 @@ function initClinicAdmin(user)
 	sideBar.append("<li class='nav-item active'><a class='nav-link' type='button'><span id='showTypeOfExamination'>Lista tipova pregleda</span></a></li>")
 	sideBar.append("<li class='nav-item active'><a class='nav-link' type='button'><span id='addPredefinedAppointment'>Dodaj predefinisani pregled</span></a></li>")
 	sideBar.append("<li class='nav-item active'><a class='nav-link' type='button'><span id='changeProfileClinic'>Izmeni profil klinike</span></a></li>")
+	
+	addView("addHallContainer")
+	addView("showHallContainer")
+	addView("changeHallContainer")
+	addView("showUserContainer")
+	addView("addTypeOfExaminationContainer")
+	addView("showTypeOfExaminationContainer")
+	addView("registrationConteiner")
+	addView("AppointmentContainer")
+	addView("changeProfileClinicContainer")
 
+	
 	let headersDoctors = ["Ime","Prezime","Email","Telefon","Tip pregleda koji obavlja","Adresa","Grad","Drzava"]
 	let handleDoctors = createTable("listDoctorsTable","Lista lekara",headersDoctors)
 	insertTableInto("doctorContainer",handleDoctors)
@@ -32,18 +44,8 @@ function initClinicAdmin(user)
 	//IZMENA PROFILA KLINIKE
 	$('#changeProfileClinic').click(function(e){
 		e.preventDefault()
-		$("#changeProfileClinicContainer").show()
-
-		$("#addHallContainer").hide()
-		$("#showHallContainer").hide()
-		$("#changeHallContainer").hide()
-		$("#showUserContainer").hide()
-		$('#addTypeOfExaminationContainer').hide()
-		$('#showTypeOfExaminationContainer').hide()
-		$('#registrationConteiner').hide()
-		$('#AppointmentContainer').hide()
+		showView("changeProfileClinicContainer")
 		
-		//tables
 		getTableDiv("listDoctorsTable").show()
 		getTableDiv("listHallsTable").show()
 		getTableDiv("listPricesTable").show()
@@ -110,6 +112,49 @@ function initClinicAdmin(user)
 			}
 
 	})
+	$('#submitChangesClinicProfile').click(function(e){
+		let nameClinic = $('#inputNameClinicProfile').val()
+		let addressClinic = $('#inputAddressClinicProfile').val()
+		let descriptionClinic = $('#inputDescriptionClinicProfile').val()
+		
+		
+		$.ajax({
+			type: 'GET',
+			url: 'api/admins/clinic/getClinicFromAdmin/' + user.email,
+			complete: function(data)
+			{
+				let clinic = data.responseJSON
+				
+				let c = {"name": nameClinic,"address": addressClinic,"city": clinic.city,"state": clinic.state,"description": descriptionClinic,"rating": clinic.rating}
+				clinicJSON = JSON.stringify(c)
+				
+				$.ajax({
+					type: 'PUT',
+					url: 'api/clinic/update/' + clinic.name,
+					data: clinicJSON,
+					dataType: "json",
+					contentType : "application/json; charset=utf-8",
+					complete: function(data)
+					{
+						if(data.status == "200")
+						{
+							$('#successSubmit').text("Uspesno ste izmenili profil klinike")
+							$('#successSubmit').show()
+						}
+						else
+						{
+							$('#successSubmit').text("Izmena klinike nije uspela")
+							$('#successSubmit').show()
+
+						}
+					}
+					
+				})
+			}
+		})
+		
+	})
+	
 	})
 	
 	
@@ -119,16 +164,8 @@ function initClinicAdmin(user)
 	
 	$('#addPredefinedAppointment').click(function(e){
 		e.preventDefault()
-		$("#addHallContainer").hide()
-		$("#showHallContainer").hide()
-		$("#changeHallContainer").hide()
-		$("#showUserContainer").hide()
-		$('#addTypeOfExaminationContainer').hide()
-		$('#showTypeOfExaminationContainer').hide()
-		$('#registrationConteiner').hide()
-		$('#AppointmentContainer').show()
-		$("#changeProfileClinicContainer").hide()
-
+		
+		showView("AppointmentContainer")
 		
 		$.ajax({
 			type: 'GET',
@@ -164,17 +201,8 @@ function initClinicAdmin(user)
 	//LISTA TIPOVA PREGLEDA
 	$('#showTypeOfExamination').click(function(e){
 		e.preventDefault()
-		$("#addHallContainer").hide()
-		$("#showHallContainer").hide()
-		$("#changeHallContainer").hide()
-		$("#showUserContainer").hide()
-		$('#addTypeOfExaminationContainer').hide()
-		$('#showTypeOfExaminationContainer').show()
-		$('#registrationConteiner').hide()
-		$('#AppointmentContainer').hide()
-		$("#changeProfileClinicContainer").hide()
+		showView("showTypeOfExaminationContainer")
 
-		
 		$.ajax({
 			type: 'GET',
 			url: 'api/admins/clinic/getClinicFromAdmin/' + user.email,
@@ -193,16 +221,8 @@ function initClinicAdmin(user)
 	//DODAVANJE TIPA PREGLEDA
 	$('#addTypeOfExamination').click(function(e){
 		e.preventDefault()
-		$("#addHallContainer").hide()
-		$("#showHallContainer").hide()
-		$("#changeHallContainer").hide()
-		$("#showUserContainer").hide()
-		$('#addTypeOfExaminationContainer').show()
-		$('#showTypeOfExaminationContainer').hide()
+		showView("addTypeOfExaminationContainer")
 		$('#errorSpanTypeOfExamination').hide()
-		$('#registrationConteiner').hide()
-		$('#AppointmentContainer').hide()
-		$("#changeProfileClinicContainer").hide()
 
 
 	})
@@ -256,17 +276,7 @@ function initClinicAdmin(user)
 	
 	$('#showDoctor').click(function(e){
 		e.preventDefault()
-		
-		$("#addHallContainer").hide()
-		$("#showHallContainer").hide()
-		$("#changeHallContainer").hide()
-		$("#showUserContainer").show()
-		$('#addTypeOfExaminationContainer').hide()
-		$('#showTypeOfExaminationContainer').hide()
-		$('#registrationConteiner').hide()
-		$('#AppointmentContainer').hide()
-		$("#changeProfileClinicContainer").hide()
-
+		showView("showUserContainer")
 		
 		$.ajax({
 			type: 'GET',
@@ -276,8 +286,6 @@ function initClinicAdmin(user)
 				let clinic = data.responseJSON
 				makeDoctorTable(clinic)
 			}
-		
-		
 	})
 	})
 	
@@ -285,34 +293,14 @@ function initClinicAdmin(user)
 	$('#addHall').click(function(e){
 		
 		e.preventDefault()
-		$("#addHallContainer").show()
-		$("#showHallContainer").hide()
-		$("#changeHallContainer").hide()
-		$("#showUserContainer").hide()
-		$('#addTypeOfExaminationContainer').hide()
-		$('#showTypeOfExaminationContainer').hide()
-		$('#registrationConteiner').hide()
-		$('#AppointmentContainer').hide()
-
-		$("#changeProfileClinicContainer").hide()
-
-		
+		showView("addHallContainer")	
 	})
 	
 	$('#addDoctor').click(function(e){
 		
 		e.preventDefault()
-		$("#addHallContainer").hide()
-		$("#showHallContainer").hide()
-		$("#changeHallContainer").hide()
-		$('#registrationConteiner').show()
-		$("#showUserContainer").hide()
-		$('#addTypeOfExaminationContainer').hide()
-		$('#showTypeOfExaminationContainer').hide()
-		$('#AppointmentContainer').hide()
-		$("#changeProfileClinicContainer").hide()
-
-				
+		showView("registrationConteiner")
+		
 		$.ajax({
 			type: 'GET',
 			url: 'api/admins/clinic/getClinicFromAdmin/' + user.email,
@@ -358,17 +346,7 @@ function initClinicAdmin(user)
 	$('#showHalls').click(function(e){
 		
 		e.preventDefault()
-		$("#showHallContainer").show()
-		$('#addHallContainer').hide()
-		$("#changeHallContainer").hide()
-		$("#showUserContainer").hide()
-		$('#addTypeOfExaminationContainer').hide()
-		$('#showTypeOfExaminationContainer').hide()
-		$('#registrationConteiner').hide()
-		$('#AppointmentContainer').hide()
-		$("#changeProfileClinicContainer").hide()
-
-		
+		showView("showHallContainer")
 		makeHallTable()
 
 		})
@@ -624,16 +602,7 @@ function listHall(data,i)
 	$('#changeHall_btn'+i).click(function(e)
 	{
 		e.preventDefault()
-
-		$('#addHallContainer').hide()
-		$('#showHallContainer').hide()
-		$('#changeHallContainer').show()
-		$('#addTypeOfExaminationContainer').hide()
-		$('#showTypeOfExaminationContainer').hide()
-		$('#registrationConteiner').hide()
-		$('#AppointmentContainer').hide()
-		$("#changeProfileClinicContainer").hide()
-
+		showView("changeHallContainer")
 		
 		$('#inputChangeHall').val(data.number) 
 		
@@ -643,15 +612,15 @@ function listHall(data,i)
 			$.ajax({
 				type: 'PUT',
 				url: 'api/hall/changeHall/'+data.number+"/"+newNumber,
-				complete: function(data)
+				complete: function(data2)
 				{
-					console.log(data.status)
-					if(data.status == "200")
+					console.log(data2.status)
+					if(data2.status == "200")
 					{
-						
+						console.log(data)
 						$('#changeHallContainer').hide()
 						$('#showHallContainer').show()
-						makeHallTable()
+						makeHallTable(data.clinicName)
 					}
 				}
 			
@@ -890,7 +859,7 @@ function makeHallTable()
 {
 	$.ajax({
 		type: 'GET',
-		url: 'api/hall/getAll',
+		url: 'api/hall/getAllByClinic/',
 		complete: function(data)
 		{
 			console.log(data)
