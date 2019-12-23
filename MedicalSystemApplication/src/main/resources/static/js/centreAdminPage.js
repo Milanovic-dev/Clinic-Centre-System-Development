@@ -33,7 +33,7 @@ function addPersonalInformations(data)
 
 
 
-	if(user.email == "klinickicentartest@gmail.com")
+	if(user.email == "adminCentra@gmail.com")
 	{
 
        	document.getElementById("centreAdminReg").style.visibility = "visible";

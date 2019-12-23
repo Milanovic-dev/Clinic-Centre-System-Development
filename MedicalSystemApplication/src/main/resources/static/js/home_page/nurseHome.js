@@ -20,11 +20,16 @@ function initNurse(user)
 
 function pageSetUp(user)
 {
+
+    clearViews()
+    addView('showCalendarContainer')
+    addView('showPatientsContainer')
+
+
 	$("#patientList").click(function(e){
 		e.preventDefault()
 
-        $('#showCalendarContainer').hide()
-		$('#showPatientsContainer').show()
+        showView('showPatientsContainer')
         $('#breadcrumbCurrPage').removeAttr('hidden')
         $('#breadcrumbCurrPage').text("Lista pacijenata")
         $('#breadcrumbCurrPage2').attr('hidden',true)
@@ -35,9 +40,8 @@ function pageSetUp(user)
 	$("#workCalendar").click(function(e){
 		e.preventDefault()
 
+        showView('showCalendarContainer')
 
-        $('#showPatientsContainer').hide()
-        $('#showCalendarContainer').show()
         $('#breadcrumbCurrPage').removeAttr('hidden')
         $('#breadcrumbCurrPage').text("Radni kalendar")
         $('#breadcrumbCurrPage2').attr('hidden',true)
@@ -192,7 +196,9 @@ $.ajax({
 			complete: function(data)
 			{
 				let patients = data.responseJSON
-
+                for(p of patients){
+                console.log(p)
+                }
 				$('#tablePatients').DataTable( {
                         data: patients,
                         columns: [
@@ -202,7 +208,8 @@ $.ajax({
                             { data: "city" },
                             { data: "state" },
                             { data: "phone" },
-                            { data: "email" }
+                            { data: "email" },
+                            { data: "insuranceId" }
                         ]
                     } );
 

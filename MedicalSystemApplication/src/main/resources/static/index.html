@@ -128,7 +128,7 @@
 
     <div class="container" id ="addHallContainer" style="display:none">
     <div class="card card-register mx-auto mt-5">
-      <div class="card-header" id="header">Dodavanje sale</div>
+      <div class="card-header">Dodavanje sale</div>
       <div class="card-body">
         <form>
           <div class="form-group">
@@ -144,7 +144,7 @@
               <input type="text" id="inputHallName" class="form-control" placeholder="Ime sale" required="required" autofocus="autofocus">
             </div>
           </div>
-          <span style="color:#FF1103" id="errorSpan"></span>
+          <span style="color:#FF1103"></span>
           <button type="button" class="btn btn-primary btn-block" id = "submitHall">Dodaj</button>
         </form>
       </div>
@@ -153,7 +153,7 @@
   
   <div class="container" id ="changeHallContainer" style="display:none">
     <div class="card card-register mx-auto mt-5">
-      <div class="card-header" id="header">Izmena sale</div>
+      <div class="card-header">Izmena sale</div>
       <div class="card-body">
         <form>
           <div class="form-group">
@@ -169,7 +169,7 @@
               <input type="text" id="inputChangeHallName" class="form-control" placeholder="Ime sale" required="required" autofocus="autofocus">
             </div>
           </div>
-          <span style="color:#FF1103" id="errorSpan"></span>
+          <span style="color:#FF1103"></span>
           <button type="button" class="btn btn-primary btn-block" id = "submitChangeHall">Sacuvaj</button>
         </form>
       </div>
@@ -306,7 +306,7 @@
   
   <div class="container" id ="detailsAppointmentContainer" style="display:none">   
     <div class="card">
-      <div class="card-header" id="header">Pregled</div>
+      <div class="card-header" >Pregled</div>
       <div class="card-body">
         <form>
           <div class="form-group">
@@ -387,6 +387,7 @@
                               <th scope="col" >Drzava</th>
                               <th scope="col" >Telefon</th>
                               <th scope="col" >Email</th>
+                              <th scope="col" >Broj osiguranika</th>
                           </tr>
                           </thead>
                           <tbody>
@@ -422,15 +423,11 @@
           <hr>
 
           <select title="Dijagnoze" class="selectpicker" id="selectDiagnosis" style="height: 40px !important;" multiple data-live-search="true">
-              <option>kasalj</option>
-              <option>prehlada</option>
-              <option>grip</option>
+
           </select>
 
           <select title="Lekovi za recept" class="selectpicker" id="selectDrug" style="height: 40px !important;" multiple data-live-search="true">
-              <option>paracetamol</option>
-              <option>kafetin</option>
-              <option>analgin</option>
+
           </select>
             <hr>
           <label class="form-control-label" style="opacity: 0.8">Terapija uz recept: </label> <br>
@@ -498,7 +495,7 @@
                <textarea class="form-control" id="inputDescriptionClinicProfile" > </textarea>
             </div>
           </div>
-          <span id="successSubmit" style="color: red " style="display:none"></span>
+          <span id="successSubmit" style="display:none; color:red"></span>
           <button type="button" class="btn btn-primary btn-block" id = "submitChangesClinicProfile">Sacuvaj izmene</button>
         </form>
       </div>
@@ -868,7 +865,7 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">New message</h5>
+        <h5 class="modal-title">New message</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -876,14 +873,14 @@
       <div class="modal-body">
         <form>
           <div class="form-group">
-            <label for="recipient-name" class="col-form-label">Pocetak smene:</label>
+            <label for="shiftStart_input" class="col-form-label">Pocetak smene:</label>
   				<input type="time" id="shiftStart_input" class="form-control">
- 				<label for="inputMDEx1">Izaberite pocetak radnog vremena</label>
+ 				<label for="shiftStart_input">Izaberite pocetak radnog vremena</label>
           </div>
           <div class="form-group">
-            <label for="message-text" class="col-form-label">Kraj smene:</label>
+            <label for="shiftEnd_input" class="col-form-label">Kraj smene:</label>
   				<input type="time" id="shiftEnd_input" class="form-control">
-  				<label for="inputMDEx1">Izaberite kraj radnog vremena</label>
+  				<label for="shiftEnd_input">Izaberite kraj radnog vremena</label>
           </div>
         </form>    
       </div>
@@ -899,7 +896,7 @@
 <!-- -----------------------DODAVANJE TIPA PREGLEDA------------------------ ------->
  <div class="container" id ="addTypeOfExaminationContainer" style="display:none">
     <div class="card card-login mx-auto mt-5">
-      <div class="card-header" id="header">Dodavanje tipa pregleda</div>
+      <div class="card-header" >Dodavanje tipa pregleda</div>
       <div class="card-body">
         <form>
           <div class="form-group">
@@ -940,11 +937,11 @@
       <div class="modal-body">
         <form>
           <div class="form-group">
-            <label for="recipient-name" class="col-form-label">Ime tipa pregleda</label>
+            <label for="typeOfExamination_input" class="col-form-label">Ime tipa pregleda</label>
   				<input type="text" id="typeOfExamination_input" class="form-control">
           </div>
           <div class="form-group">
-            <label for="message-text" class="col-form-label">Cena tipa pregleda</label>
+            <label for="typeOfExaminationPrice_input" class="col-form-label">Cena tipa pregleda</label>
   				<input type="number" pattern="[0-9.]+" id="typeOfExaminationPrice_input" class="form-control">
           </div>
         </form>    
@@ -962,7 +959,7 @@
 <!-- ----------------------------PREDEFINISANI PREGLEDI------------------------- -->
 <div class="container" id ="AppointmentContainer" style="display:none">   
     <div class="card">
-      <div class="card-header" id="header">Pregled</div>
+      <div class="card-header">Pregled</div>
       <div class="card-body">
         <form>
           <div class="form-group">
@@ -994,13 +991,13 @@
             </div>
           </div>
             <div class="form-group">
-      		<label for="inputAppointmentT">Tip pregleda</label>
+      		<label for="inputAppointmentTypeSelect">Tip pregleda</label>
       		<select id="inputAppointmentTypeSelect" class="form-control">
         		
      		</select>
     	   </div>
           <div class="form-group">
-      		<label for="inputAppointmentH">Sala</label>
+      		<label for="inputAppointmentHall">Sala</label>
       		<select id="inputAppointmentHall" class="form-control">
      		</select>
     	   </div>
@@ -1011,12 +1008,12 @@
             </div>
           </div>   
     	   <br>
-    	   <div class="card mb-3" id = "showDoctorsContainerDisabled">
+    	   <div class="card mb-3">
           <div class="card-header">
             Lekari koji vrse odabrani tip pregleda</div>
           <div class="card-body">
             <div class="table-responsive">
-              <table class="table table-hover" id="tableDoctorsList" ="100%" cellspacing="0">
+              <table class="table table-hover" id="tableDoctorsList" cellspacing="0">
                 <thead>
 					<tr>
 					<th scope="col">Ime</th>
@@ -1041,7 +1038,7 @@
 <!-- -----------------------KRAJ PREDEFINISANIH PREGLEDA------------------------ -->
 
 <!-- -----------------------MODAL ZA KALENDAR----------------------- -->
-<div class="modal fade" id="modalCalendar" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="modalCalendar" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-dialog" role="document">
       <div class="modal-content">
           <div class="modal-header">
@@ -1087,8 +1084,6 @@
   </div>
 
           
-  </div>
-  
   </div>
   <!-- /#wrapper -->
 
