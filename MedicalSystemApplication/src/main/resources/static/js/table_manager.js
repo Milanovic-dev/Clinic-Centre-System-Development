@@ -1,13 +1,13 @@
 /**
  * 
  */
-
+//TODO: Resiti id-ove
 
 function createTable(id,name,headers)
 {
 	if($('#'+id).length > 0)
 	{
-		console.log("Cannot create table: "+id+" already exists in current DOM")
+		console.error("Cannot create table: "+id+" already exists in current DOM")
 		return
 	}
 	
@@ -26,8 +26,72 @@ function createTable(id,name,headers)
 }
 
 
+function createDataTable(id,div,name,headers,orderBy)
+{
+	let handle = createTable(id,name,headers)
+	
+	insertTableInto(div,handle)
+	
+	$('#table_'+id).DataTable(
+	{
+		"order":[[orderBy,"desc"]]
+	})
+}
+
+
+
+function setTableClickEvent(id, row, col, func)
+{
+	let table = getTable(id)
+	
+	let rowLength = document.getElementById("table_"+id).getElementsByTagName("tr").length - 1
+	let colLength = document.getElementById("table_"+id).getElementsByTagName("tr")[row + 1].getElementsByTagName("td").length
+	
+	if($.fn.DataTable.isDataTable('#table_'+id))
+	{
+		rowLength = $("#table_"+id).children('tbody').children('tr').length
+		colLength = $("#table_"+id).children('tbody').children('tr').children('td').length
+	}
+	
+	let rowIndex = row + 1	
+	let colIndex = col + 1
+	
+	if(rowIndex > rowLength)
+	{
+		console.error("rowIndex out of bounds")
+		return
+	}
+	
+	if(colIndex > colLength)
+	{
+		console.error("colIndex out of bounds: col:"+colIndex + " colLength: " + colLength)
+		return
+	}
+	
+	let cols = $('#table_'+id+' tr:nth-child('+ rowIndex +') td:nth-child('+colIndex+')')
+	
+	if(cols == undefined)
+	{
+		console.error("Row or col index out of bounds")
+		return
+	}
+	
+	cols.click(function(e)
+	{
+		e.preventDefault()
+		
+		func()
+	})
+}
+
 function insertTableData(id,data)
 {
+	if($.fn.DataTable.isDataTable('#table_'+id))
+	{
+		$('#table_'+id).DataTable().row.add(data).draw()
+		return
+	}
+	
 	let tr=$('<tr></tr>')
 	
 	for(let i = 0 ; i < data.length ; i++)
@@ -42,6 +106,11 @@ function insertTableData(id,data)
 function insertTableInto(id,handle)
 {
 	$('#'+id).append(handle)
+}
+
+function getTable(id)
+{
+	return $('#table_'+id)
 }
 
 function getTableDiv(id)
