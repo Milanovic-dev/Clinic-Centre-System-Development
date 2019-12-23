@@ -173,7 +173,6 @@ function initClinicAdmin(user)
 		$.ajax({
 			type: 'POST',
 			url: 'api/appointments/makePredefined',
-			data
 			complete: function(data)
 			{
 				alert(data.status)
