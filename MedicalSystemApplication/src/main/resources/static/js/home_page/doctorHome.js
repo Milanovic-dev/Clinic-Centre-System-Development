@@ -111,7 +111,6 @@ function initDoctor(user)
                          if(data.status == "201")
                           {
                               alert('kreiran izvestaj')
-                              window.location.href = "index.html"
                           }
                     }
                 })
@@ -254,6 +253,7 @@ function initCalendarDoc(user)
                                   end: currentDate.clone().endOf("year")
                               };
                           }
+
                       }
                   },
                    eventColor: '#2f989d',
@@ -262,6 +262,7 @@ function initCalendarDoc(user)
                            url: 'api/appointments/doctor/getAllAppointments/'+user.email,
                            method: 'GET',
                            extraParams: {
+
 
                            },
 
@@ -295,35 +296,22 @@ function formatDateHours (dateObj) {
 }
 
 function setUpCodebooks(){
-    alert('test2');
+
     $.ajax({
         type: 'GET',
         url:"api/drug/getAllDrugs",
-//        data: {
-//                    'memberId': value
-//                },
         complete: function(data)
         {
-            $('#selectDrug').multiselect('destroy')
-            $('#selectDrug').empty()
-            $('#selectDrug')
-                 .append($("<option></option>")
-                            .attr("value","proba")
-                            .text("proba"));
+           let select = $('#selectDrug').val()
 
-            $.each(data.responseJSON, function(key, value) {
-                console.log("key",key)
-                console.log("value", value)
-                 $('#selectDrug')
-                     .append($("<option></option>")
-                                .attr("value",key)
-                                .text(value.name));
-
-            });
-
-            $('#selectDrug').multiselect();
-
-
+           			$.each(data.responseJSON, function (i, item) {
+           			    console.log(item)
+           			    console.log(item.name)
+           			    $('#selectDrug').append($('<option>', {
+           			        value: item.name,
+           			        text : item.name
+           			    }));
+           			});
         }
     });
 

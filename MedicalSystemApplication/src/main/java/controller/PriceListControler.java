@@ -145,7 +145,7 @@ public class PriceListControler {
 	 	@PutMapping(value="/update/{typeOfExamination}")
 	 	public ResponseEntity<Void> update(@RequestBody PriceListDTO pricesList,@PathVariable("typeOfExamination") String typeOfExamination)
 	 	{
-	 		Priceslist oldPricesList = priceListService.findByTypeOfExamination(typeOfExamination);
+	 		Priceslist oldPricesList = priceListService.findByTypeOfExaminationAndDeleted(typeOfExamination,false);
 	 		
 	 		if(oldPricesList == null)
 		    {

@@ -66,21 +66,17 @@ public class HallController {
 	@GetMapping(value = "/getAllByClinic/{clinicName}")
 	public ResponseEntity<List<HallDTO>> getHalls(@PathVariable("clinicName") String clinicName)
 	{
+		HttpHeaders header = new HttpHeaders();
 		Clinic c = clinicService.findByName(clinicName);
 		
 		if(c == null)
 		{
-			   return new ResponseEntity<>(HttpStatus.NOT_FOUND);			
-		}
-		
-	   List<Hall> halls = hallService.findAllByClinic(c);
-	   List<HallDTO> ret = new ArrayList<HallDTO>();
-	   if(halls == null)
-	   {
-		   return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-	   }
+				header.set("responseText", "clinic");
+			    return new ResponseEntity<>(header,HttpStatus.NOT_FOUND);			
+		}	
 	   
-	   for(Hall hall : halls)
+	   List<HallDTO> ret = new ArrayList<HallDTO>();	   
+	   for(Hall hall : c.getHalls())
 	   {
 		   if(!hall.getDeleted())
 		   {
@@ -122,8 +118,8 @@ public class HallController {
 		
 	}
 	
-	@PutMapping(value="/changeHall/{oldNumber}/{newNumber}")
-	public ResponseEntity<Void> changeHall(@PathVariable("oldNumber") int oldNumber,@PathVariable("newNumber") int newNumber)
+	@PutMapping(value="/changeHall/{oldNumber}/{newNumber}/{newName}")
+	public ResponseEntity<Void> changeHall(@PathVariable("oldNumber") int oldNumber,@PathVariable("newNumber") int newNumber,@PathVariable("newName") String newName)
 	{
 		Hall hall = hallService.findByNumber(oldNumber);
 		
@@ -133,7 +129,9 @@ public class HallController {
 		}
 		
 		hall.setNumber(newNumber);
+		hall.setName(newName);
 		hallService.save(hall);
+		
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 	
@@ -170,8 +168,10 @@ public class HallController {
 	        }
 	        		
 	        if(h == null) {
-	            Hall newHall = new Hall(clinic,hall.getNumber());
+	            Hall newHall = new Hall(clinic,hall.getNumber(),hall.getName());
 	            hallService.save(newHall);
+	            clinic.getHalls().add(newHall);
+	            clinicService.save(clinic);
 	            
 	        } else {
 	            return new ResponseEntity<>(HttpStatus.ALREADY_REPORTED);

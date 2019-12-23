@@ -377,7 +377,7 @@ function p_listDoctorActive(data,i,doctorCount)
 	let tr=$('<tr></tr>');
 	let tdEmail = $('<td>' + data.user.email + '</td>')
 	let tdName=$('<td>'+ data.user.name +'</td>');
-	let tdSurname=$('<td>'+ data.user.name +'</td>');
+	let tdSurname=$('<td>'+ data.user.surname +'</td>');
 	let tdRating=$('<td>'+ data.avarageRating +'</td>');
 	let tdCalendar =$('<td>'+data.shiftStart+' : '+data.shiftEnd+'</td>')
 	let tdSelect = $("<td><input type='checkbox' id='checkDoctor"+i+"'><label for='checkDoctor"+i+"'></label></td>" )
@@ -408,7 +408,7 @@ function p_listDoctorDisabled(data,i,doctorCount)
 	let tr=$('<tr></tr>');
 	let tdEmail = $('<td>' + data.user.email + '</td>')
 	let tdName=$('<td>'+ data.user.name +'</td>');
-	let tdSurname=$('<td>'+ data.user.name +'</td>');
+	let tdSurname=$('<td>'+ data.user.surname +'</td>');
 	let tdRating=$('<td>'+ data.avarageRating +'</td>');
 	let tdTime=$('<td>'+ data.shiftStart + ' : ' + data.shiftEnd + '</td>')
 	
