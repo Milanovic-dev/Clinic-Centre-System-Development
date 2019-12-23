@@ -24,17 +24,14 @@ function initDoctor(user)
 			}
 	})
 
-    clearViews()
-    addView('addHallContainer')
-    addView('showHallContainer')
-    addView('changeHallContainer')
-    addView('showUserContainer')
-    addView('showExaminationContainer')
-    addView('showCalendarContainer')
 
 	$('#pacientList').click(function(e){
 		e.preventDefault()
-        showView('showUserContainer')
+
+		$("#addHallContainer").hide()
+		$("#showHallContainer").hide()
+		$("#changeHallContainer").hide()
+		$("#showUserContainer").show()
 
 	})
 
@@ -46,8 +43,9 @@ function initDoctor(user)
            $('#breadcrumbCurrPage').removeAttr('hidden')
            $('#breadcrumbCurrPage').text("Radni kalendar")
            $('#breadcrumbCurrPage2').attr('hidden',true)
-
-           showView('showCalendarContainer')
+           $('#showPatientsContainer').hide()
+           $("#showUserContainer").hide()
+           $('#showCalendarContainer').show()
 
      });
 
@@ -58,9 +56,15 @@ function initDoctor(user)
 
                  $('#breadcrumbCurrPage2').removeAttr('hidden')
                  $('#breadcrumbCurrPage2').text("Pregled u toku")
+              //   $('#breadcrumbCurrPage2').attr('hidden',true)
                  $("#modalCalendar").modal('toggle')
 
-                 showView('showExaminationContainer')
+                 $('#showPatientsContainer').hide()
+                 $("#showUserContainer").hide()
+         		 $('#showCalendarContainer').hide()
+         		 $('#showExaminationContainer').show()
+
+              //   $('select').selectpicker();
                  $('#collapseThree').collapse('toggle')
 
      });
@@ -293,8 +297,6 @@ function formatDateHours (dateObj) {
 
 function setUpCodebooks(){
 
-
-
     $.ajax({
         type: 'GET',
         url:"api/drug/getAllDrugs",
@@ -303,14 +305,11 @@ function setUpCodebooks(){
            let select = $('#selectDrug').val()
 
            			$.each(data.responseJSON, function (i, item) {
-           			    console.log(item)
-           			    console.log(item.name)
            			    $('#selectDrug').append($('<option>', {
            			        value: item.name,
            			        text : item.name
            			    }));
            			});
-           			$('.selectpicker').selectpicker('refresh');
         }
     });
 
@@ -323,14 +322,11 @@ function setUpCodebooks(){
                let select = $('#selectDiagnosis').val()
 
                			$.each(data.responseJSON, function (i, item) {
-               			    console.log(item)
-               			    console.log(item.name)
                			    $('#selectDiagnosis').append($('<option>', {
                			        value: item.name,
                			        text : item.name
                			    }));
                			});
-               			$('.selectpicker').selectpicker('refresh');
             }
         })
 }

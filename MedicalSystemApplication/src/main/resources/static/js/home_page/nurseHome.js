@@ -41,7 +41,7 @@ function pageSetUp(user)
 		e.preventDefault()
 
         showView('showCalendarContainer')
-        
+
         $('#breadcrumbCurrPage').removeAttr('hidden')
         $('#breadcrumbCurrPage').text("Radni kalendar")
         $('#breadcrumbCurrPage2').attr('hidden',true)
