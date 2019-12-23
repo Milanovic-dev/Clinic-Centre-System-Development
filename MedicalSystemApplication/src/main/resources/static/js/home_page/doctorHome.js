@@ -111,6 +111,7 @@ function initDoctor(user)
                          if(data.status == "201")
                           {
                               alert('kreiran izvestaj')
+                              window.location.href = "index.html"
                           }
                     }
                 })
@@ -294,22 +295,35 @@ function formatDateHours (dateObj) {
 }
 
 function setUpCodebooks(){
-
+    alert('test2');
     $.ajax({
         type: 'GET',
         url:"api/drug/getAllDrugs",
+//        data: {
+//                    'memberId': value
+//                },
         complete: function(data)
         {
-           let select = $('#selectDrug').val()
+            $('#selectDrug').multiselect('destroy')
+            $('#selectDrug').empty()
+            $('#selectDrug')
+                 .append($("<option></option>")
+                            .attr("value","proba")
+                            .text("proba"));
 
-           			$.each(data.responseJSON, function (i, item) {
-           			    console.log(item)
-           			    console.log(item.name)
-           			    $('#selectDrug').append($('<option>', {
-           			        value: item.name,
-           			        text : item.name
-           			    }));
-           			});
+            $.each(data.responseJSON, function(key, value) {
+                console.log("key",key)
+                console.log("value", value)
+                 $('#selectDrug')
+                     .append($("<option></option>")
+                                .attr("value",key)
+                                .text(value.name));
+
+            });
+
+            $('#selectDrug').multiselect();
+
+
         }
     });
 
