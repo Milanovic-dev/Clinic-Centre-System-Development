@@ -176,50 +176,31 @@
     </div>
   </div>
   
-   <div class="container" id ="showHallContainer" style="display:none"> 
-    <div class="card card-register mx-auto mt-5">
-       <div class="card-header">Lista postojecih sala</div>
-            <table id="tableRequests" class="table table-borderless">
-                <thead>
-    				<tr>
-      				<th scope="col">Broj sale</th>
-      				<th scope="col">Ime sale</th>
-      				<th scope="col">Klinika</th>
-      				<th scope="col"></th>
-      				<th scope="col"></th>
-    				</tr>
-  				</thead>
-                <tbody>
-                	
-                </tbody>
-            </table>
-        </div>
+   <div class="card mb-3" id ="showHallContainer" style="display:none"> 
+    	
     </div>
     
-    <div class="card mb-3" id = "showHallContainer" style="display:none">
-          <div class="card-header">
-            <i class="fas fa-table"></i>
-            Lista postojecih sala</div>
-          <div class="card-body">
-            <div class="table-responsive">
-              <table class="table table-bordered" id="tableRequests" width="100%" cellspacing="0">
-                <thead>
-					<tr>
-					<th scope="col">Broj sale</th>
-      				<th scope="col">Klinika</th>
-      				<th scope="col"></th>
-      				<th scope="col"></th>
-					</tr>					
-					</thead>
-					<tbody>             	
-                </tbody>
-              </table>
-            </div>
-          </div>
-          </div>
-    
-
-
+<!-- WARNING MODAL -->
+<div class="modal fade" id="warningModal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="warningModalLabel"></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <span id="warningBodyModal"></span>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal">Zatvori</button>
+      </div>
+    </div>
+  </div>
+</div> 
+<!-- KRAJ WARNING MODAL -->
+   
    		<div class="card mb-3" id = "showClinicContainer" style="display:none">        
           <div class="card-header">
 			Lista Klinika
@@ -264,29 +245,8 @@
           
 
       <div class="card mb-3" id = "showUserContainer" style="display:none">
-          <div class="card-header">
-            <i class="fas fa-table"></i>
-            Lista </div>
-          <div class="card-body">
-            <div class="table-responsive">
-              <table class="table table-bordered" id="tableUsers" width="100%" cellspacing="0">
-                <thead>
-					<tr>
-					<th scope="col">Ime </th>
-      				<th scope="col">Prezime </th>
-      				<th scope="col">Email </th>
-      				<th scope="col">Telefon</th>
-      				<th scope="col">Adresa</th>
-      				<th scope="col">Grad</th>
-      				<th scope="col">Drzava</th>
-           </tr>					
-					</thead>
-					<tbody>             	
-                </tbody>
-              </table>
-            </div>
-          </div>
-          </div>
+         
+      </div>
           
           
      <div class="container" id="showAppointmentRequestsPatient" style="display:none">
@@ -963,35 +923,8 @@
 
 <!-- -----------------------KRAJ DODAVANJA TIPA PREGLEDA------------------------ -->
 <!-- --------------------------LISTA TIPOVA PREGLEDA---------------------------- -->
-<div class="card mb-3" id = "showTypeOfExaminationContainer" style="display:none">        
-     <div class="card-header">
-     <i class="fas fa-table"></i>
-			Lista Tipova pregleda
-		   </div>
-          <div class="card-body">
-            <div class="table-responsive">
-            	<div class="dataTables_filter" id="filterTypeOfExamination">
-            		<label>
-            			Pretraga:
-            			<input class="" aria-controls="tableTypeOfExamination" type="search" placeholder=""/>
-            			<button class="btn btn-primary" type="button" id="searchClinics"><span id="searchBtnText">Trazi</span>&nbsp<span class="spinner-border spinner-border-sm"  style="display:none" role="status" id="clinicSpinner"  aria-hidden="true"></span></button>
-            		</label>
-            	</div>
-              <table class="table table-bordered" id="tableTypeOfExamination" width="100%" cellspacing="0">
-                <thead>               
-					<tr>					
-					<th scope="col">Ime tipa pregleda</th>
-      				<th scope="col">Klinika </th>
-      				<th scope="col">Cena tipa pregleda</th>
-      				<th scope="col"> </th>
-      				<th scope="col"> </th>
-					</tr>				
-					</thead>
-				<tbody>             	
-                </tbody>
-              </table>
-            </div>
-          </div>
+<div id = "showTypeOfExaminationContainer" style="display:none">        
+
           </div>   
 <!-- --------------------------KRAJ LISTE TIPOVA PREGLEDA----------------------- -->
 <!-- -------------------------MODAL ZA IZMENU TIPA PREGLEDA--------------------- -->
