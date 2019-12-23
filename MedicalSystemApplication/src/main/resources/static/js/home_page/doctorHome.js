@@ -31,6 +31,7 @@ function initDoctor(user)
 		$("#addHallContainer").hide()
 		$("#showHallContainer").hide()
 		$("#changeHallContainer").hide()
+		$('#showExaminationContainer').hide()
 		$("#showUserContainer").show()
 
 	})
@@ -45,6 +46,7 @@ function initDoctor(user)
            $('#breadcrumbCurrPage2').attr('hidden',true)
            $('#showPatientsContainer').hide()
            $("#showUserContainer").hide()
+           $('#showExaminationContainer').hide()
            $('#showCalendarContainer').show()
 
      });
@@ -56,7 +58,6 @@ function initDoctor(user)
 
                  $('#breadcrumbCurrPage2').removeAttr('hidden')
                  $('#breadcrumbCurrPage2').text("Pregled u toku")
-              //   $('#breadcrumbCurrPage2').attr('hidden',true)
                  $("#modalCalendar").modal('toggle')
 
                  $('#showPatientsContainer').hide()
@@ -64,7 +65,6 @@ function initDoctor(user)
          		 $('#showCalendarContainer').hide()
          		 $('#showExaminationContainer').show()
 
-              //   $('select').selectpicker();
                  $('#collapseThree').collapse('toggle')
 
      });
@@ -310,6 +310,7 @@ function setUpCodebooks(){
            			        text : item.name
            			    }));
            			});
+           			$('.selectpicker').selectpicker('refresh');
         }
     });
 
@@ -327,6 +328,7 @@ function setUpCodebooks(){
                			        text : item.name
                			    }));
                			});
+               			$('.selectpicker').selectpicker('refresh');
             }
         })
 }
