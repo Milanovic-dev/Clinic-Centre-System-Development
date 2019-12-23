@@ -45,7 +45,9 @@ function initDoctor(user)
            $('#breadcrumbCurrPage2').attr('hidden',true)
            $('#showPatientsContainer').hide()
            $("#showUserContainer").hide()
+           $('#showExaminationContainer').hide()
            $('#showCalendarContainer').show()
+
 
      });
 
@@ -64,7 +66,6 @@ function initDoctor(user)
          		 $('#showCalendarContainer').hide()
          		 $('#showExaminationContainer').show()
 
-              //   $('select').selectpicker();
                  $('#collapseThree').collapse('toggle')
 
      });

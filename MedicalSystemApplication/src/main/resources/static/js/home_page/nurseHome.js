@@ -192,7 +192,9 @@ $.ajax({
 			complete: function(data)
 			{
 				let patients = data.responseJSON
-
+                for(p of patients){
+                console.log(p)
+                }
 				$('#tablePatients').DataTable( {
                         data: patients,
                         columns: [
@@ -202,7 +204,8 @@ $.ajax({
                             { data: "city" },
                             { data: "state" },
                             { data: "phone" },
-                            { data: "email" }
+                            { data: "email" },
+                            { data: "insuranceId" }
                         ]
                     } );
 
