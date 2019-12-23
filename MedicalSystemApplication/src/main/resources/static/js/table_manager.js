@@ -46,15 +46,16 @@ function setTableClickEvent(id, row, col, func)
 	
 	let rowLength = document.getElementById("table_"+id).getElementsByTagName("tr").length - 1
 	let colLength = document.getElementById("table_"+id).getElementsByTagName("tr")[row + 1].getElementsByTagName("td").length
+	let rowIndex = row + 1	
+	let colIndex = col + 1
 	
 	if($.fn.DataTable.isDataTable('#table_'+id))
 	{
 		rowLength = $("#table_"+id).children('tbody').children('tr').length
 		colLength = $("#table_"+id).children('tbody').children('tr').children('td').length
+		colIndex = col + 1
 	}
 	
-	let rowIndex = row + 1	
-	let colIndex = col + 1
 	
 	if(rowIndex > rowLength)
 	{
@@ -69,7 +70,7 @@ function setTableClickEvent(id, row, col, func)
 	}
 	
 	let cols = $('#table_'+id+' tr:nth-child('+ rowIndex +') td:nth-child('+colIndex+')')
-	
+	console.log(cols.prop('outerHTML') +" (row: " + rowIndex+ " , col: " + colIndex + " " + func) 
 	if(cols == undefined)
 	{
 		console.error("Row or col index out of bounds")
@@ -120,5 +121,10 @@ function getTableDiv(id)
 
 function emptyTable(id)
 {
+	if($.fn.DataTable.isDataTable('#table_'+id))
+	{
+		$('#table_'+id).DataTable().clear().draw()
+	}
+	
 	$('#table_'+id+' tbody').empty()
 }

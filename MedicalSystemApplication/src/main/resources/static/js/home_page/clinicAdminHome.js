@@ -53,14 +53,27 @@ function initClinicAdmin(user)
 	let handlePrices = createTable("listPricesTable","Cenovnik",headersPrices)
 	insertTableInto("pricesContainer",handlePrices)
 	
+	
+	let headersTypes = ["Ime tipa","Klinika","Cena","",""]
+	createDataTable("tableTypeOfExamination","showTypeOfExaminationContainer","Lista Tipova Pregleda",headersTypes,0)
+		
+	let headersUser = ["Ime","Prezime","Email","Telefon","Adresa","Grad","Drzava",""]
+	createDataTable("tableDoctorUsers","showUserContainer","Lista lekara",headersUser,0)
+	
+	let headersHall = ["Broj sale","Ime sale","Ime klinike" ,"",""]
+	createDataTable("tableHall","showHallContainer","Lista sala",headersHall,0)
+	
+	getTableDiv("tableTypeOfExamination").show()	
+	getTableDiv("listDoctorsTable").show()
+	getTableDiv("listHallsTable").show()
+	getTableDiv("listPricesTable").show()
+	getTableDiv("tableDoctorUsers").show()
+	getTableDiv("tableHall").show()
 	//IZMENA PROFILA KLINIKE
 	$('#changeProfileClinic').click(function(e){
 		e.preventDefault()
 		showView("changeProfileClinicContainer")
 		
-		getTableDiv("listDoctorsTable").show()
-		getTableDiv("listHallsTable").show()
-		getTableDiv("listPricesTable").show()
 
 		
 		$('#inputNameClinicProfile').val(clinic.name)
@@ -495,17 +508,10 @@ function submitDoctorForm(clinic)
 
 function listHall(data,i)
 {
+		
+	let d = [data.number,data.name,data.clinicName,'<button type="button" class="btn btn-primary" id = "changeHall_btn'+i+'">Izmeni</button>','<button type="button" class="btn btn-danger" id = "deleteHall_btn'+i+'">Izbrisi</button>']
 	
-	let tr=$('<tr></tr>');
-	let tdNumber=$('<td class="number" data-toggle="modal" data-target="#exampleModalLong">'+ data.number +'</td>');
-	let tdName=$('<td class="name" data-toggle="modal" data-target="#exampleModalLong">'+ data.name +'</td>');
-	let tdClinic=$('<td class="clinic" data-toggle="modal" data-target="#exampleModalLong">'+ data.clinicName +'</td>');
-	let tdChange=$('<td> <button type="button" class="btn btn-primary" id = "changeHall_btn'+i+'">Izmeni</button></td>');
-	let tdDelete=$('<td> <button type="button" class="btn btn-danger" id = "deleteHall_btn'+i+'">Izbrisi</button></td>');
-	
-	tr.append(tdNumber).append(tdName).append(tdClinic).append(tdChange).append(tdDelete);
-	$('#tableRequests tbody').append(tr);
-	
+	insertTableData("tableHall",d)
 	$('#deleteHall_btn'+i).click(function(e)
 	{
 		e.preventDefault()
@@ -519,6 +525,13 @@ function listHall(data,i)
 				if(data.status == "200")
 				{
 					makeHallTable()
+				}
+				if(data.status == "409")
+				{
+					$('#warningModal').modal('show');
+					$('#warningModalLabel').text("Nije moguće obrisati")
+					$('#warningBodyModal').text("Izabranu salu nije moguće obrisati,zbog postojanja zakazanih pregleda ili operacija u njoj.")
+
 				}
 			}
 			
@@ -567,7 +580,7 @@ function makeTypeOfExaminationTable(clinic)
 			console.log(data)
 			types = data.responseJSON
 			let i = 0
-			$('#tableTypeOfExamination tbody').empty()
+			emptyTable('tableTypeOfExamination')
 			for(let t of types)
             {
 				listTypesOfExamination(t,i,clinic);
@@ -590,7 +603,7 @@ function makeDoctorTable(clinic)
 			console.log(data)
 			users = data.responseJSON
 			let i = 0
-			$('#tableUsers tbody').empty()
+			emptyTable('tableDoctorUsers')
 			for(let u of users)
             {
 				listDoctor(u,i,clinic);
@@ -627,19 +640,9 @@ function makeUserTable(clinic)
 
 function listDoctor(data,i,clinic)
 {
-	let tr=$('<tr></tr>');
-	let tdName=$('<td class="number" data-toggle="modal" data-target="#exampleModalLong">'+ data.user.name +'</td>');
-	let tdSurname=$('<td class="clinic" data-toggle="modal" data-target="#exampleModalLong">'+ data.user.surname +'</td>');
-	let tdEmail=$('<td class="clinic" data-toggle="modal" data-target="#exampleModalLong">'+ data.user.email +'</td>');
-	let tdPhone=$('<td class="clinic" data-toggle="modal" data-target="#exampleModalLong">'+ data.user.phone +'</td>');
-	let tdAddress=$('<td class="clinic" data-toggle="modal" data-target="#exampleModalLong">'+ data.user.address +'</td>');
-	let tdCity=$('<td class="clinic" data-toggle="modal" data-target="#exampleModalLong">'+ data.user.city +'</td>');
-	let tdState=$('<td class="clinic" data-toggle="modal" data-target="#exampleModalLong">'+ data.user.state +'</td>');
-	
-	let tdChange=$('<td> <button type="button" class="btn btn-danger" id = "deleteDoctor_btn'+i+'">Obrisi lekara</button></td>');
 
-	tr.append(tdName).append(tdSurname).append(tdEmail).append(tdPhone).append(tdAddress).append(tdCity).append(tdState).append(tdChange)
-	$('#tableUsers tbody').append(tr);
+	let d = [data.user.name,data.user.surname,data.user.email,data.user.phone,data.user.address,data.user.city,data.user.state,'<button type="button" class="btn btn-danger" id = "deleteDoctor_btn'+i+'">Obrisi lekara</button>']
+	insertTableData("tableDoctorUsers",d)
 	
 	$('#deleteDoctor_btn'+i).click(function(e){
 		
@@ -649,7 +652,17 @@ function listDoctor(data,i,clinic)
 			url: 'api/doctors/removeDoctor/' + data.user.email,
 			complete: function(response)
 			{
-				makeDoctorTable(clinic)
+				if(response.status == "200")
+				{
+					makeDoctorTable(clinic)
+				}
+				if(response.status == "409")
+				{
+					$('#warningModal').modal('show');
+					$('#warningModalLabel').text("Nije moguće obrisati")
+					$('#warningBodyModal').text("Izabranog lekara nije moguće obrisati,zbog postojanja zakazanih pregleda ili operacija u kojima učestvuje.")
+
+				}
 			
 			}
 		
@@ -660,16 +673,8 @@ function listDoctor(data,i,clinic)
 
 function listTypesOfExamination(t,i,clinic)
 {
-	let tr=$('<tr></tr>');
-	let tdName=$('<td class="number" data-toggle="modal" data-target="#exampleModalLong">'+ t.typeOfExamination +'</td>');
-	let tdClinic=$('<td class="number" data-toggle="modal" data-target="#exampleModalLong">'+ t.clinicName +'</td>');
-	let tdPrice=$('<td class="number" data-toggle="modal" data-target="#exampleModalLong">'+ t.price +'</td>');
-	let tdChange=$('<td> <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#changeTypeOfExaminationModal" id = "changeTypeOfExamination_btn'+i+'">Izmeni tip</button></td>');
-	let tdDelete=$('<td> <button type="button" class="btn btn-danger" id = "deleteTypeOfExamination_btn'+i+'">Obrisi</button></td>');
-
-	
-	tr.append(tdName).append(tdClinic).append(tdPrice).append(tdChange).append(tdDelete)
-	$('#tableTypeOfExamination tbody').append(tr);
+	let d = [t.typeOfExamination,t.clinicName,t.price,"<button class='btn btn-primary' data-toggle='modal' data-target='#changeTypeOfExaminationModal' id='changeTypeOfExamination_btn"+i+"'>Izmeni</button>","<button class='btn btn-danger' id='deleteTypeOfExamination_btn"+i+"'>Obrisi</button>"]
+	insertTableData("tableTypeOfExamination",d)
 	
 	$('#changeTypeOfExamination_btn'+i).click(function(e){
 		e.preventDefault()
@@ -790,7 +795,7 @@ function makeHallTable()
 			console.log(data)
 			halls = data.responseJSON
 			let i = 0
-			$('#tableRequests tbody').empty()
+			emptyTable('tableHall')
 			for(let d of halls)
             {
 				listHall(d,i);
