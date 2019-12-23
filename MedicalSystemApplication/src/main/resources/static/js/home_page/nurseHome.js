@@ -20,11 +20,16 @@ function initNurse(user)
 
 function pageSetUp(user)
 {
+
+    clearViews()
+    addView('showCalendarContainer')
+    addView('showPatientsContainer')
+
+
 	$("#patientList").click(function(e){
 		e.preventDefault()
 
-        $('#showCalendarContainer').hide()
-		$('#showPatientsContainer').show()
+        showView('showPatientsContainer')
         $('#breadcrumbCurrPage').removeAttr('hidden')
         $('#breadcrumbCurrPage').text("Lista pacijenata")
         $('#breadcrumbCurrPage2').attr('hidden',true)
@@ -35,9 +40,8 @@ function pageSetUp(user)
 	$("#workCalendar").click(function(e){
 		e.preventDefault()
 
-
-        $('#showPatientsContainer').hide()
-        $('#showCalendarContainer').show()
+        showView('showCalendarContainer')
+        
         $('#breadcrumbCurrPage').removeAttr('hidden')
         $('#breadcrumbCurrPage').text("Radni kalendar")
         $('#breadcrumbCurrPage2').attr('hidden',true)
