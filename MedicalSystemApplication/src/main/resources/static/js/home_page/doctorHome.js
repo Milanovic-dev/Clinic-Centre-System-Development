@@ -297,6 +297,8 @@ function formatDateHours (dateObj) {
 
 function setUpCodebooks(){
 
+
+
     $.ajax({
         type: 'GET',
         url:"api/drug/getAllDrugs",
@@ -312,6 +314,7 @@ function setUpCodebooks(){
            			        text : item.name
            			    }));
            			});
+           			$('.selectpicker').selectpicker('refresh');
         }
     });
 
@@ -331,6 +334,7 @@ function setUpCodebooks(){
                			        text : item.name
                			    }));
                			});
+               			$('.selectpicker').selectpicker('refresh');
             }
         })
 }
