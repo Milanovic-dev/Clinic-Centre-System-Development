@@ -163,7 +163,7 @@ public class ContainerInitialize {
 					.withShiftStart(DateUtil.getInstance().GetDate("09:00","HH:mm"))
 					.withShiftEnd(DateUtil.getInstance().GetDate("18:00","HH:mm"))
 					.build();
-			
+
 			doctor2.setAvarageRating(6.4f);
 			userRepository.save(doctor2);
 			
@@ -228,7 +228,7 @@ public class ContainerInitialize {
 			doctor1.getAppointments().add(app1);
 			doctor1.getAppointments().add(app2);
 			
-			userRepository.save(doctor1);
+
 			
 			Nurse nurse = new Nurse.Builder("nurse@gmail.com")
 					.withPassword(hash)
@@ -245,7 +245,8 @@ public class ContainerInitialize {
 			
 			nurse.setIsFirstLog(false);
 			userRepository.save(nurse);
-			
+
+			userRepository.save(doctor1);
 			
 			Priceslist p1 = new Priceslist();
 			p1.setClinic(clinic);

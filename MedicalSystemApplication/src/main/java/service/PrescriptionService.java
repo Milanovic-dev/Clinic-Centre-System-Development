@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import repository.PrescriptionRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class PrescriptionService {
@@ -26,5 +27,9 @@ public class PrescriptionService {
 
     public List<Prescription> findAll() {
         return prescriptionRepository.findAll();
+    }
+
+    public Prescription findById(long id) {
+        return  prescriptionRepository.findById(id);
     }
 }

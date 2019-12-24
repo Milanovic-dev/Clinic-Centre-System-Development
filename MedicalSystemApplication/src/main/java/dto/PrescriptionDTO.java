@@ -15,6 +15,7 @@ public class PrescriptionDTO {
     private List<String> drugs;
     private Nurse nurse;
     private Boolean isValid;
+    private long id;
 
     public PrescriptionDTO(){
         super();
@@ -31,6 +32,7 @@ public class PrescriptionDTO {
             drugs.add(drug.getName());
         }
         this.isValid = false;
+        this.id = prescription.getId();
     }
 
     public PrescriptionDTO(String description, Date validationDate,
@@ -85,5 +87,13 @@ public class PrescriptionDTO {
 
     public void setValid(Boolean valid) {
         isValid = valid;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 }

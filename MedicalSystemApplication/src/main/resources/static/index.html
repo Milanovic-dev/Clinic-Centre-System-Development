@@ -398,17 +398,15 @@
           </div>
 <!-- ----------------KALENDAR --------------------- -->
         <div class="card mb-3" id = "showCalendarContainer" style="display:none">
-            <div class="card-header">
-                <i class="fas fa-table"></i>
-                Radni kalendar</div>
+            <div class="card-header">Radni kalendar</div>
             <div class="card-body">
                 <div class="table-responsive">
-                    <div id='calendar'></div>
+                    <div id="calendar"></div>
                 </div>
             </div>
         </div>
 <!-- ----------------KALENDAR END--------------------- -->
-  <!-- PREGLED U TOKU -->
+  <!--------------------------- PREGLED U TOKU -------------------->
   <div class="card mb-3" id = "showExaminationContainer" style="display:none">
       <div class="card-header">
           <i class="fas fa-table"></i>
@@ -459,7 +457,34 @@
       </div>
 
       </div>
-  </div>
+
+<!--------------------------- PREGLED U TOKU END -------------------->
+<!--------------------------- OVERA RECEPTA -------------------->
+
+        <div class="card mb-3" id = "showPrescriptionAuthContainer" style="display:none">
+            <div class="card-header">
+                <i class="fas fa-table"></i>
+                Overa recepata</div>
+            <div class="card-body">
+<!--                <div id = "prescriptionsDiv"></div>-->
+                <div class="table-responsive">
+                    <table class="table table-hover" id="tablePrescriptions" cellspacing="0">
+                        <thead>
+                        <tr>
+                            <th scope="col">Terapija</th>
+                            <th scope="col">Lekovi</th>
+                            <th scope="col"></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+<!--------------------------- OVERA RECEPTA END -------------------->
 <!-- -----------------------IZMENA PROFILA KLINIKE---------------------- -->
 <div class="container" id="changeProfileClinicContainer" style="display:none" >
     <div class="card card-register mx-auto mt-5" >

@@ -9,14 +9,17 @@ function initNurse(user)
 	sideBar.append("<li class='nav-item active' style='cursor:pointer'><a class='nav-link'><i class='fas fa-fw fa-tachometer-alt'></i><span id='patientList'>Lista pacijenata</span></a></li>")
 	sideBar.append("<li class='nav-item active'><a class='nav-link' href='#'><i class='fas fa-fw fa-tachometer-alt'></i><span id='workCalendar'>Radni kalendar</span></a></li>")
 	sideBar.append("<li class='nav-item active'><a class='nav-link' href='#'><i class='fas fa-fw fa-tachometer-alt'></i><span id='vacationRequest'>Zahtev za odustvo</span></a></li>")
-	sideBar.append("<li class='nav-item active'><a class='nav-link' href='#'><i class='fas fa-fw fa-tachometer-alt'></i><span id='recipeAuth'>Overa recepata</span></a></li>")
+	sideBar.append("<li class='nav-item active'><a class='nav-link' href='#'><i class='fas fa-fw fa-tachometer-alt'></i><span id='prescriptionAuth'>Overa recepata</span></a></li>")
 
 
 	pageSetUp(user)
     initCalendar(user)
     initTable(user)
+    getPrescriptions(user)
 
 }
+
+
 
 function pageSetUp(user)
 {
@@ -24,7 +27,7 @@ function pageSetUp(user)
     clearViews()
     addView('showCalendarContainer')
     addView('showPatientsContainer')
-
+    addView('showPrescriptionAuthContainer')
 
 	$("#patientList").click(function(e){
 		e.preventDefault()
@@ -44,6 +47,17 @@ function pageSetUp(user)
 
         $('#breadcrumbCurrPage').removeAttr('hidden')
         $('#breadcrumbCurrPage').text("Radni kalendar")
+        $('#breadcrumbCurrPage2').attr('hidden',true)
+
+    });
+
+    $("#prescriptionAuth").click(function(e){
+        e.preventDefault()
+
+        showView('showPrescriptionAuthContainer')
+
+        $('#breadcrumbCurrPage').removeAttr('hidden')
+        $('#breadcrumbCurrPage').text("Overa recepata")
         $('#breadcrumbCurrPage2').attr('hidden',true)
 
     });
@@ -160,23 +174,23 @@ function initCalendar(user)
 //                   container: 'body'
 //             });
 //           },
-           eventColor: '#2f989d',
-           eventSources: [
-                 {
-                   url: 'api/appointments/doctor/getAllAppointments/'+user.email,
-                   method: 'GET',
-                   extraParams: {
-
-                   },
-
-                   failure: function() {
-                     
-                   },
-
-                 },
-
-
-               ]
+           eventColor: '#2f989d'
+//           eventSources: [
+//                 {
+//                   url: 'api/appointments/doctor/getAllAppointments/'+user.email,
+//                   method: 'GET',
+//                   extraParams: {
+//
+//                   },
+//
+//                   failure: function() {
+//
+//                   },
+//
+//                 },
+//
+//
+//               ]
 
          });
 
@@ -236,3 +250,61 @@ function formatDateHours (dateObj) {
       return date.getDate() + "." + month+ "." + date.getFullYear() + ".   " + strTime;
 }
 
+function getPrescriptions(user){
+
+//    let headersPrescription = ["Terapija"]
+//    let handlePrescriptions = createTable("tablePrescriptions","Lista recepata",headersPrescription)
+//    insertTableInto("prescriptionsDiv", handlePrescriptions)
+//
+//    getTableDiv("prescriptionsDiv").show()
+
+    $.ajax({
+			type: 'GET',
+			url: 'api/prescription/getAllPrescriptions',
+			complete: function(data)
+			{
+				prescriptions = data.responseJSON
+				emptyTable("tablePrescriptions")
+				for(p of prescriptions)
+				{
+					addPrescriptionTr(p, user)
+				}
+			}
+
+		})
+
+}
+
+function addPrescriptionTr(prescription, user){
+
+    let tr=$('<tr></tr>');
+	let tdDescription=$('<td>'+ prescription.description +'</td>');
+	let tdDrugs=$('<td>'+ prescription.drugs +'</td>');
+	let tdConfirm=$('<td> <button type="button" class="btn btn-primary">Overi</button></td>');
+
+	tdConfirm.click(prescriptionAuth(prescription, user));
+
+	tr.append(tdDescription).append(tdDrugs).append(tdConfirm);
+	$('#tablePrescriptions tbody').append(tr);
+}
+
+function prescriptionAuth(prescription, user){
+     return function(){
+
+        $.ajax({
+            type: 'PUT',
+            url:'/api/prescription/validate/'+user.email,
+            data: JSON.stringify({"description":prescription.description, "id":prescription.id, "drugs":prescription.drugs}),
+            dataType: "json",
+            contentType : "application/json; charset=utf-8",
+            complete: function(data)
+            {
+                $('#tablePrescriptions tbody').html('')
+                getPrescriptions()
+                clearViews()
+                showView('showPrescriptionAuthContainer')
+            }
+        })
+
+        }
+}
