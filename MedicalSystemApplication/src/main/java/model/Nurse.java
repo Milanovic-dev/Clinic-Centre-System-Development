@@ -80,7 +80,8 @@ public class Nurse extends User{
 	public void setClinic(Clinic clinic) {
 		this.clinic = clinic;
 	}
-	
+
+
 	public static class Builder extends UserBuilder
 	{
 		private String insuranceId;

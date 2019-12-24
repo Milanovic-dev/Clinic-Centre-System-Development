@@ -30,20 +30,19 @@ function addPersonalInformations(user)
 }
 
 function getRequests(){
-         $.get({
-                  url: '/api/auth/getAllRegRequest',
-                  contentType: 'application/json',
-                  success: function(requests)
-                  {
-                       $('#tableRequests tbody').html('');
-                       console.log(requests);
-                       for(let req of requests)
-                            {
-                              addRequest(req);
-                            }
-                   }
-               });
-
+     $.get({
+          url: '/api/auth/getAllRegRequest',
+          contentType: 'application/json',
+          success: function(requests)
+          {
+               $('#tableRequests tbody').html('');
+               console.log(requests);
+               for(let req of requests)
+                    {
+                      addRequest(req);
+                    }
+           }
+       });
 }
 
 $(document).ready(()=>{

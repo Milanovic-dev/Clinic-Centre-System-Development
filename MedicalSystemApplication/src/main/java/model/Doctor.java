@@ -14,7 +14,6 @@ import model.Patient.Builder;
 @Entity
 public class Doctor extends User
 {
-
 	@Column(name = "type", nullable = true)
 	private String type;
 		
@@ -40,6 +39,7 @@ public class Doctor extends User
 	private List<Vacation> vacations;
   
 	public Doctor() {
+
 		super();
 		vacations = new ArrayList<Vacation>();
 		// TODO Auto-generated constructor stub
@@ -138,6 +138,7 @@ public class Doctor extends User
 	public void setAvarageRating(float avarageRating) {
 		this.avarageRating = avarageRating;
 	}
+
 
 	public List<ReviewDoctor> getReviews() {
 		return reviews;
@@ -252,6 +253,7 @@ public class Doctor extends User
 			
 			return this;
 		}
+
 		
 		public Doctor build()
 		{
