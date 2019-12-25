@@ -13,6 +13,25 @@ function initDoctor(user)
 	sideBar.append("<li class='nav-item active'><a class='nav-link' href='index.html'><i class='fas fa-fw fa-tachometer-alt'></i><span id='vacationRequest'>Zahtev za odustvo</span></a></li>")
 	sideBar.append("<li class='nav-item active'><a class='nav-link' href='index.html'><i class='fas fa-fw fa-tachometer-alt'></i><span id='examinationRequest'>Zakazivanje pregleda</span></a></li>")
 	sideBar.append("<li class='nav-item active'><a class='nav-link' href='index.html'><i class='fas fa-fw fa-tachometer-alt'></i><span id='operationRequest'>Zakazivanje operacija</span></a></li>")
+	
+	clearViews()
+	addView("addHallContainer")
+	addView("showHallContainer")
+	addView("changeHallContainer")
+	addView("showExaminationContainer")
+	addView("showUserContainer")
+	addView("showPatientContainer")
+	addView("showPatientContainerWithCheckBox")
+	
+	let headersPatients = ["Ime","Prezime","Email","Telefon","Adresa","Grad","Drzava","Broj zdravstvenog osiguranja"]
+	createDataTable("listPatientTable","showPatientContainer","Lista pacijenata",headersPatients,0)
+	
+	let headersPatientsWithCheckBox = ["Ime","Prezime","Email","Telefon","Adresa","Grad","Drzava","Broj zdravstvenog osiguranja",""]
+	createDataTable("listPatientTableWithCheckBox","showPatientContainerWithCheckBox","Izaberite pacijenta",headersPatientsWithCheckBox,0)
+
+	getTableDiv("listPatientTable").show()	
+	getTableDiv("listPatientTableWithCheckBox").show()	
+	
 
 	$.ajax({
 			type: 'GET',
@@ -20,20 +39,20 @@ function initDoctor(user)
 			complete: function(data)
 			{
 				findPatients(data)
-
 			}
 	})
 
 
 	$('#pacientList').click(function(e){
 		e.preventDefault()
+		showView("showPatientContainer")
 
-		$("#addHallContainer").hide()
-		$("#showHallContainer").hide()
-		$("#changeHallContainer").hide()
-		$('#showExaminationContainer').hide()
-		$("#showUserContainer").show()
-
+	})
+	
+	$('#examinationStart').click(function(e){
+		e.preventDefault()
+		showView("showPatientContainerWithCheckBox")
+		
 	})
 
     initCalendarDoc(user)
@@ -126,9 +145,6 @@ function initDoctor(user)
 function findPatients(data)
 {
 	let clinic = data.responseJSON
-
-
-
 	$.ajax({
 		type: 'GET',
 		url: 'api/clinic/getPatients/' + clinic.name,
@@ -137,34 +153,49 @@ function findPatients(data)
 
 			let patients = data.responseJSON
 			let i = 0
-			$('#tableUsers tbody').empty()
+			emptyTable("listPatientTableWithCheckBox")
+			emptyTable("listPatientTable")
 			for(let u of patients)
             {
 				listPatient(u,i);
+				listPatientWithCheckBox(u,i,patients.length);
 				i++;
             }
 
 		}
 	})
 }
+function listPatientWithCheckBox(data,i,patientsCount)
+{
+	let d = [data.name,data.surname,data.email,data.phone,data.address,data.city,data.state,data.insuranceId,"<input type='checkbox' id='checkPatient"+i+"'><label for='checkPatient"+i+"'></label>"]
+	insertTableData("listPatientTableWithCheckBox",d)
+	
+	$('#checkPatient'+i).click(function(e){
+	
+	if(patientsCount <= 1)
+	{
+		return
+	}
+	
+	for(let j = 0 ; j < patientsCount ; j++)
+	{
+		if(j == i)
+		{
+			$("#checkPatient"+j).prop('checked',true)
+		}
+		else
+		{
+			$("#checkPatient"+j).prop('checked',false)
+		}
+	}
+		
+	})
+}
 
 function listPatient(data,i)
 {
-	let tr=$('<tr></tr>');
-	let tdName=$('<td class="number" data-toggle="modal" data-target="#exampleModalLong">'+ data.name +'</td>');
-	let tdSurname=$('<td class="clinic" data-toggle="modal" data-target="#exampleModalLong">'+ data.surname +'</td>');
-	let tdEmail=$('<td class="clinic" data-toggle="modal" data-target="#exampleModalLong">'+ data.email +'</td>');
-	let tdPhone=$('<td class="clinic" data-toggle="modal" data-target="#exampleModalLong">'+ data.phone +'</td>');
-	let tdAddress=$('<td class="clinic" data-toggle="modal" data-target="#exampleModalLong">'+ data.address +'</td>');
-	let tdCity=$('<td class="clinic" data-toggle="modal" data-target="#exampleModalLong">'+ data.city +'</td>');
-	let tdState=$('<td class="clinic" data-toggle="modal" data-target="#exampleModalLong">'+ data.state +'</td>');
-
-
-	tr.append(tdName).append(tdSurname).append(tdEmail).append(tdPhone).append(tdAddress).append(tdCity).append(tdState)
-	$('#tableUsers tbody').append(tr);
-
-
-
+	let d = [data.name,data.surname,data.email,data.phone,data.address,data.city,data.state,data.insuranceId]
+	insertTableData("listPatientTable",d)
 }
 
 
