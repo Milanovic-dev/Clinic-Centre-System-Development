@@ -10,7 +10,37 @@ function initPatient(user)
 	sideBar.append("<li class='nav-item active'><a class='nav-link' type='button'><span id='clinicList'>Lista klinika</span></a></li>")	
 	sideBar.append("<li class='nav-item active'><a class='nav-link' type='button'><span id='medicalRecord'>Zdravstveni karton</span></a></li>")	
 	sideBar.append("<li class='nav-item active'><a class='nav-link' type='button'><span id='appRequests'>Zahtevi za pregled</span></a></li>")	
+	sideBar.append("<li class='nav-item active'><a class='nav-link' type='button'><span id='preApps'>Unapred definisani pregledi</span></a></li>")
+	
+	
+	addView('showClinicContainer')
+	addView('MedicalRecordContainer')
+	addView('makeAppointmentContainer')
+	addView('detailsAppointmentContainer')
+	addView('showAppointmentRequestsPatient')
+	addView('preAppointmentContainer')
+	
+      				
+    createChooseDoctorTable()
+    createAppointmentsTable()
+	
 	setUpPatientPage(user)
+}
+
+function createChooseDoctorTable()
+{
+	let headers = ['Email', 'Ime', 'Prezime', 'Prosecna ocena', 'Pocetak smene','Kraj smene','']
+    let handle = createTable('chooseDoctorTable','Izaberite doktora',headers)
+    insertTableInto('showDoctorsContainer',handle)
+    insertElementIntoTable('chooseDoctorTable','<button type="button" class="btn btn-primary" id = "detailsAppointment_btn">Pregled</button>')
+    getTableDiv('chooseDoctorTable').show()
+}
+
+function createAppointmentsTable()
+{
+	let headers = ['Datum','Termin','Sala','Doktor','Tip pregleda','Cena','']
+	createDataTable('preAppTable',"preAppointmentContainer","Unapred definisani pregledi",headers,0)
+	getTableDiv('preAppTable').show()
 }
 
 function sleep(ms) {
@@ -22,11 +52,8 @@ function setUpPatientPage(user)
 	$("#clinicList").click(function(e){
 		e.preventDefault()
 		
-		$('#showClinicContainer').show()
-		$('#MedicalRecordContainer').hide()
-		$('#makeAppointmentContainer').hide()
-		$('#detailsAppointmentContainer').hide()
-		$('#showAppointmentRequestsPatient').hide()
+		
+		showView('showClinicContainer')
 		$('#breadcrumbCurrPage').removeAttr('hidden')
 		$('#breadcrumbCurrPage').text("Lista klinika")
 		$('#breadcrumbCurrPage2').attr('hidden',true)
@@ -75,6 +102,11 @@ function setUpPatientPage(user)
     	dateFormat: "dd-mm-yyyy"   	
 	})
 	
+	$('#preApps').click(function(e){
+		e.preventDefault()
+		
+		showView('preAppointmentContainer')	
+	})
 	
 	
     $('#searchClinics').click(function(e){
@@ -88,11 +120,7 @@ function setUpPatientPage(user)
 	$('#medicalRecord').click(function(e){
 		e.preventDefault()
 		
-		$('#showClinicContainer').hide()
-		$('#makeAppointmentContainer').hide()
-		$('#MedicalRecordContainer').show()
-		$('#detailsAppointmentContainer').hide()
-		$('#showAppointmentRequestsPatient').hide()
+		showView('MedicalRecordContainer')
 		$('#breadcrumbCurrPage').removeAttr('hidden')
 		$('#breadcrumbCurrPage').text("Zdravstveni karton")
 		$('#breadcrumbCurrPage2').attr('hidden',true)
@@ -114,9 +142,29 @@ function setUpPatientPage(user)
 		
 		listAppRequests(user)
 		
-		
+		$.ajax({		
+			type: 'GET',
+			url: "api/",
+			complete: function(data)
+			{
+				let apps = data.responseJSON
+				index = 0;
+				for(let app of apps)
+				{
+					list_preApps(app,index)
+					index++
+				}
+				
+			}
+		})
 	})
 
+}
+
+
+function list_preApps(data,i)
+{
+	emptyTable('preAppTable')
 }
 
 
@@ -178,11 +226,7 @@ function makeMedicalRecord(data,user)
 
 function listAppRequests()
 {
-	$('#showAppointmentRequestsPatient').show()
-	$('#showClinicContainer').hide()
-	$('#makeAppointmentContainer').hide()
-	$('#MedicalRecordContainer').hide()
-	$('#detailsAppointmentContainer').hide()
+	showView('showAppointmentRequestsPatient')
 	$('#breadcrumbCurrPage').removeAttr('hidden')
 	$('#breadcrumbCurrPage').text("Zahtevi za pregled")
 	$('#breadcrumbCurrPage2').attr('hidden',true)	
@@ -245,15 +289,11 @@ function p_listClinic(data,i,user)
 		
 	tr.append(tdName).append(tdAdress).append(tdCity).append(tdState).append(tdDesc).append(tdRating).append(tdAppointment);
 	$('#tableClinics tbody').append(tr);
-	
+		
 	$('#makeAppointment_btn'+i).off('click')
 	$('#makeAppointment_btn'+i).click(function(e){
 		e.preventDefault()
-		$('#makeAppointmentContainer').show()
-		$('#showClinicContainer').hide()
-		$('#MedicalRecordContainer').hide()
-		$('#detailsAppointmentContainer').hide()
-		showTypeOfExaminationContainer
+		showView('makeAppointmentContainer')
 		
 		$('#inputClinicName').val(data.name)
 		$('#inputClinicAddress').val(data.address+", "+data.city+", "+data.state)
@@ -292,12 +332,7 @@ function p_listClinic(data,i,user)
 				$('#detailsAppointment_btn').click(function(e){
 					e.preventDefault()
 					
-					$('#makeAppointmentContainer').hide()
-					$('#showClinicContainer').hide()
-					$('#MedicalRecordContainer').hide()
-					$('#detailsAppointmentContainer').show()
-					$('#addTypeOfExaminationContainer').hide()
-					
+					showView('detailsAppointmentContainer')
 					
 					doctorsSelected = []
 					
@@ -312,7 +347,7 @@ function p_listClinic(data,i,user)
 						
 					}
 					
-					$('#tableDoctorsDisabled tbody').empty()
+					emptyTable('chooseDoctorTable')
 					for(let d of doctorsSelected)
 					{
 						p_listDoctorDisabled(d,index,doctors.length);
@@ -374,17 +409,11 @@ function p_listClinic(data,i,user)
 
 function p_listDoctorActive(data,i,doctorCount)
 {
-	let tr=$('<tr></tr>');
-	let tdEmail = $('<td>' + data.user.email + '</td>')
-	let tdName=$('<td>'+ data.user.name +'</td>');
-	let tdSurname=$('<td>'+ data.user.surname +'</td>');
-	let tdRating=$('<td>'+ data.avarageRating +'</td>');
-	let tdCalendar =$('<td>'+data.shiftStart+' : '+data.shiftEnd+'</td>')
-	let tdSelect = $("<td><input type='checkbox' id='checkDoctor"+i+"'><label for='checkDoctor"+i+"'></label></td>" )
 	
-	tr.append(tdEmail).append(tdName).append(tdSurname).append(tdRating).append(tdCalendar).append(tdSelect)
-	$('#tableDoctorsActive tbody').append(tr)
+	let d = [data.user.email,data.user.name,data.user.surname,data.avarageRating,data.shiftStart,data.shiftEnd,"<input type='checkbox' id='checkDoctor"+i+"'><label for='checkDoctor"+i+"'></label>"]
+	insertTableData('chooseDoctorTable',d)
 	
+	$('#checkDoctor'+i).off('click')
 	$('#checkDoctor'+i).click(function(e){
 		
 		for(let j = 0 ; j < doctorCount ; j++)

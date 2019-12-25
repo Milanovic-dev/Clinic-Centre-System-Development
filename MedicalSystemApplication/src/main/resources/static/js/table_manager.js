@@ -39,6 +39,14 @@ function createDataTable(id,div,name,headers,orderBy)
 }
 
 
+function insertElementIntoTable(id,element)
+{
+	let body = document.getElementById(id).getElementsByClassName("card-body")[0]
+	
+	body.innerHTML += element
+}
+
+
 
 function setTableClickEvent(id, row, col, func)
 {
