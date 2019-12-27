@@ -45,14 +45,30 @@ function initDoctor(user)
 
 	$('#pacientList').click(function(e){
 		e.preventDefault()
-		showView("showPatientContainer")
+//		showView("showPatientContainer")
+        $('#breadcrumbCurrPage').removeAttr('hidden')
+        $('#breadcrumbCurrPage').text("Lista pacijenata")
+        $('#breadcrumbCurrPage2').attr('hidden',true)
+        $('#showPatientsContainer').show()
+        $("#showUserContainer").hide()
+        $('#showExaminationContainer').hide()
+        $('#showCalendarContainer').hide()
+        $('#showPatientContainerWithCheckBox').hide()
 
 	})
 	
 	$('#examinationStart').click(function(e){
 		e.preventDefault()
-		showView("showPatientContainerWithCheckBox")
-		
+//		showView("showPatientContainerWithCheckBox")
+		$('#breadcrumbCurrPage').removeAttr('hidden')
+        $('#breadcrumbCurrPage').text("Radni kalendar")
+        $('#breadcrumbCurrPage2').attr('hidden',true)
+        $('#showPatientsContainer').hide()
+        $("#showUserContainer").hide()
+        $('#showExaminationContainer').hide()
+        $('#showCalendarContainer').hide()
+        $('#showPatientContainerWithCheckBox').show()
+
 	})
 
     initCalendarDoc(user)
@@ -67,25 +83,25 @@ function initDoctor(user)
            $("#showUserContainer").hide()
            $('#showExaminationContainer').hide()
            $('#showCalendarContainer').show()
+           $('#showPatientContainerWithCheckBox').hide()
 
      });
 
      $("#startExamination").click(function(e){
-         		e.preventDefault()
+          e.preventDefault()
 
-                 setUpCodebooks()
+          setUpCodebooks()
 
-                 $('#breadcrumbCurrPage2').removeAttr('hidden')
-                 $('#breadcrumbCurrPage2').text("Pregled u toku")
-                 $("#modalCalendar").modal('toggle')
+          $('#breadcrumbCurrPage2').removeAttr('hidden')
+          $('#breadcrumbCurrPage2').text("Pregled u toku")
+          $("#modalCalendar").modal('toggle')
+          $('#showPatientContainerWithCheckBox').hide()
+          $('#showPatientsContainer').hide()
+          $("#showUserContainer").hide()
+          $('#showCalendarContainer').hide()
+          $('#showExaminationContainer').show()
 
-                 $('#showPatientsContainer').hide()
-                 $("#showUserContainer").hide()
-         		 $('#showCalendarContainer').hide()
-         		 $('#showExaminationContainer').show()
-
-                 $('#collapseThree').collapse('toggle')
-
+          $('#collapseThree').collapse('toggle')
      });
 
 
@@ -165,6 +181,8 @@ function findPatients(data)
 		}
 	})
 }
+
+
 function listPatientWithCheckBox(data,i,patientsCount)
 {
 	let d = [data.name,data.surname,data.email,data.phone,data.address,data.city,data.state,data.insuranceId,"<input type='checkbox' id='checkPatient"+i+"'><label for='checkPatient"+i+"'></label>"]
@@ -334,7 +352,7 @@ function setUpCodebooks(){
         complete: function(data)
         {
            let select = $('#selectDrug').val()
-
+           $('#selectDrug').empty()
            			$.each(data.responseJSON, function (i, item) {
            			    $('#selectDrug').append($('<option>', {
            			        value: item.name,
@@ -352,7 +370,7 @@ function setUpCodebooks(){
             complete: function(data)
             {
                let select = $('#selectDiagnosis').val()
-
+               $('#selectDiagnosis').empty()
                			$.each(data.responseJSON, function (i, item) {
                			    $('#selectDiagnosis').append($('<option>', {
                			        value: item.name,
