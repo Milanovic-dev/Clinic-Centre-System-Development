@@ -51,7 +51,10 @@ public class AppointmentDTO {
 		}
 		this.duration = appointment.getDuration();
 		if(appointment.getPriceslist() != null)
+		{
 			this.typeOfExamination = appointment.getPriceslist().getTypeOfExamination();
+			this.price = appointment.getPriceslist().getPrice();
+		}
 		this.type = appointment.getAppointmentType();	
 	}
 	
