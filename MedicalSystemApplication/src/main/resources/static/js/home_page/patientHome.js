@@ -20,6 +20,19 @@ function initPatient(user)
 	addView('showAppointmentRequestsPatient')
 	addView('preAppointmentContainer')
 	
+	var bc1 = new BreadLevel()
+	bc1.append('Lista klinika').append('Zakazivanje')
+	var bc2 = new BreadLevel()
+	bc2.append('Zdravstveni karton')
+	var bc3 = new BreadLevel()
+	bc3.append('Zahtevi za pregled')
+	var bc4 = new BreadLevel()
+	bc4.append('Unapred definisani pregledi')
+	
+	initBreadcrumb([bc1,bc2,bc3,bc4])
+	
+	
+	showBread('Zakazivanje') //PR: Breadcrumb ce biti: "Pocetna / Lista klinika / Zakazivanje"
       				
     createChooseDoctorTable()
     createAppointmentsTable()
@@ -54,9 +67,7 @@ function setUpPatientPage(user)
 		
 		
 		showView('showClinicContainer')
-		$('#breadcrumbCurrPage').removeAttr('hidden')
-		$('#breadcrumbCurrPage').text("Lista klinika")
-		$('#breadcrumbCurrPage2').attr('hidden',true)
+		showBread('Lista klinika')
 		
 	})
 	
@@ -106,6 +117,23 @@ function setUpPatientPage(user)
 		e.preventDefault()
 		
 		showView('preAppointmentContainer')	
+		showBread('Unapred definisani pregledi')
+		
+		$.ajax({		
+			type: 'GET',
+			url: "api/appointments/getAllPredefined",
+			complete: function(data)
+			{
+				let apps = data.responseJSON
+				index = 0;
+				for(let app of apps)
+				{
+					list_preApps(app,index)
+					index++
+				}
+				
+			}
+		})
 	})
 	
 	
@@ -121,9 +149,7 @@ function setUpPatientPage(user)
 		e.preventDefault()
 		
 		showView('MedicalRecordContainer')
-		$('#breadcrumbCurrPage').removeAttr('hidden')
-		$('#breadcrumbCurrPage').text("Zdravstveni karton")
-		$('#breadcrumbCurrPage2').attr('hidden',true)
+		showBread('Zdravstveni karton')
 		
 		$.ajax({
 			type:'GET',
@@ -141,22 +167,7 @@ function setUpPatientPage(user)
 		e.preventDefault()
 		
 		listAppRequests(user)
-		
-		$.ajax({		
-			type: 'GET',
-			url: "api/",
-			complete: function(data)
-			{
-				let apps = data.responseJSON
-				index = 0;
-				for(let app of apps)
-				{
-					list_preApps(app,index)
-					index++
-				}
-				
-			}
-		})
+
 	})
 
 }
@@ -165,6 +176,23 @@ function setUpPatientPage(user)
 function list_preApps(data,i)
 {
 	emptyTable('preAppTable')
+	
+	let dateSplit = data.date.split(' ')
+	let date = dateSplit[0]
+	let time = dateSplit[1]
+	
+	let d = [date,time,data.hallNumber,data.doctors[0],data.typeOfExamination,data.price,'<button class="btn btn-primary" id="submitPredefinedAppRequest'+i+'">Zakazi</button>']
+	
+	insertTableData('preAppTable',d)
+	
+	
+	$('#submitPredefinedAppRequest'+i).click(function(e){
+		e.preventDefault()
+		
+		//TODO: Zakazi 
+		
+	})
+	
 }
 
 
@@ -227,9 +255,7 @@ function makeMedicalRecord(data,user)
 function listAppRequests()
 {
 	showView('showAppointmentRequestsPatient')
-	$('#breadcrumbCurrPage').removeAttr('hidden')
-	$('#breadcrumbCurrPage').text("Zahtevi za pregled")
-	$('#breadcrumbCurrPage2').attr('hidden',true)	
+	showBread('Zahtevi za pregled')
 	
 	
 	$.ajax({
@@ -298,10 +324,10 @@ function p_listClinic(data,i,user)
 		$('#inputClinicName').val(data.name)
 		$('#inputClinicAddress').val(data.address+", "+data.city+", "+data.state)
 		$('#inputDate').val($('#clinicDatePick').val())
-		$('#inputAppointmentType').val($('#selectAppointmentType').val() + " (Pregled)")
+		$('#inputAppointmentType').val($('#selectAppointmentType').val() + " (Pregled)")	
 		
-		$('#breadcrumbCurrPage2').removeAttr('hidden')
-		$('#breadcrumbCurrPage2').text("Zakazivanje")
+		showBread('Zakazivanje')
+		
 		$.ajax({
 			type:'GET',
 			url:"api/clinic/getDoctors/"+data.name,
@@ -332,7 +358,6 @@ function p_listClinic(data,i,user)
 				$('#detailsAppointment_btn').click(function(e){
 					e.preventDefault()
 					
-					showView('detailsAppointmentContainer')
 					
 					doctorsSelected = []
 					
@@ -347,6 +372,13 @@ function p_listClinic(data,i,user)
 						
 					}
 					
+					if(doctorsSelected.length == 0)
+					{
+						displayError('detailsAppointment_btn',"Morate izabrati doktora")
+						return
+					}
+					
+					showView('detailsAppointmentContainer')
 					emptyTable('chooseDoctorTable')
 					for(let d of doctorsSelected)
 					{

@@ -5,6 +5,10 @@
 var containers = []
 var linked = []
 
+var breadcrumbs = []
+
+var errorId
+
 function clearViews()
 {
 	containers = []
@@ -19,8 +23,7 @@ function addView(id)
 		return
 	}
 	
-	containers.push(id)
-	
+	containers.push(id)	
 }
 
 function removeView(id)
@@ -60,6 +63,20 @@ function showView(id)
 
 }
 
+function displayError(id,text)
+{
+	let button = $("#"+id)
+	
+	let spanId = id + "_errorSpan"
+	if($('#'+spanId).length > 0)
+	{
+		return
+	}
+	
+	button.before('<span style="color:#FF1103" id="'+spanId+'">'+text+'</span><br>')
+}
+
+
 function hideView(id)
 {
 	$('#'+id).hide()
@@ -81,10 +98,76 @@ function createViewLink(id1,id2)
 }
 
 
-function arrayRemove(arr, value) {
+function arrayRemove(arr, value) 
+{
 
 	   return arr.filter(function(ele){
 	       return ele != value;
 	   });
 
+}
+
+class BreadLevel
+{
+	constructor()
+	{
+		this.levels = []
 	}
+	
+	append(name)
+	{
+		this.levels.push(name)
+		
+		return this
+	}
+	
+	getLevels()
+	{
+		return this.levels
+	}
+	
+	print()
+	{
+		console.log(this.levels)
+	}
+}
+
+
+function initBreadcrumb(levels)
+{
+	breadcrumbs = levels
+}
+
+function showBread(name)
+{
+	let bc
+	
+	for(let b of breadcrumbs)
+	{
+		let levels = b.getLevels()
+		
+		for(let level of levels)
+		{
+			if(name == level)
+			{
+				bc = b
+				break
+			}
+		}
+	}
+	
+	let breadcrumb= $('#breadcrumb')
+	breadcrumb.empty()
+	breadcrumb.append('<li class="breadcrumb-item"><a href="#">Pocetna</a></li>')
+	for(let level of bc.getLevels())
+	{
+		breadcrumb.append('<li class="breadcrumb-item active">'+level+'</li>')
+		
+		if(level == name)
+		{
+			break
+		}
+	}
+	
+}
+

@@ -193,6 +193,26 @@ public class AppointmentController
 		return new ResponseEntity<>(dto,HttpStatus.OK);
 		
 	}
+	
+	@GetMapping(value="/getAllPredefined")
+	public ResponseEntity<List<AppointmentDTO>> getPredefined()
+	{
+		List<Appointment> appointments = appointmentService.findAllByPredefined();
+		
+		if(appointments.size() == 0)
+		{
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+		
+		List<AppointmentDTO> dtos = new ArrayList<AppointmentDTO>();
+		
+		for(Appointment app : appointments)
+		{
+			dtos.add(new AppointmentDTO(app));
+		}
+		
+		return new ResponseEntity<>(dtos,HttpStatus.OK);
+	}
 
 	@GetMapping(value="/doctor/getAllAppointments/{email}")
 	public ResponseEntity<List<AppointmentDTO>> getAppointmentsDoctor(@PathVariable("email") String email)
@@ -290,6 +310,8 @@ public class AppointmentController
 				.withDoctors(doctors)				
 				.build();
 		
+		
+		app.setPredefined(true);
 		appointmentService.save(app);
 		return new ResponseEntity<>(HttpStatus.CREATED);
 	}

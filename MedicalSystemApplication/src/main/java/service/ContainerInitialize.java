@@ -199,6 +199,13 @@ public class ContainerInitialize {
 			
 			Date date = new Date();
 			Date date2 = new GregorianCalendar(2019, Calendar.DECEMBER, 11).getTime();
+			
+			Priceslist p1 = new Priceslist();
+			p1.setClinic(clinic);
+			p1.setTypeOfExamination("Opsti pregled");
+			p1.setPrice(500L);
+			
+			pricelistRepository.save(p1);
 
 			Appointment app1 = new Appointment.Builder(date2)
 					.withPatient(patient)
@@ -206,8 +213,10 @@ public class ContainerInitialize {
 					.withHall(hall1)
 					.withClinic(clinic)
 					.withDuration(2)
+					.withPriceslist(p1)
 					.build();
 			
+			app1.setPredefined(true);
 			app1.getDoctors().add(doctor1);
 			app1.getDoctors().add(doctor2);
 			appointmentRepository.save(app1);
@@ -248,12 +257,6 @@ public class ContainerInitialize {
 
 			userRepository.save(doctor1);
 			
-			Priceslist p1 = new Priceslist();
-			p1.setClinic(clinic);
-			p1.setTypeOfExamination("Opsti pregled");
-			p1.setPrice(500L);
-			
-			pricelistRepository.save(p1);
 			
 			Priceslist p2 = new Priceslist();
 			p2.setClinic(clinic);
