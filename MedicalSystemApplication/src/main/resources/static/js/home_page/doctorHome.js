@@ -2,6 +2,8 @@
  *
  */
 //ULAZNA FUNKCIJA
+var doctorClinic = null
+
 function initDoctor(user)
 {
 
@@ -22,13 +24,15 @@ function initDoctor(user)
 	addView("showUserContainer")
 	addView("showPatientContainer")
 	addView("showPatientContainerWithCheckBox")
+	addView("showStartExaminationContainer")
 	
 	let headersPatients = ["Ime","Prezime","Email","Telefon","Adresa","Grad","Drzava","Broj zdravstvenog osiguranja"]
 	createDataTable("listPatientTable","showPatientContainer","Lista pacijenata",headersPatients,0)
 	
 	let headersPatientsWithCheckBox = ["Ime","Prezime","Email","Telefon","Adresa","Grad","Drzava","Broj zdravstvenog osiguranja",""]
 	createDataTable("listPatientTableWithCheckBox","showPatientContainerWithCheckBox","Izaberite pacijenta",headersPatientsWithCheckBox,0)
-
+	insertElementIntoTable("listPatientTableWithCheckBox",'<br><button type="button" class="btn btn-primary" id = "startExamination_btn" disabled>Zapocni pregled</button>')
+	
 	getTableDiv("listPatientTable").show()	
 	getTableDiv("listPatientTableWithCheckBox").show()	
 	
@@ -38,6 +42,7 @@ function initDoctor(user)
 			url:"api/doctors/getClinic/" + user.email,
 			complete: function(data)
 			{
+				doctorClinic = data.responseJSON
 				findPatients(data)
 			}
 	})
@@ -170,24 +175,64 @@ function listPatientWithCheckBox(data,i,patientsCount)
 	let d = [data.name,data.surname,data.email,data.phone,data.address,data.city,data.state,data.insuranceId,"<input type='checkbox' id='checkPatient"+i+"'><label for='checkPatient"+i+"'></label>"]
 	insertTableData("listPatientTableWithCheckBox",d)
 	
+	
 	$('#checkPatient'+i).click(function(e){
-	
-	if(patientsCount <= 1)
-	{
-		return
-	}
-	
-	for(let j = 0 ; j < patientsCount ; j++)
-	{
-		if(j == i)
+		
+		let flag = false
+		
+		for(let j = 0 ; j < patientsCount ; j++)
 		{
-			$("#checkPatient"+j).prop('checked',true)
+			if($("#checkPatient"+j).is(":checked"))
+			{
+				flag = true;
+				$('#patientStartExamin').text("Ime i prezime pacijenta: " + data.name + " " + data.surname)
+				$('#patientEmailStartExamin').text("Email: " + data.email)
+				$('#patientPhoneStartExamin').text("Telefon: " + data.phone)
+				$('#patientAddressStartExamin').text("Prebivaliste: " + data.address + ", " + data.city + ", " + data.state)
+				$('#doctorStartExamin').text("Ime i prezime lekara: " + user.name + " " + user.surname)
+				$('#clinictartExamin').text("Klinika: " + doctorClinic.name)
+				setUpDrugs()
+				setUpDiagnosis()
+				setUpHall()
+				
+				
+			}
+			
+		}
+		
+		if(flag == false)
+		{
+			$('#startExamination_btn').prop('disabled',true)
 		}
 		else
 		{
-			$("#checkPatient"+j).prop('checked',false)
+			$('#startExamination_btn').prop('disabled',false)
 		}
-	}
+		
+		$('#startExamination_btn').click(function(e){
+			e.preventDefault()
+			showView("showStartExaminationContainer")
+			
+		})
+		
+		if(patientsCount <= 1)
+		{		
+			return
+		}
+	
+	
+		for(let j = 0 ; j < patientsCount ; j++)
+		{
+			if(j == i)
+			{
+				$("#checkPatient"+j).prop('checked',true)
+			}
+			else
+			{
+				$("#checkPatient"+j).prop('checked',false)
+			}
+		}
+		
 		
 	})
 }
@@ -326,6 +371,67 @@ function formatDateHours (dateObj) {
       return date.getDate() + "." + month+ "." + date.getFullYear() + ".   " + strTime;
 }
 
+function setUpDrugs(){
+	$.ajax({
+        type: 'GET',
+        url:"api/drug/getAllDrugs",
+        complete: function(data)
+        {
+        	drugs = data.responseJSON
+            $('#selectDrugStartExamin').empty()
+				for(let d of drugs)
+				{
+					$('#selectDrugStartExamin').append($('<option>',{
+						value: d.name,
+						text: d.name
+					}))
+								
+				}
+        }
+    })
+	
+}
+
+function setUpHall(){
+	$.ajax({
+		type: 'GET',
+		url: 'api/hall/getAllByClinic/'+doctorClinic.name,
+		complete: function(data)
+		{
+			halls = data.responseJSON
+			let i = 0
+			$('#selectHallStartExamin').empty()
+			for(let h of halls)
+            {
+				$('#selectHallStartExamin').append($('<option>',{
+					value: h.name,
+					text: h.name
+				}))	
+            
+            }
+		}
+	})
+}
+
+function setUpDiagnosis(){
+	$.ajax({
+        type: 'GET',
+        url:"api/diagnosis/getAllDiagnosis",
+        complete: function(data)
+        {
+           let select = $('#selectDiagnosisStartExamin').val()
+
+           			$.each(data.responseJSON, function (i, item) {
+           			    $('#selectDiagnosisStartExamin').append($('<option>', {
+           			        value: item.name,
+           			        text : item.name
+           			    }));
+           			});
+        }
+    })
+	
+}
+
 function setUpCodebooks(){
 
     $.ajax({
@@ -362,4 +468,5 @@ function setUpCodebooks(){
                			$('.selectpicker').selectpicker('refresh');
             }
         })
+     
 }
