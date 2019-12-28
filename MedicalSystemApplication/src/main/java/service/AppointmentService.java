@@ -44,6 +44,11 @@ public class AppointmentService {
 		return appointmentRepository.findAll();
 	}
 	
+	public List<Appointment> findAllByPredefined()
+	{
+		return appointmentRepository.findAllByPredefined(true);
+	}
+	
 	public Appointment findAppointment(String date, int hallNumber, String clinic)
 	{	
 		Date d = DateUtil.getInstance().GetDate(date, "dd-MM-yyyy HH:mm");

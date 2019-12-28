@@ -792,7 +792,6 @@ function makeHallTable()
 		url: 'api/hall/getAllByClinic/'+clinic.name,
 		complete: function(data)
 		{
-			console.log(data)
 			halls = data.responseJSON
 			let i = 0
 			emptyTable('tableHall')
