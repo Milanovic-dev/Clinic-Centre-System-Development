@@ -1074,7 +1074,70 @@
   </div>
 </div>
 <!-- -----------------------KRAJ MODALA ZA KALENDAR------------------------ -->
+<!-- ---------------------------ZAPOCNI PREGLED---------------------------- -->
+ <div class="card mb-3" id = "showStartExaminationContainer" style="display:none">
+      <div class="card-header">
+          <i class="fas fa-table"></i>
+          Informacije o pacijenta</div>
+      <div class="card-body">
+          <label class="form-control-label" id="patientStartExamin">Pacijent: </label> <br>
+          <label class="form-control-label" id="patientEmailStartExamin">Email pacijenta: </label> <br>
+          <label class="form-control-label" id="patientPhoneStartExamin">Broj telefona: </label> <br>
+          <label class="form-control-label" id="patientAddressStartExamin">Mesto stanovanja: </label> <br>
+          <label class="form-control-label" id="doctorStartExamin">Doktor: </label> <br>
+          <label class="form-control-label" id="clinictartExamin">Klinika: </label> <br>
 
+          <hr>
+          <select title="Sala" class="form-control" id="selectHallStartExamin" style="height: 80px !important;" multiple data-live-search="true">
+
+          </select><br>
+          
+          <select title="Dijagnoze" class="form-control" id="selectDiagnosisStartExamin" style="height: 80px !important;" multiple data-live-search="true">
+
+          </select><br>
+
+          <select title="Lekovi za recept" class="form-control" id="selectDrugStartExamin" style="height: 80px !important;" multiple data-live-search="true">
+
+          </select><br>
+          
+          <label>Pocetak pregleda:</label>
+          <input type="time" id="inputStartTime" class="form-control">
+          <label>Kraj pregleda</label>
+          <input type="time" id="inputStartTime" class="form-control">
+          
+          
+            <hr>
+          <label class="form-control-label" style="opacity: 0.8">Terapija uz recept: </label> <br>
+          <div class="form-group">
+              <textarea class="form-control" rows="4" id="description"></textarea>
+          </div>
+          <label class="form-control-label" style="opacity:0.8">Informacije o pregledu: </label> <br>
+          <div class="form-group">
+              <textarea class="form-control" rows="10" id="report"></textarea>
+          </div>
+
+          <div class="card">
+              <div class="card-header" id="headingThree">
+                  <h5 class="mb-0">
+                      <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree" >
+                          Zakazivanje novog termina
+                      </button>
+                  </h5>
+              </div>
+              <div id="collapseThree" class="collapse show" aria-labelledby="headingThree" data-parent="#accordion">
+                  <div class="card-body">
+                      //TODO: 2_3.11 Kreiranje zahteva za pregled/operaciju
+                  </div>
+              </div>
+          </div>
+
+          <button type="button" style="margin:20 0 0" class="btn btn-primary" id = "submitReport">Sacuvaj&nbsp<span class="spinner-border spinner-border-sm"  style="display:none;" role="status" id="submitReportSpinner"  aria-hidden="true"></span></button>
+
+      </div>
+
+      </div>
+
+<!---------------------------ZAPOCNI PREGLED END -------------------->
   		<div class="container-fluid" id="MedicalRecordContainer">
   			<p class="text-muted" id="insuranceMR"></p>
   			<p class="font-weight-light">Osnovni podaci</p>
