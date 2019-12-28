@@ -11,6 +11,10 @@ function initNurse(user)
 	sideBar.append("<li class='nav-item active'><a class='nav-link' href='#'><i class='fas fa-fw fa-tachometer-alt'></i><span id='vacationRequest'>Zahtev za odustvo</span></a></li>")
 	sideBar.append("<li class='nav-item active'><a class='nav-link' href='#'><i class='fas fa-fw fa-tachometer-alt'></i><span id='prescriptionAuth'>Overa recepata</span></a></li>")
 
+    clearViews()
+    addView('showCalendarContainer')
+    addView('showPatientsContainer')
+    addView('showPrescriptionAuthContainer')
 
 	pageSetUp(user)
     initCalendar(user)
@@ -24,10 +28,7 @@ function initNurse(user)
 function pageSetUp(user)
 {
 
-    clearViews()
-    addView('showCalendarContainer')
-    addView('showPatientsContainer')
-    addView('showPrescriptionAuthContainer')
+
 
 	$("#patientList").click(function(e){
 		e.preventDefault()
@@ -197,7 +198,7 @@ function initCalendar(user)
          calendar.render();
          $('#workCalendar').click(function(){
               calendar.render();
-            });
+         });
 
 
 }
@@ -264,7 +265,15 @@ function getPrescriptions(user){
 			complete: function(data)
 			{
 				prescriptions = data.responseJSON
-				emptyTable("tablePrescriptions")
+
+				if(prescriptions==''){
+				    $('#tablePrescriptions').hide()
+				    $('#emptyPrescriptions').show()
+				}else{
+				    $('#tablePrescriptions').show()
+                	$('#emptyPrescriptions').hide()
+				}
+
 				for(p of prescriptions)
 				{
 					addPrescriptionTr(p, user)
@@ -300,8 +309,7 @@ function prescriptionAuth(prescription, user){
             complete: function(data)
             {
                 $('#tablePrescriptions tbody').html('')
-                getPrescriptions()
-                clearViews()
+                getPrescriptions(user)
                 showView('showPrescriptionAuthContainer')
             }
         })

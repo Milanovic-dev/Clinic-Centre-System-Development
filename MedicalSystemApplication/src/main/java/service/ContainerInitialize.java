@@ -41,6 +41,10 @@ public class ContainerInitialize {
 
 	@Autowired
 	private DiagnosisRepository diagnosisRepository;
+
+	@Autowired
+	private PrescriptionRepository prescriptionRepository;
+
 	
 	@PostConstruct
 	public void init()
@@ -264,6 +268,28 @@ public class ContainerInitialize {
 			p2.setPrice(1000L);
 			
 			pricelistRepository.save(p2);
+
+			Prescription prescription = new Prescription();
+			prescription.getDrugs().add(drug);
+			prescription.getDrugs().add(drug2);
+			prescription.setDescription("terapija");
+
+			prescriptionRepository.save(prescription);
+
+			Prescription prescription2 = new Prescription();
+			prescription2.getDrugs().add(drug3);
+			prescription2.getDrugs().add(drug2);
+			prescription2.setDescription("terapija 12345");
+
+			prescriptionRepository.save(prescription2);
+
+			Prescription prescription3 = new Prescription();
+			prescription3.getDrugs().add(drug3);
+			prescription3.getDrugs().add(drug);
+			prescription3.setDescription("terapijaaaaa a a a a a ");
+
+			prescriptionRepository.save(prescription3);
+
 			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
