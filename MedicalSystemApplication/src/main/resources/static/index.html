@@ -31,7 +31,7 @@
 
     <!-- dataTable -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.12/js/jquery.dataTables.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css">
 <!-- SCRIPT ORDER NE MENJATI -->
 <script src="js/moment.js"></script>
 <script src="js/content_manager.js"></script>
@@ -359,7 +359,7 @@
                   Lista pacijenata</div>
               <div class="card-body">
                   <div class="table-responsive">
-                      <table class="table table-bordered" id="tablePatients" width="100%" cellspacing="0">
+                      <table class="stripe"  id="tablePatients" width="100%" cellspacing="0">
                           <thead>
                           <tr>
                               <th scope="col" >Ime</th>
@@ -395,7 +395,6 @@
           Informacije o pregledu pacijenta</div>
       <div class="card-body">
           <label class="form-control-label" id="patientExamin">Pacijent: </label> <br>
-          <label class="form-control-label" id="patientExaminEmail"> </label> <br>
           <label class="form-control-label" id="typeExamin">Tip pregleda: </label> <br>
           <label class="form-control-label" id="startExamin">Pocetak: </label> <br>
           <label class="form-control-label" id="doctorExamin">Doktor: </label> <br>
@@ -403,7 +402,7 @@
           <hr>
 
           <select title="Dijagnoze" class="selectpicker" id="selectDiagnosis" style="height: 40px !important;" multiple data-live-search="true">
-
+              <div class="invalid-feedback"></div>
           </select>
 
           <select title="Lekovi za recept" class="selectpicker" id="selectDrug" style="height: 40px !important;" multiple data-live-search="true">
@@ -417,6 +416,7 @@
           <label class="form-control-label" style="opacity:0.8">Informacije o pregledu: </label> <br>
           <div class="form-group">
               <textarea class="form-control" rows="10" id="report"></textarea>
+              <div class="invalid-feedback"></div>
           </div>
 
           <div class="card">
@@ -434,7 +434,29 @@
               </div>
           </div>
 
-          <button type="button" style="margin:20 0 0" class="btn btn-primary" id = "submitReport">Sacuvaj&nbsp<span class="spinner-border spinner-border-sm"  style="display:none;" role="status" id="submitReportSpinner"  aria-hidden="true"></span></button>
+          <button type="button" style="margin:20 0 0" class="btn btn-primary" id = "submitReport" >Sacuvaj</button>
+
+          <!-- Modal -->
+          <div class="modal fade bd-example-modal-sm" id="modalOK" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+              <div class="modal-dialog modal-dialog-centered" role="document">
+                  <div class="modal-content">
+                      <div class="modal-header">
+                          <h5 class="modal-title" id="exampleModalLongTitle">Izvestaj o pregledu</h5>
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                          </button>
+                      </div>
+                      <div class="modal-body">
+                          <label id="reportLabel" style="display:none">Izvestaj je uspesno kreiran.</label>
+                          <label id="prescriptionLabel" style="display:none">Izvestaj i recept su uspesno kreirani. Recept se nalazi na listi recepata za overu kod medicinske sestre.</label>
+                      </div>
+                      <div class="modal-footer">
+                          <button type="button" class="btn btn-primary" id="btnOK">Potvrdi</button>
+                      </div>
+                  </div>
+              </div>
+          </div>
+
 
       </div>
 
@@ -448,8 +470,7 @@
                 <i class="fas fa-table"></i>
                 Overa recepata</div>
             <div class="card-body">
-                <h4 id="emptyPrescriptions"> Trenutno nema neoverenih recepata. </h4>
-<!--                <div id = "prescriptionsDiv"></div>-->
+                <h5 id="emptyPrescriptions"> Trenutno nema neoverenih recepata. </h5>
                 <div class="table-responsive">
                     <table class="table table-hover" id="tablePrescriptions" cellspacing="0">
                         <thead>
@@ -468,6 +489,8 @@
         </div>
     </div>
 <!--------------------------- OVERA RECEPTA END -------------------->
+
+
 <!-- -----------------------IZMENA PROFILA KLINIKE---------------------- -->
 <div class="container" id="changeProfileClinicContainer" style="display:none" >
     <div class="card card-register mx-auto mt-5" >
@@ -1109,29 +1132,29 @@
             <hr>
           <label class="form-control-label" style="opacity: 0.8">Terapija uz recept: </label> <br>
           <div class="form-group">
-              <textarea class="form-control" rows="4" id="description"></textarea>
+              <textarea class="form-control" rows="4" id="descriptionStart"></textarea>
           </div>
           <label class="form-control-label" style="opacity:0.8">Informacije o pregledu: </label> <br>
           <div class="form-group">
-              <textarea class="form-control" rows="10" id="report"></textarea>
+              <textarea class="form-control" rows="10" id="reportStart"></textarea>
           </div>
 
           <div class="card">
-              <div class="card-header" id="headingThree">
+              <div class="card-header" id="headingThreeStart">
                   <h5 class="mb-0">
                       <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree" >
                           Zakazivanje novog termina
                       </button>
                   </h5>
               </div>
-              <div id="collapseThree" class="collapse show" aria-labelledby="headingThree" data-parent="#accordion">
+              <div id="collapseThreeStart" class="collapse show" aria-labelledby="headingThree" data-parent="#accordion">
                   <div class="card-body">
                       //TODO: 2_3.11 Kreiranje zahteva za pregled/operaciju
                   </div>
               </div>
           </div>
 
-          <button type="button" style="margin:20 0 0" class="btn btn-primary" id = "submitReport">Sacuvaj&nbsp<span class="spinner-border spinner-border-sm"  style="display:none;" role="status" id="submitReportSpinner"  aria-hidden="true"></span></button>
+          <button type="button" style="margin:20 0 0" class="btn btn-primary" id = "submitReportStart">Sacuvaj&nbsp<span class="spinner-border spinner-border-sm"  style="display:none;" role="status" id="submitReportSpinner"  aria-hidden="true"></span></button>
 
       </div>
 

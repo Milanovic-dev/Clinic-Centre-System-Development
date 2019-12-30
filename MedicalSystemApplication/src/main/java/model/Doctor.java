@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import dto.DoctorDTO;
 import helpers.DateUtil;
 import helpers.UserBuilder;
@@ -25,13 +26,15 @@ public class Doctor extends User
     
     @Column(name = "avarageRating", nullable = true)
     private float avarageRating;
-    
+
+	@JsonIgnore
     @ManyToOne(fetch = FetchType.EAGER)
     private Clinic clinic;
     
     @OneToMany(fetch = FetchType.LAZY)
 	private List<ReviewDoctor> reviews;
-  
+
+	@JsonIgnore
 	@OneToMany(fetch = FetchType.LAZY)
 	private List<Appointment> appointments;
 	

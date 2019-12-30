@@ -7,6 +7,7 @@ import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.GenerationType;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import helpers.UserBuilder;
 import model.User.UserRole;
 
@@ -15,8 +16,8 @@ import javax.persistence.*;
 
 @Entity
 public class Patient extends User{
-	
-	
+
+	@JsonIgnore
 	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinColumn(name = "medicalRecord_id", referencedColumnName = "id")
 	private MedicalRecord medicalRecord;
