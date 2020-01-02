@@ -23,7 +23,7 @@ function initDoctor(user)
 	addView("showExaminationContainer")
 	addView("showUserContainer")
 	addView("showPatientContainer")
-	addView("showPatientContainerWithCheckBox")
+	addView("showAppointmentContainerWithCheckBox")
 	addView("showStartExaminationContainer")
 	addView("showCalendarContainer")
 
@@ -33,22 +33,26 @@ function initDoctor(user)
     bc2.append('Zapocni pregled').append('Pregled u toku ')
     var bc3 = new BreadLevel()
     bc3.append('Lista pacijenata')
+    var bc4 = new BreadLevel()
 
     initBreadcrumb([bc1,bc2,bc3])
 
 	
 	let headersPatients = ["Ime","Prezime","Email","Telefon","Adresa","Grad","Drzava","Broj zdravstvenog osiguranja"]
 	createDataTable("listPatientTable","showPatientContainer","Lista pacijenata",headersPatients,0)
+	getTableDiv("listPatientTable").show()
 	
-	let headersPatientsWithCheckBox = ["Ime","Prezime","Email","Telefon","Adresa","Grad","Drzava","Broj zdravstvenog osiguranja",""]
-	createDataTable("listPatientTableWithCheckBox","showPatientContainerWithCheckBox","Izaberite pacijenta",headersPatientsWithCheckBox,0)
-	insertElementIntoTable("listPatientTableWithCheckBox",'<br><button type="button" class="btn btn-primary" id = "startExamination_btn" disabled>Zapocni pregled</button>')
-	
-	getTableDiv("listPatientTable").show()	
-	getTableDiv("listPatientTableWithCheckBox").show()	
+	let headersApps = ["Datum","Pacijent","Doktori","Klinika","Sala","Tip pregleda","Tip zakazivanja",""]
+	createDataTable("listAppointmentTable","showAppointmentContainerWithCheckBox","Zakazani pregledi",headersApps,0)
+	getTableDiv("listAppointmentTable").show()	
 	
 
-	$.ajax({
+	$('#pacientList').click(function(e){
+		e.preventDefault()
+		showView("showPatientContainer")
+        showBread('Lista pacijenata')
+        
+        $.ajax({
 			type: 'GET',
 			url:"api/doctors/getClinic/" + user.email,
 			complete: function(data)
@@ -58,18 +62,29 @@ function initDoctor(user)
 			}
 	})
 
-
-	$('#pacientList').click(function(e){
-		e.preventDefault()
-		showView("showPatientContainer")
-        showBread('Lista pacijenata')
-
 	})
 	
 	$('#examinationStart').click(function(e){
 		e.preventDefault()
-		showView("showPatientContainerWithCheckBox")
+		showView("showAppointmentContainerWithCheckBox")
         showBread('Zapocni pregled')
+        
+        $.ajax({
+        	type:'GET',
+        	url: "api/appointments/doctor/getAllAppointments/"+user.email,
+        	complete: function(data)
+        	{
+        		let apps = data.responseJSON
+        		let index = 0
+        		emptyTable('listAppointmentTable')
+        		for(app of apps)
+        		{
+        			listAppointmentWithCheckBox(app,index,apps.length,user)
+        			index++
+        		}
+        	}
+        })
+        
 	})
 
     initCalendarDoc(user)
@@ -110,15 +125,12 @@ function findPatients(data)
 		url: 'api/clinic/getPatients/' + clinic.name,
 		complete: function(data)
 		{
-
 			let patients = data.responseJSON
 			let i = 0
-			emptyTable("listPatientTableWithCheckBox")
 			emptyTable("listPatientTable")
 			for(let u of patients)
             {
 				listPatient(u,i);
-				listPatientWithCheckBox(u,i,patients.length);
 				i++;
             }
 
@@ -127,75 +139,32 @@ function findPatients(data)
 }
 
 
-function listPatientWithCheckBox(data,i,patientsCount)
+function listAppointmentWithCheckBox(data,i,appCount,user)
 {
-	let d = [data.name,data.surname,data.email,data.phone,data.address,data.city,data.state,data.insuranceId,"<input type='checkbox' id='checkPatient"+i+"'><label for='checkPatient"+i+"'></label>"]
-	insertTableData("listPatientTableWithCheckBox",d)
+	let type
+	if(data.type == 'Surgery'){
+        type = 'Operacija'
+     }else if (data.type == 'Examination'){
+        type = 'Pregled'
+     }
 	
+	let d = [formatDateHours(data.date),data.patientEmail,data.doctors[0],data.clinicName,data.hallNumber,data.typeOfExamination, type,'<button class="btn btn-primary" id="startExamin_btn'+i+'">Zapocni pregled</button>']
+	insertTableData('listAppointmentTable',d)
 	
-	$('#checkPatient'+i).click(function(e){
+	$("#startExamin_btn"+i).off('click')
+	$("#startExamin_btn"+i).click(function(e){
 		
-		let flag = false
-		
-		for(let j = 0 ; j < patientsCount ; j++)
-		{
-			if($("#checkPatient"+j).is(":checked"))
-			{
-				flag = true;
-				$('#patientStartExamin').text("Ime i prezime pacijenta: " + data.name + " " + data.surname)
-				$('#patientEmailStartExamin').text("Email: " + data.email)
-				$('#patientPhoneStartExamin').text("Telefon: " + data.phone)
-				$('#patientAddressStartExamin').text("Prebivaliste: " + data.address + ", " + data.city + ", " + data.state)
-				$('#doctorStartExamin').text("Ime i prezime lekara: " + user.name + " " + user.surname)
-				$('#clinictartExamin').text("Klinika: " + doctorClinic.name)
-				setUpDrugs()
-				setUpDiagnosis()
-				setUpHall()
-				
-				
-			}
-			
-		}
-		
-		if(flag == false)
-		{
-			$('#startExamination_btn').prop('disabled',true)
-		}
-		else
-		{
-			$('#startExamination_btn').prop('disabled',false)
-		}
-		
-		$('#startExamination_btn').click(function(e){
-			e.preventDefault()
-			showView("showStartExaminationContainer")
-			showBread('Pregled u toku ')
-		})
-		
-		if(patientsCount <= 1)
-		{		
-			return
-		}
-	
-	
-		for(let j = 0 ; j < patientsCount ; j++)
-		{
-			if(j == i)
-			{
-				$("#checkPatient"+j).prop('checked',true)
-			}
-			else
-			{
-				$("#checkPatient"+j).prop('checked',false)
-			}
-		}
-		
-		
+		showView("showExaminationContainer")
+		showBread('Pregled u toku ')
+		setUpDiagnosis()
+		setUpCodebooks()
+		getAppointment(data.clinicName, formatDateHours(data.date), data.hallNumber, user)
 	})
 }
 
 function listPatient(data,i)
 {
+	console.log(data)
 	let d = [data.name,data.surname,data.email,data.phone,data.address,data.city,data.state,data.insuranceId]
 	insertTableData("listPatientTable",d)
 }

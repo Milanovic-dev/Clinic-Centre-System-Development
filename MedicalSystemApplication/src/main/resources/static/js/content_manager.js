@@ -19,7 +19,7 @@ function addView(id)
 {
 	if(containers.includes(id))
 	{
-		console.log("Container with " + id + " is already subscribied")
+		console.error("Container with " + id + " is already subscribied")
 		return
 	}
 	
@@ -35,7 +35,7 @@ function showView(id)
 {
 	if(!containers.includes(id))
 	{
-		console.log("Container with " + id + " does not exist!")
+		console.error("Container with " + id + " does not exist!")
 		return
 	}
 	
