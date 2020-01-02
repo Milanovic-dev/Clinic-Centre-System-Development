@@ -1,5 +1,7 @@
 package model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -17,7 +19,8 @@ public class Hall
 	@Id
 	@GeneratedValue( strategy = GenerationType.AUTO)
 	private Long id;
-	
+
+	@JsonIgnore
 	@OneToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "clinic_id")
 	private Clinic clinic;

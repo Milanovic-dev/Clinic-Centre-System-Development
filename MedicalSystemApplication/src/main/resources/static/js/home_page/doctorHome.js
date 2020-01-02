@@ -25,6 +25,17 @@ function initDoctor(user)
 	addView("showPatientContainer")
 	addView("showPatientContainerWithCheckBox")
 	addView("showStartExaminationContainer")
+	addView("showCalendarContainer")
+
+	var bc1 = new BreadLevel()
+    bc1.append('Radni kalendar').append('Pregled u toku')
+    var bc2 = new BreadLevel()
+    bc2.append('Zapocni pregled').append('Pregled u toku ')
+    var bc3 = new BreadLevel()
+    bc3.append('Lista pacijenata')
+
+    initBreadcrumb([bc1,bc2,bc3])
+
 	
 	let headersPatients = ["Ime","Prezime","Email","Telefon","Adresa","Grad","Drzava","Broj zdravstvenog osiguranja"]
 	createDataTable("listPatientTable","showPatientContainer","Lista pacijenata",headersPatients,0)
@@ -50,116 +61,44 @@ function initDoctor(user)
 
 	$('#pacientList').click(function(e){
 		e.preventDefault()
-//		showView("showPatientContainer")
-        $('#breadcrumbCurrPage').removeAttr('hidden')
-        $('#breadcrumbCurrPage').text("Lista pacijenata")
-        $('#breadcrumbCurrPage2').attr('hidden',true)
-        $('#showPatientsContainer').show()
-        $("#showUserContainer").hide()
-        $('#showExaminationContainer').hide()
-        $('#showCalendarContainer').hide()
-        $('#showPatientContainerWithCheckBox').hide()
+		showView("showPatientContainer")
+        showBread('Lista pacijenata')
 
 	})
 	
 	$('#examinationStart').click(function(e){
 		e.preventDefault()
-//		showView("showPatientContainerWithCheckBox")
-		$('#breadcrumbCurrPage').removeAttr('hidden')
-        $('#breadcrumbCurrPage').text("Radni kalendar")
-        $('#breadcrumbCurrPage2').attr('hidden',true)
-        $('#showPatientsContainer').hide()
-        $("#showUserContainer").hide()
-        $('#showExaminationContainer').hide()
-        $('#showCalendarContainer').hide()
-        $('#showPatientContainerWithCheckBox').show()
-
+		showView("showPatientContainerWithCheckBox")
+        showBread('Zapocni pregled')
 	})
 
     initCalendarDoc(user)
 
 	$("#workCalendar").click(function(e){
         e.preventDefault()
-
-           $('#breadcrumbCurrPage').removeAttr('hidden')
-           $('#breadcrumbCurrPage').text("Radni kalendar")
-           $('#breadcrumbCurrPage2').attr('hidden',true)
-           $('#showPatientsContainer').hide()
-           $("#showUserContainer").hide()
-           $('#showExaminationContainer').hide()
-           $('#showCalendarContainer').show()
-           $('#showPatientContainerWithCheckBox').hide()
-
+           showView("showCalendarContainer")
+           showBread('Radni kalendar')
      });
 
-     $("#startExamination").click(function(e){
+    $("#startExamination").click(function(e){
           e.preventDefault()
 
           setUpCodebooks()
-
-          $('#breadcrumbCurrPage2').removeAttr('hidden')
-          $('#breadcrumbCurrPage2').text("Pregled u toku")
           $("#modalCalendar").modal('toggle')
-          $('#showPatientContainerWithCheckBox').hide()
-          $('#showPatientsContainer').hide()
-          $("#showUserContainer").hide()
-          $('#showCalendarContainer').hide()
-          $('#showExaminationContainer').show()
 
+          showBread('Pregled u toku')
+          showView("showExaminationContainer")
           $('#collapseThree').collapse('toggle')
-     });
+    });
 
+    $('#btnOK').click(function(e){
+     		e.preventDefault()
 
-        $('#submitReport').off('click')
-        $('#submitReport').click(function(e){
-            e.preventDefault()
+     		$('#modalOK').modal('hide')
+     		showView("showCalendarContainer")
+            showBread('Radni kalendar')
+    })
 
-            let drugs = []
-            $('#selectDrug option:selected').each(function() {
-                drugs.push($(this).val())
-            });
-
-            let diagnosis = []
-            $('#selectDiagnosis option:selected').each(function() {
-                diagnosis.push($(this).val())
-            });
-
-           let description = $('#description').val()
-           let report = $('#report').val()
-           let patEmail = $('#patientExaminEmail').text()
-
-           let clinicNameExamin = $('#clinicExamin').text()
-           let res = clinicNameExamin.split(": ")
-           let cname = res[1]
-           let today = new Date();
-
-           let prescriptionDTO = {"description":description,"drugs":drugs,"nurse":"","isValid":false, "validationDate":""}
-           let prescription = JSON.stringify({"description":description,"drugs":drugs,"nurse":"","isValid":false, "validationDate":""})
-           let reportJson = JSON.stringify({"description":report,"diagnosis":diagnosis,"doctorEmail":user.email,"clinicName":cname,"dateAndTime":today,"patient":patEmail,"prescription":prescriptionDTO})
-           console.log(reportJson)
-           $('#submitReportSpinner').show()
-
-                $.ajax({
-                    type:'POST',
-                    url:'api/users/patient/addPatientMedicalReport/' + patEmail,
-                    data: reportJson,
-                    dataType : "json",
-                    contentType : "application/json; charset=utf-8",
-                    complete: function(data)
-                    {
-                        $('#submitReportSpinner').hide()
-                         if(data.status == "201")
-                          {
-                              alert('kreiran izvestaj')
-                          }
-                    }
-                })
-
-
-
-
-
-        })
 
 }
 
@@ -230,7 +169,7 @@ function listPatientWithCheckBox(data,i,patientsCount)
 		$('#startExamination_btn').click(function(e){
 			e.preventDefault()
 			showView("showStartExaminationContainer")
-			
+			showBread('Pregled u toku ')
 		})
 		
 		if(patientsCount <= 1)
@@ -271,7 +210,7 @@ function initCalendarDoc(user)
                   var calendar = new FullCalendar.Calendar(calendarEl, {
                   plugins: [ 'interaction', 'dayGrid', 'timeGrid', 'monthGrid', 'timeline' ],
                   defaultView: 'dayGridMonth',
-                  defaultDate: '2019-12-07',
+                  defaultDate: '2020-01-01',
                   buttonText: {
                          today:    'danas',
                          month:    'mesec',
@@ -286,6 +225,7 @@ function initCalendarDoc(user)
                   dayNamesShort: ['Ned','Pon','Uto','Sre','Cet','Pet','Sub'],
 
                   selectable:true,
+
                   eventClick: function(info)
                   {
                       var type
@@ -312,19 +252,13 @@ function initCalendarDoc(user)
 
                          })
 
-
-                      console.log(info.event.extendedProps)
                       $("#durationId").text('Trajanje: ' + info.event.extendedProps.duration + 'h');
                       $("#typeId").text('Tip pregleda: ' + type);
                       $("#clinicId").text('Klinika: ' + info.event.extendedProps.clinicName);
                       $("#hallId").text('Broj sale: ' + info.event.extendedProps.hallNumber);
                       $("#startId").text('Pocetak: ' + sd);
 
-                      //podaci u izvestaju
-                      $("#startExamin").text('Pocetak: ' + sd);
-                      $("#typeExamin").text('Tip pregleda: ' + type);
-                      $("#clinicExamin").text('Klinika: ' + info.event.extendedProps.clinicName);
-                      $("#doctorExamin").text('Doktor: ' + user.name + ' ' + user.surname);
+                      getAppointment(info.event.extendedProps.clinicName ,sd, info.event.extendedProps.hallNumber, user)
 
                       $('#modalCalendar').modal('show');
                       },
@@ -357,7 +291,6 @@ function initCalendarDoc(user)
                            method: 'GET',
                            extraParams: {
 
-
                            },
 
                            failure: function() {
@@ -370,6 +303,7 @@ function initCalendarDoc(user)
 
          calendar.render();
          $('#workCalendar').click(function(){
+              showView("showCalendarContainer")
               calendar.render();
          });
 
@@ -380,13 +314,10 @@ function formatDateHours (dateObj) {
       var date = new Date(dateObj);
       var hours = date.getHours();
       var minutes = date.getMinutes();
-      var ampm = hours >= 12 ? 'pm' : 'am';
-      hours = hours % 12;
-      hours = hours ? hours : 12; // the hour '0' should be '12'
       minutes = minutes < 10 ? '0'+minutes : minutes;
-      var strTime = hours + ':' + minutes + ' ' + ampm;
+      var strTime = hours + ':' + minutes;
       var month = date.getMonth()+1
-      return date.getDate() + "." + month+ "." + date.getFullYear() + ".   " + strTime;
+      return date.getDate() + "-" + month+ "-" + date.getFullYear() + " " + strTime;
 }
 
 function setUpDrugs(){
@@ -487,4 +418,120 @@ function setUpCodebooks(){
             }
         })
      
+}
+
+
+function getAppointment(clinicName, date, hallNumber, user){
+
+        console.log(date)
+        hallNumber = parseInt(hallNumber)
+
+        var appointment
+        var patient
+
+        $.ajax({
+            type: 'GET',
+            url: 'api/appointments/getAppointment/'+clinicName+'/'+date+'/'+hallNumber,
+            complete: function(data)
+            {
+                 appointment = data.responseJSON
+                 console.log(appointment)
+
+                 $.ajax({
+                        type: 'GET',
+                        url: 'api/users/getUser/' + appointment.patientEmail,
+                        complete: function(data){
+                           patient = data.responseJSON
+                           var patientName = patient.name
+                           var patientSurname = patient.surname
+                           var patientEmail = patient.email
+                            $("#patientExamin").text('Pacijent: ' + patientName + ' ' + patientSurname + ' ' + patientEmail);
+
+                            var type
+                            if(appointment.type == 'Surgery'){
+                                type = 'Operacija'
+                             }else if (appointment.type == 'Examination'){
+                                type = 'Pregled'
+                             }
+
+                            var sd = appointment.date
+                                sd = formatDateHours(sd)
+
+                            $("#startExamin").text('Pocetak: ' + sd);
+                            $("#typeExamin").text('Tip pregleda: ' + type);
+                            $("#clinicExamin").text('Klinika: ' + appointment.clinicName);
+                            $("#doctorExamin").text('Doktor: ' + user.name + ' ' + user.surname);
+                        },
+
+                 })
+
+                }
+        })
+
+        $('#submitReport').off('click')
+        $('#submitReport').click(function(e){
+            e.preventDefault()
+
+            let drugs = []
+            $('#selectDrug option:selected').each(function() {
+                drugs.push($(this).val())
+            });
+
+            let diagnosis = []
+            $('#selectDiagnosis option:selected').each(function() {
+                diagnosis.push($(this).val())
+            });
+
+           let description = $('#description').val()
+           let report = $('#report').val()
+
+           let today = new Date();
+
+           if(!drugs == [] && !description == '')
+           {
+           		$('#prescriptionLabel').show()
+           		$('#reportLabel').hide()
+           } else {
+                $('#reportLabel').show()
+                $('#prescriptionLabel').hide()
+           }
+
+           flag = true
+           if(report == ""){
+                var input = $('#report')
+                input.addClass('is-invalid')
+                flag = false
+           } else {
+                var input = $('#report')
+                input.removeClass('is-invalid')
+           }
+
+
+           if(flag == false){
+                return
+           }
+
+                let prescriptionDTO = {"description":description,"drugs":drugs,"nurse":"","isValid":false, "validationDate":""}
+                let prescription = JSON.stringify({"description":description,"drugs":drugs,"nurse":"","isValid":false, "validationDate":""})
+                let reportJson = JSON.stringify({"description":report,"diagnosis":diagnosis,"doctorEmail":user.email,"clinicName":appointment.clinicName,"dateAndTime":today,"patient":patient.email,"prescription":prescriptionDTO})
+
+           console.log(reportJson)
+
+                $.ajax({
+                    type:'POST',
+                    url:'api/users/patient/addPatientMedicalReport/' + patient.email,
+                    data: reportJson,
+                    dataType : "json",
+                    contentType : "application/json; charset=utf-8",
+                    complete: function(data)
+                    {
+                         if(data.status == "201")
+                          {
+                               $('#modalOK').modal('show')
+                          }
+                    }
+                })
+        })
+
+
 }

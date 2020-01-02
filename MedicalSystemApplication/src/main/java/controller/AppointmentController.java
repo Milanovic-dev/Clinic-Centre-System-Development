@@ -62,17 +62,34 @@ public class AppointmentController
 		String clinic = dto.getClinicName();
 		String date = dto.getDate();
 		int hallNumber = dto.getHallNumber();
-		
+
 		Appointment appointment = appointmentService.findAppointment(date, hallNumber,clinic);
-		
+
 		HttpHeaders header = new HttpHeaders();
 		if(appointment == null)
 		{
 			header.set("responseText","Appointment not found for: ("+date+","+hallNumber+")");
 			return new ResponseEntity<>(header,HttpStatus.NOT_FOUND);
 		}
+
 		
-		
+		return new ResponseEntity<>(new AppointmentDTO(appointment),HttpStatus.OK);
+	}
+
+	@GetMapping(value="/getAppointment/{clinicName}/{date}/{hallNumber}")
+	public ResponseEntity<AppointmentDTO> getApp(@PathVariable("clinicName") String clinic, @PathVariable("date") String date,
+												 @PathVariable("hallNumber") int hallNumber)
+	{
+		Appointment appointment = appointmentService.findAppointment(date, hallNumber,clinic);
+
+		HttpHeaders header = new HttpHeaders();
+		if(appointment == null)
+		{
+			header.set("responseText","Appointment not found for: ("+date+","+hallNumber+")");
+			return new ResponseEntity<>(header,HttpStatus.NOT_FOUND);
+		}
+
+
 		return new ResponseEntity<>(new AppointmentDTO(appointment),HttpStatus.OK);
 	}
 	

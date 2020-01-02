@@ -16,6 +16,15 @@ function initNurse(user)
     addView('showPatientsContainer')
     addView('showPrescriptionAuthContainer')
 
+    var bc1 = new BreadLevel()
+    bc1.append('Lista pacijenata')
+    var bc2 = new BreadLevel()
+    bc2.append('Radni kalendar')
+    var bc3 = new BreadLevel()
+    bc3.append('Overa recepata')
+
+    initBreadcrumb([bc1,bc2,bc3])
+
 	pageSetUp(user)
     initCalendar(user)
     initTable(user)
@@ -34,9 +43,7 @@ function pageSetUp(user)
 		e.preventDefault()
 
         showView('showPatientsContainer')
-        $('#breadcrumbCurrPage').removeAttr('hidden')
-        $('#breadcrumbCurrPage').text("Lista pacijenata")
-        $('#breadcrumbCurrPage2').attr('hidden',true)
+        showBread('Lista pacijenata')
 
 	})
 
@@ -45,10 +52,7 @@ function pageSetUp(user)
 		e.preventDefault()
 
         showView('showCalendarContainer')
-
-        $('#breadcrumbCurrPage').removeAttr('hidden')
-        $('#breadcrumbCurrPage').text("Radni kalendar")
-        $('#breadcrumbCurrPage2').attr('hidden',true)
+        showBread('Radni kalendar')
 
     });
 
@@ -56,10 +60,7 @@ function pageSetUp(user)
         e.preventDefault()
 
         showView('showPrescriptionAuthContainer')
-
-        $('#breadcrumbCurrPage').removeAttr('hidden')
-        $('#breadcrumbCurrPage').text("Overa recepata")
-        $('#breadcrumbCurrPage2').attr('hidden',true)
+        showBread('Overa recepata')
 
     });
 
@@ -238,26 +239,7 @@ $.ajax({
 
 }
 
-function formatDateHours (dateObj) {
-      var date = new Date(dateObj);
-      var hours = date.getHours();
-      var minutes = date.getMinutes();
-      var ampm = hours >= 12 ? 'pm' : 'am';
-      hours = hours % 12;
-      hours = hours ? hours : 12; // the hour '0' should be '12'
-      minutes = minutes < 10 ? '0'+minutes : minutes;
-      var strTime = hours + ':' + minutes + ' ' + ampm;
-      var month = date.getMonth()+1
-      return date.getDate() + "." + month+ "." + date.getFullYear() + ".   " + strTime;
-}
-
 function getPrescriptions(user){
-
-//    let headersPrescription = ["Terapija"]
-//    let handlePrescriptions = createTable("tablePrescriptions","Lista recepata",headersPrescription)
-//    insertTableInto("prescriptionsDiv", handlePrescriptions)
-//
-//    getTableDiv("prescriptionsDiv").show()
 
     $.ajax({
 			type: 'GET',
@@ -316,3 +298,4 @@ function prescriptionAuth(prescription, user){
 
         }
 }
+
