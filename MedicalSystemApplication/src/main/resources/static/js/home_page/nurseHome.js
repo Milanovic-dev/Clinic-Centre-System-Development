@@ -25,6 +25,11 @@ function initNurse(user)
 
     initBreadcrumb([bc1,bc2,bc3])
 
+    let preHeaders = ["Terapija","Lekovi",""]
+    let handle = createTable("tablePrescriptions","Lista recepata",preHeaders)
+    insertTableInto("showPrescriptionAuthContainer",handle)
+    getTableDiv("tablePrescriptions").show()
+    
 	pageSetUp(user)
     initCalendar(user)
     initTable(user)
@@ -255,10 +260,12 @@ function getPrescriptions(user){
 				    $('#tablePrescriptions').show()
                 	$('#emptyPrescriptions').hide()
 				}
-
+				let index = 0
+				emptyTable("tablePrescriptions")
 				for(p of prescriptions)
 				{
-					addPrescriptionTr(p, user)
+					addPrescriptionTr(p,index, user)
+					index++
 				}
 			}
 
@@ -266,22 +273,20 @@ function getPrescriptions(user){
 
 }
 
-function addPrescriptionTr(prescription, user){
+function addPrescriptionTr(prescription,i, user){
 
-    let tr=$('<tr></tr>');
-	let tdDescription=$('<td>'+ prescription.description +'</td>');
-	let tdDrugs=$('<td>'+ prescription.drugs +'</td>');
-	let tdConfirm=$('<td> <button type="button" class="btn btn-primary">Overi</button></td>');
-
-	tdConfirm.click(prescriptionAuth(prescription, user));
-
-	tr.append(tdDescription).append(tdDrugs).append(tdConfirm);
-	$('#tablePrescriptions tbody').append(tr);
+	let data = [ prescription.description,prescription.drugs,'<button type="button" class="btn btn-primary" id="confirmPre'+i+'">Overi</button>']
+	insertTableData("tablePrescriptions",data)
+	
+	$('#confirmPre'+i).click(function(e){
+		e.preventDefault()
+		console.log(i)
+		prescriptionAuth(prescription, user)
+	})
 }
 
 function prescriptionAuth(prescription, user){
-     return function(){
-
+     
         $.ajax({
             type: 'PUT',
             url:'/api/prescription/validate/'+user.email,
@@ -290,12 +295,11 @@ function prescriptionAuth(prescription, user){
             contentType : "application/json; charset=utf-8",
             complete: function(data)
             {
-                $('#tablePrescriptions tbody').html('')
+                emptyTable("tablePrescriptions")
                 getPrescriptions(user)
                 showView('showPrescriptionAuthContainer')
             }
         })
-
-        }
+     
 }
 

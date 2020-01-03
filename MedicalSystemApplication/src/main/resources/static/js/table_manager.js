@@ -32,6 +32,8 @@ function createDataTable(id,div,name,headers,orderBy)
 	
 	insertTableInto(div,handle)
 	
+	$('#table_'+id).prop('class','stripe')
+	
 	$('#table_'+id).DataTable(
 	{
 		"order":[[orderBy,"desc"]]

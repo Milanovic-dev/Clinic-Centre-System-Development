@@ -226,6 +226,7 @@ public class AppointmentController
 		for(Appointment app : appointments)
 		{
 			dtos.add(new AppointmentDTO(app));
+			
 		}
 		
 		return new ResponseEntity<>(dtos,HttpStatus.OK);
@@ -270,6 +271,48 @@ public class AppointmentController
 
 	}
 
+	
+	@GetMapping(value="/doctor/getAllAppointmentsCalendar/{email}")
+	public ResponseEntity<List<AppointmentDTO>> getAppointmentsDoctorCalendar(@PathVariable("email") String email)
+	{
+		Doctor  d = null;
+
+		try {
+			d = (Doctor)userService.findByEmailAndDeleted(email,false);
+		}
+		catch(ClassCastException e)
+		{
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+
+		HttpHeaders header = new HttpHeaders();
+
+		if(d == null)
+		{
+			header.set("responseText","User not found : ("+email+")");
+			return new ResponseEntity<>(header,HttpStatus.NOT_FOUND);
+		}
+	
+		List<Appointment> appointments = d.getAppointments();
+		List<AppointmentDTO> dto = new ArrayList<AppointmentDTO>();
+		
+		for(Appointment app : appointments)
+		{
+			AppointmentDTO dt = new AppointmentDTO(app);
+			dt.setDate(app.getDate().toString());
+			dto.add(dt);
+		}
+
+		if(appointments == null)
+		{
+			header.set("responseText","Appointments not found : ("+email+")");
+			return new ResponseEntity<>(header,HttpStatus.NOT_FOUND);
+		}
+
+		return new ResponseEntity<>(dto,HttpStatus.OK);
+
+	}
+	
 	
 	@PostMapping(value="/makePredefined")
 	public ResponseEntity<Void> makePredefined(@RequestBody AppointmentDTO dto)

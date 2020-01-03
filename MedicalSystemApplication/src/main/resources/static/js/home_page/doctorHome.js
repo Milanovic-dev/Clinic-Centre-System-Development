@@ -42,7 +42,7 @@ function initDoctor(user)
 	createDataTable("listPatientTable","showPatientContainer","Lista pacijenata",headersPatients,0)
 	getTableDiv("listPatientTable").show()
 	
-	let headersApps = ["Datum","Pacijent","Doktori","Klinika","Sala","Tip pregleda","Tip zakazivanja",""]
+	let headersApps = ["Datum","Pacijent","Doktori","Klinika","Sala","Tip pregleda","Tip zakazivanja"]
 	createDataTable("listAppointmentTable","showAppointmentContainerWithCheckBox","Zakazani pregledi",headersApps,0)
 	getTableDiv("listAppointmentTable").show()	
 	
@@ -148,9 +148,9 @@ function listAppointmentWithCheckBox(data,i,appCount,user)
         type = 'Pregled'
      }
 	
-	let d = [formatDateHours(data.date),data.patientEmail,data.doctors[0],data.clinicName,data.hallNumber,data.typeOfExamination, type,'<button class="btn btn-primary" id="startExamin_btn'+i+'">Zapocni pregled</button>']
+	let d = [data.date,data.patientEmail,data.doctors[0],data.clinicName,data.hallNumber,data.typeOfExamination, type]
 	insertTableData('listAppointmentTable',d)
-	
+	/*
 	$("#startExamin_btn"+i).off('click')
 	$("#startExamin_btn"+i).click(function(e){
 		
@@ -158,8 +158,8 @@ function listAppointmentWithCheckBox(data,i,appCount,user)
 		showBread('Pregled u toku ')
 		setUpDiagnosis()
 		setUpCodebooks()
-		getAppointment(data.clinicName, formatDateHours(data.date), data.hallNumber, user)
-	})
+		getAppointment(data.clinicName, data.date, data.hallNumber, user)
+	*/
 }
 
 function listPatient(data,i)
@@ -176,15 +176,16 @@ function initCalendarDoc(user)
         var calendarButton = document.getElementById('calendarButton');
                   var calendarEl = document.getElementById('calendar');
 
-                  var calendar = new FullCalendar.Calendar(calendarEl, {
-                  plugins: [ 'interaction', 'dayGrid', 'timeGrid', 'monthGrid', 'timeline' ],
-                  defaultView: 'dayGridMonth',
+                  var calendar = $('#calendar').fullCalendar({
+                  //plugins: [ 'interaction', 'dayGrid', 'timeGrid', 'monthGrid', 'timeline' ],
+                  //defaultView: 'dayGridMonth',
                   defaultDate: '2020-01-01',
                   buttonText: {
                          today:    'danas',
                          month:    'mesec',
                          week:     'nedelja',
                          day:      'dan',
+                         year:     'godina',
                          list:     'list'
                        },
                   monthNames: ['Januar', 'Februar', 'Mart', 'April', 'Maj', 'Jun', 'Jul',
@@ -198,50 +199,51 @@ function initCalendarDoc(user)
                   eventClick: function(info)
                   {
                       var type
-                      if(info.event.extendedProps.type == 'Surgery'){
+                      console.log(info)
+                      if(info.type == 'Surgery'){
                             type = 'Operacija'
-                       }else if (info.event.extendedProps.type == 'Examination'){
+                       }else if (info.type == 'Examination'){
                             type = 'Pregled'
                        }
 
-                       var sd=info.event.start
-                           sd=formatDateHours(sd)
+                       var sd=info.start._i
+                           sd = formatDateHours(sd)
 
                         $.ajax({
                                 type: 'GET',
-                                url: 'api/users/getUser/' + info.event.extendedProps.patientEmail,
+                                url: 'api/users/getUser/' + info.patientEmail,
                                 complete: function(data){
                                    var patient = data.responseJSON
                                    var patientName = patient.name
                                    var patientSurname = patient.surname
-                                    $("#patientId").text('Pacijent: ' + patientName + ' ' + patientSurname + ' ' + info.event.extendedProps.patientEmail);
+                                    $("#patientId").text('Pacijent: ' + patientName + ' ' + patientSurname + ' ' + info.patientEmail);
                                     $("#patientExamin").text('Pacijent: ' + patientName + ' ' + patientSurname);
-                                    $("#patientExaminEmail").text(info.event.extendedProps.patientEmail)
+                                    $("#patientExaminEmail").text(info.patientEmail)
                                 },
 
                          })
 
-                      $("#durationId").text('Trajanje: ' + info.event.extendedProps.duration + 'h');
+                      $("#durationId").text('Trajanje: ' + info.duration + 'h');
                       $("#typeId").text('Tip pregleda: ' + type);
-                      $("#clinicId").text('Klinika: ' + info.event.extendedProps.clinicName);
-                      $("#hallId").text('Broj sale: ' + info.event.extendedProps.hallNumber);
+                      $("#clinicId").text('Klinika: ' + info.clinicName);
+                      $("#hallId").text('Broj sale: ' + info.hallNumber);
                       $("#startId").text('Pocetak: ' + sd);
 
-                      getAppointment(info.event.extendedProps.clinicName ,sd, info.event.extendedProps.hallNumber, user)
+                      getAppointment(info.clinicName ,sd, info.hallNumber, user)
 
                       $('#modalCalendar').modal('show');
+                      
                       },
-                  header: {
-                    left: 'prev,next today',
-                    center: 'title',
-                    right: 'dayGridMonth,timeGridWeek,timeGridDay'
-                  },
+                      header: {
+                          right: 'month,agendaWeek,timelineCustom,agendaDay,prev,today,next',
+                          left: 'title',
+                      },
                   fixedWeekCount: false,
                   contentHeight: 650,
                   views: {
                       timelineCustom: {
                           type: 'timeline',
-                          buttonText: 'year',
+                          buttonText: 'godina',
                           dateIncrement: { years: 1 },
                           slotDuration: { months: 1 },
                           visibleRange: function (currentDate) {
@@ -256,7 +258,7 @@ function initCalendarDoc(user)
                    eventColor: '#2f989d',
                    eventSources: [
                          {
-                           url: 'api/appointments/doctor/getAllAppointments/'+user.email,
+                           url: 'api/appointments/doctor/getAllAppointmentsCalendar/'+user.email,
                            method: 'GET',
                            extraParams: {
 
@@ -270,10 +272,10 @@ function initCalendarDoc(user)
                        ]
                 });
 
-         calendar.render();
+         //calendar.render();
          $('#workCalendar').click(function(){
               showView("showCalendarContainer")
-              calendar.render();
+              //calendar.render();
          });
 
 
@@ -424,7 +426,7 @@ function getAppointment(clinicName, date, hallNumber, user){
                              }
 
                             var sd = appointment.date
-                                sd = formatDateHours(sd)
+                                
 
                             $("#startExamin").text('Pocetak: ' + sd);
                             $("#typeExamin").text('Tip pregleda: ' + type);

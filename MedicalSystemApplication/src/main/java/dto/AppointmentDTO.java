@@ -3,6 +3,7 @@ package dto;
 import java.util.ArrayList;
 import java.util.List;
 
+import helpers.DateUtil;
 import model.*;
 import model.Appointment.AppointmentType;
 
@@ -39,7 +40,7 @@ public class AppointmentDTO {
 	
 	public AppointmentDTO(Appointment appointment)
 	{
-		this.date = appointment.getDate().toString();
+		this.date = DateUtil.getInstance().GetString(appointment.getDate(),"dd-MM-yyyy HH:mm");
 		if(appointment.getPatient() != null)
 			this.patientEmail = appointment.getPatient().getEmail();
 		this.clinicName = appointment.getClinic().getName();
