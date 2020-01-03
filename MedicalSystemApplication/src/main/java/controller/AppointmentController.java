@@ -10,10 +10,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -467,5 +469,40 @@ public class AppointmentController
 		return new ResponseEntity<>(HttpStatus.CREATED);
 	}
 	
+	
+	@PutMapping(value="/reservePredefined/{email}")
+	public ResponseEntity<Void> reservePredfined(@RequestBody AppointmentDTO dto, @PathVariable("email") String email)
+	{
+		HttpHeaders headers = new HttpHeaders();
+		
+		Patient p = (Patient) userService.findByEmailAndDeleted(email, false);
+
+		if(p == null)
+		{
+			headers.set("responseText","Patient with email " + email + " not found");
+			return new ResponseEntity<>(headers,HttpStatus.NOT_FOUND);
+		}
+		
+		Appointment app = appointmentService.findAppointment(dto.getDate(), dto.getHallNumber(), dto.getClinicName());
+		
+		if(app == null)
+		{
+			headers.set("responseText","App not found for: " + dto.getDate() + " " + dto.getHallNumber() + " " + dto.getClinicName());
+			return new ResponseEntity<>(headers,HttpStatus.NOT_FOUND);
+		}
+			
+		app.setPatient(p);
+		
+		try
+		{
+			appointmentService.save(app);			
+		}
+		catch(ObjectOptimisticLockingFailureException e)
+		{
+			return new ResponseEntity<>(HttpStatus.LOCKED);
+		}
+		
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
 	
 }

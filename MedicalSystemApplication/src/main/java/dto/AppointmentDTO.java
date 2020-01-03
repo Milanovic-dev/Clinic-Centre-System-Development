@@ -17,6 +17,7 @@ public class AppointmentDTO {
 	private float price;
 	private String typeOfExamination;
 	private AppointmentType type;
+	private int version;
 	
 	
 	public AppointmentDTO() {
@@ -56,6 +57,7 @@ public class AppointmentDTO {
 			this.price = appointment.getPriceslist().getPrice();
 		}
 		this.type = appointment.getAppointmentType();	
+		this.version = appointment.getVersion();
 	}
 	
 	public AppointmentDTO(AppointmentRequest appointment)
@@ -76,6 +78,15 @@ public class AppointmentDTO {
 	}
 	
 	
+	
+	public int getVersion() {
+		return version;
+	}
+
+	public void setVersion(int version) {
+		this.version = version;
+	}
+
 	public float getPrice() {
 		return price;
 	}
