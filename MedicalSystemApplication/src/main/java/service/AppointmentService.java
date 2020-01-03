@@ -9,6 +9,9 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
 
 import helpers.DateUtil;
 import model.Appointment;
@@ -23,6 +26,7 @@ import repository.ClinicRepository;
 import repository.HallRepository;
 
 @Service
+@EnableTransactionManagement
 public class AppointmentService {
 
 	@Autowired
@@ -36,6 +40,7 @@ public class AppointmentService {
 	
 	public Appointment findAppointment(Date date, Hall hall, Clinic clinic)
 	{
+		
 		return appointmentRepository.findByDateAndHallAndClinic(date, hall, clinic);
 	}
 	
@@ -48,7 +53,7 @@ public class AppointmentService {
 	{
 		return appointmentRepository.findAllByPredefined(true);
 	}
-	
+
 	public Appointment findAppointment(String date, int hallNumber, String clinic)
 	{	
 		Date d = DateUtil.getInstance().GetDate(date, "dd-MM-yyyy HH:mm");
@@ -59,6 +64,7 @@ public class AppointmentService {
 		return findAppointment(d,h,c);
 	}
 	
+	@Transactional
 	public void save(Appointment appointment)
 	{
 		appointmentRepository.save(appointment);

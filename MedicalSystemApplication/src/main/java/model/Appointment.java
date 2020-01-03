@@ -46,6 +46,9 @@ public class Appointment
 	@Column(name="predefined",nullable = true)
 	private Boolean predefined = false;
 	
+	@Version
+	private Integer version;
+	
 	public Appointment() {
 		super();
 		this.doctors = new ArrayList<Doctor>();
@@ -67,6 +70,15 @@ public class Appointment
 	}
 
 	
+	public Integer getVersion() {
+		return version;
+	}
+
+
+	public void setVersion(Integer version) {
+		this.version = version;
+	}
+
 
 	public Boolean getPredefined() {
 		return predefined;

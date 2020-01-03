@@ -31,9 +31,7 @@ function initPatient(user)
 	
 	initBreadcrumb([bc1,bc2,bc3,bc4])
 	
-	
-	showBread('Zakazivanje') //PR: Breadcrumb ce biti: "Pocetna / Lista klinika / Zakazivanje"
-      				
+	   				
     createChooseDoctorTable()
     createAppointmentsTable()
 	
@@ -128,7 +126,7 @@ function setUpPatientPage(user)
 				index = 0;
 				for(let app of apps)
 				{
-					list_preApps(app,index)
+					list_preApps(app,index,user)
 					index++
 				}
 				
@@ -173,7 +171,7 @@ function setUpPatientPage(user)
 }
 
 
-function list_preApps(data,i)
+function list_preApps(data,i,user)
 {
 	emptyTable('preAppTable')
 	
@@ -189,8 +187,29 @@ function list_preApps(data,i)
 	$('#submitPredefinedAppRequest'+i).click(function(e){
 		e.preventDefault()
 		
-		//TODO: Zakazi 
+		let json = JSON.stringify({"date":data.date,"clinicName":data.clinicName,"hallNumber":data.hallNumber,"version":data.version})
 		
+		//TODO: Zakazi 
+		$.ajax({
+			type:'PUT',
+			url:"api/appointments/reservePredefined/"+user.email,
+			data: json,
+			dataType : "json",
+			contentType : "application/json; charset=utf-8",
+			complete:function(data)
+			{
+				console.log(data)
+				if(data.status == "200")
+				{
+					console.success("Uspesno")
+				}
+				else if(data.status == "423")
+				{
+					console.error("Vec zakazno!")
+				}
+									
+			}
+		})
 	})
 	
 }
