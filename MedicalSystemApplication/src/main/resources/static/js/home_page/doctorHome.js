@@ -8,13 +8,13 @@ function initDoctor(user)
 {
 
 	let sideBar = $("#sideBar")
-	sideBar.append("<li class='nav-item active'><a class='nav-link' href='userProfileNew.html'><i class='fas fa-fw fa-tachometer-alt'></i><span id='profileUser'>Profil</span></a></li>")
-	sideBar.append("<li class='nav-item active'><a class='nav-link' href='index.html'><i class='fas fa-fw fa-tachometer-alt'></i><span id='pacientList'>Lista pacijenata</span></a></li>")
-	sideBar.append("<li class='nav-item active'><a class='nav-link' href='index.html'><i class='fas fa-fw fa-tachometer-alt'></i><span id='examinationStart'>Zapocni pregled</span></a></li>")
-	sideBar.append("<li class='nav-item active'><a class='nav-link' href='index.html'><i class='fas fa-fw fa-tachometer-alt'></i><span id='workCalendar'>Radni kalendar</span></a></li>")
-	sideBar.append("<li class='nav-item active'><a class='nav-link' href='index.html'><i class='fas fa-fw fa-tachometer-alt'></i><span id='vacationRequest'>Zahtev za odustvo</span></a></li>")
-	sideBar.append("<li class='nav-item active'><a class='nav-link' href='index.html'><i class='fas fa-fw fa-tachometer-alt'></i><span id='examinationRequest'>Zakazivanje pregleda</span></a></li>")
-	sideBar.append("<li class='nav-item active'><a class='nav-link' href='index.html'><i class='fas fa-fw fa-tachometer-alt'></i><span id='operationRequest'>Zakazivanje operacija</span></a></li>")
+	sideBar.append("<li class='nav-item active'><a class='nav-link' href='userProfileNew.html'><span id='profileUser'>Profil</span></a></li>")
+	sideBar.append("<li class='nav-item active'><a class='nav-link' href='index.html'><span id='pacientList'>Lista pacijenata</span></a></li>")
+	sideBar.append("<li class='nav-item active'><a class='nav-link' href='index.html'><span id='examinationStart'>Zapocni pregled</span></a></li>")
+	sideBar.append("<li class='nav-item active'><a class='nav-link' href='index.html'><span id='workCalendar'>Radni kalendar</span></a></li>")
+	sideBar.append("<li class='nav-item active'><a class='nav-link' href='index.html'><span id='vacationRequest'>Zahtev za odustvo</span></a></li>")
+	sideBar.append("<li class='nav-item active'><a class='nav-link' href='index.html'><span id='examinationRequest'>Zakazivanje pregleda</span></a></li>")
+	sideBar.append("<li class='nav-item active'><a class='nav-link' href='index.html'><span id='operationRequest'>Zakazivanje operacija</span></a></li>")
 	
 	clearViews()
 	addView("addHallContainer")
@@ -26,11 +26,12 @@ function initDoctor(user)
 	addView("showAppointmentContainerWithCheckBox")
 	addView("showStartExaminationContainer")
 	addView("showCalendarContainer")
+	addView("updateMedicalRecordContainer")
 
 	var bc1 = new BreadLevel()
-    bc1.append('Radni kalendar').append('Pregled u toku')
+    bc1.append('Radni kalendar').append('Pregled u toku').append('Izmena zdravstvenog kartona')
     var bc2 = new BreadLevel()
-    bc2.append('Zapocni pregled').append('Pregled u toku ')
+    bc2.append('Zapocni pregled').append('Pregled u toku ').append('Izmena zdravstvenog kartona ')
     var bc3 = new BreadLevel()
     bc3.append('Lista pacijenata')
     var bc4 = new BreadLevel()
@@ -44,8 +45,14 @@ function initDoctor(user)
 	
 	let headersApps = ["Datum","Pacijent","Doktori","Klinika","Sala","Tip pregleda","Tip zakazivanja"]
 	createDataTable("listAppointmentTable","showAppointmentContainerWithCheckBox","Zakazani pregledi",headersApps,0)
-	getTableDiv("listAppointmentTable").show()	
-	
+	getTableDiv("listAppointmentTable").show()
+
+    let alergiesHeaders = ["Alergija","",""]
+    let handle = createTable("tableAlergies","Alergije",alergiesHeaders)
+    insertTableInto("updateAlergiesDiv",handle)
+    $("tableAlergies").removeClass("card mb-3")
+    getTableDiv("tableAlergies").show()
+
 
 	$('#pacientList').click(function(e){
 		e.preventDefault()
@@ -91,31 +98,131 @@ function initDoctor(user)
 
 	$("#workCalendar").click(function(e){
         e.preventDefault()
-           showView("showCalendarContainer")
-           showBread('Radni kalendar')
+        showView("showCalendarContainer")
+        showBread('Radni kalendar')
      });
 
     $("#startExamination").click(function(e){
-          e.preventDefault()
+      e.preventDefault()
 
-          setUpCodebooks()
-          $("#modalCalendar").modal('toggle')
+      setUpCodebooks()
+      $("#modalCalendar").modal('toggle')
 
-          showBread('Pregled u toku')
-          showView("showExaminationContainer")
-          $('#collapseThree').collapse('toggle')
+      showBread('Pregled u toku')
+      showView("showExaminationContainer")
+      $('#collapseThree').collapse('toggle')
     });
 
     $('#btnOK').click(function(e){
-     		e.preventDefault()
+        e.preventDefault()
 
-     		$('#modalOK').modal('hide')
-     		showView("showCalendarContainer")
-            showBread('Radni kalendar')
+        $('#modalOK').modal('hide')
+        showView("showCalendarContainer")
+        showBread('Radni kalendar')
     })
 
 
 }
+
+
+function initAlergies(patient){
+
+         const $tableID = $('#tableAlergiesID');
+         const $BTN = $('#submitUpdateRecord');
+
+         const newTr = `
+            <tr class="hide">
+              <td class="pt-3-half" contenteditable="true"></td>
+              <td>
+                <span class="table-remove"><button type="button" class="btn btn-primary btn-rounded btn-sm my-0 waves-effect waves-light">Obrisi</button></span>
+              </td>
+            </tr>`;
+
+         $('.table-add').on('click', 'i', () => {
+           const $clone = $tableID.find('tbody tr').last().clone(true).removeClass('hide table-line');
+           if ($tableID.find('tbody tr').length === 0) {
+             $('tbody').append(newTr);
+           }
+           $tableID.find('table').append($clone);
+         });
+
+         $tableID.on('click', '.table-remove', function () {
+           $(this).parents('tr').detach();
+         });
+
+         $tableID.on('click', '.table-up', function () {
+           const $row = $(this).parents('tr');
+           if ($row.index() === 1) {
+             return;
+           }
+           $row.prev().before($row.get(0));
+         });
+
+         $tableID.on('click', '.table-down', function () {
+           const $row = $(this).parents('tr');
+           $row.next().after($row.get(0));
+         });
+
+         // A few jQuery helpers for exporting only
+         jQuery.fn.pop = [].pop;
+         jQuery.fn.shift = [].shift;
+
+         $BTN.on('click', () => {
+
+           const $rows = $tableID.find('tr:not(:hidden)');
+           const headers = [];
+           const alergies = [];
+
+           // Get the headers (add special header logic here)
+           $($rows.shift()).find('th:not(:empty)').each(function () {
+             headers.push($(this).text().toLowerCase());
+           });
+
+
+
+           // Turn all existing rows into a loopable array
+           $rows.each(function () {
+             const $td = $(this).find('td');
+
+
+             // Use the headers from earlier to name our hash keys
+             headers.forEach((header, i) => {
+               alergies.push($td.eq(i).text());
+             });
+           });
+
+         var weight = $('#updateWeight').val()
+         var height = $('#updateHeight').val()
+         var bloodType = $('#updateBloodType option:selected').val()
+
+         let record = {"weight": weight,"height": height,"bloodType": bloodType,"alergies": alergies}
+         recordJSON = JSON.stringify(record)
+
+         		$.ajax({
+         			type: 'PUT',
+         			url: 'api/users/patient/updateMedicalRecord/' + patient.email,
+         			data: recordJSON,
+         			dataType: "json",
+         			contentType : "application/json; charset=utf-8",
+         			complete: function(data)
+         			{
+         				if(data.status == "200")
+         				{
+         					alert("izmenjeno")
+         				}
+         				else
+         				{
+         					alert("njet")
+         				}
+         			}
+
+         		})
+
+
+ });
+
+}
+
 
 function findPatients(data)
 {
@@ -195,7 +302,6 @@ function initCalendarDoc(user)
                   dayNamesShort: ['Ned','Pon','Uto','Sre','Cet','Pet','Sub'],
 
                   selectable:true,
-
                   eventClick: function(info)
                   {
                       var type
@@ -206,10 +312,11 @@ function initCalendarDoc(user)
                             type = 'Pregled'
                        }
 
-                       var sd=info.start._i
+                      var sd=info.start._i
                            sd = formatDateHours(sd)
 
-                        $.ajax({
+
+                      $.ajax({
                                 type: 'GET',
                                 url: 'api/users/getUser/' + info.patientEmail,
                                 complete: function(data){
@@ -221,7 +328,7 @@ function initCalendarDoc(user)
                                     $("#patientExaminEmail").text(info.patientEmail)
                                 },
 
-                         })
+                      })
 
                       $("#durationId").text('Trajanje: ' + info.duration + 'h');
                       $("#typeId").text('Tip pregleda: ' + type);
@@ -235,11 +342,14 @@ function initCalendarDoc(user)
                       
                       },
                       header: {
-                          right: 'month,agendaWeek,timelineCustom,agendaDay,prev,today,next',
-                          left: 'title',
+                          right: 'agendaDay,agendaWeek,month,timelineCustom',
+                          center: 'title',
+                          left: 'prev,today,next'
                       },
+
                   fixedWeekCount: false,
-                  contentHeight: 650,
+                  timeFormat: 'HH:mm',
+                  contentHeight: 550,
                   views: {
                       timelineCustom: {
                           type: 'timeline',
@@ -255,8 +365,8 @@ function initCalendarDoc(user)
 
                       }
                   },
-                   eventColor: '#2f989d',
-                   eventSources: [
+                  eventColor: '#2f989d',
+                  eventSources: [
                          {
                            url: 'api/appointments/doctor/getAllAppointmentsCalendar/'+user.email,
                            method: 'GET',
@@ -269,13 +379,12 @@ function initCalendarDoc(user)
                            },
 
                          },
-                       ]
+                       ],
+                    schedulerLicenseKey: 'GPL-My-Project-Is-Open-Source'
                 });
 
-         //calendar.render();
          $('#workCalendar').click(function(){
               showView("showCalendarContainer")
-              //calendar.render();
          });
 
 
@@ -439,7 +548,15 @@ function getAppointment(clinicName, date, hallNumber, user){
                 }
         })
 
-        $('#submitReport').off('click')
+        $('#updateRecord').click(function(e){
+           e.preventDefault()
+           getMedicalRecord(patient)
+           initAlergies(patient)
+           showView("updateMedicalRecordContainer")
+           showBread('Izmena zdravstvenog kartona')
+        });
+
+
         $('#submitReport').click(function(e){
             e.preventDefault()
 
@@ -503,6 +620,46 @@ function getAppointment(clinicName, date, hallNumber, user){
                     }
                 })
         })
+
+function getMedicalRecord(patient){
+
+    $.ajax({
+			type: 'GET',
+			url: 'api/users/patient/getMedicalRecord/'+patient.email,
+			complete: function(data)
+			{
+				record = data.responseJSON
+                console.log(record)
+				let index = 0
+				emptyTable("tableAlergies")
+				for(a of record.alergies)
+				{
+					addAlergiesTr(a, index, patient)
+					index++
+				}
+
+				$('#updateHeight').val(record.height)
+				$('#updateWeight').val(record.weight)
+				$('#updateBloodType').val(record.bloodType)
+			}
+
+		})
+
+}
+
+function addAlergiesTr(alergie, i, patient){
+
+ const newTr = `
+    <tr class="hide">
+      <td class="pt-3-half" contenteditable="true">` + alergie + `</td>
+      <td>
+        <span class="table-remove"><button type="button" class="btn btn-primary btn-rounded btn-sm my-0 waves-effect waves-light">Obrisi</button></span>
+      </td>
+    </tr>`;
+
+    $('#tableAlergiesID tbody').append(newTr);
+
+}
 
 
 }
