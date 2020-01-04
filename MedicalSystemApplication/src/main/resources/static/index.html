@@ -14,6 +14,7 @@
 <link href="css/checkbox.css" rel="stylesheet">
     <link href="css/calendar.css" rel="stylesheet">
 
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css">
 <script src="js/moment.js"></script>
 <link rel="stylesheet" href="css/custom.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -427,6 +428,7 @@
               </div>
           </div>
 
+          <button type="button" style="margin:20 0 0" class="btn btn-secondary" id = "updateRecord" >Izmeni zdravstveni karton</button>
           <button type="button" style="margin:20 0 0" class="btn btn-primary" id = "submitReport" >Sacuvaj</button>
 
           <!-- Modal -->
@@ -459,12 +461,60 @@
 <!--------------------------- OVERA RECEPTA -------------------->
 
         <div class="card mb-3" id = "showPrescriptionAuthContainer" style="display:none">
-            
-
         </div>
-    </div>
-<!--------------------------- OVERA RECEPTA END -------------------->
 
+<!--------------------------- OVERA RECEPTA END -------------------->
+<!-- -----------------------IZMENA KARTONA---------------------- -->
+<div class="container" id="updateMedicalRecordContainer" style="display:none" >
+    <div class="card card-register mx-auto mt-5" >
+        <div class="card-header">Izmena zdravstvenog kartona</div>
+        <div class="card-body">
+            <form>
+                <div class="form-group">
+                    <label>Visina:</label>
+                    <div class="form-label-group">
+                        <input type="text" id="updateHeight" class="form-control" autofocus="autofocus" >
+                        <div class="valid-feedback">Izgleda dobro!</div>
+                        <div class="invalid-feedback">Ime moze sadrzati samo slova.</div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Tezina:</label>
+                    <div class="form-label-group">
+                        <input type="text" id="updateWeight" class="form-control">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Krvna grupa:</label>
+                    <div class="form-label-group">
+                        <select  class="form-control" id="updateBloodType" class="form-control">
+                            <option disabled selected value>-- Krvna grupa --</option>
+                            <option>A</option>
+                            <option>B</option>
+                            <option>AB</option>
+                            <option>0</option>
+                        </select>
+                    </div>
+                </div>
+                <div id="tableAlergiesID" class="table-editable">
+                    <span class="table-add float-right mb-3 mr-2"><a href="#!"><i
+                        class="fas fa-plus" aria-hidden="true" style="position: absolute;top: 380px;right: 45px;}"></i></a></span>
+                    <table class="table table-bordered table-responsive-md text-center">
+                        <thead>
+                            <th>Alergije</th>
+                        </thead>
+                        <tbody>
+
+                        </tbody>
+                    </table>
+                </div>
+                <button type="button" class="btn btn-primary btn-block" id = "submitUpdateRecord">Sacuvaj izmene</button>
+            </form>
+        </div>
+
+    </div>
+</div>
+<!-- ------------------KRAJ IZMENE KARTONA---------------------- -->
 
 <!-- -----------------------IZMENA PROFILA KLINIKE---------------------- -->
 <div class="container" id="changeProfileClinicContainer" style="display:none" >
@@ -1074,9 +1124,7 @@
 <!-- -----------------------KRAJ MODALA ZA KALENDAR------------------------ -->
 <!-- ---------------------------ZAPOCNI PREGLED---------------------------- -->
  <div class="card mb-3" id = "showStartExaminationContainer" style="display:none">
-      <div class="card-header">
-          <i class="fas fa-table"></i>
-          Informacije o pacijenta</div>
+      <div class="card-header">Informacije o pacijenta</div>
       <div class="card-body">
           <label class="form-control-label" id="patientStartExamin">Pacijent: </label> <br>
           <label class="form-control-label" id="patientEmailStartExamin">Email pacijenta: </label> <br>
@@ -1160,6 +1208,6 @@
   <a class="scroll-to-top rounded" href="#page-top">
     <i class="fas fa-angle-up"></i>
   </a>    
-      
+</div>
 </body>
 </html>

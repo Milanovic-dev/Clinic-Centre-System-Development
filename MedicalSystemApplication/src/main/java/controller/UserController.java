@@ -203,7 +203,7 @@ public class UserController
 	}
 	
 	
-	@PutMapping(value="/patient/updateMedicalReport/{email}")
+	@PutMapping(value="/patient/updateMedicalRecord/{email}")
 	public ResponseEntity<Void> updateMedicalRecord(@PathVariable("email") String email,@RequestBody MedicalRecordDTO dto)
 	{
 		Patient patient = (Patient)userService.findByEmailAndDeleted(email,false);
@@ -216,6 +216,7 @@ public class UserController
 		patient.getMedicalRecord().setAlergies(dto.getAlergies());
 		patient.getMedicalRecord().setHeight(dto.getHeight());
 		patient.getMedicalRecord().setWeight(dto.getWeight());
+		patient.getMedicalRecord().setBloodType(dto.getBloodType());
 		
 		userService.save(patient);
 		

@@ -5,11 +5,11 @@
 function initNurse(user)
 {
 	let sideBar = $("#sideBar")
-	sideBar.append("<li class='nav-item active'><a class='nav-link' href='userProfileNew.html'><i class='fas fa-fw fa-tachometer-alt'></i><span id='profileUser'>Profil</span></a></li>")
-	sideBar.append("<li class='nav-item active' style='cursor:pointer'><a class='nav-link'><i class='fas fa-fw fa-tachometer-alt'></i><span id='patientList'>Lista pacijenata</span></a></li>")
-	sideBar.append("<li class='nav-item active'><a class='nav-link' href='#'><i class='fas fa-fw fa-tachometer-alt'></i><span id='workCalendar'>Radni kalendar</span></a></li>")
-	sideBar.append("<li class='nav-item active'><a class='nav-link' href='#'><i class='fas fa-fw fa-tachometer-alt'></i><span id='vacationRequest'>Zahtev za odustvo</span></a></li>")
-	sideBar.append("<li class='nav-item active'><a class='nav-link' href='#'><i class='fas fa-fw fa-tachometer-alt'></i><span id='prescriptionAuth'>Overa recepata</span></a></li>")
+	sideBar.append("<li class='nav-item active'><a class='nav-link' href='userProfileNew.html'><span id='profileUser'>Profil</span></a></li>")
+	sideBar.append("<li class='nav-item active' style='cursor:pointer'><a class='nav-link'><span id='patientList'>Lista pacijenata</span></a></li>")
+	sideBar.append("<li class='nav-item active'><a class='nav-link' href='#'><span id='workCalendar'>Radni kalendar</span></a></li>")
+	sideBar.append("<li class='nav-item active'><a class='nav-link' href='#'><span id='vacationRequest'>Zahtev za odustvo</span></a></li>")
+	sideBar.append("<li class='nav-item active'><a class='nav-link' href='#'><span id='prescriptionAuth'>Overa recepata</span></a></li>")
 
     clearViews()
     addView('showCalendarContainer')
