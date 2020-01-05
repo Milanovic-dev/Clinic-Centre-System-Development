@@ -17,6 +17,16 @@ public class FilterFactory {
 			return new ClinicFilter();
 		}
 		
+		if(filterType.equalsIgnoreCase("HALL"))
+		{
+			return new HallFilter();
+		}
+		
+		if(filterType.equalsIgnoreCase("PATIENT"))
+		{
+			return new PatientFilter();
+		}
+		
 		return null;
 	}
 	

@@ -37,11 +37,43 @@ function initDoctor(user)
     var bc4 = new BreadLevel()
 
     initBreadcrumb([bc1,bc2,bc3])
-
+   
+	createSearch({
+		id: "patientSearch",
+		header: "Pretraga pacijenata",
+		inputs: ["name" , "surname" , "insuranceId"],
+		labels: ["Unesite ime: ","Unesite prezime: " , "Unesite jedinstveni broj osiguranika"],
+		onSubmit: function(json)
+		{
+			
+			let d = JSON.stringify(json)
+			$.ajax({
+				type:'POST',
+				url:"api/clinic/getPatientsByFilter/" + doctorClinic.name,
+				data: d,
+				dataType : "json",
+				contentType : "application/json; charset=utf-8",
+				complete: function(data)
+				{
+					patients = data.responseJSON
+					i = 0
+					emptyTable("listPatientTable")
+					for(p of patients)
+					{
+						listPatient(p,i)
+						i++
+					}
+				}
+			})
+		}
+		
+	})
+	
 	
 	let headersPatients = ["Ime","Prezime","Email","Telefon","Adresa","Grad","Drzava","Broj zdravstvenog osiguranja"]
 	createDataTable("listPatientTable","showPatientContainer","Lista pacijenata",headersPatients,0)
 	getTableDiv("listPatientTable").show()
+	insertElementIntoTable("listPatientTable","&nbsp&nbsp<button class='btn btn-primary' onClick={showSearch('patientSearch')}>Pretraga</button>","card-header")
 	
 	let headersApps = ["Datum","Pacijent","Doktori","Klinika","Sala","Tip pregleda","Tip zakazivanja"]
 	createDataTable("listAppointmentTable","showAppointmentContainerWithCheckBox","Zakazani pregledi",headersApps,0)
@@ -57,8 +89,7 @@ function initDoctor(user)
 	$('#pacientList').click(function(e){
 		e.preventDefault()
 		showView("showPatientContainer")
-        showBread('Lista pacijenata')
-        
+        showBread('Lista pacijenata')  
         $.ajax({
 			type: 'GET',
 			url:"api/doctors/getClinic/" + user.email,
@@ -271,7 +302,6 @@ function listAppointmentWithCheckBox(data,i,appCount,user)
 
 function listPatient(data,i)
 {
-	console.log(data)
 	let d = [data.name,data.surname,data.email,data.phone,data.address,data.city,data.state,data.insuranceId]
 	insertTableData("listPatientTable",d)
 }
