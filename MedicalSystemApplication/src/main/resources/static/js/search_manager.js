@@ -65,6 +65,7 @@ function showSearch(id,func)
 	$('#_searchModal').modal()
 	
 	let body = $('#_searchBodyModal')
+	body.empty()
 	body.append('<form id="form_'+form.id+'"></form>')
 	let formHTML = $('#form_'+form.id)
 
@@ -77,6 +78,7 @@ function showSearch(id,func)
 		
 	}
 	
+	$('#_searchModalSubmit').off('click')
 	$('#_searchModalSubmit').click(function(e){
 		e.preventDefault()
 		

@@ -41,11 +41,22 @@ function createDataTable(id,div,name,headers,orderBy)
 }
 
 
-function insertElementIntoTable(id,element)
+function insertElementIntoTable(id,element, _class)
 {
-	let body = document.getElementById(id).getElementsByClassName("card-body")[0]
+
+	let part
 	
-	body.innerHTML += element
+	if(_class == undefined)
+	{
+		part = document.getElementById(id).getElementsByClassName("card-body")[0]
+	}
+	else
+	{
+		part = document.getElementById(id).getElementsByClassName(_class)[0]
+	}
+
+	
+	part.innerHTML += element
 }
 
 

@@ -21,6 +21,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import dto.ClinicDTO;
 import dto.HallDTO;
+import filters.FilterFactory;
+import filters.HallFilter;
 import model.Appointment;
 import model.Clinic;
 import model.Hall;
@@ -61,6 +63,36 @@ public class HallController {
 	   }
 
 	   return new ResponseEntity<>(ret,HttpStatus.OK);
+	}
+	
+	
+	@PostMapping(value = "/getAllByFilter",consumes = "application/json")
+	public ResponseEntity<List<HallDTO>> getHallsFilter(@RequestBody HallDTO dto)
+	{
+		HttpHeaders header = new HttpHeaders();
+		Clinic c = clinicService.findByName(dto.getClinicName());
+		
+		if(c == null)
+		{
+				header.set("responseText", "clinic");
+			    return new ResponseEntity<>(header,HttpStatus.NOT_FOUND);			
+		}	
+		
+		List<HallDTO> ret = new ArrayList<HallDTO>();
+		HallFilter filter = (HallFilter) FilterFactory.getInstance().get("hall");
+		
+		for(Hall hall : c.getHalls())
+		{
+			if(!hall.getDeleted())
+			{
+				if(filter.test(hall, dto))
+				{
+					ret.add(new HallDTO(hall));
+				}				
+			}
+		}
+		
+		return new ResponseEntity<>(ret,HttpStatus.OK);
 	}
 	
 	@GetMapping(value = "/getAllByClinic/{clinicName}")

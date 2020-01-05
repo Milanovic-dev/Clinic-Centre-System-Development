@@ -4,10 +4,13 @@ package controller;
 import dto.ClinicDTO;
 import dto.ClinicFilterDTO;
 import dto.DoctorDTO;
+import dto.HallDTO;
 import dto.UserDTO;
 import filters.ClinicFilter;
 import filters.Filter;
 import filters.FilterFactory;
+import filters.HallFilter;
+import filters.PatientFilter;
 import model.Appointment;
 import model.Clinic;
 import model.Doctor;
@@ -175,6 +178,49 @@ public class ClinicController {
 		System.out.println(patients.size());
 
     	return new ResponseEntity<>(patients,HttpStatus.OK);
+    	
+    }
+    @PostMapping(value="/getPatientsByFilter/{clinicName}",consumes = "application/json")
+    public ResponseEntity<List<UserDTO>> getClinicPatientsByFilter(@PathVariable("clinicName") String clinicName,@RequestBody UserDTO dto)
+    {
+		HttpHeaders header = new HttpHeaders();
+    	Clinic c = clinicService.findByName(clinicName);
+    	
+    	if(c == null)
+    	{
+    		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    	}
+    	
+    	ArrayList<UserDTO> ret = new ArrayList<UserDTO>();
+    	List<Appointment> appointments = new ArrayList<Appointment>();
+
+		PatientFilter filter = (PatientFilter) FilterFactory.getInstance().get("patient");
+
+    	appointments = appointmentService.findAllByClinic(c);
+    	
+    	if(appointments.isEmpty())
+    	{
+    		System.out.println("Nema pregleda u toj klinici");
+    		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+    	}
+    	
+    	
+    	for(Appointment app: appointments)
+    	{   	
+    		Patient p = app.getPatient();
+    		
+    		if(!ListUtil.getInstance().containsWithEmail(ret, p.getEmail()))
+    		{
+    			if(filter.test(app.getPatient(), dto))
+    			{
+    				ret.add(new UserDTO(app.getPatient()));
+    			}			
+    		}
+    	}
+
+
+    	return new ResponseEntity<>(ret,HttpStatus.OK);
     	
     }
     
