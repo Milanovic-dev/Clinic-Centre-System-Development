@@ -30,6 +30,10 @@ public class MedicalRecord {
 	
 	@Column(name = "weight", nullable = true)
 	private String height;
+
+	@OneToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "patient_id")
+	private Patient patient;
 	
 	public MedicalRecord()
 	{
@@ -87,6 +91,14 @@ public class MedicalRecord {
 	
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+	public Patient getPatient() {
+		return patient;
+	}
+
+	public void setPatient(Patient patient) {
+		this.patient = patient;
 	}
 
 	public List<PatientMedicalReport> getReports() {

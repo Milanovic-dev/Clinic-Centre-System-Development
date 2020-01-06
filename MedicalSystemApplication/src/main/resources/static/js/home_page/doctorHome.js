@@ -42,16 +42,10 @@ function initDoctor(user)
 	let headersPatients = ["Ime","Prezime","Email","Telefon","Adresa","Grad","Drzava","Broj zdravstvenog osiguranja"]
 	createDataTable("listPatientTable","showPatientContainer","Lista pacijenata",headersPatients,0)
 	getTableDiv("listPatientTable").show()
-	
+
 	let headersApps = ["Datum","Pacijent","Doktori","Klinika","Sala","Tip pregleda","Tip zakazivanja"]
 	createDataTable("listAppointmentTable","showAppointmentContainerWithCheckBox","Zakazani pregledi",headersApps,0)
 	getTableDiv("listAppointmentTable").show()
-
-    let alergiesHeaders = ["Alergija","",""]
-    let handle = createTable("tableAlergies","Alergije",alergiesHeaders)
-    insertTableInto("updateAlergiesDiv",handle)
-    $("tableAlergies").removeClass("card mb-3")
-    getTableDiv("tableAlergies").show()
 
 
 	$('#pacientList').click(function(e){
@@ -104,10 +98,8 @@ function initDoctor(user)
 
     $("#startExamination").click(function(e){
       e.preventDefault()
-
       setUpCodebooks()
       $("#modalCalendar").modal('toggle')
-
       showBread('Pregled u toku')
       showView("showExaminationContainer")
       $('#collapseThree').collapse('toggle')
@@ -115,11 +107,28 @@ function initDoctor(user)
 
     $('#btnOK').click(function(e){
         e.preventDefault()
-
         $('#modalOK').modal('hide')
-        showView("showCalendarContainer")
-        showBread('Radni kalendar')
+        location.reload()
     })
+
+     $('#addRow').click(function(e){
+        e.preventDefault()
+        const Tr = `
+            <tr class="hide">
+              <td class="pt-3-half" contenteditable="true" placeholder="alergija"></td>
+              <td>
+                <span class="table-remove"><button type="button" class="btn btn-primary btn-rounded btn-sm my-0 waves-effect waves-light">Obrisi</button></span>
+              </td>
+            </tr>`;
+
+            $('#tableAlergiesID tbody').append(Tr);
+            table = $('#tableAlergiesID')
+
+     })
+
+     $('#tableAlergiesID').on('click', '.table-remove', function () {
+        $(this).parents('tr').detach();
+     });
 
 
 }
@@ -127,99 +136,9 @@ function initDoctor(user)
 
 function initAlergies(patient){
 
-         const $tableID = $('#tableAlergiesID');
-         const $BTN = $('#submitUpdateRecord');
-
-         const newTr = `
-            <tr class="hide">
-              <td class="pt-3-half" contenteditable="true"></td>
-              <td>
-                <span class="table-remove"><button type="button" class="btn btn-primary btn-rounded btn-sm my-0 waves-effect waves-light">Obrisi</button></span>
-              </td>
-            </tr>`;
-
-         $('.table-add').on('click', 'i', () => {
-           const $clone = $tableID.find('tbody tr').last().clone(true).removeClass('hide table-line');
-           if ($tableID.find('tbody tr').length === 0) {
-             $('tbody').append(newTr);
-           }
-           $tableID.find('table').append($clone);
-         });
-
-         $tableID.on('click', '.table-remove', function () {
-           $(this).parents('tr').detach();
-         });
-
-         $tableID.on('click', '.table-up', function () {
-           const $row = $(this).parents('tr');
-           if ($row.index() === 1) {
-             return;
-           }
-           $row.prev().before($row.get(0));
-         });
-
-         $tableID.on('click', '.table-down', function () {
-           const $row = $(this).parents('tr');
-           $row.next().after($row.get(0));
-         });
-
-         // A few jQuery helpers for exporting only
-         jQuery.fn.pop = [].pop;
-         jQuery.fn.shift = [].shift;
-
-         $BTN.on('click', () => {
-
-           const $rows = $tableID.find('tr:not(:hidden)');
-           const headers = [];
-           const alergies = [];
-
-           // Get the headers (add special header logic here)
-           $($rows.shift()).find('th:not(:empty)').each(function () {
-             headers.push($(this).text().toLowerCase());
-           });
 
 
 
-           // Turn all existing rows into a loopable array
-           $rows.each(function () {
-             const $td = $(this).find('td');
-
-
-             // Use the headers from earlier to name our hash keys
-             headers.forEach((header, i) => {
-               alergies.push($td.eq(i).text());
-             });
-           });
-
-         var weight = $('#updateWeight').val()
-         var height = $('#updateHeight').val()
-         var bloodType = $('#updateBloodType option:selected').val()
-
-         let record = {"weight": weight,"height": height,"bloodType": bloodType,"alergies": alergies}
-         recordJSON = JSON.stringify(record)
-
-         		$.ajax({
-         			type: 'PUT',
-         			url: 'api/users/patient/updateMedicalRecord/' + patient.email,
-         			data: recordJSON,
-         			dataType: "json",
-         			contentType : "application/json; charset=utf-8",
-         			complete: function(data)
-         			{
-         				if(data.status == "200")
-         				{
-         					alert("izmenjeno")
-         				}
-         				else
-         				{
-         					alert("njet")
-         				}
-         			}
-
-         		})
-
-
- });
 
 }
 
@@ -541,6 +460,8 @@ function getAppointment(clinicName, date, hallNumber, user){
                             $("#typeExamin").text('Tip pregleda: ' + type);
                             $("#clinicExamin").text('Klinika: ' + appointment.clinicName);
                             $("#doctorExamin").text('Doktor: ' + user.name + ' ' + user.surname);
+
+
                         },
 
                  })
@@ -551,10 +472,47 @@ function getAppointment(clinicName, date, hallNumber, user){
         $('#updateRecord').click(function(e){
            e.preventDefault()
            getMedicalRecord(patient)
-           initAlergies(patient)
            showView("updateMedicalRecordContainer")
            showBread('Izmena zdravstvenog kartona')
         });
+
+        $('#submitUpdateRecord').click(function(e){
+             e.preventDefault()
+             var alergies = []
+             alergies =   $('#tableAlergiesID td:nth-child(1)').map(function() {
+                                 return $(this).text();
+                               }).get();
+             console.log(alergies)
+
+             var weight = $('#updateWeight').val()
+             var height = $('#updateHeight').val()
+             var bloodType = $('#updateBloodType option:selected').val()
+
+             let record = {"weight": weight,"height": height,"bloodType": bloodType,"alergies": alergies}
+             recordJSON = JSON.stringify(record)
+
+                    $.ajax({
+                        type: 'PUT',
+                        url: 'api/users/patient/updateMedicalRecord/' + patient.email,
+                        data: recordJSON,
+                        dataType: "json",
+                        contentType : "application/json; charset=utf-8",
+                        complete: function(data)
+                        {
+                            if(data.status == "200")
+                            {
+                                alert("izmenjeno")
+                                showView('showExaminationContainer')
+                            }
+                            else
+                            {
+                                alert("njet")
+                            }
+                        }
+
+                    })
+        });
+
 
 
         $('#submitReport').click(function(e){
@@ -616,13 +574,13 @@ function getAppointment(clinicName, date, hallNumber, user){
                          if(data.status == "201")
                           {
                                $('#modalOK').modal('show')
+
                           }
                     }
                 })
         })
 
 function getMedicalRecord(patient){
-
     $.ajax({
 			type: 'GET',
 			url: 'api/users/patient/getMedicalRecord/'+patient.email,
@@ -631,7 +589,8 @@ function getMedicalRecord(patient){
 				record = data.responseJSON
                 console.log(record)
 				let index = 0
-				emptyTable("tableAlergies")
+                $('#tableAlergiesID tbody').html('')
+                console.log(record.alergies)
 				for(a of record.alergies)
 				{
 					addAlergiesTr(a, index, patient)

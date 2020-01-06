@@ -51,6 +51,9 @@ public class UserController
 
 	@Autowired
 	private DrugService drugService;
+
+	@Autowired
+	private MedicalRecordService medicalRecordService;
 	
 	@PutMapping(value = "/update/{email}")
 	public ResponseEntity<Void> updateUser(@RequestBody UserDTO dto,@PathVariable("email")String email)
@@ -189,16 +192,17 @@ public class UserController
 	public ResponseEntity<MedicalRecordDTO> getMedicalRecord(@PathVariable("email")String email)
 	{
 		Patient patient = (Patient)userService.findByEmailAndDeleted(email,false);
-		
+		System.out.println(patient.getEmail()+" " +patient.getMedicalRecord().getHeight()+"***************************PACIJENT****************************************");
 		if(patient == null)
 		{
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
-		
-		MedicalRecord mr = patient.getMedicalRecord();
-		
+
+		MedicalRecord mr = medicalRecordService.findByPatient(patient);
+		System.out.println(mr.getReports() + " " + mr.getAlergies() + mr.getBloodType() + mr.getHeight() + mr.getWeight() + "***********RECORD*********************************************");
 		MedicalRecordDTO dto = new MedicalRecordDTO(mr);
-		
+
+		System.out.println(dto.getHeight()+dto.getWeight()+dto.getBloodType()+dto.getAlergies()+dto.getReports()+"********************DTO************************************");
 		return new ResponseEntity<>(dto,HttpStatus.OK);
 	}
 	
@@ -207,17 +211,25 @@ public class UserController
 	public ResponseEntity<Void> updateMedicalRecord(@PathVariable("email") String email,@RequestBody MedicalRecordDTO dto)
 	{
 		Patient patient = (Patient)userService.findByEmailAndDeleted(email,false);
-		
+
+		MedicalRecord record = medicalRecordService.findByPatient(patient);
+
 		if(patient == null)
 		{
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
-		
-		patient.getMedicalRecord().setAlergies(dto.getAlergies());
-		patient.getMedicalRecord().setHeight(dto.getHeight());
-		patient.getMedicalRecord().setWeight(dto.getWeight());
-		patient.getMedicalRecord().setBloodType(dto.getBloodType());
-		
+
+		if(record == null){
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+
+		record.setBloodType(dto.getBloodType());
+		record.setHeight(dto.getHeight());
+		record.setWeight(dto.getWeight());
+		record.setAlergies(dto.getAlergies());
+		medicalRecordService.save(record);
+
+		patient.setMedicalRecord(record);
 		userService.save(patient);
 		
 		return new ResponseEntity<>(HttpStatus.OK);
@@ -293,7 +305,9 @@ public class UserController
 
 		patientMedicalReportService.save(report);
 
-		patient.getMedicalRecord().getReports().add(report);
+		MedicalRecord mr = medicalRecordService.findByPatient(patient);
+		mr.getReports().add(report);
+		medicalRecordService.save(mr);
 
 		userService.save(patient);
 
