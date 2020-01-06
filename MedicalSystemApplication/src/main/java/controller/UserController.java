@@ -51,6 +51,9 @@ public class UserController
 
 	@Autowired
 	private DrugService drugService;
+
+	@Autowired
+	private MedicalRecordService medicalRecordService;
 	
 	@PutMapping(value = "/update/{email}")
 	public ResponseEntity<Void> updateUser(@RequestBody UserDTO dto,@PathVariable("email")String email)
@@ -189,16 +192,17 @@ public class UserController
 	public ResponseEntity<MedicalRecordDTO> getMedicalRecord(@PathVariable("email")String email)
 	{
 		Patient patient = (Patient)userService.findByEmailAndDeleted(email,false);
-		
+		System.out.println(patient.getEmail()+" " +patient.getMedicalRecord().getHeight()+"***************************PACIJENT****************************************");
 		if(patient == null)
 		{
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
-		
-		MedicalRecord mr = patient.getMedicalRecord();
-		
+
+		MedicalRecord mr = medicalRecordService.findByPatient(patient);
+		System.out.println(mr.getReports() + " " + mr.getAlergies() + mr.getBloodType() + mr.getHeight() + mr.getWeight() + "***********RECORD*********************************************");
 		MedicalRecordDTO dto = new MedicalRecordDTO(mr);
-		
+
+		System.out.println(dto.getHeight()+dto.getWeight()+dto.getBloodType()+dto.getAlergies()+dto.getReports()+"********************DTO************************************");
 		return new ResponseEntity<>(dto,HttpStatus.OK);
 	}
 	
@@ -207,96 +211,29 @@ public class UserController
 	public ResponseEntity<Void> updateMedicalRecord(@PathVariable("email") String email,@RequestBody MedicalRecordDTO dto)
 	{
 		Patient patient = (Patient)userService.findByEmailAndDeleted(email,false);
-		
+
+		MedicalRecord record = medicalRecordService.findByPatient(patient);
+
 		if(patient == null)
 		{
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
-		
-		patient.getMedicalRecord().setAlergies(dto.getAlergies());
-		patient.getMedicalRecord().setHeight(dto.getHeight());
-		patient.getMedicalRecord().setWeight(dto.getWeight());
-		patient.getMedicalRecord().setBloodType(dto.getBloodType());
-		
+
+		if(record == null){
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+
+		record.setBloodType(dto.getBloodType());
+		record.setHeight(dto.getHeight());
+		record.setWeight(dto.getWeight());
+		record.setAlergies(dto.getAlergies());
+		medicalRecordService.save(record);
+
+		patient.setMedicalRecord(record);
 		userService.save(patient);
 		
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
-	@PostMapping(value="/patient/addPatientMedicalReport/{email}")
-	public ResponseEntity<Void> addPatientMedicalReport(@PathVariable("email") String email,@RequestBody PatientMedicalReportDTO dto)
-	{
-		HttpHeaders header = new HttpHeaders();
 
-		Patient patient = (Patient)userService.findByEmailAndDeleted(email,false);
-		if(patient == null)
-		{
-			header.set("responseText","patient not found: " + email);
-			return new ResponseEntity<>(header,HttpStatus.NOT_FOUND);
-		}
-
-		Doctor doctor = (Doctor)userService.findByEmailAndDeleted(dto.getDoctorEmail(),false);
-		if(doctor == null)
-		{
-			header.set("responseText","doctor not found: " + dto.getDoctorEmail());
-			return new ResponseEntity<>(header,HttpStatus.NOT_FOUND);
-		}
-
-		Clinic clinic = clinicService.findByName(dto.getClinicName());
-		if(clinic == null)
-		{
-			header.set("responseText","clinic not found: " + dto.getClinicName());
-			return new ResponseEntity<>(header, HttpStatus.NOT_FOUND);
-		}
-
-
-
-		Prescription pr = new Prescription();
-		pr.setDescription(dto.getPrescription().getDescription());
-		for(String name : dto.getPrescription().getDrugs())
-		{
-			Drug drug = drugService.findByName(name);
-
-			if(drug == null)
-			{
-				header.set("responseText","Drug not found: " + name);
-				return new ResponseEntity<>(header,HttpStatus.NOT_FOUND);
-			}
-
-			pr.getDrugs().add(drug);
-
-		}
-		pr.setValid(false);
-		prescriptionService.save(pr);
-
-		PatientMedicalReport report = new PatientMedicalReport();
-		report.setClinic(clinic);
-		report.setDescription(dto.getDescription());
-		report.setDoctor(doctor);
-		report.setPrescription(pr);
-		report.setDateAndTime(dto.getDateAndTime());
-		report.setPatient(patient);
-
-		for(String name : dto.getDiagnosis())
-		{
-			Diagnosis diagnosis = diagnosisService.findByName(name);
-
-			if(diagnosis == null)
-			{
-				header.set("responseText","Diagnosis not found: " + name);
-				return new ResponseEntity<>(header,HttpStatus.NOT_FOUND);
-			}
-
-
-			report.getDiagnosis().add(diagnosis);
-		}
-
-		patientMedicalReportService.save(report);
-
-		patient.getMedicalRecord().getReports().add(report);
-
-		userService.save(patient);
-
-		return new ResponseEntity<>(HttpStatus.CREATED);
-	}
 }

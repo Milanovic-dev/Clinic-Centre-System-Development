@@ -37,59 +37,26 @@ function initDoctor(user)
     var bc4 = new BreadLevel()
 
     initBreadcrumb([bc1,bc2,bc3])
-   
-	createSearch({
-		id: "patientSearch",
-		header: "Pretraga pacijenata",
-		inputs: ["name" , "surname" , "insuranceId"],
-		labels: ["Unesite ime: ","Unesite prezime: " , "Unesite jedinstveni broj osiguranika"],
-		onSubmit: function(json)
-		{
-			
-			let d = JSON.stringify(json)
-			$.ajax({
-				type:'POST',
-				url:"api/clinic/getPatientsByFilter/" + doctorClinic.name,
-				data: d,
-				dataType : "json",
-				contentType : "application/json; charset=utf-8",
-				complete: function(data)
-				{
-					patients = data.responseJSON
-					i = 0
-					emptyTable("listPatientTable")
-					for(p of patients)
-					{
-						listPatient(p,i)
-						i++
-					}
-				}
-			})
-		}
-		
-	})
-	
-	
+
+
 	let headersPatients = ["Ime","Prezime","Email","Telefon","Adresa","Grad","Drzava","Broj zdravstvenog osiguranja"]
 	createDataTable("listPatientTable","showPatientContainer","Lista pacijenata",headersPatients,0)
 	getTableDiv("listPatientTable").show()
-	insertElementIntoTable("listPatientTable","&nbsp&nbsp<button class='btn btn-primary' onClick={showSearch('patientSearch')}>Pretraga</button>","card-header")
-	
+
 	let headersApps = ["Datum","Pacijent","Doktori","Klinika","Sala","Tip pregleda","Tip zakazivanja"]
 	createDataTable("listAppointmentTable","showAppointmentContainerWithCheckBox","Zakazani pregledi",headersApps,0)
 	getTableDiv("listAppointmentTable").show()
 
-    let alergiesHeaders = ["Alergija","",""]
-    let handle = createTable("tableAlergies","Alergije",alergiesHeaders)
-    insertTableInto("updateAlergiesDiv",handle)
-    $("tableAlergies").removeClass("card mb-3")
-    getTableDiv("tableAlergies").show()
-
+    let historyHeaders = ["Pacijent","Doktor","Datum pregleda","Dijagnoze",""]
+    let handle = createTable("historyTable","Istorija bolesti",historyHeaders)
+    insertTableInto("updateMedicalRecordContainer",handle)
+    getTableDiv("historyTable").show()
 
 	$('#pacientList').click(function(e){
 		e.preventDefault()
 		showView("showPatientContainer")
-        showBread('Lista pacijenata')  
+        showBread('Lista pacijenata')
+
         $.ajax({
 			type: 'GET',
 			url:"api/doctors/getClinic/" + user.email,
@@ -101,12 +68,12 @@ function initDoctor(user)
 	})
 
 	})
-	
+
 	$('#examinationStart').click(function(e){
 		e.preventDefault()
 		showView("showAppointmentContainerWithCheckBox")
         showBread('Zapocni pregled')
-        
+
         $.ajax({
         	type:'GET',
         	url: "api/appointments/doctor/getAllAppointments/"+user.email,
@@ -122,7 +89,7 @@ function initDoctor(user)
         		}
         	}
         })
-        
+
 	})
 
     initCalendarDoc(user)
@@ -135,10 +102,8 @@ function initDoctor(user)
 
     $("#startExamination").click(function(e){
       e.preventDefault()
-
       setUpCodebooks()
       $("#modalCalendar").modal('toggle')
-
       showBread('Pregled u toku')
       showView("showExaminationContainer")
       $('#collapseThree').collapse('toggle')
@@ -146,112 +111,146 @@ function initDoctor(user)
 
     $('#btnOK').click(function(e){
         e.preventDefault()
-
         $('#modalOK').modal('hide')
-        showView("showCalendarContainer")
-        showBread('Radni kalendar')
+        location.reload()
     })
 
-
-}
-
-
-function initAlergies(patient){
-
-         const $tableID = $('#tableAlergiesID');
-         const $BTN = $('#submitUpdateRecord');
-
-         const newTr = `
+     $('#addRow').click(function(e){
+        e.preventDefault()
+        const Tr = `
             <tr class="hide">
-              <td class="pt-3-half" contenteditable="true"></td>
+              <td class="pt-3-half" contenteditable="true" placeholder="alergija"></td>
               <td>
                 <span class="table-remove"><button type="button" class="btn btn-primary btn-rounded btn-sm my-0 waves-effect waves-light">Obrisi</button></span>
               </td>
             </tr>`;
 
-         $('.table-add').on('click', 'i', () => {
-           const $clone = $tableID.find('tbody tr').last().clone(true).removeClass('hide table-line');
-           if ($tableID.find('tbody tr').length === 0) {
-             $('tbody').append(newTr);
-           }
-           $tableID.find('table').append($clone);
-         });
+            $('#tableAlergiesID tbody').append(Tr);
+            table = $('#tableAlergiesID')
 
-         $tableID.on('click', '.table-remove', function () {
-           $(this).parents('tr').detach();
-         });
+     })
 
-         $tableID.on('click', '.table-up', function () {
-           const $row = $(this).parents('tr');
-           if ($row.index() === 1) {
-             return;
-           }
-           $row.prev().before($row.get(0));
-         });
+     $('#tableAlergiesID').on('click', '.table-remove', function () {
+        $(this).parents('tr').detach();
+     });
 
-         $tableID.on('click', '.table-down', function () {
-           const $row = $(this).parents('tr');
-           $row.next().after($row.get(0));
-         });
 
-         // A few jQuery helpers for exporting only
-         jQuery.fn.pop = [].pop;
-         jQuery.fn.shift = [].shift;
+}
 
-         $BTN.on('click', () => {
+function getReports(report, i, user){
 
-           const $rows = $tableID.find('tr:not(:hidden)');
-           const headers = [];
-           const alergies = [];
+    var sd = formatDateHours(report.dateAndTime)
 
-           // Get the headers (add special header logic here)
-           $($rows.shift()).find('th:not(:empty)').each(function () {
-             headers.push($(this).text().toLowerCase());
+    var btn = '<button type="button" class="btn btn-primary" id="updateBtn'+i+'">Izmeni</button>'
+    if(report.doctorEmail != user.email){
+        btn = ""
+    }
+
+    let data = [ report.patientEmail, report.doctorEmail, sd, report.diagnosis, btn]
+	insertTableData("historyTable",data)
+
+    $('#updateBtn'+i).click(function(e){
+		e.preventDefault()
+		patientMedicalReportUpdate(report)
+	})
+
+}
+
+function patientMedicalReportUpdate(report){
+
+
+    showView("showExaminationContainer")
+    $("#updateRecord").hide()
+    $("#submitReport").hide()
+    $("#updateReportBtn").show()
+    $("#additional").hide()
+
+    $('#selectDiagnosis').val(report.diagnosis)
+
+    $('#report').val(report.description)
+
+    $('select[name=selectDiagnosis]').val(report.diagnosis);
+    $('.selectpicker').selectpicker('refresh');
+
+    $.ajax({
+        type: 'GET',
+        url: 'api/reports/getReportPrescription/' + report.id,
+        complete: function(data)
+        {
+            let prescription = data.responseJSON
+
+            $('#selectDrug').val(prescription.drugs)
+            $('#description').val(prescription.description)
+            $('select[name=selectDrug]').val(prescription.drugs);
+            $('.selectpicker').selectpicker('refresh');
+        }
+    })
+
+    $('#updateReportBtn').click(function(e){
+        e.preventDefault()
+
+           let drugs = []
+           $('#selectDrug option:selected').each(function() {
+               drugs.push($(this).val())
            });
 
-
-
-           // Turn all existing rows into a loopable array
-           $rows.each(function () {
-             const $td = $(this).find('td');
-
-
-             // Use the headers from earlier to name our hash keys
-             headers.forEach((header, i) => {
-               alergies.push($td.eq(i).text());
-             });
+           let diagnosis = []
+           $('#selectDiagnosis option:selected').each(function() {
+               diagnosis.push($(this).val())
            });
 
-         var weight = $('#updateWeight').val()
-         var height = $('#updateHeight').val()
-         var bloodType = $('#updateBloodType option:selected').val()
+          let description = $('#description').val()
+          let info = $('#report').val()
 
-         let record = {"weight": weight,"height": height,"bloodType": bloodType,"alergies": alergies}
-         recordJSON = JSON.stringify(record)
+          let today = new Date();
 
-         		$.ajax({
-         			type: 'PUT',
-         			url: 'api/users/patient/updateMedicalRecord/' + patient.email,
-         			data: recordJSON,
-         			dataType: "json",
-         			contentType : "application/json; charset=utf-8",
-         			complete: function(data)
-         			{
-         				if(data.status == "200")
-         				{
-         					alert("izmenjeno")
-         				}
-         				else
-         				{
-         					alert("njet")
-         				}
-         			}
+          if(!drugs == [] && !description == '')
+          {
+              $('#reportLabel').text("Izvestaj je uspesno azuriran. Recept je izmenjen i nalazi se na listi recepata za overu kod medicinske sestre.")
+          }
 
-         		})
+          flag = true
+          if(info == ""){
+               var input = $('#report')
+               input.addClass('is-invalid')
+               flag = false
+          } else {
+               var input = $('#report')
+               input.removeClass('is-invalid')
+          }
 
 
- });
+          if(flag == false){
+               return
+          }
 
+
+
+        let prescriptionDTO = {"description":description,"drugs":drugs}
+        let prescription = JSON.stringify({"description":description,"drugs":drugs})
+        let reportJson = JSON.stringify({"description":info,"diagnosis":diagnosis,"prescription":prescriptionDTO})
+
+
+        $.ajax({
+                type: 'PUT',
+                url: 'api/reports/updateReport/' + report.id,
+                data: reportJson,
+                dataType: "json",
+                contentType : "application/json; charset=utf-8",
+                async: false,
+                complete: function(data)
+                {
+                    if(data.status == "200")
+                    {
+                       // showView('showExaminationContainer')
+                       $('#modalOK').modal('show')
+
+                    }
+
+                }
+
+         })
+        })
 }
 
 
@@ -285,13 +284,13 @@ function listAppointmentWithCheckBox(data,i,appCount,user)
      }else if (data.type == 'Examination'){
         type = 'Pregled'
      }
-	
+
 	let d = [data.date,data.patientEmail,data.doctors[0],data.clinicName,data.hallNumber,data.typeOfExamination, type]
 	insertTableData('listAppointmentTable',d)
 	/*
 	$("#startExamin_btn"+i).off('click')
 	$("#startExamin_btn"+i).click(function(e){
-		
+
 		showView("showExaminationContainer")
 		showBread('Pregled u toku ')
 		setUpDiagnosis()
@@ -335,7 +334,6 @@ function initCalendarDoc(user)
                   eventClick: function(info)
                   {
                       var type
-                      console.log(info)
                       if(info.type == 'Surgery'){
                             type = 'Operacija'
                        }else if (info.type == 'Examination'){
@@ -369,7 +367,7 @@ function initCalendarDoc(user)
                       getAppointment(info.clinicName ,sd, info.hallNumber, user)
 
                       $('#modalCalendar').modal('show');
-                      
+
                       },
                       header: {
                           right: 'agendaDay,agendaWeek,month,timelineCustom',
@@ -444,11 +442,11 @@ function setUpDrugs(){
 						value: d.name,
 						text: d.name
 					}))
-								
+
 				}
         }
     })
-	
+
 }
 
 function setUpHall(){
@@ -465,8 +463,8 @@ function setUpHall(){
 				$('#selectHallStartExamin').append($('<option>',{
 					value: h.name,
 					text: h.name
-				}))	
-            
+				}))
+
             }
 		}
 	})
@@ -488,7 +486,7 @@ function setUpDiagnosis(){
            			});
         }
     })
-	
+
 }
 
 function setUpCodebooks(){
@@ -527,13 +525,13 @@ function setUpCodebooks(){
                			$('.selectpicker').selectpicker('refresh');
             }
         })
-     
+
 }
 
 
 function getAppointment(clinicName, date, hallNumber, user){
 
-        console.log(date)
+
         hallNumber = parseInt(hallNumber)
 
         var appointment
@@ -545,7 +543,7 @@ function getAppointment(clinicName, date, hallNumber, user){
             complete: function(data)
             {
                  appointment = data.responseJSON
-                 console.log(appointment)
+
 
                  $.ajax({
                         type: 'GET',
@@ -565,12 +563,14 @@ function getAppointment(clinicName, date, hallNumber, user){
                              }
 
                             var sd = appointment.date
-                                
+
 
                             $("#startExamin").text('Pocetak: ' + sd);
                             $("#typeExamin").text('Tip pregleda: ' + type);
                             $("#clinicExamin").text('Klinika: ' + appointment.clinicName);
                             $("#doctorExamin").text('Doktor: ' + user.name + ' ' + user.surname);
+
+
                         },
 
                  })
@@ -580,14 +580,48 @@ function getAppointment(clinicName, date, hallNumber, user){
 
         $('#updateRecord').click(function(e){
            e.preventDefault()
-           getMedicalRecord(patient)
-           initAlergies(patient)
+           getMedicalRecord(patient, user)
            showView("updateMedicalRecordContainer")
            showBread('Izmena zdravstvenog kartona')
         });
 
+        $('#submitUpdateRecord').off("click").click(function(e){
+             e.preventDefault()
+             var alergies = []
+             alergies =   $('#tableAlergiesID td:nth-child(1)').map(function() {
+                                 return $(this).text();
+                          }).get();
 
-        $('#submitReport').click(function(e){
+
+             var weight = $('#updateWeight').val()
+             var height = $('#updateHeight').val()
+             var bloodType = $('#updateBloodType option:selected').val()
+
+             let record = {"weight": weight,"height": height,"bloodType": bloodType,"alergies": alergies}
+             recordJSON = JSON.stringify(record)
+
+                    $.ajax({
+                        type: 'PUT',
+                        url: 'api/users/patient/updateMedicalRecord/' + patient.email,
+                        data: recordJSON,
+                        dataType: "json",
+                        contentType : "application/json; charset=utf-8",
+                        async: false,
+                        complete: function(data)
+                        {
+                            if(data.status == "200")
+                            {
+                                showView('showExaminationContainer')
+                            }
+
+                        }
+
+                    })
+        });
+
+
+
+        $('#submitReport').off("click").click(function(e){
             e.preventDefault()
 
             let drugs = []
@@ -605,14 +639,19 @@ function getAppointment(clinicName, date, hallNumber, user){
 
            let today = new Date();
 
-           if(!drugs == [] && !description == '')
-           {
-           		$('#prescriptionLabel').show()
-           		$('#reportLabel').hide()
-           } else {
-                $('#reportLabel').show()
-                $('#prescriptionLabel').hide()
-           }
+//           if(!drugs == [] && !description == '')
+//           {
+//           		$('#prescriptionLabel').show()
+//           		$('#reportLabel').hide()
+//           } else {
+//                $('#reportLabel').show()
+//                $('#prescriptionLabel').hide()
+//           }
+
+          if(!drugs == [] && !description == '')
+          {
+              $('#reportLabel').text("Izvestaj i recept su uspesno kreirani. Recept se nalazi na listi recepata za overu kod medicinske sestre.")
+          }
 
            flag = true
            if(report == ""){
@@ -633,11 +672,11 @@ function getAppointment(clinicName, date, hallNumber, user){
                 let prescription = JSON.stringify({"description":description,"drugs":drugs,"nurse":"","isValid":false, "validationDate":""})
                 let reportJson = JSON.stringify({"description":report,"diagnosis":diagnosis,"doctorEmail":user.email,"clinicName":appointment.clinicName,"dateAndTime":today,"patient":patient.email,"prescription":prescriptionDTO})
 
-           console.log(reportJson)
+
 
                 $.ajax({
                     type:'POST',
-                    url:'api/users/patient/addPatientMedicalReport/' + patient.email,
+                    url:'api/reports/addPatientMedicalReport/' + patient.email,
                     data: reportJson,
                     dataType : "json",
                     contentType : "application/json; charset=utf-8",
@@ -646,27 +685,36 @@ function getAppointment(clinicName, date, hallNumber, user){
                          if(data.status == "201")
                           {
                                $('#modalOK').modal('show')
+
                           }
                     }
                 })
         })
 
-function getMedicalRecord(patient){
-
+function getMedicalRecord(patient, user){
     $.ajax({
 			type: 'GET',
 			url: 'api/users/patient/getMedicalRecord/'+patient.email,
 			complete: function(data)
 			{
 				record = data.responseJSON
-                console.log(record)
+
 				let index = 0
-				emptyTable("tableAlergies")
+                $('#tableAlergiesID tbody').html('')
+
 				for(a of record.alergies)
 				{
 					addAlergiesTr(a, index, patient)
 					index++
 				}
+				let i=0
+				emptyTable("historyTable")
+
+				for(report of record.reports)
+                {
+                    getReports(report, i, user)
+                    i++
+                }
 
 				$('#updateHeight').val(record.height)
 				$('#updateWeight').val(record.weight)
@@ -690,6 +738,7 @@ function addAlergiesTr(alergie, i, patient){
     $('#tableAlergiesID tbody').append(newTr);
 
 }
+
 
 
 }

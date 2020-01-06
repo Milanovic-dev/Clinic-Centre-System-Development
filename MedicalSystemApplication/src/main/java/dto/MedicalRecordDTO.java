@@ -10,7 +10,7 @@ import model.MedicalRecord.BloodType;
 public class MedicalRecordDTO {
 
 	
-	private List<PatientMedicalReportDTO> reports;	
+	private List<PatientMedicalReportDTO> reports = new ArrayList<>();
 	private List<String> alergies;	
 	private String weight;
 	private BloodType bloodType;	
@@ -20,6 +20,7 @@ public class MedicalRecordDTO {
 	public MedicalRecordDTO() {
 		super();
 		// TODO Auto-generated constructor stub
+		reports = new ArrayList<>();
 	}
 
 	public MedicalRecordDTO(List<String> alergies, String weight, BloodType bloodType,

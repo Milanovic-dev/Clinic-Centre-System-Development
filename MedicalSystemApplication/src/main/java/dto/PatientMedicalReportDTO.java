@@ -15,6 +15,7 @@ public class PatientMedicalReportDTO {
     private List<String> diagnosis = new ArrayList<>();
 	private PrescriptionDTO prescription;
 	private String patientEmail;
+	private long id;
 	
 	
 	public PatientMedicalReportDTO() {
@@ -47,6 +48,7 @@ public class PatientMedicalReportDTO {
 			diagnosis.add(d.getName());
 		}
 		this.patientEmail = report.getPatient().getEmail();
+		this.id = report.getId();
 	}
 
 	public String getDescription() {
@@ -103,5 +105,13 @@ public class PatientMedicalReportDTO {
 
 	public void setPatientEmail(String patientEmail) {
 		this.patientEmail = patientEmail;
+	}
+
+	public long getId() {
+		return id;
+	}
+
+	public void setId(long id) {
+		this.id = id;
 	}
 }

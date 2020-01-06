@@ -368,9 +368,7 @@
 
 <!-- LISTA PACIJENATA -->
           <div class="card mb-3" id = "showPatientsContainer" style="display:none">
-              <div class="card-header">
-                  <i class="fas fa-table"></i>
-                  Lista pacijenata</div>
+              <div class="card-header">Lista pacijenata</div>
               <div class="card-body">
                   <div class="table-responsive">
                       <table class="stripe"  id="tablePatients" width="100%" cellspacing="0">
@@ -404,9 +402,7 @@
 <!-- ----------------KALENDAR END--------------------- -->
   <!--------------------------- PREGLED U TOKU -------------------->
   <div class="card mb-3" id = "showExaminationContainer" style="display:none">
-      <div class="card-header">
-          <i class="fas fa-table"></i>
-          Informacije o pregledu pacijenta</div>
+      <div class="card-header">Informacije o pregledu pacijenta</div>
       <div class="card-body">
           <label class="form-control-label" id="patientExamin">Pacijent: </label> <br>
           <label class="form-control-label" id="typeExamin">Tip pregleda: </label> <br>
@@ -415,11 +411,11 @@
           <label class="form-control-label" id="clinicExamin">Klinika: </label> <br>
           <hr>
 
-          <select title="Dijagnoze" class="selectpicker" id="selectDiagnosis" style="height: 40px !important;" multiple data-live-search="true">
+          <select title="Dijagnoze" class="selectpicker" id="selectDiagnosis" name="selectDiagnosis" style="height: 40px !important;" multiple data-live-search="true">
               <div class="invalid-feedback"></div>
           </select>
 
-          <select title="Lekovi za recept" class="selectpicker" id="selectDrug" style="height: 40px !important;" multiple data-live-search="true">
+          <select title="Lekovi za recept" class="selectpicker" id="selectDrug" name="selectDrug" style="height: 40px !important;" multiple data-live-search="true">
 
           </select>
             <hr>
@@ -433,7 +429,7 @@
               <div class="invalid-feedback"></div>
           </div>
 
-          <div class="card">
+          <div class="card" id="additional">
               <div class="card-header" id="headingThree">
                   <h5 class="mb-0">
                       <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree" >
@@ -450,6 +446,7 @@
 
           <button type="button" style="margin:20 0 0" class="btn btn-secondary" id = "updateRecord" >Izmeni zdravstveni karton</button>
           <button type="button" style="margin:20 0 0" class="btn btn-primary" id = "submitReport" >Sacuvaj</button>
+          <button type="button" style="margin:20 0 0; display:none" class="btn btn-primary" id = "updateReportBtn" >Sacuvaj izmene</button>
 
           <!-- Modal -->
           <div class="modal fade bd-example-modal-sm" id="modalOK" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
@@ -462,8 +459,7 @@
                           </button>
                       </div>
                       <div class="modal-body">
-                          <label id="reportLabel" style="display:none">Izvestaj je uspesno kreiran.</label>
-                          <label id="prescriptionLabel" style="display:none">Izvestaj i recept su uspesno kreirani. Recept se nalazi na listi recepata za overu kod medicinske sestre.</label>
+                          <label id="reportLabel" >Izvestaj je uspesno kreiran.</label>
                       </div>
                       <div class="modal-footer">
                           <button type="button" class="btn btn-primary" id="btnOK">Potvrdi</button>
@@ -517,7 +513,7 @@
                     </div>
                 </div>
                 <div id="tableAlergiesID" class="table-editable">
-                    <span class="table-add float-right mb-3 mr-2"><a href="#!"><i
+                    <span id="addRow" class="table-add float-right mb-3 mr-2"><a href="#"><i
                         class="fas fa-plus" aria-hidden="true" style="position: absolute;top: 380px;right: 45px;}"></i></a></span>
                     <table class="table table-bordered table-responsive-md text-center">
                         <thead>
@@ -528,11 +524,14 @@
                         </tbody>
                     </table>
                 </div>
-                <button type="button" class="btn btn-primary btn-block" id = "submitUpdateRecord">Sacuvaj izmene</button>
+                <button class="btn btn-primary" id = "submitUpdateRecord">Sacuvaj izmene</button>
             </form>
         </div>
 
     </div>
+    <br>
+    <br>
+    <div  id="historyDiv"></div>
 </div>
 <!-- ------------------KRAJ IZMENE KARTONA---------------------- -->
 
