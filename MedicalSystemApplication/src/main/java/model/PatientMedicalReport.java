@@ -16,7 +16,7 @@ public class PatientMedicalReport {
 	@Column(name = "description", nullable = true)
     private String description;
 	
-	@Column(name = "dateAndTime", nullable = false)
+	@Column(name = "dateAndTime", nullable = true)
     private Date dateAndTime;
 
 	@OneToOne(fetch = FetchType.EAGER)

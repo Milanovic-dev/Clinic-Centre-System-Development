@@ -26,4 +26,8 @@ public class PatientMedicalReportService {
     public PatientMedicalReport findByPatient(Patient patient) {
         return patientMedicalReportRepository.findByPatient(patient);
     }
+
+    public PatientMedicalReport findById(long id) {
+        return patientMedicalReportRepository.findById(id);
+    }
 }

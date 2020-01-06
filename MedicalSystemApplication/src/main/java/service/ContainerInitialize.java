@@ -45,6 +45,11 @@ public class ContainerInitialize {
 	@Autowired
 	private PrescriptionRepository prescriptionRepository;
 
+	@Autowired
+	private PatientMedicalReportRepository patientMedicalReportRepository;
+
+	@Autowired
+	private MedicalRecordRepository medicalRecordRepository;
 	
 	@PostConstruct
 	public void init()
@@ -109,6 +114,7 @@ public class ContainerInitialize {
 					.withPhone("44555656")
 					.withInsuranceID("35654645")
 					.build();
+
 
 			patient1.getMedicalRecord().setPatient(patient1);
 
@@ -232,14 +238,24 @@ public class ContainerInitialize {
 					.withClinic(clinic)
 					.withDuration(1)
 					.build();
+
+			Appointment app3 = new Appointment.Builder(DateUtil.getInstance().GetDate("03-01-2020 19:30", "dd-mm-yyyy HH:mm"))
+					.withPatient(patient1)
+					.withType(AppointmentType.Surgery)
+					.withHall(hall2)
+					.withClinic(clinic)
+					.withDuration(1)
+					.build();
 			
 			app2.getDoctors().add(doctor1);
 			app2.getDoctors().add(doctor3);
 			appointmentRepository.save(app2);
+			appointmentRepository.save(app3);
 			
 			
 			doctor1.getAppointments().add(app1);
 			doctor1.getAppointments().add(app2);
+			doctor2.getAppointments().add(app3);
 			
 
 			
@@ -260,6 +276,7 @@ public class ContainerInitialize {
 			userRepository.save(nurse);
 
 			userRepository.save(doctor1);
+			userRepository.save(doctor2);
 			
 			
 			Priceslist p2 = new Priceslist();
