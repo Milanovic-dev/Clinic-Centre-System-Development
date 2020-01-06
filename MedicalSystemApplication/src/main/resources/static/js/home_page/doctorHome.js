@@ -38,7 +38,7 @@ function initDoctor(user)
 
     initBreadcrumb([bc1,bc2,bc3])
 
-	
+
 	let headersPatients = ["Ime","Prezime","Email","Telefon","Adresa","Grad","Drzava","Broj zdravstvenog osiguranja"]
 	createDataTable("listPatientTable","showPatientContainer","Lista pacijenata",headersPatients,0)
 	getTableDiv("listPatientTable").show()
@@ -52,7 +52,7 @@ function initDoctor(user)
 		e.preventDefault()
 		showView("showPatientContainer")
         showBread('Lista pacijenata')
-        
+
         $.ajax({
 			type: 'GET',
 			url:"api/doctors/getClinic/" + user.email,
@@ -64,12 +64,12 @@ function initDoctor(user)
 	})
 
 	})
-	
+
 	$('#examinationStart').click(function(e){
 		e.preventDefault()
 		showView("showAppointmentContainerWithCheckBox")
         showBread('Zapocni pregled')
-        
+
         $.ajax({
         	type:'GET',
         	url: "api/appointments/doctor/getAllAppointments/"+user.email,
@@ -85,7 +85,7 @@ function initDoctor(user)
         		}
         	}
         })
-        
+
 	})
 
     initCalendarDoc(user)
@@ -134,15 +134,6 @@ function initDoctor(user)
 }
 
 
-function initAlergies(patient){
-
-
-
-
-
-}
-
-
 function findPatients(data)
 {
 	let clinic = data.responseJSON
@@ -173,13 +164,13 @@ function listAppointmentWithCheckBox(data,i,appCount,user)
      }else if (data.type == 'Examination'){
         type = 'Pregled'
      }
-	
+
 	let d = [data.date,data.patientEmail,data.doctors[0],data.clinicName,data.hallNumber,data.typeOfExamination, type]
 	insertTableData('listAppointmentTable',d)
 	/*
 	$("#startExamin_btn"+i).off('click')
 	$("#startExamin_btn"+i).click(function(e){
-		
+
 		showView("showExaminationContainer")
 		showBread('Pregled u toku ')
 		setUpDiagnosis()
@@ -258,7 +249,7 @@ function initCalendarDoc(user)
                       getAppointment(info.clinicName ,sd, info.hallNumber, user)
 
                       $('#modalCalendar').modal('show');
-                      
+
                       },
                       header: {
                           right: 'agendaDay,agendaWeek,month,timelineCustom',
@@ -333,11 +324,11 @@ function setUpDrugs(){
 						value: d.name,
 						text: d.name
 					}))
-								
+
 				}
         }
     })
-	
+
 }
 
 function setUpHall(){
@@ -354,8 +345,8 @@ function setUpHall(){
 				$('#selectHallStartExamin').append($('<option>',{
 					value: h.name,
 					text: h.name
-				}))	
-            
+				}))
+
             }
 		}
 	})
@@ -377,7 +368,7 @@ function setUpDiagnosis(){
            			});
         }
     })
-	
+
 }
 
 function setUpCodebooks(){
@@ -416,7 +407,7 @@ function setUpCodebooks(){
                			$('.selectpicker').selectpicker('refresh');
             }
         })
-     
+
 }
 
 
@@ -454,7 +445,7 @@ function getAppointment(clinicName, date, hallNumber, user){
                              }
 
                             var sd = appointment.date
-                                
+
 
                             $("#startExamin").text('Pocetak: ' + sd);
                             $("#typeExamin").text('Tip pregleda: ' + type);
@@ -476,12 +467,12 @@ function getAppointment(clinicName, date, hallNumber, user){
            showBread('Izmena zdravstvenog kartona')
         });
 
-        $('#submitUpdateRecord').click(function(e){
+        $('#submitUpdateRecord').off("click").click(function(e){
              e.preventDefault()
              var alergies = []
              alergies =   $('#tableAlergiesID td:nth-child(1)').map(function() {
                                  return $(this).text();
-                               }).get();
+                          }).get();
              console.log(alergies)
 
              var weight = $('#updateWeight').val()
@@ -497,6 +488,7 @@ function getAppointment(clinicName, date, hallNumber, user){
                         data: recordJSON,
                         dataType: "json",
                         contentType : "application/json; charset=utf-8",
+                        async: false,
                         complete: function(data)
                         {
                             if(data.status == "200")
@@ -515,7 +507,7 @@ function getAppointment(clinicName, date, hallNumber, user){
 
 
 
-        $('#submitReport').click(function(e){
+        $('#submitReport').off("click").click(function(e){
             e.preventDefault()
 
             let drugs = []

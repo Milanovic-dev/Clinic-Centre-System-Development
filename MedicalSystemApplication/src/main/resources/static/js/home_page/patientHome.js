@@ -19,19 +19,9 @@ function initPatient(user)
 	addView('detailsAppointmentContainer')
 	addView('showAppointmentRequestsPatient')
 	addView('preAppointmentContainer')
+
 	
-	var bc1 = new BreadLevel()
-	bc1.append('Lista klinika').append('Zakazivanje')
-	var bc2 = new BreadLevel()
-	bc2.append('Zdravstveni karton')
-	var bc3 = new BreadLevel()
-	bc3.append('Zahtevi za pregled')
-	var bc4 = new BreadLevel()
-	bc4.append('Unapred definisani pregledi')
-	
-	initBreadcrumb([bc1,bc2,bc3,bc4])
-	
-	   				
+	createBreadcrumb()
     createChooseDoctorTable()
     createAppointmentsTable()
 	
@@ -52,6 +42,20 @@ function createAppointmentsTable()
 	let headers = ['Datum','Termin','Sala','Doktor','Tip pregleda','Cena','']
 	createDataTable('preAppTable',"preAppointmentContainer","Unapred definisani pregledi",headers,0)
 	getTableDiv('preAppTable').show()
+}
+
+function createBreadcrumb()
+{
+	var bc1 = new BreadLevel()
+	bc1.append('Lista klinika').append('Zakazivanje')
+	var bc2 = new BreadLevel()
+	bc2.append('Zdravstveni karton')
+	var bc3 = new BreadLevel()
+	bc3.append('Zahtevi za pregled')
+	var bc4 = new BreadLevel()
+	bc4.append('Unapred definisani pregledi')
+	
+	initBreadcrumb([bc1,bc2,bc3,bc4])
 }
 
 function sleep(ms) {

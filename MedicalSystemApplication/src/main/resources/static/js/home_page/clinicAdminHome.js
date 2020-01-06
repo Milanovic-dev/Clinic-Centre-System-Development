@@ -40,19 +40,35 @@ function initClinicAdmin(user)
 	addView("AppointmentContainer")
 	addView("changeProfileClinicContainer")
 
-	
-	let headersDoctors = ["Ime","Prezime","Email","Telefon","Tip pregleda koji obavlja","Adresa","Grad","Drzava"]
-	let handleDoctors = createTable("listDoctorsTable","Lista lekara",headersDoctors)
-	insertTableInto("doctorContainer",handleDoctors)
-	
-	let headersHalls = ["Broj sale","Klinika kojoj pripada"]
-	let handleHalls = createTable("listHallsTable","Lista Sala",headersHalls)
-	insertTableInto("hallContainer",handleHalls)
-	
-	let headersPrices = ["Tip pregleda" ,"Cena pregleda"]
-	let handlePrices = createTable("listPricesTable","Cenovnik",headersPrices)
-	insertTableInto("pricesContainer",handlePrices)
-	
+	createSearch({
+		id: "hallSearch",
+		header:"Pronadji salu",
+		inputs: ["name","number"],
+		labels: ["Ime sale","Broj sale"],
+		onSubmit: function(json)
+		{
+			json["clinicName"] = clinic.name
+			let d = JSON.stringify(json)
+			$.ajax({
+				type:'POST',
+				url:"api/hall/getAllByFilter/",
+				data: d,
+				dataType : "json",
+				contentType : "application/json; charset=utf-8",
+				complete: function(data)
+				{
+					halls = data.responseJSON
+					i = 0
+					emptyTable("tableHall")
+					for(h of halls )
+					{
+						listHall(h,i)
+						i++
+					}
+				}
+			})
+		}
+	})
 	
 	let headersTypes = ["Ime tipa","Klinika","Cena","",""]
 	createDataTable("tableTypeOfExamination","showTypeOfExaminationContainer","Lista Tipova Pregleda",headersTypes,0)
@@ -60,8 +76,10 @@ function initClinicAdmin(user)
 	let headersUser = ["Ime","Prezime","Email","Telefon","Adresa","Grad","Drzava",""]
 	createDataTable("tableDoctorUsers","showUserContainer","Lista lekara",headersUser,0)
 	
-	let headersHall = ["Broj sale","Ime sale","Ime klinike" ,"",""]
+	let headersHall = ["Broj sale","Ime sale","Ime klinike" ,"","",""]
 	createDataTable("tableHall","showHallContainer","Lista sala",headersHall,0)
+	insertElementIntoTable("tableHall","&nbsp&nbsp<button class='btn btn-primary' onClick={showSearch('hallSearch')}>Pretraga</button>","card-header")
+
 	
 	getTableDiv("tableTypeOfExamination").show()	
 	getTableDiv("listDoctorsTable").show()
@@ -509,13 +527,18 @@ function submitDoctorForm(clinic)
 function listHall(data,i)
 {
 		
-	let d = [data.number,data.name,data.clinicName,'<button type="button" class="btn btn-primary" id = "changeHall_btn'+i+'">Izmeni</button>','<button type="button" class="btn btn-danger" id = "deleteHall_btn'+i+'">Izbrisi</button>']
+	let d = [data.number,data.name,data.clinicName,'<button type="button" class="btn btn-warning" id = "calendarHall_btn'+i+'">Zauzeće</button>','<button type="button" class="btn btn-primary" id = "changeHall_btn'+i+'">Izmeni</button>','<button type="button" class="btn btn-danger" id = "deleteHall_btn'+i+'">Izbrisi</button>']
 	
 	insertTableData("tableHall",d)
+	$('#calendarHall_btn' + i).click(function(e){
+		$('#hallCalendar').modal('show');
+		$('#hallCalendarModalLabel').text("Kalendar zauzeća sale " + data.number)
+
+	})
+	
 	$('#deleteHall_btn'+i).click(function(e)
 	{
 		e.preventDefault()
-		console.log(data.number)
 		
 		$.ajax({
 			type: 'DELETE',
