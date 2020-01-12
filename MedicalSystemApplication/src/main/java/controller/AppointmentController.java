@@ -213,6 +213,7 @@ public class AppointmentController
 		
 	}
 	
+	
 	@GetMapping(value="/getAllPredefined")
 	public ResponseEntity<List<AppointmentDTO>> getPredefined()
 	{
@@ -227,8 +228,10 @@ public class AppointmentController
 		
 		for(Appointment app : appointments)
 		{
-			dtos.add(new AppointmentDTO(app));
-			
+			if(app.getPatient() == null)
+			{
+				dtos.add(new AppointmentDTO(app));						
+			}
 		}
 		
 		return new ResponseEntity<>(dtos,HttpStatus.OK);
@@ -533,9 +536,14 @@ public class AppointmentController
 			headers.set("responseText","App not found for: " + dto.getDate() + " " + dto.getHallNumber() + " " + dto.getClinicName());
 			return new ResponseEntity<>(headers,HttpStatus.NOT_FOUND);
 		}
+		
+		if(app.getVersion() != dto.getVersion())
+		{
+			return new ResponseEntity<>(HttpStatus.LOCKED);
+		}
 			
 		app.setPatient(p);
-		
+			
 		try
 		{
 			appointmentService.save(app);			

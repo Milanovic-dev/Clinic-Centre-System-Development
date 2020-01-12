@@ -218,7 +218,6 @@ public class ContainerInitialize {
 			pricelistRepository.save(p1);
 
 			Appointment app1 = new Appointment.Builder(DateUtil.getInstance().GetDate("15-01-2020 07:30","dd-mm-yyyy HH:mm"))
-					.withPatient(patient)
 					.withType(AppointmentType.Examination)
 					.withHall(hall1)
 					.withClinic(clinic)
