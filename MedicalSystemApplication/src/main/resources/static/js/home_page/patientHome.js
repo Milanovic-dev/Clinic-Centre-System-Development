@@ -121,21 +121,7 @@ function setUpPatientPage(user)
 		showView('preAppointmentContainer')	
 		showBread('Unapred definisani pregledi')
 		
-		$.ajax({		
-			type: 'GET',
-			url: "api/appointments/getAllPredefined",
-			complete: function(data)
-			{
-				let apps = data.responseJSON
-				index = 0;
-				for(let app of apps)
-				{
-					list_preApps(app,index,user)
-					index++
-				}
-				
-			}
-		})
+		setPreAppointmentsTable()
 	})
 	
 	
@@ -174,10 +160,28 @@ function setUpPatientPage(user)
 
 }
 
-
-function list_preApps(data,i,user)
+function setPreAppointmentsTable()
 {
-	emptyTable('preAppTable')
+	$.ajax({		
+		type: 'GET',
+		url: "api/appointments/getAllPredefined",
+		complete: function(data)
+		{
+			let apps = data.responseJSON
+			emptyTable('preAppTable')
+			index = 0;
+			for(let app of apps)
+			{
+				list_preApp(app,index,user)
+				index++
+			}
+		}
+	})
+		
+}
+
+function list_preApp(data,i,user)
+{
 	
 	let dateSplit = data.date.split(' ')
 	let date = dateSplit[0]
@@ -193,7 +197,6 @@ function list_preApps(data,i,user)
 		
 		let json = JSON.stringify({"date":data.date,"clinicName":data.clinicName,"hallNumber":data.hallNumber,"version":data.version})
 		
-		//TODO: Zakazi 
 		$.ajax({
 			type:'PUT',
 			url:"api/appointments/reservePredefined/"+user.email,
@@ -205,11 +208,11 @@ function list_preApps(data,i,user)
 				console.log(data)
 				if(data.status == "200")
 				{
-					console.success("Uspesno")
+					setPreAppointmentsTable()
 				}
 				else if(data.status == "423")
 				{
-					console.error("Vec zakazno!")
+					console.error("Vec zakazano!")
 				}
 									
 			}

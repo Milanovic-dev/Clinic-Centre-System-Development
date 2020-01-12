@@ -53,6 +53,7 @@ public class AppointmentService {
 	{
 		return appointmentRepository.findAllByPredefined(true);
 	}
+	
 
 	public Appointment findAppointment(String date, int hallNumber, String clinic)
 	{	
@@ -64,7 +65,7 @@ public class AppointmentService {
 		return findAppointment(d,h,c);
 	}
 	
-	@Transactional
+	@Transactional(readOnly = false)
 	public void save(Appointment appointment)
 	{
 		appointmentRepository.save(appointment);

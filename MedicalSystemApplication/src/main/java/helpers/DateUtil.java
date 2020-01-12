@@ -16,8 +16,10 @@ public class DateUtil {
 		return df.format(date);		
 	}
 	
+	
 	public Date GetDate(String date,String format)
 	{
+		date = date.strip();
 		DateFormat df = new SimpleDateFormat(format);
 		
 		try {
