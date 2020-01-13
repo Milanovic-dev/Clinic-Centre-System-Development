@@ -1,21 +1,32 @@
 
 
-function sessionCheck()
-{
-		$.ajax({
-			type: 'GET',
-			url: 'api/auth/sessionUser',
-			complete: function(data){
-				addPersonalInformations(data)
-			}
-				
-		})
-		
+function extractUser()
+{	
+	getProfileFromURL(function(profile)
+	{
+		if(profile == undefined)
+		{
+			$.ajax({
+				type: 'GET',
+				url: 'api/auth/sessionUser',
+				complete: function(data)
+				{
+					setPersonalInformations(data.responseJSON,false)
+				}
+					
+			})
+		}
+		else
+		{
+			setPersonalInformations(profile,true)
+		}
+	})
+			
 }
 
-function addPersonalInformations(data)
+function setPersonalInformations(user, foreign)
 {
-	user = data.responseJSON
+
 	if(user == undefined)
 	{
 		window.location.href = "index.html"
@@ -48,17 +59,23 @@ function addPersonalInformations(data)
 		$('#pRole').text("Med. Sestra")
 		$('#pRating').hide();
 	}
+	
+	if(foreign)
+	{
+		$('#profileChange_btn').hide()
+		$('#profileChangePassword_btn').hide()
+	}
+	else
+	{
+		$('#profileChange_btn').show()
+		$('#profileChangePassword_btn').show()
+	}
+	
 }
 
 $(document).ready(function(){
 
-	sessionCheck()
-	
-	
-	
-	$('#change_profile_edit').click(function(e){
-		window.location.href = "profileChange.html"
-	})
+	extractUser()
 	
 })
 	

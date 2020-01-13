@@ -122,8 +122,28 @@ function initDoctor(user)
         		}
         	}
         })
-
+        
 	})
+	
+	$.ajax({
+        	type:'GET',
+        	url:'api/priceList/getAll',
+        	complete: function(data)
+        	{
+			
+        		let pricelists = data.responseJSON
+				console.log(pricelists.length)		
+        		for(p of pricelists)
+        		{
+        			$('#nextAppToE').append($('<option>',{
+        				value: p.typeOfExamination,
+        				text: p.typeOfExamination
+        			}))
+				
+        		}
+			
+        	}
+        })
 
     initCalendarDoc(user)
 
@@ -132,6 +152,11 @@ function initDoctor(user)
         showView("showCalendarContainer")
         showBread('Radni kalendar')
      });
+	
+	$('#nextAppDate').datepicker({
+		dateFormat: "dd-mm-yyyy",
+		position: "top left"
+	})
 
     $("#startExamination").click(function(e){
       e.preventDefault()
@@ -140,8 +165,10 @@ function initDoctor(user)
       showBread('Pregled u toku')
       showView("showExaminationContainer")
       $('#collapseThree').collapse('toggle')
+      
     });
-
+    
+    
     $('#btnOK').click(function(e){
         e.preventDefault()
         $('#modalOK').modal('hide')
@@ -602,7 +629,9 @@ function getAppointment(clinicName, date, hallNumber, user){
                             $("#typeExamin").text('Tip pregleda: ' + type);
                             $("#clinicExamin").text('Klinika: ' + appointment.clinicName);
                             $("#doctorExamin").text('Doktor: ' + user.name + ' ' + user.surname);
-
+                            
+                            
+                            
 
                         },
 
@@ -671,6 +700,10 @@ function getAppointment(clinicName, date, hallNumber, user){
            let report = $('#report').val()
 
            let today = new Date();
+           
+           let nextDate = $('#nextAppDate').val()
+           let nextType = $('#nextAppType').val()
+           let ToE = $('#nextAppToE').val()
 
 //           if(!drugs == [] && !description == '')
 //           {
@@ -695,11 +728,56 @@ function getAppointment(clinicName, date, hallNumber, user){
                 var input = $('#report')
                 input.removeClass('is-invalid')
            }
-
+           
+           if(nextDate == "")
+           {
+        	   flag = false
+           }
+           
+           if(nextType == "")
+        	 {
+        	   flag = false
+        	 }
+           
+           if(ToE == "")
+        	 {
+        	   flag = false
+        	 }
 
            if(flag == false){
                 return
            }
+           			
+           
+           		let typeOfExam
+           		
+           		if(nextType == "Pregled")
+           		{
+           			typeOfExam = "Examination"
+           			
+           		}
+           		else
+           		{
+           			typeOfExam = "Surgery"           			
+           		}
+           
+           		let nextAppRequestJSON = JSON.stringify({"date":nextDate, "patientEmail":patient.email, "clinicName":clinicName, "doctors":[user.email], "typeOfExamination":ToE, "type":typeOfExam})
+           		
+           		$.ajax({
+						type:'POST',
+						url:'api/appointments/sendRequest',
+						data: nextAppRequestJSON,
+						dataType : "json",
+						contentType : "application/json; charset=utf-8",
+						complete: function(data)
+						{
+							if(data.status != "201")
+							{
+								alert("Error pri cuvanju sledeceg pregleda")
+							}													
+						}
+					})
+           
 
                 let prescriptionDTO = {"description":description,"drugs":drugs,"nurse":"","isValid":false, "validationDate":""}
                 let prescription = JSON.stringify({"description":description,"drugs":drugs,"nurse":"","isValid":false, "validationDate":""})
