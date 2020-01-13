@@ -1,21 +1,31 @@
 
-function sessionCheck()
-{
-		$.ajax({
-			type: 'GET',
-			url: 'api/auth/sessionUser',
-			complete: function(data){
-				addPersonalInformations(data)
-			}
-				
+function extractUser()
+{	
+	getProfileFromURL(function(profile)
+	{
+		if(profile == undefined)
+		{
+			$.ajax({
+				type: 'GET',
+				url: 'api/auth/sessionUser',
+				complete: function(data)
+				{
+					setPersonalInformations(data.responseJSON)
+				}
+					
+			})
+		}
+		else
+		{
+			setPersonalInformations(profile)
+		}
+	})
 			
-		})
-		
 }
 
-function addPersonalInformations(data)
+function setPersonalInformations(user)
 {
-	user = data.responseJSON
+
 	if(user == undefined)
 		{
 			console.log("nema data.")
@@ -37,7 +47,7 @@ function addPersonalInformations(data)
 
 $(document).ready(function(){
 
-	sessionCheck()
+	extractUser()
 	
 	$('#exitChanges').click(function(e){
 		e.preventDefault()

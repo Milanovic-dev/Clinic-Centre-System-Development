@@ -9,6 +9,11 @@ var breadcrumbs = []
 
 var errorId
 
+function getViews()
+{
+	return containers
+}
+
 function clearViews()
 {
 	containers = []

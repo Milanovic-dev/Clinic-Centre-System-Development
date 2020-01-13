@@ -286,6 +286,11 @@
           </div>
           </div>
     </div>
+    
+    
+    <div class="container" id="showAppointmentsPatient" style="display:none">
+    	
+    </div>
 
      <!-- ZAKAZIVANJE PREGLEDA -->
     <div class="container" id ="makeAppointmentContainer" style="display:none">
@@ -439,7 +444,23 @@
               </div>
               <div id="collapseThree" class="collapse show" aria-labelledby="headingThree" data-parent="#accordion">
                   <div class="card-body">
-                      //TODO: 2_3.11 Kreiranje zahteva za pregled/operaciju
+                  
+                      <form>
+                      	<div class="form-group">
+                      		<input class="form-control datepicker-here" data-language='en' style="width:20%" placeholder="Izaberite datum" data-timepicker="true" data-time-format='hh:ii' id="nextAppDate">                     		
+                      	</div>
+                      	<div class="form-group">
+                      		<select class="form-control" style="width:20%" id="nextAppType">
+                      			<option>Pregled</option>
+                      			<option>Operacija</option>
+                      		</select>
+                      	</div>
+                      	<div class="form-group">
+                      		<select class="form-control" style="width:20%" id ="nextAppToE">
+                      		</select>
+                      	</div>
+                      </form>
+                        
                   </div>
               </div>
           </div>
@@ -474,6 +495,9 @@
       </div>
 
 <!--------------------------- PREGLED U TOKU END -------------------->
+
+
+
 <!--------------------------- OVERA RECEPTA -------------------->
 
         <div class="card mb-3" id = "showPrescriptionAuthContainer" style="display:none">
@@ -1141,68 +1165,7 @@
   </div>
 </div>
 <!-- -----------------------KRAJ MODALA ZA KALENDAR------------------------ -->
-<!-- ---------------------------ZAPOCNI PREGLED---------------------------- -->
- <div class="card mb-3" id = "showStartExaminationContainer" style="display:none">
-      <div class="card-header">Informacije o pacijenta</div>
-      <div class="card-body">
-          <label class="form-control-label" id="patientStartExamin">Pacijent: </label> <br>
-          <label class="form-control-label" id="patientEmailStartExamin">Email pacijenta: </label> <br>
-          <label class="form-control-label" id="patientPhoneStartExamin">Broj telefona: </label> <br>
-          <label class="form-control-label" id="patientAddressStartExamin">Mesto stanovanja: </label> <br>
-          <label class="form-control-label" id="doctorStartExamin">Doktor: </label> <br>
-          <label class="form-control-label" id="clinictartExamin">Klinika: </label> <br>
 
-          <hr>
-          <select title="Sala" class="form-control" id="selectHallStartExamin" style="height: 80px !important;" multiple data-live-search="true">
-
-          </select><br>
-          
-          <select title="Dijagnoze" class="form-control" id="selectDiagnosisStartExamin" style="height: 80px !important;" multiple data-live-search="true">
-
-          </select><br>
-
-          <select title="Lekovi za recept" class="form-control" id="selectDrugStartExamin" style="height: 80px !important;" multiple data-live-search="true">
-
-          </select><br>
-          
-          <label>Pocetak pregleda:</label>
-          <input type="time" id="inputStartTime" class="form-control">
-          <label>Kraj pregleda</label>
-          <input type="time" id="inputStartTime" class="form-control">
-          
-          
-            <hr>
-          <label class="form-control-label" style="opacity: 0.8">Terapija uz recept: </label> <br>
-          <div class="form-group">
-              <textarea class="form-control" rows="4" id="descriptionStart"></textarea>
-          </div>
-          <label class="form-control-label" style="opacity:0.8">Informacije o pregledu: </label> <br>
-          <div class="form-group">
-              <textarea class="form-control" rows="10" id="reportStart"></textarea>
-          </div>
-
-          <div class="card">
-              <div class="card-header" id="headingThreeStart">
-                  <h5 class="mb-0">
-                      <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree" >
-                          Zakazivanje novog termina
-                      </button>
-                  </h5>
-              </div>
-              <div id="collapseThreeStart" class="collapse show" aria-labelledby="headingThree" data-parent="#accordion">
-                  <div class="card-body">
-                      //TODO: 2_3.11 Kreiranje zahteva za pregled/operaciju
-                  </div>
-              </div>
-          </div>
-
-          <button type="button" style="margin:20 0 0" class="btn btn-primary" id = "submitReportStart">Sacuvaj&nbsp<span class="spinner-border spinner-border-sm"  style="display:none;" role="status" id="submitReportSpinner"  aria-hidden="true"></span></button>
-
-      </div>
-
-      </div>
-
-<!---------------------------ZAPOCNI PREGLED END -------------------->
   		<div class="container-fluid" id="MedicalRecordContainer">
   			<p class="text-muted" id="insuranceMR"></p>
   			<p class="font-weight-light">Osnovni podaci</p>

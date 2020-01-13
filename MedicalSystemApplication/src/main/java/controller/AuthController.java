@@ -42,7 +42,6 @@ public class AuthController
 
 	@Autowired
 	private NotificationService notificationService;
-
 	
 	@Autowired
 	private UserService userService;

@@ -1,8 +1,9 @@
 
 
-function getProfileURL(email)
+function getPageURLWithUser(page, email)
 {
-	return "userProfileNew?u=" + email
+	console.log(page + ".html?u=" + email)
+	return page + ".html?u=" + email
 }
 
 function getProfileFromURL(done)
@@ -16,14 +17,9 @@ function getProfileFromURL(done)
 		complete: function(data)
 		{
 			let user = data.responseJSON
-			if(user == undefined)
-			{
-				console.error("user is undefined")
-			}
-			else
-			{
-				done(user)
-			}
+		
+			done(user)
+
 		}
 			
 		

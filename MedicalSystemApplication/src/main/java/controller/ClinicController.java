@@ -167,6 +167,8 @@ public class ClinicController {
     	
     	for(Appointment app: appointments)
     	{   		
+    		if(app.getPatient() == null) continue;
+    		
     		if(!ListUtil.getInstance().containsWithEmail(patients,app.getPatient().getEmail()))
     		{
     			patients.add(new UserDTO(app.getPatient()));    			

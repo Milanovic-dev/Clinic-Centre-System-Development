@@ -3,15 +3,19 @@
  */
 
 //ULAZNA FUNKCIJA
+
+var thisUser = ""
+
 function initPatient(user)
 {
+	thisUser = user
 	let sideBar = $("#sideBar")
 	sideBar.append("<li class='nav-item active'><a class='nav-link' href='userProfileNew.html'><span id='profileUser'>Profil</span></a></li>")
 	sideBar.append("<li class='nav-item active'><a class='nav-link' type='button'><span id='clinicList'>Lista klinika</span></a></li>")	
-	sideBar.append("<li class='nav-item active'><a class='nav-link' type='button'><span id='medicalRecord'>Zdravstveni karton</span></a></li>")	
-	sideBar.append("<li class='nav-item active'><a class='nav-link' type='button'><span id='appRequests'>Zahtevi za pregled</span></a></li>")	
 	sideBar.append("<li class='nav-item active'><a class='nav-link' type='button'><span id='preApps'>Unapred definisani pregledi</span></a></li>")
-	
+	sideBar.append("<li class='nav-item active'><a class='nav-link' type='button'><span id='Apps'>Pregledi</span></a></li>")
+	sideBar.append("<li class='nav-item active'><a class='nav-link' type='button'><span id='appRequests'>Pregledi na cekanju</span></a></li>")	
+	sideBar.append("<li class='nav-item active'><a class='nav-link' type='button'><span id='medicalRecord'>Zdravstveni karton</span></a></li>")	
 	
 	addView('showClinicContainer')
 	addView('MedicalRecordContainer')
@@ -19,10 +23,11 @@ function initPatient(user)
 	addView('detailsAppointmentContainer')
 	addView('showAppointmentRequestsPatient')
 	addView('preAppointmentContainer')
-
+	addView('showAppointmentsPatient')
 	
 	createBreadcrumb()
     createChooseDoctorTable()
+    createPreAppointmentsTable()
     createAppointmentsTable()
 	
 	setUpPatientPage(user)
@@ -37,11 +42,19 @@ function createChooseDoctorTable()
     getTableDiv('chooseDoctorTable').show()
 }
 
-function createAppointmentsTable()
+function createPreAppointmentsTable()
 {
 	let headers = ['Datum','Termin','Sala','Doktor','Tip pregleda','Cena','']
 	createDataTable('preAppTable',"preAppointmentContainer","Unapred definisani pregledi",headers,0)
 	getTableDiv('preAppTable').show()
+}
+
+function createAppointmentsTable()
+{
+	let headers = ['Datum','Termin','Sala','Doktor','Tip pregleda','Cena']
+	let handle = createTable('patientAppsTable',"Zakazani pregledi",headers)
+	insertTableInto('showAppointmentsPatient',handle)
+	getTableDiv('patientAppsTable').show()
 }
 
 function createBreadcrumb()
@@ -51,11 +64,13 @@ function createBreadcrumb()
 	var bc2 = new BreadLevel()
 	bc2.append('Zdravstveni karton')
 	var bc3 = new BreadLevel()
-	bc3.append('Zahtevi za pregled')
+	bc3.append('Pregledi na cekanju')
 	var bc4 = new BreadLevel()
 	bc4.append('Unapred definisani pregledi')
+	var bc5 = new BreadLevel()
+	bc5.append('Pregledi')
 	
-	initBreadcrumb([bc1,bc2,bc3,bc4])
+	initBreadcrumb([bc1,bc2,bc3,bc4,bc5])
 }
 
 function sleep(ms) {
@@ -115,6 +130,14 @@ function setUpPatientPage(user)
     	dateFormat: "dd-mm-yyyy"   	
 	})
 	
+	$('#Apps').click(function(e){
+		e.preventDefault()
+		console.log(getViews())
+		showView('showAppointmentsPatient')
+		showBread('Pregledi')
+		setAppointmentsTable()
+	})
+	
 	$('#preApps').click(function(e){
 		e.preventDefault()
 		
@@ -160,6 +183,35 @@ function setUpPatientPage(user)
 
 }
 
+function setAppointmentsTable()
+{
+	$.ajax({		
+		type: 'GET',
+		url: "api/appointments/patient/getAll/"+thisUser.email,
+		complete: function(data)
+		{
+			let apps = data.responseJSON
+			emptyTable('patientAppsTable')
+			index = 0;
+			for(let app of apps)
+			{
+				list_App(app,index,user)
+				index++
+			}
+		}
+	})
+}
+
+function list_App(data,i,user)
+{
+	let dateSplit = data.date.split(' ')
+	let date = dateSplit[0]
+	let time = dateSplit[1]
+	
+	let d = [date,time,data.hallNumber,data.doctors[0],data.typeOfExamination,data.price]
+	insertTableData('patientAppsTable',d)
+}
+
 function setPreAppointmentsTable()
 {
 	$.ajax({		
@@ -172,7 +224,7 @@ function setPreAppointmentsTable()
 			index = 0;
 			for(let app of apps)
 			{
-				list_preApp(app,index,user)
+				list_preApp(app,index,thisUser)
 				index++
 			}
 		}
@@ -281,7 +333,7 @@ function makeMedicalRecord(data,user)
 function listAppRequests()
 {
 	showView('showAppointmentRequestsPatient')
-	showBread('Zahtevi za pregled')
+	showBread('Pregledi na cekanju')
 	
 	
 	$.ajax({
