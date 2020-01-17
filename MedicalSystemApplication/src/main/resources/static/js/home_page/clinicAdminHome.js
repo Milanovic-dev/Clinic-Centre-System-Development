@@ -8,6 +8,21 @@ var clinic = null
 function initClinicAdmin(user)
 {
 
+	$.ajax({
+		type:'GET',
+		url:"api/admins/clinic/getClinicFromAdmin/" + user.email,
+		complete: function(data)
+		{
+			clinic = data.responseJSON
+			setUpClinicAdminPage(user)
+		}
+	
+	})
+}
+
+function setUpClinicAdminPage(user)
+{
+	
 	let sideBar = $("#sideBar")
 	sideBar.append("<li class='nav-item active'><a class='nav-link' href='userProfileNew.html'><span id='profileUser'>Profil</span></a></li>")
 	sideBar.append("<li class='nav-item active'><a class='nav-link' type='button'><span id='changeProfileClinic'>Uredi profil klinike</span></a></li>")
@@ -18,15 +33,9 @@ function initClinicAdmin(user)
 	sideBar.append("<li class='nav-item active'><a class='nav-link' type='button'><span id='addTypeOfExamination'>Dodaj tip pregleda</span></a></li>")
 	sideBar.append("<li class='nav-item active'><a class='nav-link' type='button'><span id='showTypeOfExamination'>Lista tipova pregleda</span></a></li>")
 	sideBar.append("<li class='nav-item active'><a class='nav-link' type='button'><span id='addPredefinedAppointment'>Dodaj predefinisani pregled</span></a></li>")
+	sideBar.append("<li class='nav-item active'><a class='nav-link' href = 'clinicProfile.html?clinic=" + clinic.name +"'><span id='showReport'>Prikaz izvestaja poslovanja</span></a></li>")
+
 	
-	$.ajax({
-		type:'GET',
-		url:"api/admins/clinic/getClinicFromAdmin/" + user.email,
-		complete: function(data)
-		{
-			clinic = data.responseJSON
-		}
-	})
 	
 	
 	clearViews()
@@ -262,8 +271,7 @@ function initClinicAdmin(user)
 
 	//KRAJ DODAVANJA TIPA PREGLEDA
 	
-	
-	
+		
 	$('#showDoctor').click(function(e){
 		e.preventDefault()
 		showView("showUserContainer")
@@ -903,4 +911,5 @@ function makeDoctor(d,i)
 	$('#tableDoctorsList tbody').append(tr);
 
 }
+
 

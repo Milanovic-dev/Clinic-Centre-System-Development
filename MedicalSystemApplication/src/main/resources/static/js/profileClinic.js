@@ -7,12 +7,11 @@ $(document).ready(function(){
 
 function sessionCheck()
 {
-	let urlData = getUrlVars()
-	let name = urlData.name
-	
+	let n = getParameterByName("clinic")
+	console.log(n)
 		$.ajax({
 			type: 'GET',
-			url: 'api/clinic/'+ name,
+			url: 'api/clinic/' + n,
 			complete: function(data){
 				addClinicInformations(data)
 			}
@@ -23,18 +22,18 @@ function sessionCheck()
 
 function addClinicInformations(data)
 {
-	clinic = data.responseJSON
 	if(clinic == undefined)
-		{
-			console.log("no clinic data.")
-		}
+	{
+		console.log("no clinic data.")
+		return;
+	}
 	
 	$("#pNameClinic").text(clinic.name);
 	$("#pAdressClinic").text(clinic.address);
 	$("#pDescriptionClinic").text(clinic.description);
 	$("#pCityClinic").text(clinic.city);
 	$("#pStateClinic").text(clinic.state);
-	//$("#sClinicRating").text();
+	$("#sClinicRating").text(parseFloat(clinic.rating).toPrecision(4));
 	
 
 }
