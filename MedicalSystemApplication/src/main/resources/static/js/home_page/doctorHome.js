@@ -1,7 +1,7 @@
 /**
- *
+ * 
  */
-//ULAZNA FUNKCIJA
+// ULAZNA FUNKCIJA
 var doctorClinic = null
 
 function initDoctor(user)
@@ -348,15 +348,13 @@ function listAppointmentWithCheckBox(data,i,appCount,user)
 	let d = [data.date,data.patientEmail,data.doctors[0],data.clinicName,data.hallNumber,data.typeOfExamination, type]
 	insertTableData('listAppointmentTable',d)
 	/*
-	$("#startExamin_btn"+i).off('click')
-	$("#startExamin_btn"+i).click(function(e){
-
-		showView("showExaminationContainer")
-		showBread('Pregled u toku ')
-		setUpDiagnosis()
-		setUpCodebooks()
-		getAppointment(data.clinicName, data.date, data.hallNumber, user)
-	*/
+	 * $("#startExamin_btn"+i).off('click')
+	 * $("#startExamin_btn"+i).click(function(e){
+	 * 
+	 * showView("showExaminationContainer") showBread('Pregled u toku ')
+	 * setUpDiagnosis() setUpCodebooks() getAppointment(data.clinicName,
+	 * data.date, data.hallNumber, user)
+	 */
 }
 
 function listPatient(data,i)
@@ -373,8 +371,9 @@ function initCalendarDoc(user)
                   var calendarEl = document.getElementById('calendar');
 
                   var calendar = $('#calendar').fullCalendar({
-                  //plugins: [ 'interaction', 'dayGrid', 'timeGrid', 'monthGrid', 'timeline' ],
-                  //defaultView: 'dayGridMonth',
+                  // plugins: [ 'interaction', 'dayGrid', 'timeGrid',
+					// 'monthGrid', 'timeline' ],
+                  // defaultView: 'dayGridMonth',
                   defaultDate: '2020-01-01',
                   buttonText: {
                          today:    'danas',
@@ -701,23 +700,24 @@ function getAppointment(clinicName, date, hallNumber, user){
 
            let today = new Date();
            
-           let nextDate = $('#nextAppDate').val()
-           let nextType = $('#nextAppType').val()
-           let ToE = $('#nextAppToE').val()
+           let nextDate = $('#nextAppDate')
+           let nextType = $('#nextAppType')
+           let ToE = $('#nextAppToE')
 
-//           if(!drugs == [] && !description == '')
-//           {
-//           		$('#prescriptionLabel').show()
-//           		$('#reportLabel').hide()
-//           } else {
-//                $('#reportLabel').show()
-//                $('#prescriptionLabel').hide()
-//           }
+// if(!drugs == [] && !description == '')
+// {
+// $('#prescriptionLabel').show()
+// $('#reportLabel').hide()
+// } else {
+// $('#reportLabel').show()
+// $('#prescriptionLabel').hide()
+// }
 
           if(!drugs == [] && !description == '')
           {
               $('#reportLabel').text("Izvestaj i recept su uspesno kreirani. Recept se nalazi na listi recepata za overu kod medicinske sestre.")
           }
+           
 
            flag = true
            if(report == ""){
@@ -729,20 +729,21 @@ function getAppointment(clinicName, date, hallNumber, user){
                 input.removeClass('is-invalid')
            }
            
-           if(nextDate == "")
+           if(!validation(nextDate, nextDate.val() == "", "Morate uneti datum."))
+           {
+        	   flag = false        	   
+           }
+           
+           if(!validation(nextType, nextType.val() == "", "Morate izabrati tip."))
+           {
+        	   flag = false
+           }
+                 
+           if(!validation(ToE, ToE.val() == "", "Morate izabrati tip pregleda"))
            {
         	   flag = false
            }
            
-           if(nextType == "")
-        	 {
-        	   flag = false
-        	 }
-           
-           if(ToE == "")
-        	 {
-        	   flag = false
-        	 }
 
            if(flag == false){
                 return
@@ -751,7 +752,7 @@ function getAppointment(clinicName, date, hallNumber, user){
            
            		let typeOfExam
            		
-           		if(nextType == "Pregled")
+           		if(nextType.val() == "Pregled")
            		{
            			typeOfExam = "Examination"
            			
@@ -761,7 +762,7 @@ function getAppointment(clinicName, date, hallNumber, user){
            			typeOfExam = "Surgery"           			
            		}
            
-           		let nextAppRequestJSON = JSON.stringify({"date":nextDate, "patientEmail":patient.email, "clinicName":clinicName, "doctors":[user.email], "typeOfExamination":ToE, "type":typeOfExam})
+           		let nextAppRequestJSON = JSON.stringify({"date":nextDate.val(), "patientEmail":patient.email, "clinicName":clinicName, "doctors":[user.email], "typeOfExamination":ToE.val(), "type":typeOfExam})
            		
            		$.ajax({
 						type:'POST',
