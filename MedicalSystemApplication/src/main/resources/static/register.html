@@ -10,6 +10,7 @@
   crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 <link rel="stylesheet" href="css/index.css" >
+<script src="js/content_manager.js"></script>
 <script src ="js/navbar.js"></script>
 <script src="js/register.js"></script>
 <link rel="stylesheet" href="css/register.css">
@@ -61,15 +62,11 @@
               <div class="col-md-6">
                 <div class="form-label-group">
                   <input type="text" id="inputName" class="form-control" placeholder="Ime" autofocus="autofocus" >
-                  <div class="valid-feedback">Izgleda dobro!</div>
-                  <div class="invalid-feedback">Ime moze sadrzati samo slova.</div>
                 </div>
               </div>
               <div class="col-md-6">
                 <div class="form-label-group">
                   <input type="text" id="inputSurname" class="form-control" placeholder="Prezime" >
-                <div class="valid-feedback">Izgleda dobro!</div>
-                  <div class="invalid-feedback">Prezime moze sadrzati samo slova.</div>
                 </div>
               </div>
             </div>
@@ -77,8 +74,6 @@
           <div class="form-group">
             <div class="form-label-group">
               <input type="email" id="inputEmail" class="form-control" placeholder="Email" >
-              <div class="valid-feedback">Izgleda dobro!</div>
-              <div class="invalid-feedback">Email mora biti u dobrom formatu.("primer@gmail.com")</div>
             </div>
           </div>
           <div class="form-group">
@@ -86,15 +81,11 @@
               <div class="col-md-6">
                 <div class="form-label-group">
                   <input type="password" id="inputPassword" class="form-control" placeholder="Lozinka">
-                  <div class="valid-feedback">Izgleda dobro!</div>
-                  <div class="invalid-feedback">Lozinka mora biti duza od 3 karaktera.</div>
                 </div>
               </div>
               <div class="col-md-6">
                 <div class="form-label-group">
                   <input type="password" id="confirmPassword" class="form-control" placeholder="Potvrdi Lozinku">
-                  <div class="valid-feedback">Izgleda dobro!</div>
-                  <div class="invalid-feedback">Lozinke se ne podudaraju.</div>
                 </div>
               </div>
             </div>
@@ -102,8 +93,6 @@
           <div class="form-group">
                 <div class="form-label-group">
                   <input type="text" id="inputAddress" class="form-control" placeholder="Adresa" >
-                  <div class="valid-feedback">Izgleda dobro!</div>
-                  <div class="invalid-feedback">Morate uneti adresu.</div>
             </div>
           </div>
           <div class="form-group">
@@ -111,8 +100,6 @@
               <div class="col-md-6">
                 <div class="form-label-group">
                   <input type="text" id="inputCity" class="form-control" placeholder="Grad" >
-                  <div class="valid-feedback">Izgleda dobro!</div>
-                  <div class="invalid-feedback">Morate uneti grad.</div>
                 </div>
               </div>
               <div class="col-md-6">
@@ -371,15 +358,11 @@
           <div class="form-group">
             <div class="form-label-group">
               <input type="text" id="inputPhone" class="form-control" placeholder="Telefon" >
-              <div class="valid-feedback">Izgleda dobro!</div>
-                  <div class="invalid-feedback">Morate uneti telefon.</div>
             </div>
           </div>
           <div class="form-group">
             <div class="form-label-group">
               <input type="text" id="inputInsurance" class="form-control" placeholder="Broj osiguranika" >
-              <div class="valid-feedback">Izgleda dobro!</div>
-                  <div class="invalid-feedback">Morate uneti broj osiguranika.</div>
             </div>
           </div>
 		  <span style="color:#FF1103" id="alreadyExists"></span>

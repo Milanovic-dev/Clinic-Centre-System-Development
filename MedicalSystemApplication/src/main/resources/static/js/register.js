@@ -21,72 +21,29 @@ $(document).ready(function(){
 		
 		flag = true
 		
-		
-		if(email.indexOf("@gmail.com") == -1)
-		{
-			var emailInput = $('#inputEmail')
 			
-			emailInput.addClass('is-invalid')
-			emailInput.removeClass('is-valid')
+		if(!validation('inputEmail', email.indexOf("@gmail.com") == -1, "Email mora biti u dobrom formatu"))
+		{
 			flag = false
 		}
-		else
-		{
-			var emailInput = $('#inputEmail')
-			
-			emailInput.addClass('is-valid')
-			emailInput.removeClass('is-invalid')
-		}
 		
-		if(/^[a-zA-Z]+$/.test(name) == false || name == "")
+		if(!validation('inputName', /^[a-zA-Z]+$/.test(name) == false || name == "", "Ime moze sadrzati samo slova."))
 		{
-			var nameInput = $('#inputName')
-			
-			nameInput.addClass('is-invalid')
-			nameInput.removeClass('is-valid')
 			flag = false
 		}
-		else
-		{
-			var nameInput = $('#inputName')
-			
-			nameInput.addClass('is-valid')
-			nameInput.removeClass('is-invalid')
-		}
 		
 		
-		if(/^[a-zA-Z]+$/.test(surname) == false || surname == "")
+		if(!validation('inputSurname',/^[a-zA-Z]+$/.test(surname) == false || surname == "", "Prezime moze sadrzati samo slova"))
 		{
-			var nameInput = $('#inputSurname')
-			
-			nameInput.addClass('is-invalid')
-			nameInput.removeClass('is-valid')
 			flag = false
 		}
-		else
-		{
-			var nameInput = $('#inputSurname')
-			
-			nameInput.addClass('is-valid')
-			nameInput.removeClass('is-invalid')
-		}
-				
 		
-		if(password == "" || password.length < 3)
+		if(!validation('inputPassword', password == "" || password.length < 3, "Lozinka mora biti duza od 3 karaktera."))
 		{
-			var passInput = $('#inputPassword')
-			passInput.addClass('is-invalid')
-			passInput.removeClass('is-valid')
 			flag = false
 		}
-		else
-		{
-			var passInput = $('#inputPassword')
-			passInput.addClass('is-valid')
-			passInput.removeClass('is-invalid')
-		}
-				
-		
+							
+						
 		if(password != confirmPassword)
 		{
 			var passInput = $('#inputPassword')
@@ -96,83 +53,32 @@ $(document).ready(function(){
 			passConfirm.addClass('is-invalid')
 			flag = false
 		}
-
 		
-		if(city == "")
+		if(!validation('inputCity', city == "", "Morate uneti grad."))
 		{
-			var input = $('#inputCity')
-			
-			input.addClass('is-invalid')
-			input.removeClass('is-valid')
 			flag = false
 		}
-		else
-		{
-			var input = $('#inputCity')
-			
-			input.removeClass('is-invalid')
-			input.addClass('is-valid')
-		}
 		
-		
-		if(address == "")
+		if(!validation('inputAddress',address == "", "Morate uneti adresu."))
 		{
-			var input = $('#inputAddress')
-			
-			input.addClass('is-invalid')
-			input.removeClass('is-valid')
 			flag = false
 		}
-		else
-		{
-			var input = $('#inputAddress')
-			
-			input.removeClass('is-invalid')
-			input.addClass('is-valid')
-		}
 		
-		if(phone == "")
+		if(!validation('inputPhone',phone == "", "Morate uneti telefon."))
 		{
-			var input = $('#inputPhone')
-			
-			input.addClass('is-invalid')
-			input.removeClass('is-valid')
 			flag = false
-		}
-		else
-		{
-			var input = $('#inputPhone')
-			
-			input.removeClass('is-invalid')
-			input.addClass('is-valid')
-		}
-		
-		if(insurance == "")
-		{
-			var input = $('#inputInsurance')
-			
-			input.addClass('is-invalid')
-			input.removeClass('is-valid')
-			flag = false
-		}
-		else
-		{
-			var input = $('#inputInsurance')
-			
-			input.removeClass('is-invalid')
-			input.addClass('is-valid')
 		}
 
-		if($('#selectState').find(':selected').prop('disabled')){
-                		    var input = $('#selectState')
-                            input.addClass('is-invalid')
-                            input.removeClass('is-valid')
-                            flag = false
-                		} else {
-                		    var input = $('#selectState')
-                            input.removeClass('is-invalid')
-                            input.addClass('is-valid')
-                		}
+		if(!validation('inputInsurance',insurance == "", "Morate uneti broj osiguranika."))
+		{
+			flag = false
+		}
+		
+		if(!validation('selectState',$('#selectState').find(':selected').prop('disabled') , "Morate izabrati drzavu."))
+		{
+			flag = false
+		}
+		
 		
 		if(flag == false) return
 		

@@ -82,6 +82,50 @@ function displayError(id,text)
 }
 
 
+function validation(element, condition, errorMessage)
+{
+	console.log(element)
+	let elem
+	
+	if(isString(element))
+	{
+		elem = $('#'+element)	
+	}
+	else
+	{
+		elem = element
+	}
+	
+	
+	let parent = elem.parent()
+	
+	
+	if(parent.children('.invalid-feedback').length == 0)
+	{
+		elem.after('<div class="invalid-feedback">'+errorMessage+'</div>')
+	}
+	
+	
+	if(parent.children('.valid-feedback').length == 0)
+	{
+		elem.after('<div class="valid-feedback">Izgleda dobro!</div>')
+	}
+	
+	if(!condition)
+	{
+		elem.addClass('is-valid')	
+		elem.removeClass('is-invalid')
+		return true
+	}
+	else
+	{
+		elem.addClass('is-invalid')	
+		elem.removeClass('is-valid')
+		return false
+	}
+}
+
+
 function hideView(id)
 {
 	$('#'+id).hide()
@@ -174,5 +218,10 @@ function showBread(name)
 		}
 	}
 	
+}
+
+function isString(obj)
+{
+    return obj !== undefined && obj !== null && obj.constructor == String;
 }
 
