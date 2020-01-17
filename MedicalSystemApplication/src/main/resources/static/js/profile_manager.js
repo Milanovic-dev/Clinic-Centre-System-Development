@@ -29,6 +29,18 @@ function getProfileFromURL(done)
 		
 	})
 }
+function validationError(id, errorMessage)
+{
+	if($('#' + id).next('.invalid-feedback').length <= 0)
+	{
+		$('#' + id).after('<div class="invalid-feedback">' +errorMessage+ '</div>')
+	}
+	else
+	{
+		($('#' + id).next('.invalid-feedback').text(errorMessage))
+	}
+	$(id).addClass('invalid-feedback')
+}
 
 function getParameterByName(name, url) {
     if (!url) url = window.location.href;
