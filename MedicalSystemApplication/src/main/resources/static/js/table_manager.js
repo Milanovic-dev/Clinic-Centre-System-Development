@@ -3,15 +3,27 @@
  */
 //TODO: Resiti id-ove
 
-function createTable(id,name,headers)
+function createTable(id,name,headers,tableClass)
 {
+	
 	if($('#'+id).length > 0)
 	{
 		console.error("Cannot create table: "+id+" already exists in current DOM")
 		return
 	}
 	
-	let tableHTML = '<div class="card mb-3" id = '+id+' style="display:none"><div class="card-header">'+name+'</div><div class="card-body"><div class="table-responsive"><table class="table table-bordered" id="table_'+id+'" width="100%" cellspacing="0"><thead><tr>'
+	let tClass
+	
+	if(tableClass == undefined)
+	{
+		tClass = "table table-bordered"
+	}
+	else
+	{
+		tClass = tableClass
+	}
+	
+	let tableHTML = '<div class="card mb-3" id = '+id+' style="display:none"><div class="card-header">'+name+'</div><div class="card-body"><div class="table-responsive"><table class="'+tClass+'" id="table_'+id+'" width="100%" cellspacing="0"><thead><tr>'
 					
 	for(let i = 0 ; i < headers.length ; i++)
 	{
@@ -28,16 +40,31 @@ function createTable(id,name,headers)
 
 function createDataTable(id,div,name,headers,orderBy)
 {
-	let handle = createTable(id,name,headers)
+	let handle = createTable(id,name,headers,"stripe")
 	
 	insertTableInto(div,handle)
 	
-	$('#table_'+id).prop('class','stripe')
 	
 	$('#table_'+id).DataTable(
 	{
-		"order":[[orderBy,"desc"]]
+		"order":[[orderBy,"desc"]],
+		"language": {
+			"search": "Filter:",
+			"loadingRecords": "&nbsp;",
+            "processing": "<div class='spinner'></div>",
+			"zeroRecords": "Nema stavki.",
+			"emptyTable" : "Nema stavki.",
+			"info": "Prikazano od _START_ do _END_ od _TOTAL_ stavki",
+			"lengthMenu": "Prikazi _MENU_ po stranici",
+			"paginate":{
+				"first":"Prvi",
+				"last":"Poslednji",
+				"next": "Sledeci",
+				"previous": "Prethodni"
+			}
+		}
 	})
+
 }
 
 
@@ -59,6 +86,56 @@ function insertElementIntoTable(id,element, _class)
 	part.innerHTML += element
 }
 
+function insertSearchIntoTable(id, search, func)
+{
+	let inputs = search.getInputs()
+	
+	let header = document.getElementById(id).getElementsByClassName("card-header")[0]
+	
+	header.innerHTML += "<br><br><form class='needs-validation' id='form_"+id+"'></form>"
+		
+	let form = header.getElementsByTagName("form")[0]
+	let rowCount = -1
+	for(let i = 0 ; i < inputs.length ; i++)
+	{
+		if(i == 0 || i % 4 == 0)
+		{
+			form.innerHTML += '<div class="form-group row"></div>'			
+			rowCount++
+		}
+		
+		let row = form.getElementsByClassName("form-group row")[rowCount]
+		row.innerHTML += "&nbsp&nbsp&nbsp" + inputs[i]
+			
+	}
+	
+	form.innerHTML += '<button class="btn btn-primary" type="button"><span>Trazi</span>&nbsp<span class="spinner-border spinner-border-sm"  style="display:none" role="status" aria-hidden="true"></span></button>'
+	
+	let loadedInputs = header.getElementsByTagName("input")
+	let loadedSelects = header.getElementsByTagName("select")
+
+	for(let i = 0 ; i < loadedInputs.length ; i++)
+	{
+		loadedInputs[i].style.width = "20%"
+	}
+	
+	for(let i = 0 ; i < loadedSelects.length ; i++)
+	{
+		loadedSelects[i].style.width = "20%"
+	}
+		
+	let button = form.getElementsByTagName("button")[0]
+	
+	button.addEventListener("click",function(e){
+		e.preventDefault()
+		
+		$('#table_'+id).DataTable().sort()
+
+
+		if(func != undefined)
+			func()
+	})
+}
 
 
 function setTableClickEvent(id, row, col, func)
@@ -148,4 +225,23 @@ function emptyTable(id)
 	}
 	
 	$('#table_'+id+' tbody').empty()
+}
+
+
+class TableSearch
+{
+	constructor()
+	{
+		this.inputs = []
+	}
+	
+	input(inpt)
+	{
+		this.inputs.push(inpt)
+	}
+	
+	getInputs()
+	{
+		return this.inputs
+	}
 }
