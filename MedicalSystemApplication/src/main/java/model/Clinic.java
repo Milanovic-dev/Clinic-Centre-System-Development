@@ -147,8 +147,30 @@ public class Clinic
 
 	public float calculateRating() {
 		// TODO Auto-generated method stub
-		Random r = new Random(42);
-		return r.nextFloat() * 10f;
+		List<ClinicReview> reviews = getReviews();
+		List<Integer> ratings = new ArrayList<Integer>();
+		float sum = 0;
+		
+		if(reviews.isEmpty())
+		{
+			return -1;
+		}
+		
+		for(ClinicReview cr : reviews)
+		{
+			if(cr.getRating() >= 0)
+			{
+				ratings.add(cr.getRating());
+			}
+		}
+		
+		for(Integer r : ratings)
+		{
+			sum = sum + r;
+		}
+		
+		 return sum = (Float) sum / ratings.size();
+
 	}
 
 }
