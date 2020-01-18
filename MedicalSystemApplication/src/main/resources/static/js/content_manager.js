@@ -84,7 +84,6 @@ function displayError(id,text)
 
 function validation(element, condition, errorMessage)
 {
-	console.log(element)
 	let elem
 	
 	if(isString(element))
@@ -102,13 +101,26 @@ function validation(element, condition, errorMessage)
 	
 	if(parent.children('.invalid-feedback').length == 0)
 	{
-		elem.after('<div class="invalid-feedback">'+errorMessage+'</div>')
+		if(errorMessage == ""){
+			elem.append('<div class="invalid-feedback">'+errorMessage+'</div>')
+		}
+		else
+		{
+			elem.after('<div class="invalid-feedback">'+errorMessage+'</div>')			
+		}
 	}
 	
 	
 	if(parent.children('.valid-feedback').length == 0)
 	{
-		elem.after('<div class="valid-feedback">Izgleda dobro!</div>')
+		if(errorMessage == "")
+		{
+			elem.append('<div class="valid-feedback">Izgleda dobro!</div>')
+		}
+		else
+		{
+			elem.after('<div class="valid-feedback">Izgleda dobro!</div>')			
+		}
 	}
 	
 	if(!condition)
@@ -125,6 +137,10 @@ function validation(element, condition, errorMessage)
 	}
 }
 
+
+function hideValidation(element){
+	
+}
 
 function hideView(id)
 {

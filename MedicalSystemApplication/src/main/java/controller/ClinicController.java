@@ -3,6 +3,7 @@ package controller;
 
 import dto.ClinicDTO;
 import dto.ClinicFilterDTO;
+import dto.ClinicReviewDTO;
 import dto.DoctorDTO;
 import dto.HallDTO;
 import dto.UserDTO;
@@ -252,6 +253,18 @@ public class ClinicController {
     	return new ResponseEntity<>(dtos,HttpStatus.OK);
     }
     
+    @PostMapping(value="/addReview/{name}")
+    public ResponseEntity<Void> addReview(@PathVariable("name") String name, @RequestBody ClinicReviewDTO dto)
+    {
+    	Clinic clinic = clinicService.findByName(name);
+    	
+    	if(clinic == null)
+    	{
+    		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    	}
+    	
+    	return new ResponseEntity<>(HttpStatus.OK);
+    }
     
     @PutMapping(value="/update/{name}")
     public ResponseEntity<Void> updateClinic(@PathVariable("name") String name,@RequestBody ClinicDTO dto)

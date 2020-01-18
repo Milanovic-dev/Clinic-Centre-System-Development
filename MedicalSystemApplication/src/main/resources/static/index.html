@@ -2,6 +2,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
 <script
   src="https://code.jquery.com/jquery-3.4.1.js"
   integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
@@ -12,9 +13,9 @@
 <link href="css/sb-admin.css" rel="stylesheet">
 <link href="css/grid.css" rel ="stylesheet">
 <link href="css/checkbox.css" rel="stylesheet">
-    <link href="css/calendar.css" rel="stylesheet">
+<link href="css/calendar.css" rel="stylesheet">
 
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css">
+ <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css">
 <script src="js/moment.js"></script>
 <link rel="stylesheet" href="css/custom.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -28,6 +29,7 @@
     <!-- dataTable -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.12/js/jquery.dataTables.min.js"></script>
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css">
+    
 <!-- SCRIPT ORDER NE MENJATI -->
 <script src="js/search_manager.js"></script>
 <script src="js/content_manager.js"></script>
@@ -41,18 +43,15 @@
 <link href="css/datepicker.min.css" rel="stylesheet" type="text/css">
 <script src="js/datepicker.min.js"></script>
 <script src="js/datepicker.en.js"></script>
-    <script type="text/javascript" src="https://unpkg.com/popper.js/dist/umd/popper.min.js"></script>
-    <script type="text/javascript" src="https://unpkg.com/tooltip.js/dist/umd/tooltip.min.js"></script>
+<script type="text/javascript" src="https://unpkg.com/popper.js/dist/umd/popper.min.js"></script>
+<script type="text/javascript" src="https://unpkg.com/tooltip.js/dist/umd/tooltip.min.js"></script>
 <!-- ! -->
 
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/css/bootstrap-select.css" />
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/bootstrap-select.min.js"></script>
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/css/bootstrap-select.css" />
-
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/bootstrap-select.min.js"></script>
-
-
-    <meta charset="ISO-8859-1">
+<meta charset="ISO-8859-1">
 <title>Index</title>
 </head>
 <body>
@@ -214,52 +213,26 @@
 </div> 
 <!-- KRAJ SEARCH MODAL -->
    
-   		<div class="card mb-3" id = "showClinicContainer" style="display:none">        
-          <div class="card-header">
-			Lista Klinika
-			<br><br>
-			<form>
-			<div class="form-group row">
-			&nbsp&nbsp&nbsp
-				<input class="form-control datepicker-here" data-language='en' style="width:20%" placeholder="Izaberite datum" id="clinicDatePick">
-				&nbsp&nbsp
-				<select class="form-control" style="width:20%" id="selectAppointmentType">
-					<option selected disabled>Tip pregleda</option>
-				</select>
-				&nbsp&nbsp
-				<input class="form-control" type="text" placeholder="Unesite adresu" style="width:20%" id="clinicAdressPick">
-				&nbsp&nbsp
-				<input class="form-control" type="number" placeholder="Unesite ocenu" style="width:20%" id="clinicRatingPick">
-			</div>
-				<button class="btn btn-primary" type="button" id="searchClinics"><span id="searchBtnText">Trazi</span>&nbsp<span class="spinner-border spinner-border-sm"  style="display:none" role="status" id="clinicSpinner"  aria-hidden="true"></span></button>				
-			</form>
-		   </div>
-          <div class="card-body">
-            <div class="table-responsive">
-              <table class="table table-bordered" id="tableClinics" width="100%" cellspacing="0">
-                <thead>               
-					<tr>					
-					<th scope="col">Ime Klinike</th>
-      				<th scope="col">Adresa</th>
-      				<th scope="col">Grad</th>
-      				<th scope="col">Drzava</th>
-      				<th scope="col">Opis</th>
-      				<th scope="col">Rejting</th>
-      				<th scope="col"> </th>
-					</tr>	
-									
-					</thead>
-					<tbody>             	
-                </tbody>
-              </table>
-            </div>
-          </div>
-          </div>
-          
-
-      <div class="card mb-3" id = "showUserContainer" style="display:none"></div>
-      <div class="card mb-3" id = "showPatientContainer" style="display:none"></div>
-      <div class="card mb-3" id = "showAppointmentContainerWithCheckBox" style="display:none"></div>
+   	  <div  id = "showClinicContainer" style="display:none"></div>        
+      <div  id = "showUserContainer" style="display:none"></div>
+      <div  id = "showPatientContainer" style="display:none"></div>
+      <div  id = "showAppointmentContainerWithCheckBox" style="display:none"></div>
+      
+      <div class="container-fluid" id="MedicalRecordContainer">
+  			<p class="text-muted" id="insuranceMR"></p>
+  			<p class="font-weight-light">Osnovni podaci</p>
+  			<div class="row mb-3" id="basicData">
+    			<div class="col-4 themed-grid-col" id="height">Visina: 195</div>
+    			<div class="col-4 themed-grid-col" id="weight">Tezina: 95</div>
+    			<div class="col-4 themed-grid-col" id="bloodType">Krvna grupa: O+</div>
+  			</div>
+  			<p class="font-weight-light">Alergije</p>
+  			<div class="row mb-3" id="alergies"> 			
+  			</div>	
+  			<div class="row">
+  				<div class="col-12 themed-grid-col" id="history"></div>
+  			</div>		
+  		</div>
        
           
      <div class="container" id="showAppointmentRequestsPatient" style="display:none">
@@ -301,7 +274,7 @@
           <br>
       </div>
 
-	<div class="container" id="preAppointmentContainer" style="display:none">
+	<div id="preAppointmentContainer" style="display:none">
 		
 	</div>
   
@@ -1166,23 +1139,11 @@
 </div>
 <!-- -----------------------KRAJ MODALA ZA KALENDAR------------------------ -->
 
-  		<div class="container-fluid" id="MedicalRecordContainer">
-  			<p class="text-muted" id="insuranceMR"></p>
-  			<p class="font-weight-light">Osnovni podaci</p>
-  			<div class="row mb-3" id="basicData">
-    			<div class="col-4 themed-grid-col" id="height">Visina: 195</div>
-    			<div class="col-4 themed-grid-col" id="weight">Tezina: 95</div>
-    			<div class="col-4 themed-grid-col" id="bloodType">Krvna grupa: O+</div>
-  			</div>
-  			<p class="font-weight-light">Alergije</p>
-  			<div class="row mb-3" id="alergies">
-    			
-  			</div>
-  		</div>
+  		
    
   </div>
 
-          
+	       
   </div>
   <!-- /#wrapper -->
 

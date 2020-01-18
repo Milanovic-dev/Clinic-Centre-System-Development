@@ -45,6 +45,8 @@ public class PrescriptionController {
 
         return new ResponseEntity<>(prescriptionsDTO,HttpStatus.OK);
     }
+    
+   
 
     @PutMapping(value = "/validate/{email}")
     public ResponseEntity<Void> confirmRegister(@RequestBody PrescriptionDTO dto, @PathVariable("email") String email)

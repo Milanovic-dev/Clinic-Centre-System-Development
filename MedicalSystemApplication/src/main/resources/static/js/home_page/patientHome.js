@@ -25,13 +25,37 @@ function initPatient(user)
 	addView('preAppointmentContainer')
 	addView('showAppointmentsPatient')
 	
+	createClinicTable()
 	createBreadcrumb()
     createChooseDoctorTable()
     createPreAppointmentsTable()
     createAppointmentsTable()
-	
+    createHistoryTable()
 	setUpPatientPage(user)
 }
+
+
+function createClinicTable()
+{
+	let headers = ["Ime Klinike","Adresa","Grad","Drzava","Opis","Rejting",""]
+	createDataTable("clinicTable","showClinicContainer","Lista klinika",headers,0)
+		
+	let search = new TableSearch()
+	search.input('<input class="form-control datepicker-here" data-language="en" placeholder="Izaberite datum" id="clinicDatePick" readonly="true">')
+	search.input('<select class="form-control" id="selectAppointmentType"><option selected disabled>Tip pregleda</option></select>')
+	search.input('<input class="form-control" type="text" placeholder="Unesite adresu" id="clinicAdressPick">')
+	search.input('<input class="form-control" type="number" placeholder="Unesite ocenu" id="clinicRatingPick">')
+	
+	insertSearchIntoTable("clinicTable",search,function(){
+		
+		let picker = $('#clinicDatePick').val()
+    	getClinics(picker)
+    	
+	})
+	
+	 getTableDiv('clinicTable').show()
+}
+
 
 function createChooseDoctorTable()
 {
@@ -46,6 +70,13 @@ function createPreAppointmentsTable()
 {
 	let headers = ['Datum','Termin','Sala','Doktor','Tip pregleda','Cena','']
 	createDataTable('preAppTable',"preAppointmentContainer","Unapred definisani pregledi",headers,0)
+	
+	let ts = new TableSearch()
+	ts.input('<input class="form-control" type="text" placeholder="Unesite adresu" style="width:20%" >')
+	ts.input('<input class="form-control" type="text" placeholder="Unesite adresu" style="width:20%" >')
+	ts.input('<input class="form-control" type="text" placeholder="Unesite adresu" style="width:20%">')
+	insertSearchIntoTable("preAppTable",ts)
+	//insertTableInto("preAppointmentContainer",handle)
 	getTableDiv('preAppTable').show()
 }
 
@@ -55,6 +86,14 @@ function createAppointmentsTable()
 	let handle = createTable('patientAppsTable',"Zakazani pregledi",headers)
 	insertTableInto('showAppointmentsPatient',handle)
 	getTableDiv('patientAppsTable').show()
+}
+
+
+function createHistoryTable()
+{
+	let headers = ['Datum','Klinika','Doktor/i','Pacijent','Razlog pregleda','Dijagnoza','Recepti']
+	createDataTable("historyTable","history","Istorija pregleda/operacija",headers,0)
+	getTableDiv("historyTable").show()
 }
 
 function createBreadcrumb()
@@ -111,7 +150,6 @@ function setUpPatientPage(user)
 	
 	
 	
-	
 	var start = new Date(),
         prevDay,
         startHours = 9;
@@ -146,14 +184,6 @@ function setUpPatientPage(user)
 		
 		setPreAppointmentsTable()
 	})
-	
-	
-    $('#searchClinics').click(function(e){
-    	e.preventDefault()
-    	
-    	let picker = $('#clinicDatePick').val()
-    	getClinics(picker)
-    })
 	
 	
 	$('#medicalRecord').click(function(e){
@@ -191,6 +221,9 @@ function setAppointmentsTable()
 		complete: function(data)
 		{
 			let apps = data.responseJSON
+			
+			if(apps.length == 0) return
+			
 			emptyTable('patientAppsTable')
 			index = 0;
 			for(let app of apps)
@@ -220,6 +253,9 @@ function setPreAppointmentsTable()
 		complete: function(data)
 		{
 			let apps = data.responseJSON
+			
+			if(apps.length == 0) return
+			
 			emptyTable('preAppTable')
 			index = 0;
 			for(let app of apps)
@@ -276,12 +312,7 @@ function list_preApp(data,i,user)
 
 async function getClinics(date)
 {	
-	$('#tableClinics tbody').empty()
-	$('#searchClinics').attr('disabled',true)
-	$('#searchBtnText').text("Trazi...")
-	$('#clinicSpinner').show()
-	await sleep(1000)
-	
+
 	let address = $('#clinicAdressPick').val()
 	let rating = $('#clinicRatingPick').val()
 	
@@ -297,15 +328,16 @@ async function getClinics(date)
 		complete: function(data)
 		{
 			let clinics = data.responseJSON
+					
 			let i = 0
 			$('#clinicSpinner').hide()
 			$('#searchClinics').removeAttr('disabled')
 			$('#searchBtnText').text("Trazi")
 			
-			$('#tableClinics tbody').empty()
+			emptyTable('clinicTable')
 			for(let c of clinics)
 			{
-				p_listClinic(c,i,user)
+				p_listClinic(c,i,user)					
 				i++
 			}
 		}
@@ -323,10 +355,16 @@ function makeMedicalRecord(data,user)
 	let alergies = data.alergies
 	$('#alergies').empty()
 	for(let al of alergies)
-	{
-		
+	{	
 		$('#alergies').append("<div class='col-4 themed-grid-col' >"+al+"</div>")	
 	}
+	
+	setHistoryTable()
+}
+
+function setHistoryTable()
+{
+	
 }
 
 
@@ -382,17 +420,9 @@ function p_listRequest(req,i)
 
 function p_listClinic(data,i,user)
 {
-	let tr=$('<tr></tr>');
-	let tdName=$('<td>'+ data.name +'</td>');
-	let tdAdress = $('<td>'+ data.address +'</td>');
-	let tdCity = $('<td>'+ data.city +'</td>');
-	let tdState = $('<td>'+ data.state +'</td>');
-	let tdDesc = $('<td>'+ data.description +'</td>');
-	let tdRating = $('<td>'+ data.rating +'</td>');
-	let tdAppointment = $('<td><button type="button" class="btn btn-primary" id = "makeAppointment_btn'+i+'">Zakazi pregled</button></td>')
-		
-	tr.append(tdName).append(tdAdress).append(tdCity).append(tdState).append(tdDesc).append(tdRating).append(tdAppointment);
-	$('#tableClinics tbody').append(tr);
+
+	let d = [data.name, data.address, data.city, data.state, data.description, data.rating,'<td><button type="button" class="btn btn-primary" id = "makeAppointment_btn'+i+'">Zakazi pregled</button></td>']
+	insertTableData('clinicTable',d)
 		
 	$('#makeAppointment_btn'+i).off('click')
 	$('#makeAppointment_btn'+i).click(function(e){
@@ -414,7 +444,7 @@ function p_listClinic(data,i,user)
 				let doctors = data.responseJSON
 				
 				let index = 0
-				$('#tableDoctorsActive tbody').empty()
+				emptyTable('chooseDoctorTable')
 				for(let d of doctors)
 				{
 					console.log(d)
@@ -457,7 +487,7 @@ function p_listClinic(data,i,user)
 					}
 					
 					showView('detailsAppointmentContainer')
-					emptyTable('chooseDoctorTable')
+					$('#tableDoctorsDisabled tbody').empty()
 					for(let d of doctorsSelected)
 					{
 						p_listDoctorDisabled(d,index,doctors.length);
@@ -481,6 +511,12 @@ function p_listClinic(data,i,user)
 					for(let d of doctorsSelected)
 					{
 						doctorArray.push(d.user.email)
+					}
+					
+					let timeInput = $('#inputStartTime')
+					if(!validation(timeInput, time == "", "Morate izabrati vreme"))
+					{
+						return
 					}
 					
 					let json = JSON.stringify({"date":date+" "+time,"clinicName":clinicName,"patientEmail":patientEmail,"doctors":doctorArray,"typeOfExamination":typeOfExamination,"type":"Examination"})
