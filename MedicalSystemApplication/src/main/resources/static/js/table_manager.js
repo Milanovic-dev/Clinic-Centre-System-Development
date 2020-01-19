@@ -49,12 +49,13 @@ function createDataTable(id,div,name,headers,orderBy)
 	{
 		"order":[[orderBy,"desc"]],
 		"language": {
+			"info": "Prikazano od _START_ do _END_ od _TOTAL_ stavki",
+			"infoEmpty": "Prikazano od 0 do 0 od 0 stavki",
 			"search": "Filter:",
 			"loadingRecords": "&nbsp;",
             "processing": "<div class='spinner'></div>",
-			"zeroRecords": "Nema stavki.",
-			"emptyTable" : "Nema stavki.",
-			"info": "Prikazano od _START_ do _END_ od _TOTAL_ stavki",
+			"zeroRecords": "Trenutno ne postoje stavke.",
+			"emptyTable" : "Trenutno ne postoje stavke.",
 			"lengthMenu": "Prikazi _MENU_ po stranici",
 			"paginate":{
 				"first":"Prvi",
