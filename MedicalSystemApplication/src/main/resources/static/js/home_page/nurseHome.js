@@ -2,7 +2,24 @@
  *
  */
 //ULAZNA FUNKCIJA
+var nurseClinic = null;
+
 function initNurse(user)
+{
+	$.ajax({
+		type: 'GET',
+		url: 'api/clinic/getNurse/' + user.email,
+		complete: function(data)
+		{
+			nurseClinic = data.responseJSON
+			setUpPageNurse()
+		}
+		
+	})
+}
+
+
+function setUpPageNurse()
 {
 	let sideBar = $("#sideBar")
 	sideBar.append("<li class='nav-item active'><a class='nav-link' href='userProfileNew.html'><span id='profileUser'>Profil</span></a></li>")
@@ -15,6 +32,41 @@ function initNurse(user)
     addView('showCalendarContainer')
     addView('showPatientsContainer')
     addView('showPrescriptionAuthContainer')
+
+    let patientSearch = new TableSearch()
+	patientSearch.input("<input class='form-control' type='text' placeholder='Ime pacijenta' id='patientNameLabelNurse'>")
+	patientSearch.input("<input class='form-control' type='text' placeholder='Prezime pacijenta' id='patientSurnameLabelNurse'>")
+	patientSearch.input("<input class='form-control' type='text' placeholder='Broj osiguranika' id='patientIdLabelNurse'>")
+    
+	let headersPatients = ["Ime","Prezime","Email","Telefon","Adresa","Grad","Drzava","Broj zdravstvenog osiguranja"]
+	createDataTable("listPatientsTable","showPatientsContainer","Lista pacijenata",headersPatients,0)
+	getTableDiv("listPatientsTable").show()
+	
+		insertSearchIntoTable("listPatientsTable",patientSearch,function(){
+		pname = $('#patientNameLabelNurse').val()
+		psurname = $('#patientSurnameLabelNurse').val()
+		pid = $('#patientIdLabelNurse').val()
+		let json = JSON.stringify({"name": pname,"surname": psurname,"insuranceId":pid })
+		$.ajax({
+			type: 'POST',
+			url: 'api/clinic/getPatientsByFilter/' + nurseClinic.name,
+			data: json,
+			dataType: "json",
+			contentType : "application/json; charset=utf-8",
+			complete: function(data)
+			{
+				let patients = data.responseJSON
+				emptyTable("listPatientsTable")
+				for(p of patients)
+				{
+					listPatientNurse(p)
+					
+				}
+			}
+			
+		})
+		
+	})
 
     var bc1 = new BreadLevel()
     bc1.append('Lista pacijenata')
@@ -32,7 +84,6 @@ function initNurse(user)
     
 	pageSetUp(user)
   //  initCalendar(user)
-    initTable(user)
     getPrescriptions(user)
 
 }
@@ -41,8 +92,6 @@ function initNurse(user)
 
 function pageSetUp(user)
 {
-
-
 
 	$("#patientList").click(function(e){
 		e.preventDefault()
@@ -209,40 +258,13 @@ function pageSetUp(user)
 //
 //}
 
-function initTable(user){
-
-$.ajax({
-			type: 'GET',
-			url:"api/users/getAll/Patient",
-			complete: function(data)
-			{
-				let patients = data.responseJSON
-                for(p of patients){
-                console.log(p)
-                }
-				$('#tablePatients').DataTable( {
-                        data: patients,
-                        columns: [
-                            { data: "name" },
-                            { data: "surname" },
-                            { data: "address" },
-                            { data: "city" },
-                            { data: "state" },
-                            { data: "phone" },
-                            { data: "email" },
-                            { data: "insuranceId" }
-                        ]
-                    } );
-
-//                    $('#tablePatients_length').hide()
-                      $('#tablePatients_info').hide()
-//                    $('#tablePatients_length').hide()
-
-			}
-
-		})
-
+function listPatientNurse(data)
+{
+	let d = [data.name,data.surname,getProfileLink(data.email),data.phone,data.address,data.city,data.state,data.insuranceId]
+	insertTableData("listPatientsTable",d)
 }
+
+
 
 function getPrescriptions(user){
 

@@ -10,9 +10,14 @@
   src="https://code.jquery.com/jquery-3.4.1.js"
   integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
   crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+  
+  <!-- dataTable -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.12/js/jquery.dataTables.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css">
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 <script src="js/profile_manager.js"></script>
 <script src ="js/navbar.js"></script>
+<script src ="js/table_manager.js"></script>
 <script src="js/profile.js"></script>
 <link rel = "stylesheet" href="css/profile.css">
 <link rel="stylesheet" href="css/custom.css">
@@ -54,7 +59,26 @@
     </header>
 
 <!---------------------------------------NAVBAR END---------------------------------------->
-
+<!-- ----LISTA ZAKAZANIH PREGLEDA MODAL(LEKAR)-------- -->
+<div class="modal fade" id="allAppointmentsModal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-xl" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="allAppointmentsModalLabel"></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" id="appointmentsModalBody">
+        
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal">Zatvori</button>
+      </div>
+    </div>
+  </div>
+</div> 
+<!-- ----KRAJ LISTA ZAKAZANIH PREGLEDA MODAL(LEKAR)----- -->
 <div class = "prikaz">
 	<div class="container emp-profile">
 	<h2>Profil korisnika</h2>
@@ -86,6 +110,8 @@
                             <p id = "pRole"></p>
                             <a href="profileChange.html" id ="profileChange_btn">Izmeni profil</a><br/>
                             <a href="passwordChange.html" id="profileChangePassword_btn">Izmeni sifru</a><br/>
+                            <a href="medicalRecord.html" id="medicalRecord_btn">Zdravstveni karton</a><br/>
+                            <a data-toggle="modal" href="#allAppointmentsModal" id="startExamination_btn">Zapocni pregled</a><br/>
                             <a href="" hidden>Radni kalendar</a><br/>
                             <a href="" hidden>Zahtev za odustvo</a><br/>
                             <a href="" hidden>Zakazivanje pregleda</a><br/>

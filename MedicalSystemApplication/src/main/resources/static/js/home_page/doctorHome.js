@@ -6,7 +6,19 @@ var doctorClinic = null
 
 function initDoctor(user)
 {
-
+	  $.ajax({
+			type: 'GET',
+			url:"api/doctors/getClinic/" + user.email,
+			complete: function(data)
+			{
+				doctorClinic = data.responseJSON
+				setUpPageDoctor()
+				//findPatients(data)
+			}
+	})
+}
+function setUpPageDoctor()
+{
 	let sideBar = $("#sideBar")
 	sideBar.append("<li class='nav-item active'><a class='nav-link' href='userProfileNew.html'><span id='profileUser'>Profil</span></a></li>")
 	sideBar.append("<li class='nav-item active'><a class='nav-link' href='index.html'><span id='pacientList'>Lista pacijenata</span></a></li>")
@@ -37,44 +49,44 @@ function initDoctor(user)
     var bc4 = new BreadLevel()
 
     initBreadcrumb([bc1,bc2,bc3])
-
-    createSearch({
-		id: "patientSearch",
-		header: "Pretraga pacijenata",
-		inputs: ["name" , "surname" , "insuranceId"],
-		labels: ["Unesite ime: ","Unesite prezime: " , "Unesite jedinstveni broj osiguranika"],
-		onSubmit: function(json)
-		{
-
-			let d = JSON.stringify(json)
-			$.ajax({
-				type:'POST',
-				url:"api/clinic/getPatientsByFilter/" + doctorClinic.name,
-				data: d,
-				dataType : "json",
-				contentType : "application/json; charset=utf-8",
-				complete: function(data)
-				{
-					patients = data.responseJSON
-					i = 0
-					emptyTable("listPatientTable")
-					for(p of patients)
-					{
-						listPatient(p,i)
-						i++
-					}
-				}
-			})
-		}
-
-	})
-
-
+    
+    
+    
+    let patientSearch = new TableSearch()
+	patientSearch.input("<input class='form-control' type='text' placeholder='Ime pacijenta' id='patientNameLabel'>")
+	patientSearch.input("<input class='form-control' type='text' placeholder='Prezime pacijenta' id='patientSurnameLabel'>")
+	patientSearch.input("<input class='form-control' type='text' placeholder='Broj osiguranika' id='patientIdLabel'>")
+    
 	let headersPatients = ["Ime","Prezime","Email","Telefon","Adresa","Grad","Drzava","Broj zdravstvenog osiguranja"]
 	createDataTable("listPatientTable","showPatientContainer","Lista pacijenata",headersPatients,0)
 	getTableDiv("listPatientTable").show()
-	insertElementIntoTable("listPatientTable","&nbsp&nbsp<button class='btn btn-primary' onClick={showSearch('patientSearch')}>Pretraga</button>","card-header")
-
+	
+	insertSearchIntoTable("listPatientTable",patientSearch,function(){
+		pname = $('#patientNameLabel').val()
+		psurname = $('#patientSurnameLabel').val()
+		pid = $('#patientIdLabel').val()
+		let json = JSON.stringify({"name": pname,"surname": psurname,"insuranceId":pid })
+		$.ajax({
+			type: 'POST',
+			url: 'api/clinic/getPatientsByFilter/' + doctorClinic.name,
+			data: json,
+			dataType: "json",
+			contentType : "application/json; charset=utf-8",
+			complete: function(data)
+			{
+				let i = 0
+				let patients = data.responseJSON
+				emptyTable("listPatientTable")
+				for(p of patients)
+				{
+					listPatient(p,i)
+					i++
+				}
+			}
+			
+		})
+		
+	})
 
 	let headersApps = ["Datum","Pacijent","Doktori","Klinika","Sala","Tip pregleda","Tip zakazivanja"]
 	createDataTable("listAppointmentTable","showAppointmentContainerWithCheckBox","Zakazani pregledi",headersApps,0)
@@ -84,12 +96,14 @@ function initDoctor(user)
     let handle = createTable("historyTable","Istorija bolesti",historyHeaders)
     insertTableInto("updateMedicalRecordContainer",handle)
     getTableDiv("historyTable").show()
-
+    
+    
 	$('#pacientList').click(function(e){
 		e.preventDefault()
 		showView("showPatientContainer")
         showBread('Lista pacijenata')
-
+        
+    /*
         $.ajax({
 			type: 'GET',
 			url:"api/doctors/getClinic/" + user.email,
@@ -99,8 +113,10 @@ function initDoctor(user)
 				findPatients(data)
 			}
 	})
+	*/
 
 	})
+	
 
 	$('#examinationStart').click(function(e){
 		e.preventDefault()
@@ -194,6 +210,14 @@ function initDoctor(user)
         $(this).parents('tr').detach();
      });
 
+    if(getParameterByName("startExam") != undefined)
+    {
+    	setUpCodebooks()
+        showBread('Pregled u toku')
+        showView("showExaminationContainer")
+    	getAppointment(doctorClinic.name,getParameterByName("date"),getParameterByName("hall"),user)
+    }
+    
 
 }
 
@@ -359,7 +383,7 @@ function listAppointmentWithCheckBox(data,i,appCount,user)
 
 function listPatient(data,i)
 {
-	let d = [data.name,data.surname,data.email,data.phone,data.address,data.city,data.state,data.insuranceId]
+	let d = [data.name,data.surname,getProfileLink(data.email),data.phone,data.address,data.city,data.state,data.insuranceId]
 	insertTableData("listPatientTable",d)
 }
 

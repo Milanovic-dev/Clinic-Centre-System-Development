@@ -719,8 +719,7 @@ function listTypesOfExamination(t,i,clinic)
 			let typeOfExamPrice = $('#typeOfExaminationPrice_input').val()
 			let data = JSON.stringify({"clinicName":clinic.name,"typeOfExamination" : typeOfExam,"price" : typeOfExamPrice})
 			
-			console.log(typeOfExam)
-			console.log(typeOfExamPrice)
+		
 			$.ajax({
 				type:'PUT',
 				url: 'api/priceList/update/' + t.typeOfExamination,
