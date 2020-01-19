@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+<script
+  src="https://code.jquery.com/jquery-3.4.1.js"
+  integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+  crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.12/js/jquery.dataTables.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css">
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+<link href="css/sb-admin.css" rel="stylesheet">
+<link href="css/grid.css" rel ="stylesheet">
+<script src="js/search_manager.js"></script>
+<script src="js/content_manager.js"></script>
+<script src="js/table_manager.js"></script>
+<script src="js/profile_manager.js"></script>
+<script src ="js/navbar.js"></script>
+<script src="js/medicalRecord.js"></script>
+<link rel = "stylesheet" href="css/profile.css">
+<link rel="stylesheet" href="css/custom.css">
+<meta charset="ISO-8859-1">
+<title>Zdravstveni Karton</title>
+</head>
+<body>
+
+<header>
+    	<nav class="navbar navbar-expand navbar-dark bg-dark">
+    	<a class="navbar-brand" href="#">
+    		<img src="images/logo.png" width="30" height="30" alt="">
+  		</a>
+         <a class="navbar-brand" href="index.html">Klinicki Centar</a>
+         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+         	<span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+           	<ul class="navbar-nav mr-auto"></ul>
+                <form class="form-inline my-2 my-lg-0" id="log_buttons" hidden="true">
+                    <button type="button" class="btn btn-primary" id = "navbar_prijava_btn">Prijava</button>
+                    &nbsp&nbsp
+                    <button type="button" class="btn btn-light" id = "navbar_registracija_btn">Registracija</button>
+                </form>
+        		<form class="form-inline my-2 my-lg-0" id="drop_down_menu" hidden="true">
+        			<span class="navbar-text" id="welcome-text"></span>
+        			&nbsp&nbsp
+              		<div class="btn-group">
+              		<button class="btn btn-warning" id="admin_btn">Admin</button>
+  						<button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
+  					<div class="dropdown-menu dropdown-menu-lg-right">
+    					<a class="dropdown-item" href="userProfileNew.html">Profil</a>
+    				<div class="dropdown-divider"></div>
+    					<a class="dropdown-item" href="index.html" id="dropdown-item_logout">Odjavi se</a>
+  					</div>
+					</div> 					
+                </form>
+              </div>
+         </nav>
+    </header>
+    
+    <!-- BODY CONTAINER -->
+    
+    <div class = "prikaz">
+	<div class="container emp-profile">
+    <div class="container-fluid" id="MedicalRecordContainer">
+    		<h2>Medicinski Karton</h2>
+    		<p id="userGmail" class="font-weight-light">Gmail:</p>
+    		<p id="userName" class="font-weight-light">Ime: </p>
+    		<p id="userSurname" class="font-weight-light">Prezime: </p>
+  			<p class="text-muted" id="insuranceMR"></p>
+  			<p class="font-weight-light">Osnovni podaci</p>
+  			<div class="row mb-3" id="basicData">
+    			<div class="col-4 themed-grid-col" id="height">Visina: 195</div>
+    			<div class="col-4 themed-grid-col" id="weight">Tezina: 95</div>
+    			<div class="col-4 themed-grid-col" id="bloodType">Krvna grupa: O+</div>
+  			</div>
+  			<p class="font-weight-light">Alergije</p>
+  			<div class="row mb-3" id="alergies"> 			
+  			</div>	
+			<br>
+  			<div class="row">
+  				<div class="col-12 themed-grid-col" id="history"></div>
+  			</div>		
+  		</div>
+  		<br>
+  		<a href="index.html">Nazad na pocetnu</a>
+	</div>
+</div>
+	<!-- BODY CONTAINER END -->
+
+</body>
+</html>

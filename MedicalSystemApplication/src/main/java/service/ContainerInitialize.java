@@ -1,10 +1,12 @@
 package service;
 
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.List;
 
 import javax.annotation.PostConstruct;
 
@@ -92,6 +94,7 @@ public class ContainerInitialize {
 			patient.getMedicalRecord().setHeight("195cm");
 			patient.getMedicalRecord().setWeight("85kg");
 			patient.getMedicalRecord().setPatient(patient);
+					
 
 			Patient patient2 = new Patient.Builder("patient1@gmail.com")
 					.withPassword(hash)
@@ -305,8 +308,11 @@ public class ContainerInitialize {
 			prescription3.setDescription("terapijaaaaa a a a a a ");
 
 			prescriptionRepository.save(prescription3);
-
 			
+			Diagnosis d1 = new Diagnosis("123","tag","name");
+			List<Diagnosis> listDiag = new ArrayList<>();
+			listDiag.add(d1);
+					
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

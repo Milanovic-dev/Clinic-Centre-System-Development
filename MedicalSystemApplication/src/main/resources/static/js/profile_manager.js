@@ -25,6 +25,7 @@ function getProfileFromURL(done)
 		
 	})
 }
+
 function validationError(id, errorMessage)
 {
 	if($('#' + id).next('.invalid-feedback').length <= 0)
