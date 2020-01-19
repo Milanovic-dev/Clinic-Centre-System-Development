@@ -6,6 +6,11 @@ function getPageURLWithUser(page, email)
 	return page + ".html?u=" + email
 }
 
+function getProfileLink(email)
+{
+	return "<a href = '" + getPageURLWithUser("userProfileNew",email)+ "'>" + email + "</a>";
+}
+
 function getProfileFromURL(done)
 {
 	let url = window.location.href

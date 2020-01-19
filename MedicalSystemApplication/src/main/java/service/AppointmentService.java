@@ -81,9 +81,39 @@ public class AppointmentService {
 		return appointmentRepository.findAllByDoctor(doctorID);
 	}
 	
+	public List<Appointment> findAllByDoctorAndPatient(Doctor d,Patient p)
+	{
+		List<Appointment> apps = appointmentRepository.findAllByClinic(d.getClinic());
+		List<Appointment> ret = new ArrayList<Appointment>();
+		for(Appointment app : apps)
+		{
+			List<Doctor> doctors = app.getDoctors();
+			
+			if(app.getPatient() == null )
+			{
+				continue;
+			}
+			
+			if(!app.getPatient().getEmail().equalsIgnoreCase(p.getEmail()))
+			{
+				continue;
+			}
+
+			for(Doctor doc : doctors)
+			{
+				if(doc.getEmail().equalsIgnoreCase(d.getEmail()))
+				{
+					ret.add(app);
+				}
+			}
+		}
+		
+		return ret;
+	}
+	
 	public List<Appointment> findAllByDoctor(Doctor d)
 	{
-		List<Appointment> apps = appointmentRepository.findAll();
+		List<Appointment> apps = appointmentRepository.findAllByClinic(d.getClinic());
 		List<Appointment> ret = new ArrayList<Appointment>();
 		for(Appointment app : apps)
 		{

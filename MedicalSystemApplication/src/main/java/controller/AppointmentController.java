@@ -77,6 +77,40 @@ public class AppointmentController
 		
 		return new ResponseEntity<>(new AppointmentDTO(appointment),HttpStatus.OK);
 	}
+	
+	@GetMapping(value="/getAppointments/{doctorEmail}/{patientEmail}")
+	public ResponseEntity<List<AppointmentDTO>> getAppointmentsByPatient(@PathVariable("doctorEmail") String doctorEmail,@PathVariable("patientEmail") String patientEmail )
+	{
+		Patient p = (Patient) userService.findByEmailAndDeleted(patientEmail, false);
+		Doctor d = (Doctor) userService.findByEmailAndDeleted(doctorEmail, false);
+		
+		
+		if(p == null )
+		{
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND); 
+		}
+		
+		if(d == null)
+		{
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND); 
+		}
+		
+		List<Appointment> app = appointmentService.findAllByDoctorAndPatient(d, p);
+		List<AppointmentDTO> appDTO = new ArrayList<AppointmentDTO>();
+		
+		if(app == null)
+		{
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND); 
+		}
+		
+		for(Appointment a : app)
+		{
+			appDTO.add(new AppointmentDTO(a));
+		}
+		
+		return new ResponseEntity<List<AppointmentDTO>>(appDTO,HttpStatus.OK);
+		
+	}
 
 	@GetMapping(value="/getAppointment/{clinicName}/{date}/{hallNumber}")
 	public ResponseEntity<AppointmentDTO> getApp(@PathVariable("clinicName") String clinic, @PathVariable("date") String date,

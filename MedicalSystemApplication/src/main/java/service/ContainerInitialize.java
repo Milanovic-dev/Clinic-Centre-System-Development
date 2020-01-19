@@ -272,6 +272,7 @@ public class ContainerInitialize {
 					.build();
 			
 			nurse.setIsFirstLog(false);
+			nurse.setClinic(clinic);
 			userRepository.save(nurse);
 
 			userRepository.save(doctor1);

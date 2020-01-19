@@ -15,6 +15,7 @@ import filters.PatientFilter;
 import model.Appointment;
 import model.Clinic;
 import model.Doctor;
+import model.Nurse;
 import model.Patient;
 import model.RegistrationRequest;
 import helpers.DateUtil;
@@ -83,6 +84,23 @@ public class ClinicController {
 
 
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+    
+    @GetMapping(value = "/getNurse/{emailNurse}")
+    public ResponseEntity<ClinicDTO> getClinicFromNurse(@PathVariable("emailNurse") String emailNurse)
+    {
+    	Nurse n = (Nurse) userService.findByEmailAndDeleted(emailNurse,false);
+		
+		if(n == null)
+		{
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+		}
+		
+		
+		ClinicDTO dto = new ClinicDTO(n.getClinic());
+		return new ResponseEntity<>(dto,HttpStatus.OK);
+
     }
     
     @GetMapping(value = "/getAll")
@@ -205,13 +223,17 @@ public class ClinicController {
     	{
     		System.out.println("Nema pregleda u toj klinici");
     		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-
     	}
     	
     	
     	for(Appointment app: appointments)
     	{   	
     		Patient p = app.getPatient();
+    		
+    		if(p == null)
+    		{
+    			continue;
+    		}
     		
     		if(!ListUtil.getInstance().containsWithEmail(ret, p.getEmail()))
     		{

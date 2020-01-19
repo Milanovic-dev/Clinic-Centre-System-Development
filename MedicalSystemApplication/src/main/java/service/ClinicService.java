@@ -23,6 +23,7 @@ public class ClinicService {
     public Clinic findByDoctor(Doctor d) {
         return clinicRepository.findByDoctors(d);
     }
+    
 
     public void save(Clinic clinic)
     {
