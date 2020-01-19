@@ -192,17 +192,14 @@ public class UserController
 	public ResponseEntity<MedicalRecordDTO> getMedicalRecord(@PathVariable("email")String email)
 	{
 		Patient patient = (Patient)userService.findByEmailAndDeleted(email,false);
-		System.out.println(patient.getEmail()+" " +patient.getMedicalRecord().getHeight()+"***************************PACIJENT****************************************");
 		if(patient == null)
 		{
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 
 		MedicalRecord mr = medicalRecordService.findByPatient(patient);
-		System.out.println(mr.getReports() + " " + mr.getAlergies() + mr.getBloodType() + mr.getHeight() + mr.getWeight() + "***********RECORD*********************************************");
 		MedicalRecordDTO dto = new MedicalRecordDTO(mr);
 
-		System.out.println(dto.getHeight()+dto.getWeight()+dto.getBloodType()+dto.getAlergies()+dto.getReports()+"********************DTO************************************");
 		return new ResponseEntity<>(dto,HttpStatus.OK);
 	}
 	

@@ -15,7 +15,7 @@ function initPatient(user)
 	sideBar.append("<li class='nav-item active'><a class='nav-link' type='button'><span id='preApps'>Unapred definisani pregledi</span></a></li>")
 	sideBar.append("<li class='nav-item active'><a class='nav-link' type='button'><span id='Apps'>Pregledi</span></a></li>")
 	sideBar.append("<li class='nav-item active'><a class='nav-link' type='button'><span id='appRequests'>Pregledi na cekanju</span></a></li>")	
-	sideBar.append("<li class='nav-item active'><a class='nav-link' type='button'><span id='medicalRecord'>Zdravstveni karton</span></a></li>")	
+	sideBar.append("<li class='nav-item active'><a class='nav-link' type='button' href='medicalRecord.html'><span id='medicalRecord'>Zdravstveni karton</span></a></li>")	
 	
 	addView('showClinicContainer')
 	addView('MedicalRecordContainer')
@@ -30,8 +30,7 @@ function initPatient(user)
     createChooseDoctorTable()
     createPreAppointmentsTable()
     createAppointmentsTable()
-    createHistoryTable()
-	setUpPatientPage(user)
+    setUpPatientPage(user)
 }
 
 
@@ -70,13 +69,6 @@ function createPreAppointmentsTable()
 {
 	let headers = ['Datum','Termin','Sala','Doktor','Tip pregleda','Cena','']
 	createDataTable('preAppTable',"preAppointmentContainer","Unapred definisani pregledi",headers,0)
-	
-	let ts = new TableSearch()
-	ts.input('<input class="form-control" type="text" placeholder="Unesite adresu" style="width:20%" >')
-	ts.input('<input class="form-control" type="text" placeholder="Unesite adresu" style="width:20%" >')
-	ts.input('<input class="form-control" type="text" placeholder="Unesite adresu" style="width:20%">')
-	insertSearchIntoTable("preAppTable",ts)
-	//insertTableInto("preAppointmentContainer",handle)
 	getTableDiv('preAppTable').show()
 }
 
@@ -88,13 +80,6 @@ function createAppointmentsTable()
 	getTableDiv('patientAppsTable').show()
 }
 
-
-function createHistoryTable()
-{
-	let headers = ['Datum','Klinika','Doktor/i','Pacijent','Razlog pregleda','Dijagnoza','Recepti']
-	createDataTable("historyTable","history","Istorija pregleda/operacija",headers,0)
-	getTableDiv("historyTable").show()
-}
 
 function createBreadcrumb()
 {
@@ -184,25 +169,7 @@ function setUpPatientPage(user)
 		
 		setPreAppointmentsTable()
 	})
-	
-	
-	$('#medicalRecord').click(function(e){
-		e.preventDefault()
-		
-		showView('MedicalRecordContainer')
-		showBread('Zdravstveni karton')
-		
-		$.ajax({
-			type:'GET',
-			url:"api/users/patient/getMedicalRecord/"+user.email,
-			complete: function(data)
-			{
-				let mr = data.responseJSON
-				makeMedicalRecord(mr,user)
-				
-			}
-		})
-	})
+
 	
 	$('#appRequests').click(function(e){
 		e.preventDefault()
@@ -345,27 +312,6 @@ async function getClinics(date)
 	})
 }
 
-function makeMedicalRecord(data,user)
-{
-	$('#insuranceMR').text("Broj osiguranika: " + user.insuranceId)
-	$('#height').text("Visina: " + data.height)
-	$('#weight').text("Tezina: " + data.weight)
-	$('#bloodType').text("Krvna grupa: " + data.bloodType)
-	
-	let alergies = data.alergies
-	$('#alergies').empty()
-	for(let al of alergies)
-	{	
-		$('#alergies').append("<div class='col-4 themed-grid-col' >"+al+"</div>")	
-	}
-	
-	setHistoryTable()
-}
-
-function setHistoryTable()
-{
-	
-}
 
 
 function listAppRequests()
@@ -420,8 +366,17 @@ function p_listRequest(req,i)
 
 function p_listClinic(data,i,user)
 {
+	let rating;
+	if(data.rating == -1)
+	{
+		rating = "N/A"
+	}
+	else
+	{
+		rating = data.rating
+	}
 
-	let d = [data.name, data.address, data.city, data.state, data.description, data.rating,'<td><button type="button" class="btn btn-primary" id = "makeAppointment_btn'+i+'">Zakazi pregled</button></td>']
+	let d = [data.name, data.address, data.city, data.state, data.description, rating,'<td><button type="button" class="btn btn-primary" id = "makeAppointment_btn'+i+'">Zakazi pregled</button></td>']
 	insertTableData('clinicTable',d)
 		
 	$('#makeAppointment_btn'+i).off('click')

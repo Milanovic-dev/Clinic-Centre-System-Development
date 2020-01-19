@@ -6,6 +6,8 @@ import java.util.List;
 
 import javax.persistence.*;
 
+import dto.PrescriptionDTO;
+
 @Entity
 public class PatientMedicalReport {
 	
@@ -38,6 +40,7 @@ public class PatientMedicalReport {
 	@ManyToMany(fetch = FetchType.LAZY)
 	private List<Diagnosis> diagnosis;
 	
+
 	public PatientMedicalReport()
 	{
 		super();
@@ -55,7 +58,9 @@ public class PatientMedicalReport {
 		this.prescription = prescription;
 		this.diagnosis = new ArrayList<>();
 	}
+	
 
+	
 	public Long getId() {
 		return id;
 	}
@@ -119,4 +124,74 @@ public class PatientMedicalReport {
 	public void setPatient(Patient patient) {
 		this.patient = patient;
 	}
+	
+	public static class Builder{
+	    private String description;
+	    private Date dateAndTime;
+	    private Doctor doctor;
+	    private Clinic clinic;
+		private Patient patient;
+		private Prescription prescription;
+		private List<Diagnosis> diagnosis;
+			
+		public Builder(Date dateAndTime)
+		{
+			this.dateAndTime = dateAndTime;	
+		} 
+		
+		public Builder withDescription(String desc)
+		{
+			this.description = desc;
+			
+			return this;
+		}
+		
+		public Builder withDoctor(Doctor d)
+		{
+			this.doctor = d;
+			
+			return this;
+		}
+		
+		public Builder withClinic(Clinic c)
+		{
+			this.clinic = c;
+			
+			return this;
+		}
+		
+		public Builder withPatient(Patient p)
+		{
+			this.patient = p;
+			
+			return this;
+		}
+		
+		public Builder withPrescription(Prescription p)
+		{
+			this.prescription = p;
+			
+			return this;
+		}
+		
+		public Builder withDiagnosis(List<Diagnosis> diag)
+		{
+			this.diagnosis = diag;
+			
+			return this;
+		}
+		
+		public PatientMedicalReport build()
+		{
+			PatientMedicalReport rp = new PatientMedicalReport();
+			rp.setClinic(this.clinic);
+			rp.setDateAndTime(this.dateAndTime);
+			rp.setDescription(this.description);
+			rp.setDiagnosis(this.diagnosis);
+			rp.setDoctor(this.doctor);
+			rp.setPatient(this.patient);
+			rp.setPrescription(this.prescription);
+			return rp;
+		}
+	}		
 }
