@@ -17,6 +17,7 @@ import model.Patient;
 import repository.AppointmentRequestRepository;
 import repository.ClinicRepository;
 import repository.HallRepository;
+import repository.UserRepository;
 
 @Service
 public class AppointmentRequestService {
@@ -30,6 +31,9 @@ public class AppointmentRequestService {
 	@Autowired
 	private ClinicRepository clinicRepository;
 	
+	@Autowired
+	private UserRepository userRepository;
+	
 	public List<AppointmentRequest> getAllByClinic(String clinic)
 	{
 		Clinic c = clinicRepository.findByName(clinic);
@@ -42,14 +46,40 @@ public class AppointmentRequestService {
 		return appointmentRequestRepository.findAllByPatient(p);
 	}
 	
+	public AppointmentRequest findAppointmentRequest(Date date, Patient patient, Clinic clinic) 
+	{
+		return appointmentRequestRepository.findByDateAndPatientAndClinic(date, patient, clinic);
+	}
+	
 	public AppointmentRequest findAppointmentRequest(Date date, Hall hall,Clinic clinic)
 	{
 		return appointmentRequestRepository.findByDateAndHallAndClinic(date, hall,clinic);
 	}
 	
+	public AppointmentRequest findAppointmentRequest(String date, String patientEmail, String clinic)
+	{
+		DateFormat df = new SimpleDateFormat("dd-MM-yyyy HH:mm");
+		
+		try {
+			Date d = df.parse(date);
+			
+			Patient p = (Patient) userRepository.findByEmailAndDeleted(patientEmail, false);
+			
+			Clinic c = clinicRepository.findByName(clinic);
+			
+			return findAppointmentRequest(d, p, c);
+			
+		} catch (Exception e ) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return null;
+	}
+	
 	public AppointmentRequest findAppointmentRequest(String date, int hallNumber,String clinic)
 	{
-		DateFormat df = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+		DateFormat df = new SimpleDateFormat("dd-MM-yyyy HH:mm");
 		
 		try {
 			Date d = df.parse(date);

@@ -2,7 +2,6 @@
 
 function getPageURLWithUser(page, email)
 {
-	console.log(page + ".html?u=" + email)
 	return page + ".html?u=" + email
 }
 
@@ -22,13 +21,36 @@ function getProfileFromURL(done)
 		complete: function(data)
 		{
 			let user = data.responseJSON
-		
-			done(user)
-
+			
+			if(user == undefined)
+			{
+				done(undefined, undefined)
+				return
+			}
+			
+			getRoleUser(user.email, user.role, function(myUser){
+				
+				done(myUser, user.role)
+				
+			})
+			
 		}
 			
 		
 	})
+}
+
+
+function getRoleUser(email, role, complete)
+{
+		$.ajax({
+			type:'GET',
+			url: "api/users/get"+role+"/" + email,
+			complete:function(data)
+			{
+				complete(data.responseJSON)
+			}
+		})
 }
 
 function validationError(id, errorMessage)

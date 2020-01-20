@@ -11,7 +11,7 @@ function initPatient(user)
 	thisUser = user
 	let sideBar = $("#sideBar")
 	sideBar.append("<li class='nav-item active'><a class='nav-link' href='userProfileNew.html'><span id='profileUser'>Profil</span></a></li>")
-	sideBar.append("<li class='nav-item active'><a class='nav-link' type='button'><span id='medicalRecord'>Zdravstveni karton</span></a></li>")	
+	sideBar.append("<li class='nav-item active'><a class='nav-link' type='button' href='medicalRecord.html'><span id='medicalRecord'>Zdravstveni karton</span></a></li>")	
 	sideBar.append("<li class='nav-item active'><a class='nav-link' type='button'><span id='clinicList'>Lista klinika</span></a></li>")	
 	sideBar.append("<li class='nav-item active'><a class='nav-link' type='button'><span id='preApps'>Unapred definisani pregledi</span></a></li>")
 	sideBar.append("<li class='nav-item active'><a class='nav-link' type='button'><span id='Apps'>Pregledi</span></a></li>")
@@ -44,8 +44,8 @@ function createClinicTable()
 	search.input('<select class="form-control" id="selectAppointmentType"><option selected disabled>Tip pregleda</option></select>')
 	search.input('<input class="form-control" type="text" placeholder="Unesite adresu" id="clinicAdressPick">')
 	search.input('<input class="form-control" type="number" placeholder="Unesite ocenu" id="clinicRatingPick">')
-	
-	insertSearchIntoTable("clinicTable",search,function(){
+	 
+	insertSearchIntoTable("clinicTable", search, function(){
 		
 		let picker = $('#clinicDatePick').val()
     	getClinics(picker)
@@ -58,10 +58,20 @@ function createClinicTable()
 
 function createChooseDoctorTable()
 {
-	let headers = ['Email', 'Ime', 'Prezime', 'Prosecna ocena', 'Pocetak smene','Kraj smene','']
+	let headers = ['Tip', 'Email', 'Ime', 'Prezime', 'Prosecna ocena', 'Pocetak smene','Kraj smene','']
     let handle = createTable('chooseDoctorTable','Izaberite doktora',headers)
     insertTableInto('showDoctorsContainer',handle)
     insertElementIntoTable('chooseDoctorTable','<button type="button" class="btn btn-primary" id = "detailsAppointment_btn">Pregled</button>')
+    
+    let search = new TableSearch()
+	search.input('<input class="form-control" type="text" placeholder="Unesite Ime" id="chooseDoctorName">')
+	search.input('<input class="form-control" type="text" placeholder="Unesite prezime" id="chooseDoctorSurname">')
+	search.input('<input class="form-control" type="number" placeholder="Unesite ocenu" id="chooseDoctorSurname">')
+	
+	insertSearchIntoTable("chooseDoctorTable", search, function(){
+			
+	})
+	
     getTableDiv('chooseDoctorTable').show()
 }
 
@@ -84,7 +94,7 @@ function createAppointmentsTable()
 function createBreadcrumb()
 {
 	var bc1 = new BreadLevel()
-	bc1.append('Lista klinika').append('Zakazivanje')
+	bc1.append('Lista klinika').append('Zakazivanje').append('Pregled zahteva')
 	var bc2 = new BreadLevel()
 	bc2.append('Zdravstveni karton')
 	var bc3 = new BreadLevel()
@@ -155,7 +165,6 @@ function setUpPatientPage(user)
 	
 	$('#Apps').click(function(e){
 		e.preventDefault()
-		console.log(getViews())
 		showView('showAppointmentsPatient')
 		showBread('Pregledi')
 		setAppointmentsTable()
@@ -174,10 +183,17 @@ function setUpPatientPage(user)
 	$('#appRequests').click(function(e){
 		e.preventDefault()
 		
-		listAppRequests(user)
+		listAppRequests()
 
 	})
+	
+	$('#listClinicsLink').click(function(e){
+		e.preventDefault()
+		showView('showClinicContainer')
+		showBread('Lista klinika')
+	})
 
+	$('#toast').toast('show')
 }
 
 function setAppointmentsTable()
@@ -188,16 +204,13 @@ function setAppointmentsTable()
 		complete: function(data)
 		{
 			let apps = data.responseJSON
-			
-			if(apps.length == 0) return
-			
+					
 			emptyTable('patientAppsTable')
-			index = 0;
-			for(let app of apps)
-			{
-				list_App(app,index,user)
-				index++
-			}
+		
+			$.each(apps, function(i, item){
+				list_App(item, i, user)
+			});
+			
 		}
 	})
 }
@@ -220,16 +233,13 @@ function setPreAppointmentsTable()
 		complete: function(data)
 		{
 			let apps = data.responseJSON
+		
+			emptyTable('preAppTable')		
 			
-			if(apps.length == 0) return
+			$.each(apps, function(i, item){
+				list_preApp(item, i, thisUser)
+			});
 			
-			emptyTable('preAppTable')
-			index = 0;
-			for(let app of apps)
-			{
-				list_preApp(app,index,thisUser)
-				index++
-			}
 		}
 	})
 		
@@ -242,7 +252,7 @@ function list_preApp(data,i,user)
 	let date = dateSplit[0]
 	let time = dateSplit[1]
 	
-	let d = [date,time,data.hallNumber,data.doctors[0],data.typeOfExamination,data.price,'<button class="btn btn-primary" id="submitPredefinedAppRequest'+i+'">Zakazi</button>']
+	let d = [date,time,data.hallNumber,getProfileLink(data.doctors[0]),data.typeOfExamination,data.price,'<button class="btn btn-primary" id="submitPredefinedAppRequest'+i+'">Zakazi</button>']
 	
 	insertTableData('preAppTable',d)
 	
@@ -279,7 +289,9 @@ function list_preApp(data,i,user)
 
 async function getClinics(date)
 {	
-
+	let tableSearchBtn = getTableSearchButton('clinicTable')
+	showLoading(tableSearchBtn)
+	
 	let address = $('#clinicAdressPick').val()
 	let rating = $('#clinicRatingPick').val()
 	
@@ -294,19 +306,17 @@ async function getClinics(date)
 		contentType : "application/json; charset=utf-8",
 		complete: function(data)
 		{
+
 			let clinics = data.responseJSON
-					
-			let i = 0
-			$('#clinicSpinner').hide()
-			$('#searchClinics').removeAttr('disabled')
-			$('#searchBtnText').text("Trazi")
-			
+								
 			emptyTable('clinicTable')
-			for(let c of clinics)
-			{
-				p_listClinic(c,i,user)					
-				i++
-			}
+			
+			$.each(clinics, function(i, item){
+				p_listClinic(item, i, user)
+			});
+			
+			
+			hideLoading(tableSearchBtn)
 		}
 		
 	})
@@ -322,18 +332,18 @@ function listAppRequests()
 	
 	$.ajax({
 		type:'GET',
-		url:"api/appointments/patient/getAllRequests/"+user.email,
+		url:"api/appointments/patient/getAllRequests/"+thisUser.email,
 		complete: function(data)
 		{
 			
 			let reqs = data.responseJSON
 			let index = 0
 			$('#tablePendingApps tbody').empty()
-			for(let req of reqs)
-			{
-				p_listRequest(req,index)
-				index++
-			}
+			
+			$.each(reqs, function(i, item){
+				p_listRequest(item, i)
+			});
+			
 		}
 	})
 }
@@ -354,11 +364,42 @@ function p_listRequest(req,i)
 			let tdType=$('<td>'+ req.typeOfExamination +'</td>');
 			let tdClinic=$('<td>'+ req.clinicName +'</td>');	
 			let tdAddress=$('<td>' + clinic.address + ', ' + clinic.city + ', ' + clinic.state + '</td>')
-			let tdDelete = $('<td><button class="btn btn-danger">Otkazi</button></td>')
+			let tdDelete = $('<td><button class="btn btn-danger" id="cancelReq'+i+'">Otkazi</button></td>')
 			
 			tr.append(tdDateAndTime).append(tdDoctor).append(tdType).append(tdClinic).append(tdAddress).append(tdDelete)
 			
 			$('#tablePendingApps tbody').append(tr)
+			
+			$('#cancelReq'+i).off('click')
+			$('#cancelReq'+i).click(function(e){
+				e.preventDefault()
+				
+				showLoading('cancelReq'+i)
+				
+				let json = JSON.stringify({"date":req.date, "patientEmail": req.patientEmail, "clinicName": req.clinicName})
+
+				$.ajax({
+					type: 'DELETE',
+					url: "api/appointments/cancelRequest/Patient",
+					data: json,
+					dataType : "json",
+					contentType : "application/json; charset=utf-8",
+					complete: function(data)
+					{
+						if(data.status == "200")
+						{
+							listAppRequests()
+						}
+						else if(data.status == "400")
+						{
+							displayError('cancelReq'+i, "Proslo je 24 sata od pravljena zahteva. Ne moze biti otkazano.")						
+						}
+						
+						hideLoading('cancelReq'+i)
+					}
+				})
+			})
+			
 		}
 	})
 }
@@ -400,23 +441,11 @@ function p_listClinic(data,i,user)
 				
 				let index = 0
 				emptyTable('chooseDoctorTable')
-				for(let d of doctors)
-				{
-					console.log(d)
-					p_listDoctorActive(d,index,doctors.length);
-					index++;
-				}
 				
-				/*
-				$('#inputAppointmentType').change(function(e){
-					
-					for(let j = 0 ; j < doctors.length ; j++)
-					{
-						$("#checkDoctor"+j).prop('checked',false)
-					}
-					
+				$.each(doctors, function(i, item){
+					p_listDoctorActive(item, i, doctors.length);
 				})
-				*/
+				
 				
 				$('#detailsAppointment_btn').click(function(e){
 					e.preventDefault()
@@ -442,6 +471,7 @@ function p_listClinic(data,i,user)
 					}
 					
 					showView('detailsAppointmentContainer')
+					showBread('Pregled zahteva')
 					$('#tableDoctorsDisabled tbody').empty()
 					for(let d of doctorsSelected)
 					{
@@ -454,6 +484,8 @@ function p_listClinic(data,i,user)
 				$('#submitAppointmentRequest').off('click')
 				$('#submitAppointmentRequest').click(function(e){
 					e.preventDefault()
+					
+					showLoading("submitAppointmentRequest")
 					
 					let clinicName = $('#inputClinicName').val()
 					let date =  $('#inputDate').val()
@@ -487,7 +519,7 @@ function p_listClinic(data,i,user)
 						contentType : "application/json; charset=utf-8",
 						complete: function(data)
 						{
-							$('#submitAppSpinner').hide()
+							hideLoading('submitAppointmentRequest')
 							if(data.status == "201")
 							{
 								listAppRequests(user)
@@ -508,10 +540,10 @@ function p_listClinic(data,i,user)
 	
 }
 
-function p_listDoctorActive(data,i,doctorCount)
+function p_listDoctorActive(data, i, doctorCount)
 {
 	
-	let d = [data.user.email,data.user.name,data.user.surname,data.avarageRating,data.shiftStart,data.shiftEnd,"<input type='checkbox' id='checkDoctor"+i+"'><label for='checkDoctor"+i+"'></label>"]
+	let d = [data.type, getProfileLink(data.user.email), data.user.name, data.user.surname, data.avarageRating, data.shiftStart, data.shiftEnd, "<input type='checkbox' id='checkDoctor"+i+"'><label for='checkDoctor"+i+"'></label>"]
 	insertTableData('chooseDoctorTable',d)
 	
 	$('#checkDoctor'+i).off('click')
@@ -533,7 +565,7 @@ function p_listDoctorActive(data,i,doctorCount)
 	
 }
 
-function p_listDoctorDisabled(data,i,doctorCount)
+function p_listDoctorDisabled(data, i, doctorCount)
 {
 	let tr=$('<tr></tr>');
 	let tdEmail = $('<td>' + data.user.email + '</td>')
