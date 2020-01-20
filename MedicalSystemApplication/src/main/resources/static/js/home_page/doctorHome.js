@@ -22,7 +22,6 @@ function setUpPageDoctor()
 	let sideBar = $("#sideBar")
 	sideBar.append("<li class='nav-item active'><a class='nav-link' href='userProfileNew.html'><span id='profileUser'>Profil</span></a></li>")
 	sideBar.append("<li class='nav-item active'><a class='nav-link' href='index.html'><span id='pacientList'>Lista pacijenata</span></a></li>")
-	sideBar.append("<li class='nav-item active'><a class='nav-link' href='index.html'><span id='examinationStart'>Zapocni pregled</span></a></li>")
 	sideBar.append("<li class='nav-item active'><a class='nav-link' href='index.html'><span id='workCalendar'>Radni kalendar</span></a></li>")
 	sideBar.append("<li class='nav-item active'><a class='nav-link' href='index.html'><span id='vacationRequest'>Zahtev za odustvo</span></a></li>")
 	sideBar.append("<li class='nav-item active'><a class='nav-link' href='index.html'><span id='examinationRequest'>Zakazivanje pregleda</span></a></li>")
@@ -117,29 +116,6 @@ function setUpPageDoctor()
 
 	})
 	
-
-	$('#examinationStart').click(function(e){
-		e.preventDefault()
-		showView("showAppointmentContainerWithCheckBox")
-        showBread('Zapocni pregled')
-
-        $.ajax({
-        	type:'GET',
-        	url: "api/appointments/doctor/getAllAppointments/"+user.email,
-        	complete: function(data)
-        	{
-        		let apps = data.responseJSON
-        		let index = 0
-        		emptyTable('listAppointmentTable')
-        		for(app of apps)
-        		{
-        			listAppointmentWithCheckBox(app,index,apps.length,user)
-        			index++
-        		}
-        	}
-        })
-        
-	})
 	
 	$.ajax({
         	type:'GET',

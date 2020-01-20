@@ -110,7 +110,7 @@ function insertSearchIntoTable(id, search, func)
 			
 	}
 	
-	form.innerHTML += '<button class="btn btn-primary" type="button"><span>Trazi</span>&nbsp<span class="spinner-border spinner-border-sm"  style="display:none" role="status" aria-hidden="true"></span></button>'
+	form.innerHTML += '<button class="btn btn-primary" id="tableSearch_btn_'+id+'" type="button">Trazi</button>'
 	
 	let loadedInputs = header.getElementsByTagName("input")
 	let loadedSelects = header.getElementsByTagName("select")
@@ -136,6 +136,12 @@ function insertSearchIntoTable(id, search, func)
 		if(func != undefined)
 			func()
 	})
+}
+
+
+function getTableSearchButton(id)
+{
+	return $('#tableSearch_btn_'+id)
 }
 
 

@@ -48,7 +48,7 @@ function getMedicalRecord(user, foreign)
 function initMedicalRecord(record, user, foreign)
 {
 	console.log(record)
-	$('#userGmail').append(" <b>" + user.email + "</b>")
+	$('#userEmail').append(" <b>" + user.email + "</b>")
 	$('#userName').append(" <b>" + user.name + "</b>")
 	$('#userSurname').append(" <b>" + user.surname + "</b>")
 	$('#insuranceMR').text("Broj osiguranika: " + user.insuranceId)
