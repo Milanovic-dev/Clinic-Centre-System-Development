@@ -171,6 +171,19 @@ public class UserController
 		return new ResponseEntity<>(new NurseDTO(ret),HttpStatus.OK);
 	}
 	
+	@GetMapping(value="/getClinicAdmin/{email}")
+	public ResponseEntity<UserDTO> getClinicAdmin(@PathVariable("email") String email)
+	{
+		User ret = (User) userService.findByEmailAndDeleted(email,false);
+		
+		if(ret == null || ret.getDeleted())
+		{
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+		
+		return new ResponseEntity<>(new UserDTO(ret),HttpStatus.OK);
+	}
+	
 	@GetMapping(value = "/getUser/{email}")
 	public ResponseEntity<UserDTO> getUser(@PathVariable("email") String email)
 	{

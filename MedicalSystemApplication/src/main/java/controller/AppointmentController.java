@@ -188,6 +188,67 @@ public class AppointmentController
 		return new ResponseEntity<>(dtos,HttpStatus.OK);
 	}
 	
+	@GetMapping(value="/clinic/getAllAppointments/{clinicName}")
+	public ResponseEntity<List<AppointmentDTO>> getAppointmentsClinic(@PathVariable("clinicName") String clinicName)
+	{
+		
+		Clinic clinic = clinicService.findByName(clinicName);
+		
+		if(clinic == null)
+		{
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+		
+		List<Appointment> list = appointmentService.findAllByClinic(clinic);
+		
+		if(list == null)
+		{
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+		
+		List<AppointmentDTO> dtos = new ArrayList<AppointmentDTO>();
+		
+		for(Appointment app : list)
+		{
+			dtos.add(new AppointmentDTO(app));
+		}
+		
+		return new ResponseEntity<>(dtos,HttpStatus.OK);
+	}
+	
+	@GetMapping(value="/clinic/getAllAppointmentsToday/{clinicName}")
+	public ResponseEntity<List<AppointmentDTO>> getAppointmentsClinicToday(@PathVariable("clinicName") String clinicName)
+	{
+		
+		Date today = new Date();
+		
+		Clinic clinic = clinicService.findByName(clinicName);
+		
+		if(clinic == null)
+		{
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+		
+		List<Appointment> list = appointmentService.findAllByClinic(clinic);
+		
+		if(list == null)
+		{
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+		
+		List<AppointmentDTO> dtos = new ArrayList<AppointmentDTO>();
+		
+		for(Appointment app : list)
+		{
+			if(DateUtil.getInstance().isSameDay(today, app.getDate()))
+			{
+				dtos.add(new AppointmentDTO(app));
+			}
+		}
+		
+		return new ResponseEntity<>(dtos,HttpStatus.OK);
+	}
+	
 	@GetMapping(value="/patient/getAllRequests/{email}")
 	public ResponseEntity<List<AppointmentDTO>> getPatientRequests(@PathVariable("email") String email)
 	{
@@ -393,7 +454,7 @@ public class AppointmentController
 			doctors.add(d);
 		}
 		
-		Date date = DateUtil.getInstance().GetDate(dto.getDate(), "dd-mm-yyyy HH:mm");
+		Date date = DateUtil.getInstance().getDate(dto.getDate(), "dd-mm-yyyy HH:mm");
 		
 		
 		Appointment a = appointmentService.findAppointment(date, hall, clinic);
@@ -491,7 +552,7 @@ public class AppointmentController
 		}
 		request.setPatient(patient);
 		
-		Date date = DateUtil.getInstance().GetDate(dto.getDate(), "dd-MM-yyyy HH:mm");
+		Date date = DateUtil.getInstance().getDate(dto.getDate(), "dd-MM-yyyy HH:mm");
 		
 		request.setDate(date);
 		request.setAppointmentType(dto.getType());

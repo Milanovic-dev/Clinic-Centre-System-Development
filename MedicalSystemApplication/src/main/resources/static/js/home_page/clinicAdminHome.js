@@ -49,36 +49,6 @@ function setUpClinicAdminPage(user)
 	addView("AppointmentContainer")
 	addView("changeProfileClinicContainer")
 
-	createSearch({
-		id: "hallSearch",
-		header:"Pronadji salu",
-		inputs: ["name","number"],
-		labels: ["Ime sale","Broj sale"],
-		onSubmit: function(json)
-		{
-			json["clinicName"] = clinic.name
-			let d = JSON.stringify(json)
-			$.ajax({
-				type:'POST',
-				url:"api/hall/getAllByFilter/",
-				data: d,
-				dataType : "json",
-				contentType : "application/json; charset=utf-8",
-				complete: function(data)
-				{
-					halls = data.responseJSON
-					i = 0
-					emptyTable("tableHall")
-					for(h of halls )
-					{
-						listHall(h,i)
-						i++
-					}
-				}
-			})
-		}
-	})
-	
 	let headersTypes = ["Ime tipa","Klinika","Cena","",""]
 	createDataTable("tableTypeOfExamination","showTypeOfExaminationContainer","Lista Tipova Pregleda",headersTypes,0)
 		
@@ -87,7 +57,6 @@ function setUpClinicAdminPage(user)
 	
 	let headersHall = ["Broj sale","Ime sale","Ime klinike" ,"","",""]
 	createDataTable("tableHall","showHallContainer","Lista sala",headersHall,0)
-	insertElementIntoTable("tableHall","&nbsp&nbsp<button class='btn btn-primary' onClick={showSearch('hallSearch')}>Pretraga</button>","card-header")
 
 	
 	getTableDiv("tableTypeOfExamination").show()	
@@ -672,7 +641,7 @@ function makeUserTable(clinic)
 function listDoctor(data,i,clinic)
 {
 
-	let d = [data.user.name,data.user.surname,data.user.email,data.user.phone,data.user.address,data.user.city,data.user.state,'<button type="button" class="btn btn-danger" id = "deleteDoctor_btn'+i+'">Obrisi lekara</button>']
+	let d = [data.user.name,data.user.surname,getProfileLink(data.user.email),data.user.phone,data.user.address,data.user.city,data.user.state,'<button type="button" class="btn btn-danger" id = "deleteDoctor_btn'+i+'">Obrisi lekara</button>']
 	insertTableData("tableDoctorUsers",d)
 	
 	$('#deleteDoctor_btn'+i).click(function(e){

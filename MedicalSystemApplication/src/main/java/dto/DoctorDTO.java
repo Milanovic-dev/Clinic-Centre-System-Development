@@ -53,8 +53,8 @@ public class DoctorDTO {
 		this.avarageRating = d.getAvarageRating();
 		this.user.setInsuranceId(d.getInsuranceId());
 		this.type = d.getType();
-		this.shiftStart = DateUtil.getInstance().GetString(d.getShiftStart(),"HH:mm");
-		this.shiftEnd = DateUtil.getInstance().GetString(d.getShiftEnd(),"HH:mm");
+		this.shiftStart = DateUtil.getInstance().getString(d.getShiftStart(),"HH:mm");
+		this.shiftEnd = DateUtil.getInstance().getString(d.getShiftEnd(),"HH:mm");
 	}
 
 	public UserDTO getUser() {

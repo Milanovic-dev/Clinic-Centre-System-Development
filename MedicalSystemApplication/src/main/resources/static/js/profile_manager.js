@@ -5,9 +5,19 @@ function getPageURLWithUser(page, email)
 	return page + ".html?u=" + email
 }
 
+function getPageURLWithClinic(page, clinicName)
+{
+	return page + ".html?clinic=" + clinicName
+}
+
 function getProfileLink(email)
 {
 	return "<a href = '" + getPageURLWithUser("userProfileNew",email)+ "'>" + email + "</a>";
+}
+
+function getClinicProfileLink(clinic)
+{
+	return "<a href='"+ getPageURLWithClinic("clinicProfile", clinic) +"'>" + clinic + "</a>"
 }
 
 function getProfileFromURL(done)
