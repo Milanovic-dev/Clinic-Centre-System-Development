@@ -157,8 +157,8 @@ public class ContainerInitialize {
 					.withInsuranceID("123484654324")
 					.withType("Stomatoloski")
 					.withClinic(clinic)					
-					.withShiftStart(DateUtil.getInstance().GetDate("08:00","HH:mm"))
-					.withShiftEnd(DateUtil.getInstance().GetDate("14:00","HH:mm"))
+					.withShiftStart(DateUtil.getInstance().getDate("08:00","HH:mm"))
+					.withShiftEnd(DateUtil.getInstance().getDate("14:00","HH:mm"))
 					.build();
 			
 			doctor1.setIsFirstLog(false);
@@ -176,8 +176,8 @@ public class ContainerInitialize {
 					.withInsuranceID("12345674864")
 					.withType("Opsti pregled")
 					.withClinic(clinic)					
-					.withShiftStart(DateUtil.getInstance().GetDate("09:00","HH:mm"))
-					.withShiftEnd(DateUtil.getInstance().GetDate("18:00","HH:mm"))
+					.withShiftStart(DateUtil.getInstance().getDate("09:00","HH:mm"))
+					.withShiftEnd(DateUtil.getInstance().getDate("18:00","HH:mm"))
 					.build();
 
 			doctor2.setAvarageRating(6.4f);
@@ -194,8 +194,8 @@ public class ContainerInitialize {
 					.withInsuranceID("1897654856456")
 					.withType("Opsti pregled")
 					.withClinic(clinic)
-					.withShiftStart(DateUtil.getInstance().GetDate("08:00","HH:mm"))
-					.withShiftEnd(DateUtil.getInstance().GetDate("18:00","HH:mm"))
+					.withShiftStart(DateUtil.getInstance().getDate("08:00","HH:mm"))
+					.withShiftEnd(DateUtil.getInstance().getDate("18:00","HH:mm"))
 					.build();
 
 			doctor3.setAvarageRating(9.91f);
@@ -219,8 +219,7 @@ public class ContainerInitialize {
 			p1.setPrice(500L);
 			
 			pricelistRepository.save(p1);
-
-			Appointment app1 = new Appointment.Builder(DateUtil.getInstance().GetDate("15-01-2020 07:30","dd-mm-yyyy HH:mm"))
+			Appointment app1 = new Appointment.Builder(DateUtil.getInstance().getDate("21-01-2020 07:30","dd-mm-yyyy HH:mm"))
 					.withType(AppointmentType.Examination)
 					.withHall(hall1)
 					.withClinic(clinic)
@@ -233,7 +232,7 @@ public class ContainerInitialize {
 			app1.getDoctors().add(doctor2);
 			appointmentRepository.save(app1);
 
-			Appointment app2 = new Appointment.Builder(DateUtil.getInstance().GetDate("01-01-2020 18:30", "dd-mm-yyyy HH:mm"))
+			Appointment app2 = new Appointment.Builder(DateUtil.getInstance().getDate("21-01-2020 07:40", "dd-mm-yyyy HH:mm"))
 					.withPatient(patient1)
 					.withType(AppointmentType.Surgery)
 					.withHall(hall2)
@@ -241,7 +240,7 @@ public class ContainerInitialize {
 					.withDuration(1)
 					.build();
 
-			Appointment app3 = new Appointment.Builder(DateUtil.getInstance().GetDate("03-01-2020 19:30", "dd-mm-yyyy HH:mm"))
+			Appointment app3 = new Appointment.Builder(DateUtil.getInstance().getDate("21-01-2020 19:30", "dd-mm-yyyy HH:mm"))
 					.withPatient(patient1)
 					.withType(AppointmentType.Surgery)
 					.withHall(hall2)

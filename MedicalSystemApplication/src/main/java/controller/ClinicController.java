@@ -135,7 +135,7 @@ public class ClinicController {
     		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     	}
   
-    	Date realDate = DateUtil.getInstance().GetDate(date, "dd-MM-yyyy");
+    	Date realDate = DateUtil.getInstance().getDate(date, "dd-MM-yyyy");
 						
 		Filter filter = FilterFactory.getInstance().get("clinic");
 			

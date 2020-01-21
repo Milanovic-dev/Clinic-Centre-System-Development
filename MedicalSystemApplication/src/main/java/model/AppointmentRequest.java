@@ -46,7 +46,9 @@ public class AppointmentRequest {
 	
 	@Column(name = "appointmentType",nullable = true)
 	private AppointmentType appointmentType;
-
+	
+	@Column(name = "timestamp")
+	private Date timestamp;
 	
 	public AppointmentRequest()
 	{
@@ -66,9 +68,15 @@ public class AppointmentRequest {
 		this.priceslist = priceslist;
 		this.appointmentType = appointmentType;
 	}
+	
+	public Date getTimestamp() {
+		return timestamp;
+	}
 
-	
-	
+	public void setTimestamp(Date timestamp) {
+		this.timestamp = timestamp;
+	}
+
 	public Hall getHall() {
 		return hall;
 	}

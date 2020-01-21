@@ -81,6 +81,39 @@ function displayError(id,text)
 	button.before('<span style="color:#FF1103" id="'+spanId+'">'+text+'</span><br>')
 }
 
+function showLoading(button)
+{
+	let buttonElem;
+	
+	if(isString(button))
+	{
+		buttonElem = $('#'+button)
+	}
+	else
+	{
+		buttonElem = button
+	}
+	
+	buttonElem.append('<span class="spin">&nbsp<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span></span>')
+}
+
+
+function hideLoading(button)
+{
+	let buttonElem;
+	
+	if(isString(button))
+	{
+		buttonElem = $('#'+button)
+	}
+	else
+	{
+		buttonElem = button
+	}
+	
+	buttonElem.children(".spin").remove()
+}
+
 
 function validation(element, condition, errorMessage)
 {

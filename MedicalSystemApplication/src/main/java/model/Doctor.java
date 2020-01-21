@@ -3,6 +3,7 @@ package model;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 import javax.persistence.*;
 
@@ -71,8 +72,8 @@ public class Doctor extends User
 		super(dto.getUser());
 		this.setRole(UserRole.Doctor);
 		this.setIsFirstLog(true);
-		this.shiftStart = DateUtil.getInstance().GetDate(dto.getShiftStart(), "HH:mm");
-		this.shiftEnd = DateUtil.getInstance().GetDate(dto.getShiftEnd(), "HH:mm");
+		this.shiftStart = DateUtil.getInstance().getDate(dto.getShiftStart(), "HH:mm");
+		this.shiftEnd = DateUtil.getInstance().getDate(dto.getShiftEnd(), "HH:mm");
 		this.appointments = new ArrayList<Appointment>();
 		this.vacations = new ArrayList<Vacation>();
 		this.reviews = new ArrayList<ReviewDoctor>();
@@ -141,7 +142,33 @@ public class Doctor extends User
 	public void setAvarageRating(float avarageRating) {
 		this.avarageRating = avarageRating;
 	}
-
+	
+	public float calculateRating()
+	{
+		List<ReviewDoctor> reviews = getReviews();
+		List<Integer> ratings = new ArrayList<Integer>();
+		float sum = 0;
+		
+		if(reviews.isEmpty())
+		{
+			return -1;
+		}
+		
+		for(ReviewDoctor cr : reviews)
+		{
+			if(cr.getRating() >= 0)
+			{
+				ratings.add(cr.getRating());
+			}
+		}
+	
+		for(Integer r : ratings)
+		{
+			sum = sum + r;
+		}
+		
+		 return sum = (Float) sum / ratings.size();
+	}
 
 	public List<ReviewDoctor> getReviews() {
 		return reviews;

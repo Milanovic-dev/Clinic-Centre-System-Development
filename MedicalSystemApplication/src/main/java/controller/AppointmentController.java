@@ -3,6 +3,7 @@ package controller;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -36,6 +37,7 @@ import service.UserService;
 @RequestMapping(value = "api/appointments")
 public class AppointmentController 
 {
+	private final long HOUR_MILLIS = 3600000;
 	
 	@Autowired
 	private AppointmentService appointmentService;
@@ -181,6 +183,67 @@ public class AppointmentController
 		for(AppointmentRequest req : list)
 		{
 			dtos.add(new AppointmentDTO(req));
+		}
+		
+		return new ResponseEntity<>(dtos,HttpStatus.OK);
+	}
+	
+	@GetMapping(value="/clinic/getAllAppointments/{clinicName}")
+	public ResponseEntity<List<AppointmentDTO>> getAppointmentsClinic(@PathVariable("clinicName") String clinicName)
+	{
+		
+		Clinic clinic = clinicService.findByName(clinicName);
+		
+		if(clinic == null)
+		{
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+		
+		List<Appointment> list = appointmentService.findAllByClinic(clinic);
+		
+		if(list == null)
+		{
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+		
+		List<AppointmentDTO> dtos = new ArrayList<AppointmentDTO>();
+		
+		for(Appointment app : list)
+		{
+			dtos.add(new AppointmentDTO(app));
+		}
+		
+		return new ResponseEntity<>(dtos,HttpStatus.OK);
+	}
+	
+	@GetMapping(value="/clinic/getAllAppointmentsToday/{clinicName}")
+	public ResponseEntity<List<AppointmentDTO>> getAppointmentsClinicToday(@PathVariable("clinicName") String clinicName)
+	{
+		
+		Date today = new Date();
+		
+		Clinic clinic = clinicService.findByName(clinicName);
+		
+		if(clinic == null)
+		{
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+		
+		List<Appointment> list = appointmentService.findAllByClinic(clinic);
+		
+		if(list == null)
+		{
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+		
+		List<AppointmentDTO> dtos = new ArrayList<AppointmentDTO>();
+		
+		for(Appointment app : list)
+		{
+			if(DateUtil.getInstance().isSameDay(today, app.getDate()))
+			{
+				dtos.add(new AppointmentDTO(app));
+			}
 		}
 		
 		return new ResponseEntity<>(dtos,HttpStatus.OK);
@@ -391,7 +454,7 @@ public class AppointmentController
 			doctors.add(d);
 		}
 		
-		Date date = DateUtil.getInstance().GetDate(dto.getDate(), "dd-mm-yyyy HH:mm");
+		Date date = DateUtil.getInstance().getDate(dto.getDate(), "dd-mm-yyyy HH:mm");
 		
 		
 		Appointment a = appointmentService.findAppointment(date, hall, clinic);
@@ -469,7 +532,7 @@ public class AppointmentController
 	{
 		HttpHeaders header = new HttpHeaders();
 		AppointmentRequest request = new AppointmentRequest();
-		
+		request.setTimestamp(new Date());
 		Clinic clinic = clinicService.findByName(dto.getClinicName());
 		
 		if(clinic == null)
@@ -489,7 +552,7 @@ public class AppointmentController
 		}
 		request.setPatient(patient);
 		
-		Date date = DateUtil.getInstance().GetDate(dto.getDate(), "dd-MM-yyyy HH:mm");
+		Date date = DateUtil.getInstance().getDate(dto.getDate(), "dd-MM-yyyy HH:mm");
 		
 		request.setDate(date);
 		request.setAppointmentType(dto.getType());
@@ -547,6 +610,69 @@ public class AppointmentController
 		appointmentRequestService.save(request);
 		
 		return new ResponseEntity<>(HttpStatus.CREATED);
+	}
+	
+	@DeleteMapping(value="/cancelRequest/{role}")
+	public ResponseEntity<Void> cancelAppointmentRequest(@RequestBody AppointmentDTO dto, @PathVariable("role")UserRole role)
+	{
+		AppointmentRequest req = appointmentRequestService.findAppointmentRequest(dto.getDate(), dto.getPatientEmail(), dto.getClinicName());
+				
+		if(req == null)
+		{
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+		
+		Date tm = req.getTimestamp();
+		
+		Date date = new Date();
+		
+		if(date.getTime() > tm.getTime() + 24 * HOUR_MILLIS)
+		{
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		
+		List<User> admins = userService.getAll(UserRole.ClinicAdmin);	
+		Patient p = req.getPatient();
+		
+		
+		
+		if(role == UserRole.Patient)
+		{
+			for(User user : admins)
+			{
+				ClinicAdmin admin = (ClinicAdmin)user;
+				
+				if(admin.getClinic().getName().equals(dto.getClinicName()))
+				{
+					//TODO: Napisati lepo mail
+					notificationService.sendNotification(admin.getEmail(), "Pacijent je otkazao pregled", "Zahtev za pregled zakazan za " + dto.getDate() + " je otkazan od strane pacijenta: " + p.getEmail());
+				}
+			}
+			
+			
+			notificationService.sendNotification(p.getEmail(), "Vas zahtev za pregled je otkazan.", "Zahtev za pregled zakazan za " + dto.getDate() + " je otkazan na vas zahtev.");
+		}
+		else
+		{
+			for(User user : admins)
+			{
+				ClinicAdmin admin = (ClinicAdmin)user;
+				
+				if(admin.getClinic().getName().equals(dto.getClinicName()))
+				{
+					//TODO: Napisati lepo mail
+					notificationService.sendNotification(admin.getEmail(), "Pregled je otkazan", "Zahtev za pregled zakazan za " + dto.getDate() + " je otkazan od strane admina klinike");
+				}
+			}
+			
+			
+			notificationService.sendNotification(p.getEmail(), "Vas zahtev za pregled je otkazan.", "Zahtev za pregled zakazan za " + dto.getDate() + " je otkazan od strane admina.");
+		}
+		
+		
+		appointmentRequestService.delete(req);
+		
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 	
 	

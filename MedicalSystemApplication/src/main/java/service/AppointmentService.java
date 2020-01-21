@@ -62,7 +62,7 @@ public class AppointmentService {
 
 	public Appointment findAppointment(String date, int hallNumber, String clinic)
 	{	
-		Date d = DateUtil.getInstance().GetDate(date, "dd-MM-yyyy HH:mm");
+		Date d = DateUtil.getInstance().getDate(date, "dd-MM-yyyy HH:mm");
 			
 		Hall h = hallRepository.findByNumber(hallNumber);
 		Clinic c = clinicRepository.findByName(clinic);
