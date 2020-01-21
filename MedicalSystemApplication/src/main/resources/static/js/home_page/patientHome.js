@@ -260,6 +260,7 @@ function list_preApp(data,i,user)
 	$('#submitPredefinedAppRequest'+i).click(function(e){
 		e.preventDefault()
 		
+		showLoading('submitPredefinedAppRequest'+i)
 		let json = JSON.stringify({"date":data.date,"clinicName":data.clinicName,"hallNumber":data.hallNumber,"version":data.version})
 		
 		$.ajax({
@@ -270,7 +271,6 @@ function list_preApp(data,i,user)
 			contentType : "application/json; charset=utf-8",
 			complete:function(data)
 			{
-				console.log(data)
 				if(data.status == "200")
 				{
 					setPreAppointmentsTable()
@@ -279,7 +279,8 @@ function list_preApp(data,i,user)
 				{
 					console.error("Vec zakazano!")
 				}
-									
+				
+				hideLoading('submitPredefinedAppRequest'+i)
 			}
 		})
 	})
@@ -417,7 +418,7 @@ function p_listClinic(data,i,user)
 		rating = data.rating
 	}
 
-	let d = [data.name, data.address, data.city, data.state, data.description, rating,'<td><button type="button" class="btn btn-primary" id = "makeAppointment_btn'+i+'">Zakazi pregled</button></td>']
+	let d = [getClinicProfileLink(data.name), data.address, data.city, data.state, data.description, rating,'<td><button type="button" class="btn btn-primary" id = "makeAppointment_btn'+i+'">Zakazi pregled</button></td>']
 	insertTableData('clinicTable',d)
 		
 	$('#makeAppointment_btn'+i).off('click')

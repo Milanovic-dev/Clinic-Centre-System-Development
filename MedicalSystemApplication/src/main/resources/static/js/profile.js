@@ -56,6 +56,10 @@ function setPersonalInformations(user, role, foreign)
 	{
 		setNurseProfile(user, foreign)
 	}
+	else if(role == "ClinicAdmin")
+	{
+		setClinicAdminProfile(user, foreign)
+	}
 	
 	
 }
@@ -161,9 +165,7 @@ function setDoctorProfile(doctor, foreign)
 }
 
 function setNurseProfile(nurse, foreign)
-{
-$('#medicalRecord_btn').prop('href',getPageURLWithUser('medicalRecord',nurse.email))
-	
+{	
 	$("#pName").text(nurse.name);
 	$("#pSurname").text(nurse.surname);
 	$("#pEmail").text(nurse.email);
@@ -185,6 +187,26 @@ $('#medicalRecord_btn').prop('href',getPageURLWithUser('medicalRecord',nurse.ema
 	
 	$('#profileChange_btn').hide()
 	$('#profileChangePassword_btn').hide()
+	$('#medicalRecord_btn').hide()
+	$('#startExamination_btn').hide()
+}
+
+function setClinicAdminProfile(admin, foreign)
+{
+	$("#pName").text(admin.name);
+	$("#pSurname").text(admin.surname);
+	$("#pEmail").text(admin.email);
+	$("#pPhone").text(admin.phone);
+	$("#pCity").text(admin.city);
+	$("#pState").text(admin.state);
+	$("#pAddress").text(admin.address);
+	$('#pInsurance').text(admin.insuranceId)
+	
+	$('#pRole').text("Status: Admin Klinike")
+	$('#pRating').hide();
+	
+	$('#profileChange_btn').show()
+	$('#profileChangePassword_btn').show()
 	$('#medicalRecord_btn').hide()
 	$('#startExamination_btn').hide()
 }
