@@ -16,7 +16,7 @@ import model.User;
 public interface AppointmentRepository extends JpaRepository<Appointment,Long>{
 
 	public Appointment findByDateAndHallAndClinic(Date date, Hall hall, Clinic clinic);
-	
+	public List<Appointment> findAllByHallAndClinic(Hall hall,Clinic clinic);
 	public List<Appointment> findAllByPatient(Patient p);
 	
 	@Query(value = "select * from appointment where id = any(select appointments_id from doctor_appointments where doctor_id=?1)",nativeQuery = true)
