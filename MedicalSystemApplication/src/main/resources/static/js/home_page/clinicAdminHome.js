@@ -35,9 +35,6 @@ function setUpClinicAdminPage(user)
 	sideBar.append("<li class='nav-item active'><a class='nav-link' type='button'><span id='addPredefinedAppointment'>Dodaj predefinisani pregled</span></a></li>")
 	sideBar.append("<li class='nav-item active'><a class='nav-link' href = 'clinicProfile.html?clinic=" + clinic.name +"'><span id='showReport'>Prikaz izvestaja poslovanja</span></a></li>")
 
-	
-	
-	
 	clearViews()
 	addView("addHallContainer")
 	addView("showHallContainer")
@@ -48,6 +45,10 @@ function setUpClinicAdminPage(user)
 	addView("registrationConteiner")
 	addView("AppointmentContainer")
 	addView("changeProfileClinicContainer")
+	
+	$('#hallDatePick').datepicker({
+    	dateFormat: "dd-mm-yyyy"   	
+	})
 
 	let headersTypes = ["Ime tipa","Klinika","Cena","",""]
 	createDataTable("tableTypeOfExamination","showTypeOfExaminationContainer","Lista Tipova Pregleda",headersTypes,0)
@@ -55,16 +56,33 @@ function setUpClinicAdminPage(user)
 	let headersUser = ["Ime","Prezime","Email","Telefon","Adresa","Grad","Drzava",""]
 	createDataTable("tableDoctorUsers","showUserContainer","Lista lekara",headersUser,0)
 	
+	//LISTA SALA
+	let hallSearch = new TableSearch()
+	hallSearch.input("<input class='form-control' type='text' placeholder='Ime sale' id='hallNameLabel'>")
+	hallSearch.input("<input class='form-control' type='text' placeholder='Broj sale' id='hallNumberLabel'>")
+	hallSearch.input('<input class="form-control datepicker-here" data-language="en" placeholder="Izaberite datum" id="hallDatePick" readonly="true">')
+
 	let headersHall = ["Broj sale","Ime sale","Ime klinike" ,"","",""]
 	createDataTable("tableHall","showHallContainer","Lista sala",headersHall,0)
 
+	insertElementIntoTable("tableHall","&nbsp&nbsp<button class='btn btn-primary' onClick={showSearch('hallSearch')}>Pretraga</button>","card-header")
 	
+	insertSearchIntoTable("tableHall",hallSearch,function(){
+		hname = $('#hallNameLabel').val()
+		hnumber = $('#hallNumberLabel').val()
+		hdate = $('#hallDatePick').val()
+	let json = JSON.stringify({"name": hname,"number": hnumber,"insuranceId":hdate })
+
+
+	
+	//KRAJ LISTE SALA
 	getTableDiv("tableTypeOfExamination").show()	
 	getTableDiv("listDoctorsTable").show()
 	getTableDiv("listHallsTable").show()
 	getTableDiv("listPricesTable").show()
 	getTableDiv("tableDoctorUsers").show()
 	getTableDiv("tableHall").show()
+	
 	//IZMENA PROFILA KLINIKE
 	$('#changeProfileClinic').click(function(e){
 		e.preventDefault()
@@ -502,8 +520,7 @@ function submitDoctorForm(clinic)
 }
 
 function listHall(data,i)
-{
-		
+{	
 	let d = [data.number,data.name,data.clinicName,'<button type="button" class="btn btn-warning" id = "calendarHall_btn'+i+'">Zauzeće</button>','<button type="button" class="btn btn-primary" id = "changeHall_btn'+i+'">Izmeni</button>','<button type="button" class="btn btn-danger" id = "deleteHall_btn'+i+'">Izbrisi</button>']
 	
 	insertTableData("tableHall",d)
@@ -786,6 +803,7 @@ function listUser(data,i,clinic)
 
 function makeHallTable()
 {
+	
 	$.ajax({
 		type: 'GET',
 		url: 'api/hall/getAllByClinic/'+clinic.name,

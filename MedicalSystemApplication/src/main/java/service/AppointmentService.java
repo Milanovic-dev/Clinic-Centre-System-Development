@@ -44,6 +44,11 @@ public class AppointmentService {
 		return appointmentRepository.findByDateAndHallAndClinic(date, hall, clinic);
 	}
 	
+	public List<Appointment> findAllByHallAndClinic(Hall hall,Clinic clinic)
+	{
+		return appointmentRepository.findAllByHallAndClinic(hall,clinic);
+	}
+	
 	public List<Appointment> findAll()
 	{
 		return appointmentRepository.findAll();
