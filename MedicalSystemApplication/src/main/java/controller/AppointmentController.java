@@ -249,6 +249,93 @@ public class AppointmentController
 		return new ResponseEntity<>(dtos,HttpStatus.OK);
 	}
 	
+	
+	@GetMapping(value="/clinic/getAllAppointmentsWeek/{clinicName}")
+	public ResponseEntity<List<AppointmentDTO>> getAppointmentsClinicWeekly(@PathVariable("clinicName") String clinicName)
+	{
+		Calendar cal = Calendar.getInstance();
+		cal.set(Calendar.HOUR_OF_DAY, 0);
+		cal.clear(Calendar.MINUTE);
+		cal.clear(Calendar.SECOND);
+		cal.clear(Calendar.MILLISECOND);
+		
+		cal.set(Calendar.DAY_OF_WEEK, cal.getFirstDayOfWeek());
+		Date weekStart = cal.getTime();
+		cal.add(Calendar.WEEK_OF_YEAR, 1);
+		Date weekEnd = cal.getTime();
+		
+		
+		Clinic clinic = clinicService.findByName(clinicName);
+		
+		if(clinic == null)
+		{
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+		
+		List<Appointment> list = appointmentService.findAllByClinic(clinic);
+		
+		if(list == null)
+		{
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+		
+		List<AppointmentDTO> dtos = new ArrayList<AppointmentDTO>();
+		
+		for(Appointment app : list)
+		{
+			if(app.getDate().after(weekStart) && app.getDate().before(weekEnd))
+			{
+				dtos.add(new AppointmentDTO(app));
+			}
+		} 
+		
+		
+		return new ResponseEntity<>(dtos,HttpStatus.OK);
+	}
+	
+	
+	@GetMapping(value="/clinic/getAllAppointmentsMonth/{clinicName}")
+	public ResponseEntity<List<AppointmentDTO>> getAppointmentsClinicMonth(@PathVariable("clinicName") String clinicName)
+	{
+		Calendar cal = Calendar.getInstance();
+		cal.set(Calendar.HOUR_OF_DAY, 0);
+		cal.clear(Calendar.MINUTE);
+		cal.clear(Calendar.SECOND);
+		cal.clear(Calendar.MILLISECOND);
+		
+		cal.set(Calendar.DAY_OF_MONTH, 1);
+		Date monthStart = cal.getTime();
+		cal.add(Calendar.MONTH, 1);
+		Date monthEnd = cal.getTime();
+		
+		Clinic clinic = clinicService.findByName(clinicName);
+		
+		if(clinic == null)
+		{
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+		
+		List<Appointment> list = appointmentService.findAllByClinic(clinic);
+		
+		if(list == null)
+		{
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+		
+		List<AppointmentDTO> dtos = new ArrayList<AppointmentDTO>();
+		
+		for(Appointment app : list)
+		{
+			if(app.getDate().after(monthStart) && app.getDate().before(monthEnd))
+			{
+				dtos.add(new AppointmentDTO(app));
+			}
+		} 
+		
+		return new ResponseEntity<>(dtos,HttpStatus.OK);
+	}
+	
+	
 	@GetMapping(value="/patient/getAllRequests/{email}")
 	public ResponseEntity<List<AppointmentDTO>> getPatientRequests(@PathVariable("email") String email)
 	{

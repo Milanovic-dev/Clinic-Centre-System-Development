@@ -216,7 +216,14 @@ public class ContainerInitialize {
 			Priceslist p1 = new Priceslist();
 			p1.setClinic(clinic);
 			p1.setTypeOfExamination("Opsti pregled");
-			p1.setPrice(500L);
+			p1.setPrice(1000L);
+			
+			Priceslist p2 = new Priceslist();
+			p2.setClinic(clinic);
+			p2.setTypeOfExamination("Stomatoloski");
+			p2.setPrice(1500L);
+			
+			pricelistRepository.save(p2);
 			
 			pricelistRepository.save(p1);
 			Appointment app1 = new Appointment.Builder(DateUtil.getInstance().getDate("21-01-2020 07:30","dd-mm-yyyy HH:mm"))
@@ -238,14 +245,16 @@ public class ContainerInitialize {
 					.withHall(hall2)
 					.withClinic(clinic)
 					.withDuration(1)
+					.withPriceslist(p2)
 					.build();
 
-			Appointment app3 = new Appointment.Builder(DateUtil.getInstance().getDate("21-01-2020 19:30", "dd-mm-yyyy HH:mm"))
+			Appointment app3 = new Appointment.Builder(DateUtil.getInstance().getDate("23-01-2020 19:30", "dd-mm-yyyy HH:mm"))
 					.withPatient(patient1)
 					.withType(AppointmentType.Surgery)
 					.withHall(hall2)
 					.withClinic(clinic)
 					.withDuration(1)
+					.withPriceslist(p1)
 					.build();
 			
 			app2.getDoctors().add(doctor1);
@@ -281,13 +290,7 @@ public class ContainerInitialize {
 			userRepository.save(doctor2);
 			
 			
-			Priceslist p2 = new Priceslist();
-			p2.setClinic(clinic);
-			p2.setTypeOfExamination("Stomatoloski");
-			p2.setPrice(1000L);
-			
-			pricelistRepository.save(p2);
-
+		
 			Prescription prescription = new Prescription();
 			prescription.getDrugs().add(drug);
 			prescription.getDrugs().add(drug2);

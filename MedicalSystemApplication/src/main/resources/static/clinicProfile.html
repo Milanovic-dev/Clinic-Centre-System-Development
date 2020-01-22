@@ -87,9 +87,14 @@
                                     <a class="nav-link inactive" id="chartTab-tab" data-toggle="tab" href="#chartTab" role="tab" aria-controls="chartTab" aria-selected="true" style="display:none">Dnevni pregledi</a>                     
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link inactive" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Cenovnik</a>                     
+                                    <a class="nav-link inactive" id="chartTabWeek-tab" data-toggle="tab" href="#chartTabWeek" role="tab" aria-controls="chartTabWeek" aria-selected="true" style="display:none">Nedeljeni pregledi</a>                     
                                 </li>
-                                
+                                <li class="nav-item">
+                                    <a class="nav-link inactive" id="chartTabMonth-tab" data-toggle="tab" href="#chartTabMonth" role="tab" aria-controls="chartTabMonth" aria-selected="true" style="display:none">Mesecni pregledi</a>                     
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link inactive" id="revanueTab-tab" data-toggle="tab" href="#revanueTab" role="tab" aria-controls="revanueTab" aria-selected="true" style="display:none">Prihodi</a>                     
+                                </li>
                             </ul>
                         </div>
                     </div>
@@ -153,9 +158,19 @@
                             </div>
                            	<div class="tab-pane fade show inactive" id="doctorsTab" role="tabpanel" aria-labelledby="doctorsTab-tab"></div>
                            	<div class="tab-pane fade show inactive" id="chartTab" role="tabpanel" aria-labelledby="chartTab-tab">
-                           		<div id="myChart" style="width:100%; height:400px;"></div>             	
+                           		<div id="dailyChart" style="width:100%; height:400px;"></div>             	
                            	</div>
-                           	
+                           	<div class="tab-pane fade show inactive" id="chartTabWeek" role="tabpanel" aria-labelledby="chartTabWeek-tab">
+                           		<div id="weeklyChart" style="width:100%; height:400px;"></div>             	
+                           	</div>
+                           	 <div class="tab-pane fade show inactive" id="chartTabMonth" role="tabpanel" aria-labelledby="chartTabMonth-tab">
+                           		<div id="monthlyChart" style="width:100%; height:400px;"></div>             	
+                           	</div>
+                           	<div class="tab-pane fade show inactive" id="revanueTab" role="tabpanel" aria-labelledby="revanueTab-tab">
+                           		<p id="DailyRevanue"></p> 
+                           		<p id="WeeklyRevanue"></p> 
+                           		<p id="MonthlyRevanue"></p>          	
+                           	</div>
                         </div>
                     </div>
                 </div>
