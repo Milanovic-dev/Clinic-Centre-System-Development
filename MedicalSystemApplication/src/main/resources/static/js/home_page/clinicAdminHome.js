@@ -34,7 +34,7 @@ function setUpClinicAdminPage(user)
 	sideBar.append("<li class='nav-item active'><a class='nav-link' type='button'><span id='showTypeOfExamination'>Lista tipova pregleda</span></a></li>")
 	sideBar.append("<li class='nav-item active'><a class='nav-link' type='button'><span id='addPredefinedAppointment'>Dodaj predefinisani pregled</span></a></li>")
 	sideBar.append("<li class='nav-item active'><a class='nav-link' href = 'clinicProfile.html?clinic=" + clinic.name +"'><span id='showReport'>Prikaz izvestaja poslovanja</span></a></li>")
-
+	
 	clearViews()
 	addView("addHallContainer")
 	addView("showHallContainer")
@@ -56,6 +56,9 @@ function setUpClinicAdminPage(user)
 	let headersUser = ["Ime","Prezime","Email","Telefon","Adresa","Grad","Drzava",""]
 	createDataTable("tableDoctorUsers","showUserContainer","Lista lekara",headersUser,0)
 	
+	//Lista doktora kod pravljenja predefinsanog pregleda
+	createDataTable("preAppTableDoctor","makePredefined_chooseDoctor", "Izaberite lekara",headersUser,0)
+	
 	//LISTA SALA
 	let hallSearch = new TableSearch()
 	hallSearch.input("<input class='form-control' type='text' placeholder='Ime sale' id='hallNameLabel'>")
@@ -65,14 +68,34 @@ function setUpClinicAdminPage(user)
 	let headersHall = ["Broj sale","Ime sale","Ime klinike" ,"","",""]
 	createDataTable("tableHall","showHallContainer","Lista sala",headersHall,0)
 
-	insertElementIntoTable("tableHall","&nbsp&nbsp<button class='btn btn-primary' onClick={showSearch('hallSearch')}>Pretraga</button>","card-header")
-	
+
 	insertSearchIntoTable("tableHall",hallSearch,function(){
 		hname = $('#hallNameLabel').val()
 		hnumber = $('#hallNumberLabel').val()
 		hdate = $('#hallDatePick').val()
-	let json = JSON.stringify({"name": hname,"number": hnumber,"insuranceId":hdate })
-
+		let json = JSON.stringify({"name": hname,"number": hnumber, "clinicName": clinic.name})
+		
+		console.log(json)
+		$.ajax({
+			type: 'POST',
+			url: "api/hall/getAllByFilter",
+			data: json,
+			dataType: "json",
+			contentType : "application/json; charset=utf-8",
+			complete:function(data)
+			{
+				halls = data.responseJSON
+				let i = 0
+				emptyTable("tableHall")
+				for(h of halls )
+				{
+					listHall(h, i )
+					i++
+				}
+			}
+		})
+		
+	})
 
 	
 	//KRAJ LISTE SALA
@@ -82,6 +105,7 @@ function setUpClinicAdminPage(user)
 	getTableDiv("listPricesTable").show()
 	getTableDiv("tableDoctorUsers").show()
 	getTableDiv("tableHall").show()
+	getTableDiv("preAppTableDoctor").show()
 	
 	//IZMENA PROFILA KLINIKE
 	$('#changeProfileClinic').click(function(e){
@@ -109,23 +133,7 @@ function setUpClinicAdminPage(user)
 			}
 				
 		})
-		
-		$.ajax({
-			type: 'GET',
-			url: 'api/hall/getAllByClinic/' + clinic.name,
-			complete: function(data)
-			{
-				halls = data.responseJSON
-						
-				emptyTable("listHallsTable")
-				for(h of halls )
-				{
-					let values = [h.number , h.clinicName]
-					insertTableData("listHallsTable",values)
-				}
-			}
-		})
-				
+
 		$.ajax({
 			type: 'GET',
 			url: 'api/priceList/getAllByClinic/' + clinic.name,
@@ -197,12 +205,15 @@ function setUpClinicAdminPage(user)
 	$('#submitPredefinedAppointmentRequest').click(function(e){
 		e.preventDefault()
 		
+		showLoading('submitPredefinedAppointmentRequest')
+		
 		$.ajax({
 			type: 'POST',
 			url: 'api/appointments/makePredefined',
 			complete: function(data)
 			{
 				alert(data.status)
+				hideLoading('submitPredefinedAppointmentRequest')
 			}
 		
 		})
@@ -343,6 +354,8 @@ function setUpClinicAdminPage(user)
 
 
 }
+	
+	
 
 
 function submitDoctorForm(clinic)
@@ -880,6 +893,26 @@ function makeAppointment(clinic)
 				
 			}
 		})
+	})
+	
+	
+	emptyTable('preAppTableDoctor')
+	
+	$.ajax({
+		type: 'GET',
+		url: 'api/clinic/getDoctors/' + clinic.name,
+		complete: function(data)
+		{
+			users = data.responseJSON
+			let i = 0
+			emptyTable('preAppTableDoctor')
+			for(let u of users)
+            {
+				let d = [u.user.name, u.user.surname, getProfileLink(u.user.email), u.user.phone, u.user.address, u.user.city, u.user.state,"<input type='checkbox' id='checkDoctorSelect"+i+"'><label for='checkDoctorSelect"+i+"'></label>"]
+				insertTableData("preAppTableDoctor",d)
+            }
+		}
+								
 	})
 
 }

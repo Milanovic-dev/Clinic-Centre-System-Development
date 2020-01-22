@@ -172,6 +172,7 @@ class ChartData
 	{
 		this.data = []
 		this.hourData = {}
+		this.weekData = {}
 		
 		//TODO: Prebrojati koliko ima pregleda u svakom satu 
 		
@@ -210,7 +211,10 @@ class ChartData
 			let num = this.hourData[i]
 			
 			this.data.push([mills, num])
-		}			
+		}		
+		
+		
+		
 	}
 	
 	getHourData()
