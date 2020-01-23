@@ -67,7 +67,7 @@ function createChooseDoctorTable()
 	search.input('<input class="form-control" type="text" placeholder="Unesite Ime" id="chooseDoctorName">')
 	search.input('<input class="form-control" type="text" placeholder="Unesite prezime" id="chooseDoctorSurname">')
 	search.input('<input class="form-control" type="number" placeholder="Unesite ocenu" id="chooseDoctorSurname">')
-	
+		
 	insertSearchIntoTable("chooseDoctorTable", search, function(){
 			
 	})

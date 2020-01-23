@@ -729,6 +729,7 @@ function getAppointment(clinicName, date, hallNumber, user){
                 input.removeClass('is-invalid')
            }
            
+           /*
            if(!validation(nextDate, nextDate.val() == "", "Morate uneti datum."))
            {
         	   flag = false        	   
@@ -743,28 +744,28 @@ function getAppointment(clinicName, date, hallNumber, user){
            {
         	   flag = false
            }
-           
+           */
 
            if(flag == false){
                 return
            }
-           			
            
-           		let typeOfExam
-           		
-           		if(nextType.val() == "Pregled")
-           		{
-           			typeOfExam = "Examination"
-           			
-           		}
-           		else
-           		{
-           			typeOfExam = "Surgery"           			
-           		}
-           
-           		let nextAppRequestJSON = JSON.stringify({"date":nextDate.val(), "patientEmail":patient.email, "clinicName":clinicName, "doctors":[user.email], "typeOfExamination":ToE.val(), "type":typeOfExam})
-           		
-           		$.ajax({
+           if(nextDate.val() != "" && ToE.val() != "" && nextType.val() != "")
+           {
+        	   let typeOfExam
+          		
+          		if(nextType.val() == "Pregled")
+          		{
+          			typeOfExam = "Examination"      			
+          		}
+          		else
+          		{
+          			typeOfExam = "Surgery"           			
+          		}
+        	   	
+          		let nextAppRequestJSON = JSON.stringify({"date":nextDate.val(), "patientEmail":patient.email, "clinicName":clinicName, "doctors":[user.email], "typeOfExamination":ToE.val(), "type":typeOfExam})
+          		
+          		$.ajax({
 						type:'POST',
 						url:'api/appointments/sendRequest',
 						data: nextAppRequestJSON,
@@ -778,6 +779,9 @@ function getAppointment(clinicName, date, hallNumber, user){
 							}													
 						}
 					})
+           }
+           
+           		
            
 
                 let prescriptionDTO = {"description":description,"drugs":drugs,"nurse":"","isValid":false, "validationDate":""}

@@ -40,7 +40,7 @@ function createTable(id,name,headers,tableClass)
 
 function createDataTable(id,div,name,headers,orderBy)
 {
-	let handle = createTable(id,name,headers,"stripe")
+	let handle = createTable(id,name,headers)
 	
 	insertTableInto(div,handle)
 	
@@ -130,7 +130,10 @@ function insertSearchIntoTable(id, search, func)
 	button.addEventListener("click",function(e){
 		e.preventDefault()
 		
-		$('#table_'+id).DataTable().sort()
+		if($.fn.DataTable.isDataTable('#table_'+id))
+		{
+			$('#table_'+id).DataTable().sort()			
+		}
 
 
 		if(func != undefined)
