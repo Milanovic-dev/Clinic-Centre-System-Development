@@ -73,16 +73,16 @@ function createHistoryTable(reports)
 	createDataTable("historyTable","history","Istorija pregleda/operacija",headers,0)
 	getTableDiv("historyTable").show()
 	
-	for(report of reports)
+	for(let report of reports)
 	{
-		let diagnosis
+		//let diagnosis = ""
 		
-		for(d of diagnosis)
-		{
-			diagnosis += d+" "
-		}
+		//for(d of reports.diagnosis)
+		//{
+			//diagnosis += d+" "
+		//}
 		
-		let data = ['Pregled',report.dateAndTime, report.clinicName, report.doctorEmail, report.patientEmail, report.description, diagnosis, report.prescription.description]
+		let data = ['Pregled',report.dateAndTime, report.clinicName, report.doctorEmail, report.patientEmail, report.description, "", ""]
 		insertTableData("historyTable",data)
 	}
 	
