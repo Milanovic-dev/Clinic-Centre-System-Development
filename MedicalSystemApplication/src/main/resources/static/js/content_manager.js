@@ -95,6 +95,7 @@ function showLoading(button)
 	}
 	
 	buttonElem.append('<span class="spin">&nbsp<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span></span>')
+	buttonElem.prop('disabled', true)
 }
 
 
@@ -112,6 +113,7 @@ function hideLoading(button)
 	}
 	
 	buttonElem.children(".spin").remove()
+	buttonElem.prop('disabled', false)
 }
 
 

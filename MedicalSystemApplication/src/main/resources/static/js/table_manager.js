@@ -212,7 +212,7 @@ function insertTableData(id,data)
 }
 
 
-function insertTableInto(id,handle)
+function insertTableInto(id, handle)
 {
 	$('#'+id).append(handle)
 }

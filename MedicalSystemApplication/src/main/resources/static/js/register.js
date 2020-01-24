@@ -84,7 +84,9 @@ $(document).ready(function(){
 		
 		
 		let regReq = JSON.stringify({"password":password,"email":email,"name":name,"surname":surname,"city":city,"address":address,"state":state,"phone":phone,"insuranceId":insurance})
-		console.log(regReq)
+
+		showLoading('submitRegister')
+		
 		$.ajax({
 			type: 'POST',
 			url:'/api/auth/registerRequest',
@@ -93,7 +95,7 @@ $(document).ready(function(){
 			contentType : "application/json; charset=utf-8",
 			complete: function(data)
 			{
-				console.log(data.status)
+				hideLoading('submitRegister')
 				
 				if(data.status == "208")
 				{

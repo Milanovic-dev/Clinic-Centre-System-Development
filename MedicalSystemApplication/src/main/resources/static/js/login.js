@@ -48,9 +48,8 @@ $(document).ready(function(){
 		
 		if(flag == false) return
 		
-		
+		showLoading('submitLogin')
 		let json = JSON.stringify({"email":email,"password":password})
-		console.log(json)
 		
 		$.ajax({
 			type: 'POST',
@@ -61,6 +60,7 @@ $(document).ready(function(){
 			complete: function(data)
 			{
 
+				hideLoading('submitLogin')
 				if(data.status == "200")
 				{
 					let user = data.responseJSON
