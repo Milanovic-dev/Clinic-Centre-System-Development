@@ -529,24 +529,6 @@ function setUpHall(){
 	})
 }
 
-function setUpDiagnosis(){
-	$.ajax({
-        type: 'GET',
-        url:"api/diagnosis/getAllDiagnosis",
-        complete: function(data)
-        {
-           let select = $('#selectDiagnosisStartExamin').val()
-
-           			$.each(data.responseJSON, function (i, item) {
-           			    $('#selectDiagnosisStartExamin').append($('<option>', {
-           			        value: item.name,
-           			        text : item.name
-           			    }));
-           			});
-        }
-    })
-
-}
 
 function setUpCodebooks(){
 
@@ -578,7 +560,7 @@ function setUpCodebooks(){
                			$.each(data.responseJSON, function (i, item) {
                			    $('#selectDiagnosis').append($('<option>', {
                			        value: item.name,
-               			        text : item.name
+               			        text : item.name + "(" + item.code + ")"
                			    }));
                			});
                			$('.selectpicker').selectpicker('refresh');
@@ -590,8 +572,13 @@ function setUpCodebooks(){
 
 function getAppointment(clinicName, date, hallNumber, user){
 
-
+		$('#collapseThree').collapse('toggle')
         hallNumber = parseInt(hallNumber)
+        
+        $('#nextAppType').change(function(e)
+        {
+        	$('#nextAppToE').prop('disabled', $('#nextAppType').val() != "Pregled")
+        })
 
         var appointment
         var patient
@@ -679,8 +666,9 @@ function getAppointment(clinicName, date, hallNumber, user){
 
                     })
         });
-
-
+        
+        
+ 
 
         $('#submitReport').off("click").click(function(e){
             e.preventDefault()
@@ -703,6 +691,7 @@ function getAppointment(clinicName, date, hallNumber, user){
            let nextDate = $('#nextAppDate')
            let nextType = $('#nextAppType')
            let ToE = $('#nextAppToE')
+           
 
 // if(!drugs == [] && !description == '')
 // {

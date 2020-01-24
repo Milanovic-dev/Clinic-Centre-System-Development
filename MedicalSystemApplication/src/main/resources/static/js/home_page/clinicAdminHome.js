@@ -57,7 +57,8 @@ function setUpClinicAdminPage(user)
 	createDataTable("tableDoctorUsers","showUserContainer","Lista lekara",headersUser,0)
 	
 	//Lista doktora kod pravljenja predefinsanog pregleda
-	createDataTable("preAppTableDoctor","makePredefined_chooseDoctor", "Izaberite lekara",headersUser,0)
+	headersDoctorsPredefApp = ["Ime","Prezime","Email","Telefon","Adresa","Grad","Drzava",""]
+	createDataTable("preAppTableDoctor","makePredefined_chooseDoctor", "Izaberite lekara",headersDoctorsPredefApp,0)
 	
 	//LISTA SALA
 	let hallSearch = new TableSearch()
@@ -200,24 +201,6 @@ function setUpClinicAdminPage(user)
 	})
 	//KRAJ DODAVANJA PREDEFINISANOG PREGLEDA
 	
-	
-	$('#submitPredefinedAppointmentRequest').off('click')
-	$('#submitPredefinedAppointmentRequest').click(function(e){
-		e.preventDefault()
-		
-		showLoading('submitPredefinedAppointmentRequest')
-		
-		$.ajax({
-			type: 'POST',
-			url: 'api/appointments/makePredefined',
-			complete: function(data)
-			{
-				alert(data.status)
-				hideLoading('submitPredefinedAppointmentRequest')
-			}
-		
-		})
-	})
 	
 	//LISTA TIPOVA PREGLEDA
 	$('#showTypeOfExamination').click(function(e){
@@ -875,47 +858,104 @@ function makeAppointment(clinic)
 
 	})
 	
+	doctorsSelected = []
+	let users = null
 	$('#inputAppointmentTypeSelect').change(function(e){
 		$.ajax({
 			type: 'GET',
-			url: 'api/doctors/getAll/' + $('#inputAppointmentTypeSelect').val() + "/" + clinic.name,
+			url: 'api/clinic/getDoctorsByType/' + clinic.name + "/" + $('#inputAppointmentTypeSelect').val(),
 			complete: function(data)
 			{
-				let doctors = data.responseJSON
-				$('#tableDoctorsList tbody').empty()
-				let i=0
-				for(let d of doctors)
-				{
-					console.log(d)
-					makeDoctor(d,i)
-					i++;
-				}
+				users = data.responseJSON
+				let i = 0
+				emptyTable('preAppTableDoctor')
 				
+				for(let u of users)
+	            {
+					let d = [u.user.name, u.user.surname, getProfileLink(u.user.email), u.user.phone, u.user.address, u.user.city, u.user.state,"<input type='checkbox' id='checkDoctorSelect"+i+"'><label for='checkDoctorSelect"+i+"'></label>"]
+					insertTableData("preAppTableDoctor",d)
+					i++
+					
+					$('#checkDoctorSelect'+i).off('click')
+					$('#checkDoctorSelect'+i).click(function(e){
+						
+						for(let j = 0 ; j < users.length ; j++)
+						{
+							if(j == i)
+							{
+								$("#checkDoctorSelect"+j).prop('checked',true)
+							}
+							else
+							{
+								$("#checkDoctorSelect"+j).prop('checked',false)
+							}
+						}
+					})
+	            }
 			}
 		})
 	})
 	
+
+
+			$('#submitPredefinedAppointmentRequest').click(function(e){
+				for(let j = 0 ; j < users.length ; j++)
+				{
+					if($("#checkDoctorSelect"+j).is(":checked"))
+					{
+						doctorsSelected.push(users[j].user.email)
+					}
+					
+				}
+				submitPredefinedAppointment(doctorsSelected)
+				
+			})
+
+
+}
+
+function submitPredefinedAppointment(doctorsSelected)
+{
+	if(doctorsSelected.length == 0)
+	{
+		displayError('submitPredefinedAppointmentRequest',"Morate izabrati doktora")
+		return
+	}
+	showLoading("submitPredefinedAppointmentRequest")
 	
-	emptyTable('preAppTableDoctor')
+	let date = $('#inputDatePredef').val()
+	let clinicName = clinic.name
+	let hallNumber = $('#inputAppointmentHall').val()
+	let doctors = doctorsSelected
+	let timeStart = $('#inputTimeBegin').val()
+	let timeEnd = $('#inputTimeEnd').val()
+	let price = $('#inputPrice').val()
+	let typeOfExamination = $('#inputAppointmentTypeSelect').val()
+	let json = JSON.stringify({"date":date,"clinicName":clinicName,"hallNumber": hallNumber, "doctors":doctors,"duration": 0,"price": price,"typeOfExamination":typeOfExamination,"type":"Examination"})
 	
+	console.log(json)
 	$.ajax({
-		type: 'GET',
-		url: 'api/clinic/getDoctors/' + clinic.name,
+		type: 'POST',
+		url: 'api/appointments/makePredefineded',
+		data: json,
+		dataType : "json",
+		contentType : "application/json; charset=utf-8",
 		complete: function(data)
 		{
-			users = data.responseJSON
-			let i = 0
-			emptyTable('preAppTableDoctor')
-			for(let u of users)
-            {
-				let d = [u.user.name, u.user.surname, getProfileLink(u.user.email), u.user.phone, u.user.address, u.user.city, u.user.state,"<input type='checkbox' id='checkDoctorSelect"+i+"'><label for='checkDoctorSelect"+i+"'></label>"]
-				insertTableData("preAppTableDoctor",d)
-            }
+			console.log(data)
+			if(data.status == '201')
+			{
+				alert('Uspesno kreiran predefinisani pregled')
+			}
+			
+			hideLoading("submitPredefinedAppointmentRequest")
 		}
-								
+		
+		
 	})
 
 }
+
 function makeDoctor(d,i)
 {
 	let tr=$('<tr></tr>');

@@ -248,7 +248,30 @@ public class ClinicController {
     	return new ResponseEntity<>(ret,HttpStatus.OK);
     	
     }
-    
+    @GetMapping(value="/getDoctorsByType/{clinicName}/{typeOfExamination}")
+    public ResponseEntity<List<DoctorDTO>> getClinicDoctorsByType(@PathVariable("clinicName") String clinicName,@PathVariable("typeOfExamination") String typeOfExamination)
+    {
+    	Clinic clinic = clinicService.findByName(clinicName);
+    	if(clinic == null)
+    	{
+    		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    	}
+    	
+    	List<Doctor> doctors = clinic.getDoctors();
+    	List<DoctorDTO> dtos = new ArrayList<DoctorDTO>();
+    	
+    	for(Doctor doc : doctors)
+    	{
+    		if(doc.getDeleted() == false && doc.getType().equalsIgnoreCase(typeOfExamination))
+    		{
+    			DoctorDTO dto = new DoctorDTO(doc);
+    			dtos.add(dto);	
+    		}
+    	}
+    	
+    	return new ResponseEntity<>(dtos,HttpStatus.OK);
+
+    }
 
     @GetMapping(value="/getDoctors/{name}")
     public ResponseEntity<List<DoctorDTO>> getClinicsDoctors(@PathVariable("name") String name)

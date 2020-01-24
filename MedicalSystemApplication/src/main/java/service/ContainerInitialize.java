@@ -248,7 +248,7 @@ public class ContainerInitialize {
 					.withPriceslist(p2)
 					.build();
 
-			Appointment app3 = new Appointment.Builder(DateUtil.getInstance().getDate("23-01-2020 19:30", "dd-mm-yyyy HH:mm"))
+			Appointment app3 = new Appointment.Builder(DateUtil.getInstance().getDate("24-01-2020 19:30", "dd-mm-yyyy HH:mm"))
 					.withPatient(patient1)
 					.withType(AppointmentType.Surgery)
 					.withHall(hall2)
