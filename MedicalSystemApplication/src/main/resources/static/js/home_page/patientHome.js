@@ -504,14 +504,12 @@ function p_listClinic(data,i,user)
 					let timeInput = $('#inputStartTime')
 					if(!validation(timeInput, time == "", "Morate izabrati vreme"))
 					{
+						hideLoading("submitAppointmentRequest")
 						return
 					}
 					
 					let json = JSON.stringify({"date":date+" "+time,"clinicName":clinicName,"patientEmail":patientEmail,"doctors":doctorArray,"typeOfExamination":typeOfExamination,"type":"Examination"})
-					console.log(json)
-					$('#submitAppSpinner').show()
-					//SEND REQUEST
-					
+
 					$.ajax({
 						type:'POST',
 						url:'api/appointments/sendRequest',
