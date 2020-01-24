@@ -487,9 +487,12 @@ public class AppointmentController
 		
 		for(Appointment app : appointments)
 		{
-			AppointmentDTO dt = new AppointmentDTO(app);
-			dt.setDate(app.getDate().toString());
-			dto.add(dt);
+			if(app.getPatient() != null && !app.getPredefined())
+			{
+				AppointmentDTO dt = new AppointmentDTO(app);
+				dt.setDate(app.getDate().toString());
+				dto.add(dt);			
+			}
 		}
 
 		if(appointments == null)
@@ -590,6 +593,8 @@ public class AppointmentController
 			appointment.getDoctors().add(doc);
 		}		
 		clinic.getAppointments().add(appointment);
+		
+		//TODO: Dodati salu, dodati svakom doktoru appointment
 		//Send mail
 		appointmentRequestService.delete(request);
 		appointmentService.save(appointment);	
@@ -698,6 +703,7 @@ public class AppointmentController
 		
 		return new ResponseEntity<>(HttpStatus.CREATED);
 	}
+	
 	
 	@DeleteMapping(value="/cancelRequest/{role}")
 	public ResponseEntity<Void> cancelAppointmentRequest(@RequestBody AppointmentDTO dto, @PathVariable("role")UserRole role)

@@ -325,7 +325,7 @@ function createChartsWeekly(apps)
 		        tooltip: {
 		            crosshairs: [true],
 		            formatter: function () {
-		                return "Vreme: " + moment.utc(moment.unix(this.x/1000)).format("DD/MM-YYYY HH:mm") + "<br> Br. Pregleda: " + this.y;
+		                return "Vreme: " + moment.utc(moment.unix((this.x + 24 * 3600 * 1000)/1000)).format("DD/MM-YYYY") + "<br> Br. Pregleda: " + this.y;
 		            }
 		        },
 		        series: [{
