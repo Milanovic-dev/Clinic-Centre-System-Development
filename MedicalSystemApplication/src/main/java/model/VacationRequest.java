@@ -9,6 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -28,6 +29,9 @@ public class VacationRequest
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
 	private User user;
+    
+    @ManyToOne(fetch = FetchType.EAGER)
+    private Clinic clinic;
 
 	public VacationRequest() {
 		super();
@@ -35,10 +39,22 @@ public class VacationRequest
 	}
 	
 
-	public VacationRequest(Date startDate, Date endDate, User vacationUser) {
+	public VacationRequest(Date startDate, Date endDate,Clinic clinic, User vacationUser) {
 		this.startDate = startDate;
 		this.endDate = endDate;
 		this.user = vacationUser;
+		this.clinic = clinic;
+	}
+
+	
+
+	public Clinic getClinic() {
+		return clinic;
+	}
+
+
+	public void setClinic(Clinic clinic) {
+		this.clinic = clinic;
 	}
 
 
