@@ -67,6 +67,13 @@ public class DateUtil {
 		return cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR) &&
 		                  cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR);
 	}
+	
+	public Date now(String format)
+	{
+		Calendar cal = Calendar.getInstance();
+		
+		return getDate(new SimpleDateFormat(format).format(cal.getTime()), format);
+	}
 		
 	public static DateUtil getInstance()
 	{

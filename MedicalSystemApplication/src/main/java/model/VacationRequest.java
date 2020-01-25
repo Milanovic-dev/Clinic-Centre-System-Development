@@ -1,6 +1,6 @@
 package model;
 
-import java.sql.Date;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -27,7 +27,7 @@ public class VacationRequest
     
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
-	private User vacationUser;
+	private User user;
 
 	public VacationRequest() {
 		super();
@@ -38,7 +38,7 @@ public class VacationRequest
 	public VacationRequest(Date startDate, Date endDate, User vacationUser) {
 		this.startDate = startDate;
 		this.endDate = endDate;
-		this.vacationUser = vacationUser;
+		this.user = vacationUser;
 	}
 
 
@@ -56,8 +56,8 @@ public class VacationRequest
 	}
 
 
-	public void setStartDate(Date startDate) {
-		this.startDate = startDate;
+	public void setStartDate(java.util.Date date) {
+		this.startDate = date;
 	}
 
 
@@ -70,17 +70,12 @@ public class VacationRequest
 		this.endDate = endDate;
 	}
 
-
-	public User getVacationUser() {
-		return vacationUser;
+	public User getUser() {
+		return user;
 	}
 
-
-	public void setVacationUser(User vacationUser) {
-		this.vacationUser = vacationUser;
+	public void setUser(User vacationUser) {
+		this.user = vacationUser;
 	}
-	
-	
-	
 
 }

@@ -32,7 +32,7 @@ public class Doctor extends User
     @ManyToOne(fetch = FetchType.EAGER)
     private Clinic clinic;
     
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<ReviewDoctor> reviews;
 
 	@JsonIgnore

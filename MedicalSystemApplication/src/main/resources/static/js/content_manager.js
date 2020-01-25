@@ -72,13 +72,30 @@ function displayError(id,text)
 {
 	let button = $("#"+id)
 	
-	let spanId = id + "_errorSpan"
+	let spanId = id + "_mesSpan"
 	if($('#'+spanId).length > 0)
 	{
+		$('#'+spanID).text(text+"fds")
+		$('#'+spanID).css("color","#FF1103")
 		return
 	}
 	
 	button.before('<span style="color:#FF1103" id="'+spanId+'">'+text+'</span><br>')
+}
+
+function displaySuccess(id, text)
+{
+let button = $("#"+id)
+	
+	let spanId = id + "_mesSpan"
+	if($('#'+spanId).length > 0)
+	{
+		$('#'+spanID).text(text)
+		$('#'+spanID).css("color","#4BB543")
+		return
+	}
+	
+	button.before('<span style="color:#4BB543" id="'+spanId+'">'+text+'</span><br>')
 }
 
 function warningModal(header, content)
@@ -168,8 +185,8 @@ function validation(element, condition, errorMessage)
 	
 	if(!condition)
 	{
-		elem.addClass('is-valid')	
 		elem.removeClass('is-invalid')
+		elem.addClass('is-valid')	
 		return true
 	}
 	else

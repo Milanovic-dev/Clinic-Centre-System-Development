@@ -162,7 +162,7 @@ public class ContainerInitialize {
 					.build();
 			
 			doctor1.setIsFirstLog(false);
-			doctor1.setAvarageRating(8.81f);
+			doctor1.setAvarageRating(3.98f);
 			userRepository.save(doctor1);
 			
 			Doctor doctor2 = new Doctor.Builder("doktor2@gmail.com")
@@ -180,7 +180,7 @@ public class ContainerInitialize {
 					.withShiftEnd(DateUtil.getInstance().getDate("18:00","HH:mm"))
 					.build();
 
-			doctor2.setAvarageRating(6.4f);
+			doctor2.setAvarageRating(4.4f);
 			userRepository.save(doctor2);
 			
 			Doctor doctor3 = new Doctor.Builder("doktor3@gmail.com")
@@ -198,7 +198,7 @@ public class ContainerInitialize {
 					.withShiftEnd(DateUtil.getInstance().getDate("18:00","HH:mm"))
 					.build();
 
-			doctor3.setAvarageRating(9.91f);
+			doctor3.setAvarageRating(2.0f);
 			userRepository.save(doctor3);
 			
 			Hall hall1 = new Hall(clinic,1,"Prva sala");
@@ -236,7 +236,6 @@ public class ContainerInitialize {
 			
 			app1.setPredefined(true);
 			app1.getDoctors().add(doctor1);
-			app1.getDoctors().add(doctor2);
 			appointmentRepository.save(app1);
 
 			Appointment app2 = new Appointment.Builder(DateUtil.getInstance().getDate("21-01-2020 07:40", "dd-mm-yyyy HH:mm"))
@@ -248,6 +247,8 @@ public class ContainerInitialize {
 					.withDuration(1)
 					.withPriceslist(p2)
 					.build();
+			
+			app2.getDoctors().add(doctor2);
 
 			Appointment app3 = new Appointment.Builder(DateUtil.getInstance().getDate("24-01-2020 19:30", "dd-mm-yyyy HH:mm"))
 					.withPatient(patient1)
@@ -258,8 +259,7 @@ public class ContainerInitialize {
 					.withPriceslist(p1)
 					.build();
 			
-			app2.getDoctors().add(doctor1);
-			app2.getDoctors().add(doctor3);
+			app3.getDoctors().add(doctor3);
 			appointmentRepository.save(app2);
 			appointmentRepository.save(app3);
 			
