@@ -37,7 +37,6 @@ import service.UserService;
 @RequestMapping(value = "api/appointments")
 public class AppointmentController 
 {
-	private final long HOUR_MILLIS = 3600000;
 	
 	@Autowired
 	private AppointmentService appointmentService;
@@ -719,7 +718,7 @@ public class AppointmentController
 		
 		Date date = new Date();
 		
-		if(date.getTime() > tm.getTime() + 24 * HOUR_MILLIS)
+		if(date.getTime() > tm.getTime() + 24 * DateUtil.HOUR_MILLIS)
 		{
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}

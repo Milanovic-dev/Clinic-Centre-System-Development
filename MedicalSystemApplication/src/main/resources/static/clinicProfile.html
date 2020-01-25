@@ -83,6 +83,12 @@
                                 <li class="nav-item">
                                     <a class="nav-link inactive" id="doctorsTab-tab" data-toggle="tab" href="#doctorsTab" role="tab" aria-controls="doctorsTab" aria-selected="true">Spisak lekara</a>                     
                                 </li>
+                                 <li class="nav-item">
+                                    <a class="nav-link inactive" id="hallTab-tab" data-toggle="tab" href="#hallTab" role="tab" aria-controls="hallTab" aria-selected="true">Spisak sala</a>                     
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link inactive" id="pricelistTab-tab" data-toggle="tab" href="#pricelistTab" role="tab" aria-controls="pricelistTab" aria-selected="true">Cenovnik</a>                     
+                                </li>
                                 <li class="nav-item">
                                     <a class="nav-link inactive" id="chartTab-tab" data-toggle="tab" href="#chartTab" role="tab" aria-controls="chartTab" aria-selected="true" style="display:none">Dnevni pregledi</a>                     
                                 </li>
@@ -104,7 +110,7 @@
                     <div class="col-md-4">
                         <div class="profile-work">
                             <p id = "pRole"></p>
-                            <a href="profileClinicChange.html" >Izmeni informacije</a><br/>
+                            <a href="index.html?changeProfileClinic=true" id="changeClinicInfo" style="display:none">Izmeni informacije</a><br/>
                                                
                         </div>
                     </div>
@@ -157,6 +163,15 @@
 										
                             </div>
                            	<div class="tab-pane fade show inactive" id="doctorsTab" role="tabpanel" aria-labelledby="doctorsTab-tab"></div>
+                           	<div class="tab-pane fade show inactive" id="hallTab" role="tabpanel" aria-labelledby="hallTab-tab">
+                           		<div id="hallContainerProfileClinic">
+                           		</div>
+                           	</div>
+                           	<div class="tab-pane fade show inactive" id="pricelistTab" role="tabpanel" aria-labelledby="pricelistTab-tab">
+                           		<div id="pricelistContainerProfileClinic">
+                           		</div>
+                           	</div>
+                          	
                            	<div class="tab-pane fade show inactive" id="chartTab" role="tabpanel" aria-labelledby="chartTab-tab">
                            		<div id="dailyChart" style="width:100%; height:400px;"></div>             	
                            	</div>
@@ -174,7 +189,8 @@
                         </div>
                     </div>
                 </div>
-            </form>           
+            </form> 
+            <a href="index.html">Nazad na pocetnu</a>          
         </div>
      </div>
   </body>

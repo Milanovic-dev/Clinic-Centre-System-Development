@@ -170,14 +170,38 @@
     </div>
   </div>
   
-   <div id ="showHallContainer" style="display:none"> 
-    	
-    </div>
-    
-    <div class="card mb-3" id ="showReportContainer" style="display:none"> 
-    	
-    </div>
-    
+   <div id ="showHallContainer" style="display:none"> </div>
+   <div class="card mb-3" id ="showReportContainer" style="display:none"></div>
+   
+<!-- -------------------ZAHTEV ZA GODISNJI ODMOR----------- -->
+<div class="card mb-3" id ="showVacationRequestContainer" style="display:none">
+  <div class="card card-register mx-auto mt-5">
+  <div class="card-header">Zahtev za godišnji odmor ili odsustvo</div>
+  <div class="card-body">
+   <form>
+	  <div class="form-group">
+	    <label for="startDateVacationRequest">Prvi dan godišnjeg odmora ili odsustva: </label>
+        <input class="form-control datepicker-here" data-language="en" placeholder="Izaberite datum" id="startDayInputVacationRequest" readonly="true">
+	  </div>
+	  <div class="form-group">
+	    <label for="endDateVacationRequest">Poslednji dan godišnjeg odmora ili odsustva: </label>
+        <input class="form-control datepicker-here" data-language="en" placeholder="Izaberite datum" id="endDayInputVacationRequest" readonly="true">
+	  </div>
+	  <p>
+	  <div>
+	  <img src="images/checked.png" id="checkedImageVacationRequest" style="display:none ; width:10% ; height:auto" >
+	  <img src="images/unchecked.png" id="uncheckedImageVacationRequest" style="display:none ; width:5% ; height:auto">
+	  </div>
+	  	<div class="spinner-border text-primary" id="vacationRequestSpinner" role="status" style="display:none">
+  			<span class="sr-only">Provera mogućnosti slanja zahteva...</span>
+		</div>
+	  </p>
+	  <button type="submit" id = "submitVacationRequest"class="btn btn-primary" disabled="true">Pošalji zahtev</button>
+	</form>
+   </div>
+  </div>
+</div>
+<!-- ------------------- KRAJ ZAHTEVA ZA GODISNJI ODMOR----------- -->
 <!-- WARNING MODAL -->
 <div class="modal fade" id="warningModal" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-dialog" role="document">
@@ -217,6 +241,29 @@
   </div>
 </div> 
 <!-- KRAJ SEARCH MODAL -->
+
+<!-- ---------KALENDAR ZAUZECA SALE-------------- -->
+<div class="modal fade" id="hallCalendar" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="calendarModalLabel"></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+ 		<div class="table-responsive">
+             <div id="calendarHall"></div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal">Zatvori</button>
+      </div>
+    </div>
+  </div>
+</div> 
+<!-- -------KRAJ KALENDARA ZAUZECA SALE----------- -->
    
    	  <div  id = "showClinicContainer" style="display:none"></div>        
       <div  id = "showUserContainer" style="display:none"></div>
@@ -306,7 +353,7 @@
           <div class="form-group">
           <label>Datum</label>
             <div class="form-label-group">        
-              <input type="text" id="inputDate" class="form-control"  autofocus="autofocus" disabled>
+              <input class="form-control datepicker-here" data-language="en" placeholder="Izaberite datum" id="inputDate" readonly="true">
             </div>
           </div>   
           <div class="form-group">
@@ -559,12 +606,16 @@
           <button type="button" class="btn btn-primary btn-block" id = "submitChangesClinicProfile">Sacuvaj izmene</button>
         </form>
       </div>
-    <div id = "doctorContainer"></div>
- 	<div id = "hallContainer"></div>
- 	<div id = "pricesContainer"></div>
+  		<div class="card mb-3" id = "doctorClinicProfileContainer" style="display:none">
+        </div>
+        <div class="card mb-3" id = "hallClinicProfileContainer" style="display:none">
+        </div>
+        <div class="card mb-3" id = "pricesContainer" style="display:none">
+        </div>
  
  </div>
  </div>
+
 <!-- ------------------KRAJ IZMENE PROFILA KLINIKE---------------------- -->
   
 <!-- -----------------------REGISTRACIJA LEKARA------------------------- -->

@@ -3,12 +3,15 @@ package helpers;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.Calendar;
 import java.util.Date;
 
 public class DateUtil {
 		
 	private static DateUtil instance;
+	public static final long HOUR_MILLIS = 3600000;
+	
 	
 	public String getString(Date date,String format)
 	{
@@ -31,6 +34,28 @@ public class DateUtil {
 		}
 		
 		return null;
+	}
+	
+	public Date getDate(long millis, String format)
+	{
+		Calendar cal = Calendar.getInstance();
+		
+		cal.setTimeInMillis(millis);
+		Date date = cal.getTime();
+
+		return getDate(getString(date,format) , format);
+	}
+	
+	public long getHoursBetween(Date d1, Date d2)
+	{
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(d1);
+		long start = cal.getTimeInMillis();
+		cal.clear();
+		cal.setTime(d2);
+		long end = cal.getTimeInMillis();
+		System.out.println(start + " : " + end);
+		return Math.abs(end - start);
 	}
 	
 	public Boolean isSameDay(Date date1, Date date2)

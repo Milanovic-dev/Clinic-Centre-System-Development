@@ -240,6 +240,7 @@ public class ContainerInitialize {
 			appointmentRepository.save(app1);
 
 			Appointment app2 = new Appointment.Builder(DateUtil.getInstance().getDate("21-01-2020 07:40", "dd-mm-yyyy HH:mm"))
+					.withEndingDate(DateUtil.getInstance().getDate("21-01-2020 09:40", "dd-mm-yyyy HH:mm"))
 					.withPatient(patient1)
 					.withType(AppointmentType.Surgery)
 					.withHall(hall2)

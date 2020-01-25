@@ -24,4 +24,5 @@ public interface AppointmentRepository extends JpaRepository<Appointment,Long>{
 	public List<Appointment> findAllByHall(Hall hall);
 	public List<Appointment> findAllByClinic(Clinic c);
 	public List<Appointment> findAllByPredefined(Boolean predefined);
+	public List<Appointment> findAllByDate(Date date);
 }

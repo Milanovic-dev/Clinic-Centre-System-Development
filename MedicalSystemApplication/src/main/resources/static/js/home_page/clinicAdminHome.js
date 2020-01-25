@@ -25,6 +25,7 @@ function setUpClinicAdminPage(user)
 	
 	let sideBar = $("#sideBar")
 	sideBar.append("<li class='nav-item active'><a class='nav-link' href='userProfileNew.html'><span id='profileUser'>Profil</span></a></li>")
+	sideBar.append("<li class='nav-item active'><a class='nav-link' href = 'clinicProfile.html?clinic=" + clinic.name +"'><span id='showReport'>Profil klinike</span></a></li>")
 	sideBar.append("<li class='nav-item active'><a class='nav-link' type='button'><span id='changeProfileClinic'>Uredi profil klinike</span></a></li>")
 	sideBar.append("<li class='nav-item active'><a class='nav-link' type='button'><span id='addHall'>Dodaj salu</span></a></li>")	
 	sideBar.append("<li class='nav-item active'><a class='nav-link' type='button'><span id='showHalls'>Lista sala</span></a></li>")
@@ -33,7 +34,6 @@ function setUpClinicAdminPage(user)
 	sideBar.append("<li class='nav-item active'><a class='nav-link' type='button'><span id='addTypeOfExamination'>Dodaj tip pregleda</span></a></li>")
 	sideBar.append("<li class='nav-item active'><a class='nav-link' type='button'><span id='showTypeOfExamination'>Lista tipova pregleda</span></a></li>")
 	sideBar.append("<li class='nav-item active'><a class='nav-link' type='button'><span id='addPredefinedAppointment'>Dodaj predefinisani pregled</span></a></li>")
-	sideBar.append("<li class='nav-item active'><a class='nav-link' href = 'clinicProfile.html?clinic=" + clinic.name +"'><span id='showReport'>Prikaz izvestaja poslovanja</span></a></li>")
 	
 	clearViews()
 	addView("addHallContainer")
@@ -46,9 +46,9 @@ function setUpClinicAdminPage(user)
 	addView("AppointmentContainer")
 	addView("changeProfileClinicContainer")
 	
-	$('#hallDatePick').datepicker({
-    	dateFormat: "dd-mm-yyyy"   	
-	})
+	
+	
+	
 
 	let headersTypes = ["Ime tipa","Klinika","Cena","",""]
 	createDataTable("tableTypeOfExamination","showTypeOfExaminationContainer","Lista Tipova Pregleda",headersTypes,0)
@@ -64,22 +64,23 @@ function setUpClinicAdminPage(user)
 	let hallSearch = new TableSearch()
 	hallSearch.input("<input class='form-control' type='text' placeholder='Ime sale' id='hallNameLabel'>")
 	hallSearch.input("<input class='form-control' type='text' placeholder='Broj sale' id='hallNumberLabel'>")
-	hallSearch.input('<input class="form-control datepicker-here" data-language="en" placeholder="Izaberite datum" id="hallDatePick" readonly="true">')
+	hallSearch.input('<input class="form-control datepicker-here" data-language="en" placeholder="Izaberite datum" id="hallDateLabel" readonly="true">')
+	
 
 	let headersHall = ["Broj sale","Ime sale","Ime klinike" ,"","",""]
 	createDataTable("tableHall","showHallContainer","Lista sala",headersHall,0)
-
+	
+	
 
 	insertSearchIntoTable("tableHall",hallSearch,function(){
 		hname = $('#hallNameLabel').val()
 		hnumber = $('#hallNumberLabel').val()
-		hdate = $('#hallDatePick').val()
-		let json = JSON.stringify({"name": hname,"number": hnumber, "clinicName": clinic.name})
+		hdate = $('#hallDateLabel').val()
+		let json = JSON.stringify({"name": hname,"number": hnumber, "clinicName": clinic.name, "date": hdate})
 		
-		console.log(json)
 		$.ajax({
 			type: 'POST',
-			url: "api/hall/getAllByFilter",
+			url: "api/hall/getAllByFilter/",
 			data: json,
 			dataType: "json",
 			contentType : "application/json; charset=utf-8",
@@ -88,7 +89,10 @@ function setUpClinicAdminPage(user)
 				halls = data.responseJSON
 				let i = 0
 				emptyTable("tableHall")
-				for(h of halls )
+				
+				if(halls == undefined) return
+				
+				for(let h of halls )
 				{
 					listHall(h, i )
 					i++
@@ -98,6 +102,9 @@ function setUpClinicAdminPage(user)
 		
 	})
 
+	$('#hallDateLabel').datepicker({
+    	dateFormat: "dd-mm-yyyy"   	
+	})
 	
 	//KRAJ LISTE SALA
 	getTableDiv("tableTypeOfExamination").show()	
@@ -108,85 +115,16 @@ function setUpClinicAdminPage(user)
 	getTableDiv("tableHall").show()
 	getTableDiv("preAppTableDoctor").show()
 	
+	if(getParameterByName("changeProfileClinic") == "true")
+	{
+		changeProfileClinicFunction(clinic)
+	}
+	
 	//IZMENA PROFILA KLINIKE
 	$('#changeProfileClinic').click(function(e){
 		e.preventDefault()
-		showView("changeProfileClinicContainer")
-		
 
-		
-		$('#inputNameClinicProfile').val(clinic.name)
-		$('#inputAddressClinicProfile').val(clinic.address)
-		$('#inputDescriptionClinicProfile').val(clinic.description)
-				
-		$.ajax({
-			type: 'GET',
-			url: 'api/clinic/getDoctors/' + clinic.name,
-			complete: function(data)
-			{
-				doctors = data.responseJSON
-				emptyTable("listDoctorsTable")
-				for(d of doctors)
-				{
-					let values = [d.user.name,d.user.surname,d.user.email,d.user.phone,d.type,d.user.address,d.user.city,d.user.state]
-					insertTableData("listDoctorsTable",values)
-				}
-			}
-				
-		})
-
-		$.ajax({
-			type: 'GET',
-			url: 'api/priceList/getAllByClinic/' + clinic.name,
-			complete: function(data)
-			{
-				prices = data.responseJSON
-						
-				emptyTable("listPricesTable")
-				for(p of prices)
-				{
-					let values = [p.typeOfExamination , p.price]
-					insertTableData("listPricesTable",values)
-				}
-			}
-		})
-				
-
-	$('#submitChangesClinicProfile').click(function(e){
-		let nameClinic = $('#inputNameClinicProfile').val()
-		let addressClinic = $('#inputAddressClinicProfile').val()
-		let descriptionClinic = $('#inputDescriptionClinicProfile').val()
-		
-					
-		let c = {"name": nameClinic,"address": addressClinic,"city": clinic.city,"state": clinic.state,"description": descriptionClinic,"rating": clinic.rating}
-		clinicJSON = JSON.stringify(c)
-				
-		$.ajax({
-			type: 'PUT',
-			url: 'api/clinic/update/' + clinic.name,
-			data: clinicJSON,
-			dataType: "json",
-			contentType : "application/json; charset=utf-8",
-			complete: function(data)
-			{
-				if(data.status == "200")
-				{
-					$('#successSubmit').text("Uspesno ste izmenili profil klinike")
-					$('#successSubmit').show()
-				}
-				else
-				{
-					$('#successSubmit').text("Izmena klinike nije uspela")
-					$('#successSubmit').show()
-
-				}
-			}
-					
-		})
-		
-		
-	})
-	
+		changeProfileClinicFunction(clinic)
 	})
 	
 	//KRAJ IZMENE PROFILA KLINIKE
@@ -335,10 +273,86 @@ function setUpClinicAdminPage(user)
 	
 	//KRAJ SUBMIT HALLS
 
-
 }
 	
+function changeProfileClinicFunction(clinic)
+{
+	showView("changeProfileClinicContainer")
+		
+	$('#inputNameClinicProfile').val(clinic.name)
+	$('#inputAddressClinicProfile').val(clinic.address)
+	$('#inputDescriptionClinicProfile').val(clinic.description)
+			
+	$.ajax({
+		type: 'GET',
+		url: 'api/clinic/getDoctors/' + clinic.name,
+		complete: function(data)
+		{
+			doctors = data.responseJSON
+			emptyTable("listDoctorsTable")
+			for(d of doctors)
+			{
+				let values = [d.user.name,d.user.surname,d.user.email,d.user.phone,d.type,d.user.address,d.user.city,d.user.state]
+				insertTableData("listDoctorsTable",values)
+			}
+		}
+			
+	})
+
+	$.ajax({
+		type: 'GET',
+		url: 'api/priceList/getAllByClinic/' + clinic.name,
+		complete: function(data)
+		{
+			prices = data.responseJSON
+					
+			emptyTable("listPricesTable")
+			for(p of prices)
+			{
+				let values = [p.typeOfExamination , p.price]
+				insertTableData("listPricesTable",values)
+			}
+		}
+	})
+			
+
+$('#submitChangesClinicProfile').click(function(e){
+	let nameClinic = $('#inputNameClinicProfile').val()
+	let addressClinic = $('#inputAddressClinicProfile').val()
+	let descriptionClinic = $('#inputDescriptionClinicProfile').val()
 	
+				
+	let c = {"name": nameClinic,"address": addressClinic,"city": clinic.city,"state": clinic.state,"description": descriptionClinic,"rating": clinic.rating}
+	clinicJSON = JSON.stringify(c)
+			
+	$.ajax({
+		type: 'PUT',
+		url: 'api/clinic/update/' + clinic.name,
+		data: clinicJSON,
+		dataType: "json",
+		contentType : "application/json; charset=utf-8",
+		complete: function(data)
+		{
+			if(data.status == "200")
+			{
+				$('#successSubmit').text("Uspesno ste izmenili profil klinike")
+				$('#successSubmit').show()
+			}
+			else
+			{
+				$('#successSubmit').text("Izmena klinike nije uspela")
+				$('#successSubmit').show()
+
+			}
+		}
+				
+	})
+	
+	
+})
+
+
+}
 
 
 function submitDoctorForm(clinic)
@@ -515,12 +529,14 @@ function submitDoctorForm(clinic)
 	
 }
 
+
 function listHall(data,i)
 {	
 	let d = [data.number,data.name,data.clinicName,'<button type="button" class="btn btn-warning" id = "calendarHall_btn'+i+'">Zauzeće</button>','<button type="button" class="btn btn-primary" id = "changeHall_btn'+i+'">Izmeni</button>','<button type="button" class="btn btn-danger" id = "deleteHall_btn'+i+'">Izbrisi</button>']
 	
 	insertTableData("tableHall",d)
 	$('#calendarHall_btn' + i).click(function(e){
+		setUpCalendar()
 		$('#hallCalendar').modal('show');
 		$('#hallCalendarModalLabel').text("Kalendar zauzeća sale " + data.number)
 
@@ -541,10 +557,7 @@ function listHall(data,i)
 				}
 				if(data.status == "409")
 				{
-					$('#warningModal').modal('show');
-					$('#warningModalLabel').text("Nije moguće obrisati")
-					$('#warningBodyModal').text("Izabranu salu nije moguće obrisati,zbog postojanja zakazanih pregleda ili operacija u njoj.")
-
+					warningModal("Nije moguće obrisati", "Izabranu salu nije moguće obrisati,zbog postojanja zakazanih pregleda ili operacija u njoj.")
 				}
 			}
 			
@@ -671,10 +684,7 @@ function listDoctor(data,i,clinic)
 				}
 				if(response.status == "409")
 				{
-					$('#warningModal').modal('show');
-					$('#warningModalLabel').text("Nije moguće obrisati")
-					$('#warningBodyModal').text("Izabranog lekara nije moguće obrisati,zbog postojanja zakazanih pregleda ili operacija u kojima učestvuje.")
-
+					warningModal("Nije moguće obrisati", "Izabranog lekara nije moguće obrisati,zbog postojanja zakazanih pregleda ili operacija u kojima učestvuje.")
 				}
 			
 			}
@@ -731,6 +741,12 @@ function listTypesOfExamination(t,i,clinic)
 			url: 'api/priceList/deletePriceList/' + t.typeOfExamination + "/" + clinic.name,
 			complete: function(response)
 			{
+				if(response.status == "400")
+				{
+					warningModal("Nije moguće obrisati", "Nije moguce obrisati tip " + t.typeOfExamination + " jer postoji zakazan pregled ovog tipa!")
+					return
+				}
+				
 				makeTypeOfExaminationTable(clinic)
 			}
 		
