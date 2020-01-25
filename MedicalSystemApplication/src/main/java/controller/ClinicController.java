@@ -3,9 +3,9 @@ package controller;
 
 import dto.ClinicDTO;
 import dto.ClinicFilterDTO;
-import dto.ClinicReviewDTO;
 import dto.DoctorDTO;
 import dto.HallDTO;
+import dto.ReviewDTO;
 import dto.UserDTO;
 import filters.ClinicFilter;
 import filters.Filter;
@@ -14,6 +14,7 @@ import filters.HallFilter;
 import filters.PatientFilter;
 import model.Appointment;
 import model.Clinic;
+import model.ClinicReview;
 import model.Doctor;
 import model.Nurse;
 import model.Patient;
@@ -37,6 +38,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import service.AppointmentService;
 import service.ClinicService;
+import service.NotificationService;
 import service.UserService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -59,6 +61,9 @@ public class ClinicController {
     
     @Autowired
     private AppointmentService appointmentService;
+    
+    @Autowired
+    private NotificationService notificationService;
 
     @PostMapping(value ="/registerClinic", consumes = "application/json")
     public ResponseEntity<Void> registerClinic(@RequestBody ClinicDTO dto, HttpServletRequest request)
@@ -201,6 +206,7 @@ public class ClinicController {
     	return new ResponseEntity<>(patients,HttpStatus.OK);
     	
     }
+    
     @PostMapping(value="/getPatientsByFilter/{clinicName}",consumes = "application/json")
     public ResponseEntity<List<UserDTO>> getClinicPatientsByFilter(@PathVariable("clinicName") String clinicName,@RequestBody UserDTO dto)
     {
@@ -248,6 +254,7 @@ public class ClinicController {
     	return new ResponseEntity<>(ret,HttpStatus.OK);
     	
     }
+    
     @GetMapping(value="/getDoctorsByType/{clinicName}/{typeOfExamination}")
     public ResponseEntity<List<DoctorDTO>> getClinicDoctorsByType(@PathVariable("clinicName") String clinicName,@PathVariable("typeOfExamination") String typeOfExamination)
     {
@@ -298,15 +305,33 @@ public class ClinicController {
     	return new ResponseEntity<>(dtos,HttpStatus.OK);
     }
     
-    @PostMapping(value="/addReview/{name}")
-    public ResponseEntity<Void> addReview(@PathVariable("name") String name, @RequestBody ClinicReviewDTO dto)
+    @PostMapping(value="/addReview")
+    public ResponseEntity<Void> addReview(@RequestBody ReviewDTO dto)
     {
-    	Clinic clinic = clinicService.findByName(name);
+    	Clinic clinic = clinicService.findByName(dto.getClinicName());
+    	Patient patient = (Patient) userService.findByEmailAndDeleted(dto.getPatientEmail(), false);
     	
-    	if(clinic == null)
+    	if(clinic == null || patient == null)
     	{
     		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     	}
+    	
+    	List<ClinicReview> reviews = clinic.getReviews();
+    	
+    	for(ClinicReview review : reviews)
+    	{
+    		if(review.getPatient().getEmail().equals(dto.getPatientEmail()))
+    		{
+    			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    		}
+    	}
+    	
+    	ClinicReview cr = new ClinicReview(dto.getRating(), DateUtil.getInstance().now("dd-MM-yyyy"), patient);
+    	clinic.getReviews().add(cr);
+    	
+    	clinicService.save(clinic);
+    	
+    	notificationService.sendNotification(patient.getEmail(), "Ocenili ste kliniku!", "Vasa ocena od " + dto.getRating() + " zvezdice za kliniku "+dto.getClinicName()+" je uspesno zabelezena! Hvala vam na recenziji!");
     	
     	return new ResponseEntity<>(HttpStatus.OK);
     }

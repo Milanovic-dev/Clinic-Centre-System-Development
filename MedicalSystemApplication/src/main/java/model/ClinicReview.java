@@ -10,52 +10,41 @@ public class ClinicReview {
     @GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 
-    @Column(name = "header", nullable = false)
-    private String header;
-
-    @Column(name = "description", nullable = false)
-    private String description;
-
     @Column(name = "rating", nullable = false)
     private int rating;
 
     @Column(name = "date", nullable = false)
     private Date date;
-
+    
     @ManyToOne(fetch = FetchType.LAZY)
-    private Clinic clinic;
+    private Patient patient;
 
     public ClinicReview(){
 
     }
 
-    public ClinicReview(String header, String description, int rating, Date date, Clinic clinic) {
-        this.header = header;
-        this.description = description;
-        this.rating = rating;
-        this.date = date;
-        this.clinic = clinic;
-    }
-    
-    public Long getId()
+        
+    public ClinicReview(int rating, Date date, Patient patient) {
+		super();
+		this.rating = rating;
+		this.date = date;
+		this.patient = patient;
+	}
+
+
+
+
+	public Patient getPatient() {
+		return patient;
+	}
+
+	public void setPatient(Patient patient) {
+		this.patient = patient;
+	}
+
+	public Long getId()
     {
     	return id;
-    }
-
-    public String getHeader() {
-        return header;
-    }
-
-    public void setHeader(String header) {
-        this.header = header;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 
     public int getRating() {
@@ -76,13 +65,5 @@ public class ClinicReview {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public Clinic getClinic() {
-        return clinic;
-    }
-
-    public void setClinic(Clinic clinic) {
-        this.clinic = clinic;
     }
 }
