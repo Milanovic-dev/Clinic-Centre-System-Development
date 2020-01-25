@@ -63,22 +63,7 @@ public class VacationController {
     		{
     			Boolean flag = true;
     			
-    			if(request.getStartDate().equals(vacationStart) && request.getEndDate().equals(vacationEnd))
-    			{
-    				flag = false;
-    			}
-    			
-    			if(vacationStart.after(request.getStartDate()) && vacationStart.before(request.getEndDate()))
-    			{
-    				flag = false;
-    			}
-    			
-    			if(vacationEnd.after(request.getStartDate()) && vacationEnd.before(request.getEndDate()))
-    			{
-    				flag = false;
-    			}
-    			
-    			if(vacationStart.before(request.getStartDate()) && vacationEnd.after(request.getEndDate()))
+    			if(vacationStart.before(request.getEndDate()) && vacationEnd.after(request.getStartDate()))
     			{
     				flag = false;
     			}
