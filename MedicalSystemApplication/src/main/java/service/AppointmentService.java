@@ -141,6 +141,11 @@ public class AppointmentService {
 		return appointmentRepository.findAllByHall(hall);
 	}
 	
+	public List<Appointment> findAllByDate(Date date)
+	{
+		return appointmentRepository.findAllByDate(date);
+	}
+	
 	public List<Appointment> findAllByClinic(Clinic c)
 	{
 		return appointmentRepository.findAllByClinic(c);

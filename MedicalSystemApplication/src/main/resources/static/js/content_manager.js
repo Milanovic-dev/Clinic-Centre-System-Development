@@ -81,6 +81,14 @@ function displayError(id,text)
 	button.before('<span style="color:#FF1103" id="'+spanId+'">'+text+'</span><br>')
 }
 
+function warningModal(header, content)
+{
+	$('#warningModal').modal('show')
+	$('#warningModalLabel').text(header)
+	$('#warningBodyModal').text(content)
+}
+
+
 function showLoading(button)
 {
 	let buttonElem;

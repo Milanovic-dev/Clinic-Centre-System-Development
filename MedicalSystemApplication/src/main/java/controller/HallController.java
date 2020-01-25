@@ -25,6 +25,7 @@ import dto.ClinicDTO;
 import dto.HallDTO;
 import filters.FilterFactory;
 import filters.HallFilter;
+import helpers.DateUtil;
 import model.Appointment;
 import model.Clinic;
 import model.Hall;
@@ -102,8 +103,9 @@ public class HallController {
 	@PostMapping(value = "/getAllByFilter",consumes = "application/json")
 	public ResponseEntity<List<HallDTO>> getHallsFilter(@RequestBody HallDTO dto)
 	{
+
 		HttpHeaders header = new HttpHeaders();
-		Clinic c = clinicService.findByName(dto.getClinicName());
+		Clinic c = clinicService.findByName(dto.getClinicName());		
 		
 		if(c == null)
 		{
@@ -114,8 +116,28 @@ public class HallController {
 		List<HallDTO> ret = new ArrayList<HallDTO>();
 		HallFilter filter = (HallFilter) FilterFactory.getInstance().get("hall");
 		
+		Date startDate = DateUtil.getInstance().getDate(dto.getDate(), "dd-MM-yyyy");
+		
+		List<Appointment> appointments = appointmentService.findAllByDate(startDate);
+		
 		for(Hall hall : c.getHalls())
 		{
+			if(dto.getDate() != null)
+			{
+				long hours = 0; //miliisecs
+				
+				for(Appointment app : appointments)
+				{
+					hours += DateUtil.getInstance().getHoursBetween(app.getDate(), app.getEndDate());
+				}
+				
+				
+				if(hours > 23 * DateUtil.HOUR_MILLIS)
+				{
+					continue;
+				}			
+			}
+			
 			if(!hall.getDeleted())
 			{
 				if(filter.test(hall, dto))
@@ -124,6 +146,8 @@ public class HallController {
 				}				
 			}
 		}
+		
+		
 		
 		return new ResponseEntity<>(ret,HttpStatus.OK);
 	}

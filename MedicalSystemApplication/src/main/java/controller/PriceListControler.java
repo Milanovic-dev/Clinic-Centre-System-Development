@@ -58,9 +58,11 @@ public class PriceListControler {
 
 			}
 			
-			for(Appointment app : c.getAppointments())
+			List<Appointment> appointments = appointmentService.findAllByClinic(c);
+
+			for(Appointment app : appointments)
 			{
-				if(app.getPriceslist().getTypeOfExamination() == priceList.getTypeOfExamination())
+				if(app.getPriceslist().getTypeOfExamination().equals(priceList.getTypeOfExamination()))
 				{
 					return new ResponseEntity<>(HttpStatus.BAD_REQUEST);	
 				}

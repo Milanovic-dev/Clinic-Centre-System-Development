@@ -40,6 +40,8 @@ function addClinicInformations(data)
 	}
 	
 	setDoctorRatings(clinic)
+	setHallTableClinicProfile(clinic.name)
+	setPricelistTableClinicProfile(clinic.name)
 	
 	let sessionUser
 	
@@ -54,7 +56,7 @@ function addClinicInformations(data)
 			{
 				
 				$('#revanueTab-tab').show()
-				
+				$('#changeClinicInfo').show()
 				$.ajax({
 					type: 'GET',
 					url:"api/appointments/clinic/getAllAppointmentsToday/" + clinic.name,
@@ -97,6 +99,63 @@ function addClinicInformations(data)
 	
 	
 	
+}
+
+function setPricelistTableClinicProfile(clinicName)
+{
+	let headersPricelist = ["Pregled/Operacija","Tip pregleda","Cena"]
+	createDataTable("tablePricelistClinicProfile","pricelistContainerProfileClinic","Cenovnik",headersPricelist,0)
+	$.ajax({
+			type: 'GET',
+			url: "api/priceList/getAllByClinic/" + clinicName,
+			complete:function(data)
+			{
+				pricelist = data.responseJSON
+				let i = 0
+				emptyTable("tablePricelistClinicProfile")
+				for(p of pricelist )
+				{
+					listPricelist(p, i)
+					i++
+				}
+			}
+		})
+		
+		getTableDiv("tablePricelistClinicProfile").show()
+}
+function listPricelist(data,i)
+{	
+	let d = ["Pregled",data.typeOfExamination, data.price]
+	insertTableData("tablePricelistClinicProfile",d)
+}
+
+
+function setHallTableClinicProfile(clinicName)
+{
+	let headersHall = ["Broj sale","Ime sale","Ime klinike"]
+	createDataTable("tableHallClinicProfile","hallContainerProfileClinic","Lista sala",headersHall,0)
+			$.ajax({
+			type: 'GET',
+			url: "api/hall/getAllByClinic/" + clinicName,
+			complete:function(data)
+			{
+				halls = data.responseJSON
+				let i = 0
+				emptyTable("tableHallClinicProfile")
+				for(h of halls )
+				{
+					listHall(h, i)
+					i++
+				}
+			}
+		})
+	getTableDiv("tableHallClinicProfile").show()
+}
+
+function listHall(data,i)
+{	
+	let d = [data.number,data.name,data.clinicName]
+	insertTableData("tableHallClinicProfile",d)
 }
 
 
