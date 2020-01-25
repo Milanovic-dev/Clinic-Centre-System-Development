@@ -53,6 +53,9 @@ public class ContainerInitialize {
 	@Autowired
 	private MedicalRecordRepository medicalRecordRepository;
 	
+	@Autowired
+	private VacationRequestRepository vacationRequestRepository;
+	
 	@PostConstruct
 	public void init()
 	{	
@@ -183,7 +186,7 @@ public class ContainerInitialize {
 			doctor2.setAvarageRating(6.4f);
 			userRepository.save(doctor2);
 			
-			Doctor doctor3 = new Doctor.Builder("doktor3@gmail.com")
+			Doctor doctor3 = new Doctor.Builder("nikolamilanovic21@gmail.com")
 					.withPassword(hash)
 					.withName("Petar")
 					.withSurname("Pertrovic")
@@ -316,6 +319,15 @@ public class ContainerInitialize {
 			Diagnosis d1 = new Diagnosis("123","tag","name");
 			List<Diagnosis> listDiag = new ArrayList<>();
 			listDiag.add(d1);
+			 
+			DateUtil dateInstance = DateUtil.getInstance();
+			VacationRequest vrq = new VacationRequest(dateInstance.getDate("21-02-2020", "dd-MM-yyyy"),dateInstance.getDate("08-03-2020", "dd-MM-yyyy"),clinic,doctor3);
+			vacationRequestRepository.save(vrq);
+			
+			VacationRequest vrq2 = new VacationRequest(dateInstance.getDate("26-05-2020", "dd-MM-yyyy"),dateInstance.getDate("15-06-2020", "dd-MM-yyyy"),clinic,doctor1);
+			vacationRequestRepository.save(vrq2);
+			
+			
 					
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
