@@ -2,20 +2,33 @@ package dto;
 
 import java.util.Date;
 
+import helpers.DateUtil;
+import model.VacationRequest;
+
 public class VacationDTO 
 {
 	private String startDate;
 	private String endDate;
-	private String userEmail;
+	private UserDTO user;
+	private Long id;
 	
 	
-	public VacationDTO(String startDate, String endDate, String userEmail) {
+	public VacationDTO(String startDate, String endDate,UserDTO userDTO,Long id) {
 		super();
 		this.startDate = startDate;
 		this.endDate = endDate;
-		this.userEmail = userEmail;
+		this.user = userDTO;
+		this.id = id;
 	}
-
+	public VacationDTO(VacationRequest vrq)
+	{
+		this.startDate = DateUtil.getInstance().getString(vrq.getStartDate(), "dd-MM-yyyy");
+		this.endDate = DateUtil.getInstance().getString(vrq.getEndDate(), "dd-MM-yyyy");
+		this.user = new UserDTO(vrq.getUser());
+		this.id = vrq.getId();
+		
+	}
+	
 	public VacationDTO() {
 		super();
 		// TODO Auto-generated constructor stub
@@ -23,6 +36,12 @@ public class VacationDTO
 
 
 	
+	public Long getId() {
+		return id;
+	}
+	public void setId(Long id) {
+		this.id = id;
+	}
 	public String getStartDate() {
 		return startDate;
 	}
@@ -38,13 +57,14 @@ public class VacationDTO
 	public void setEndDate(String endDate) {
 		this.endDate = endDate;
 	}
+	public UserDTO getUser() {
+		return user;
+	}
+	public void setUser(UserDTO user) {
+		this.user = user;
+	}
 
-	public String getUserEmail() {
-		return userEmail;
-	}
-	public void setUserEmail(String userEmail) {
-		this.userEmail = userEmail;
-	}
+
 	
 	
 }

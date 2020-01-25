@@ -27,6 +27,7 @@ function setUpClinicAdminPage(user)
 	sideBar.append("<li class='nav-item active'><a class='nav-link' href='userProfileNew.html'><span id='profileUser'>Profil</span></a></li>")
 	sideBar.append("<li class='nav-item active'><a class='nav-link' href = 'clinicProfile.html?clinic=" + clinic.name +"'><span id='showReport'>Profil klinike</span></a></li>")
 	sideBar.append("<li class='nav-item active'><a class='nav-link' type='button'><span id='changeProfileClinic'>Uredi profil klinike</span></a></li>")
+	sideBar.append("<li class='nav-item active'><a class='nav-link' type='button'><span id='vacationRequestList'>Zahtevi za godišnji odmor</span></a></li>")
 	sideBar.append("<li class='nav-item active'><a class='nav-link' type='button'><span id='addHall'>Dodaj salu</span></a></li>")	
 	sideBar.append("<li class='nav-item active'><a class='nav-link' type='button'><span id='showHalls'>Lista sala</span></a></li>")
 	sideBar.append("<li class='nav-item active'><a class='nav-link' type='button'><span id='addDoctor'>Dodaj lekara</span></a></li>")
@@ -45,7 +46,7 @@ function setUpClinicAdminPage(user)
 	addView("registrationConteiner")
 	addView("AppointmentContainer")
 	addView("changeProfileClinicContainer")
-	
+	addView("showVacationRequestListContainer")
 	
 	
 	
@@ -101,6 +102,11 @@ function setUpClinicAdminPage(user)
 		})
 		
 	})
+	
+	vacationHeaders = ["Tip medicinskog osoblja" , "Ime","Prezime","Email","Datum početka odsustva","Datum kraja odsustva","Šifra zahteva","",""]
+	let table = createTable("vacationReqTable","Lista zahteva za godišnji odmor ili odsustvo",vacationHeaders)
+	insertTableInto("showVacationRequestListContainer",table)
+	getTableDiv('vacationReqTable').show()
 
 	$('#hallDateLabel').datepicker({
     	dateFormat: "dd-mm-yyyy"   	
@@ -119,6 +125,15 @@ function setUpClinicAdminPage(user)
 	{
 		changeProfileClinicFunction(clinic)
 	}
+	
+	//LISTA ZAHTEVA ZA GODISNJI ODMOR
+	$('#vacationRequestList').click(function(e){
+		e.preventDefault()
+		
+		listVacationRequest(user,clinic)
+		
+	})
+	//KRAJ LISTE ZAHTEVA ZA GODISNJI ODMOR
 	
 	//IZMENA PROFILA KLINIKE
 	$('#changeProfileClinic').click(function(e){
@@ -274,6 +289,105 @@ function setUpClinicAdminPage(user)
 	//KRAJ SUBMIT HALLS
 
 }
+
+function listVacationRequest(admin,clinic)
+{
+	showView("showVacationRequestListContainer")
+	getAllVacationRequestsByClinic(clinic)
+	
+}
+
+function getAllVacationRequestsByClinic(clinic)
+{
+	$.ajax({
+		type: 'GET',
+		url: 'api/vacation/getAllVacationRequestsByClinic/' + clinic.name,
+		complete: function(data)
+		{
+			let vacations = data.responseJSON
+			emptyTable("vacationReqTable")
+			let i=0
+			for(v of vacations)
+			{
+				listVacationRequests(clinic,v,i)
+				i++
+			}
+		}
+	
+	})
+	
+}
+
+function listVacationRequests(clinic,data,i)
+{
+	let tdConfirm = '<button type="button" id="acceptRequestVacation'+i+'" class="btn btn-primary">Prihvati</button>'
+	let tdDeny = '<button type="button" id="denyRequestVacation'+i+'" class="btn btn-danger" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo">Odbij</button>'
+	
+	
+	let values = [data.user.role, data.user.name, data.user.surname, data.user.email, data.startDate,data.endDate,data.id,tdConfirm,tdDeny]
+	insertTableData("vacationReqTable",values)
+	
+	//PRIHVATANJE ZAHTEVA ZA GODISNJI ODMOR ILI ODSUSTVO
+	$('#acceptRequestVacation' + i).click(function(e){
+		e.preventDefault()
+		
+		showLoading('acceptRequestVacation'+ i)
+		request = JSON.stringify({"startDate":data.startDate,"endDate" : data.endDate , "user": data.user,"id": data.id})
+		$.ajax({
+			type: 'POST',
+			url: 'api/vacation/confirmVacationRequest',
+			data: request,
+			dataType : "json",
+			contentType : "application/json; charset=utf-8",
+			complete: function(response)
+			{
+				hideLoading('acceptRequestVacation'+ i)
+				getAllVacationRequestsByClinic(clinic)
+				
+			}
+			
+		})
+	})
+	
+	//ODBIJANJE ZAHTEVA ZA GODISNJI ODMOR ILI ODSUSTVO
+	$('#denyRequestVacation' + i).click(function(e){
+		e.preventDefault()
+		$('#vacationRequestModal').modal("show")
+		$('#vacation-user').val(data.user.email)
+		
+		$('#modalDeny').off('click')
+		$('#modalDeny').click(function(e){
+			
+			let request = JSON.stringify({"startDate":data.startDate,"endDate" : data.endDate , "user": data.user,"id": data.id})
+			let text = $('#messageVacationDeny-text').val()
+			
+			showLoading('modalDeny')
+			
+			$.ajax({
+			type: 'DELETE',
+			url: 'api/vacation/denyVacationRequest/' + text,
+			data: request,
+			dataType : "json",
+			contentType : "application/json; charset=utf-8",
+			complete: function(response)
+			{
+				hideLoading('modalDeny')
+				$('#vacationRequestModal').modal("hide")
+				getAllVacationRequestsByClinic(clinic)
+				
+			}
+			
+		})
+			
+		})
+		
+		
+	})
+	
+}
+
+
+
 	
 function changeProfileClinicFunction(clinic)
 {
