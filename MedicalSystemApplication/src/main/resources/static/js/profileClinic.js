@@ -177,6 +177,12 @@ function setDoctorRatings(clinic)
 	createDataTable("tableDoctorRatings","doctorsTab","Lista lekara i njihovih prosečnih ocena",headersTypes,0)
 	getTableDiv('tableDoctorRatings').show()
 	
+	let search = new TableSearch()
+	search.input('<input class="form-control" type="text" placeholder="Unesite Ime" id="chooseDoctorName">')
+	search.input('<input class="form-control" type="text" placeholder="Unesite prezime" id="chooseDoctorSurname">')
+	search.input('<input class="form-control" type="number" placeholder="Unesite ocenu" id="chooseDoctorRating">')
+	search.input('<input class="form-control" type="text" placeholder="Unesite tip" id="chooseDoctorType">')
+	search.input('<input class="form-control datepicker-here" data-language="en" placeholder="Izaberite datum" id="clinicDatePick" readonly="true">')
 	
 	$.ajax({
 			type: 'GET',

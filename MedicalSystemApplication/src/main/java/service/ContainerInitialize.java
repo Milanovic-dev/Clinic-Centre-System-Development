@@ -230,6 +230,7 @@ public class ContainerInitialize {
 			
 			pricelistRepository.save(p1);
 			Appointment app1 = new Appointment.Builder(DateUtil.getInstance().getDate("21-01-2020 07:30","dd-mm-yyyy HH:mm"))
+					.withEndingDate(DateUtil.getInstance().getDate("21-01-2020 09:00","dd-mm-yyyy HH:mm"))
 					.withType(AppointmentType.Examination)
 					.withHall(hall1)
 					.withClinic(clinic)
@@ -261,6 +262,19 @@ public class ContainerInitialize {
 					.withDuration(1)
 					.withPriceslist(p1)
 					.build();
+			
+			Appointment app4 = new Appointment.Builder(DateUtil.getInstance().getDate("21-01-2020 07:00","dd-mm-yyyy HH:mm"))
+					.withEndingDate(DateUtil.getInstance().getDate("21-01-2020 08:00","dd-mm-yyyy HH:mm"))
+					.withType(AppointmentType.Examination)
+					.withHall(hall1)
+					.withClinic(clinic)
+					.withDuration(1)
+					.withPriceslist(p1)
+					.build();
+			
+			app4.setPredefined(true);
+			app4.getDoctors().add(doctor2);
+			appointmentRepository.save(app4);
 			
 			app3.getDoctors().add(doctor3);
 			appointmentRepository.save(app2);

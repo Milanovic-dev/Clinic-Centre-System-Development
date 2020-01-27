@@ -92,10 +92,11 @@ function insertSearchIntoTable(id, search, func)
 	let inputs = search.getInputs()
 	
 	let header = document.getElementById(id).getElementsByClassName("card-header")[0]
-	
-	header.innerHTML += "<br><br><form class='needs-validation' id='form_"+id+"'></form>"
-		
+
+	header.innerHTML += "<br><br><form id='form_"+id+"'></form>"
+
 	let form = header.getElementsByTagName("form")[0]
+
 	let rowCount = -1
 	for(let i = 0 ; i < inputs.length ; i++)
 	{

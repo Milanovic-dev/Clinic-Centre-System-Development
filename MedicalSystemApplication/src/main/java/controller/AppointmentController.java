@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import dto.AppointmentDTO;
+import helpers.DateInterval;
 import helpers.DateUtil;
 import model.*;
 import model.User.UserRole;
@@ -775,6 +776,7 @@ public class AppointmentController
 		
 		Patient p = (Patient) userService.findByEmailAndDeleted(email, false);
 
+
 		if(p == null)
 		{
 			headers.set("responseText","Patient with email " + email + " not found");
@@ -789,15 +791,44 @@ public class AppointmentController
 			return new ResponseEntity<>(headers,HttpStatus.NOT_FOUND);
 		}
 		
+		List<Appointment> appointments = appointmentService.findAllByPatient(p);
+		
+		for(Appointment appointment : appointments)
+		{
+			DateInterval interval1 = new DateInterval(appointment.getDate(), appointment.getEndDate());
+			DateInterval interval2 = new DateInterval(app.getDate(), app.getEndDate());
+			
+			if(DateUtil.getInstance().overlappingInterval(interval1, interval2))
+			{
+				return new ResponseEntity<>(HttpStatus.CONFLICT);
+			}
+		}
+		
 		if(app.getVersion() != dto.getVersion())
 		{
 			return new ResponseEntity<>(HttpStatus.LOCKED);
 		}
-			
+		
 		app.setPatient(p);
 			
 		try
 		{
+			StringBuilder strBuilder = new StringBuilder();
+			strBuilder.append("Uspesno ste zakazali pregled(");
+			strBuilder.append(app.getPriceslist().getTypeOfExamination());
+			strBuilder.append(") za datum ");
+			strBuilder.append(app.getDate());
+			strBuilder.append(" na klinici ");
+			strBuilder.append(app.getClinic().getName());
+			strBuilder.append(" u sali Br. ");
+			strBuilder.append(app.getHall().getNumber());
+			strBuilder.append(". Vas doktor je ");
+			strBuilder.append(app.getDoctors().get(0).getName() + " " + app.getDoctors().get(0).getSurname());
+			strBuilder.append(". Cena pregleda je ");
+			strBuilder.append(app.getPriceslist().getPrice());
+			strBuilder.append("rsd.");
+			System.out.println(strBuilder.toString());
+			notificationService.sendNotification(p.getEmail(), "Zakazali ste pregled!", strBuilder.toString());
 			appointmentService.save(app);			
 		}
 		catch(ObjectOptimisticLockingFailureException e)

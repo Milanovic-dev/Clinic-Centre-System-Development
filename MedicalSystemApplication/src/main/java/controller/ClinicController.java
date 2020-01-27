@@ -8,6 +8,7 @@ import dto.HallDTO;
 import dto.ReviewDTO;
 import dto.UserDTO;
 import filters.ClinicFilter;
+import filters.DoctorFilter;
 import filters.Filter;
 import filters.FilterFactory;
 import filters.HallFilter;
@@ -303,6 +304,32 @@ public class ClinicController {
     	}
     	
     	return new ResponseEntity<>(dtos,HttpStatus.OK);
+    }
+    
+    @PostMapping(value="/getDoctorsByFilter/{clinicName}")
+    public ResponseEntity<List<DoctorDTO>> getDoctorsByFilter(@RequestBody DoctorDTO dto, @PathVariable("clinicName") String clinicName)
+    {
+    	Clinic clinic = clinicService.findByName(clinicName);
+
+    	if(clinic == null)
+    	{
+    		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    	}
+    	
+    	List<Doctor> doctors = clinic.getDoctors();
+    	List<DoctorDTO> ret = new ArrayList<DoctorDTO>();
+    	
+    	DoctorFilter filter = (DoctorFilter) FilterFactory.getInstance().get("doctor");
+    	
+    	for(Doctor doctor : doctors)
+    	{
+    		if(filter.test(doctor, dto))
+    		{
+    			ret.add(new DoctorDTO(doctor));
+    		}
+    	}
+    	
+    	return new ResponseEntity<>(ret, HttpStatus.OK);
     }
     
     @PostMapping(value="/addReview")

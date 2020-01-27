@@ -5,6 +5,7 @@ import model.Patient;
 
 public class PatientFilter implements Filter{
 
+	
 	@Override
 	public Boolean test(Object o1, Object o2) {
 		// TODO Auto-generated method stub
@@ -14,14 +15,14 @@ public class PatientFilter implements Filter{
 			Boolean flag = true;
 			if(!d.getName().equals(""))
 			{
-				if(!p.getName().contains(d.getName()))
+				if(!p.getName().toLowerCase().contains(d.getName().toLowerCase()))
 				{
 					flag = false;
 				}
 			}
 			if(!d.getSurname().equals(""))
 			{
-				if(!p.getSurname().contains(d.getSurname()))
+				if(!p.getSurname().toLowerCase().contains(d.getSurname().toLowerCase()))
 				{
 					flag = false;
 				}				

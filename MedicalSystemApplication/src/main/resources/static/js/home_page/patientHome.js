@@ -36,7 +36,7 @@ function initPatient(user)
 
 function createClinicTable()
 {
-	let headers = ["Ime Klinike","Adresa","Grad","Drzava","Opis","Rejting",""]
+	let headers = ["Ime Klinike","Adresa","Grad","Drzava","Opis","Ocena",""]
 	createDataTable("clinicTable","showClinicContainer","Lista klinika",headers,0)
 		
 	let search = new TableSearch()
@@ -59,25 +59,14 @@ function createClinicTable()
 function createChooseDoctorTable()
 {
 	let headers = ['Tip', 'Email', 'Ime', 'Prezime', 'Prosecna ocena', 'Pocetak smene','Kraj smene','']
-    let handle = createTable('chooseDoctorTable','Izaberite doktora',headers)
-    insertTableInto('showDoctorsContainer',handle)
-    insertElementIntoTable('chooseDoctorTable','<button type="button" class="btn btn-primary" id = "detailsAppointment_btn">Pregled</button>')
-    
-    let search = new TableSearch()
-	search.input('<input class="form-control" type="text" placeholder="Unesite Ime" id="chooseDoctorName">')
-	search.input('<input class="form-control" type="text" placeholder="Unesite prezime" id="chooseDoctorSurname">')
-	search.input('<input class="form-control" type="number" placeholder="Unesite ocenu" id="chooseDoctorSurname">')
-		
-	insertSearchIntoTable("chooseDoctorTable", search, function(){
-			
-	})
-	
+	createDataTable('chooseDoctorTable','showDoctorsContainer','Izaberite doktora',headers,0)
+    insertElementIntoTable('chooseDoctorTable','<br><button type="button" class="btn btn-primary" id = "detailsAppointment_btn">Pregled</button>')  
     getTableDiv('chooseDoctorTable').show()
 }
 
 function createPreAppointmentsTable()
 {
-	let headers = ['Datum','Klinika','Termin','Sala','Doktor','Tip pregleda','Cena','']
+	let headers = ['Datum Pocetka','Datum Zavrsetka','Klinika','Sala','Doktor','Tip pregleda','Cena','']
 	createDataTable('preAppTable',"preAppointmentContainer","Unapred definisani pregledi",headers,0)
 	getTableDiv('preAppTable').show()
 }
@@ -251,11 +240,13 @@ function list_preApp(data,i,user)
 	let date = dateSplit[0]
 	let time = dateSplit[1]
 	
-	let d = [date,getClinicProfileLink(data.clinicName),time,data.hallNumber,getProfileLink(data.doctors[0]),data.typeOfExamination,data.price,'<button class="btn btn-primary" id="submitPredefinedAppRequest'+i+'">Zakazi</button>']
+	let d = [data.date,data.endDate,getClinicProfileLink(data.clinicName),data.hallNumber,getProfileLink(data.doctors[0]),data.typeOfExamination,data.price,'<button class="btn btn-primary" data-toggle="tooltip" id="submitPredefinedAppRequest'+i+'">Zakazi</button>']
 	
 	insertTableData('preAppTable',d)
 	
+	$('#submitPredefinedAppRequest'+i).tooltip({title:"Ukoliko zakazete pregled NECETE moci da ga otkazete.", placement: "right"})
 	
+	$('#submitPredefinedAppRequest'+i).off('click')
 	$('#submitPredefinedAppRequest'+i).click(function(e){
 		e.preventDefault()
 		
@@ -268,17 +259,23 @@ function list_preApp(data,i,user)
 			data: json,
 			dataType : "json",
 			contentType : "application/json; charset=utf-8",
-			complete:function(data)
+			complete:function(response)
 			{
-				if(data.status == "200")
+				if(response.status == "200")
 				{
+					warningModal("Uspesno!", "Rezervistali ste pregled za datum " + data.date)
 					setPreAppointmentsTable()
 				}
-				else if(data.status == "423")
+				else if(response.status == "423")
 				{
 					console.error("Vec zakazano!")
+					displayError('submitPredefinedAppRequest'+i, "Neuspesno. Osvezite stranicu.")
 				}
-				
+				else if(response.status == "409")
+				{
+					warningModal("Neuspesno!", "Niste u mogucnosti da zakazete ovaj pregled jer vec imate pregled zakazan za " + data.date + " do " + data.endDate);
+				}
+				$('#submitPredefinedAppRequest'+i).tooltip('hide')
 				hideLoading('submitPredefinedAppRequest'+i)
 			}
 		})
@@ -364,11 +361,18 @@ function p_listRequest(req,i)
 			let tdType=$('<td>'+ req.typeOfExamination +'</td>');
 			let tdClinic=$('<td>'+ req.clinicName +'</td>');	
 			let tdAddress=$('<td>' + clinic.address + ', ' + clinic.city + ', ' + clinic.state + '</td>')
-			let tdDelete = $('<td><button class="btn btn-danger" id="cancelReq'+i+'">Otkazi</button></td>')
+			let tdDelete = $('<td><button class="btn btn-danger" data-toggle="tooltip"  id="cancelReq'+i+'">Otkazi</button></td>')
+			
 			
 			tr.append(tdDateAndTime).append(tdDoctor).append(tdType).append(tdClinic).append(tdAddress).append(tdDelete)
 			
 			$('#tablePendingApps tbody').append(tr)
+					
+		
+			let cancelDate = new Date(convertToMMDDYYYY(req.date))
+			cancelDate.setDate(cancelDate.getDate() + 1)
+			
+			$('#cancelReq'+i).tooltip({title:"Mozete otkazati do: " + cancelDate, placement: 'right'})
 			
 			$('#cancelReq'+i).off('click')
 			$('#cancelReq'+i).click(function(e){
@@ -386,6 +390,8 @@ function p_listRequest(req,i)
 					contentType : "application/json; charset=utf-8",
 					complete: function(data)
 					{
+						$('#cancelReq'+i).tooltip('hide')
+						
 						if(data.status == "200")
 						{
 							listAppRequests()
@@ -416,6 +422,8 @@ function p_listClinic(data,i,user)
 	{
 		rating = data.rating
 	}
+	
+	let clinic = data
 
 	let d = [getClinicProfileLink(data.name), data.address, data.city, data.state, data.description, rating,'<td><button type="button" class="btn btn-primary" id = "makeAppointment_btn'+i+'">Zakazi pregled</button></td>']
 	insertTableData('clinicTable',d)
@@ -434,12 +442,65 @@ function p_listClinic(data,i,user)
 		
 		$.ajax({
 			type:'GET',
-			url:"api/clinic/getDoctors/"+data.name,
+			url:"api/clinic/getDoctors/" + data.name,
 			complete: function(data)
 			{
 				let doctors = data.responseJSON
 				
 				let index = 0
+				
+				let search = new TableSearch()
+				search.input('<input class="form-control" type="text" placeholder="Unesite Ime" id="chooseDoctorName">')
+				search.input('<input class="form-control" type="text" placeholder="Unesite prezime" id="chooseDoctorSurname">')
+				search.input('<input class="form-control" type="number" placeholder="Unesite ocenu" id="chooseDoctorRating">')
+				search.input('<input class="form-control" type="text" placeholder="Unesite tip" id="chooseDoctorType">')
+					
+				insertSearchIntoTable("chooseDoctorTable", search, function(){
+						
+					
+					let srcButton = getTableSearchButton('chooseDoctorTable')
+					showLoading(srcButton)
+					
+					let name = $('#chooseDoctorName').val()
+					let surname = $('#chooseDoctorSurname').val()
+					let rating = $('#chooseDoctorRating').val()
+					let type = $('#chooseDoctorType').val()
+					
+					let dto = 
+					{
+						user:{
+							"name" : name,
+							"surname" : surname
+						},
+						"averageRating": rating,
+						"type" : type
+					}
+					
+					
+					let json = JSON.stringify(dto)
+
+					$.ajax({
+						type: "POST",
+						url:"api/clinic/getDoctorsByFilter/" + clinic.name,
+						data: json,
+						dataType : "json",
+						contentType : "application/json; charset=utf-8",
+						complete: function(response)
+						{
+							let doctors = response.responseJSON
+							
+							emptyTable('chooseDoctorTable')
+							$.each(doctors, function(i, item){
+								p_listDoctorActive(item, i, doctors.length);
+							})
+							
+							hideLoading(srcButton)
+						}
+					})
+					
+				})
+				
+				
 				emptyTable('chooseDoctorTable')
 				
 				$.each(doctors, function(i, item){

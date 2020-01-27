@@ -46,6 +46,31 @@ public class DateUtil {
 		return getDate(getString(date,format) , format);
 	}
 	
+	public Boolean overlappingInterval(Date start1, Date end1, Date start2, Date end2)
+	{
+		return overlappingInterval(new DateInterval(start1,end1), new DateInterval(start2,end2));
+	}
+	
+	public Boolean overlappingInterval(DateInterval d1, DateInterval d2)
+	{
+		Calendar c1 = Calendar.getInstance();
+		Calendar c2 = Calendar.getInstance();
+		Calendar c3 = Calendar.getInstance();
+		Calendar c4 = Calendar.getInstance();
+		
+		c1.setTime(d1.getStart());
+		c2.setTime(d1.getEnd());
+		c3.setTime(d2.getStart());
+		c4.setTime(d2.getEnd());
+		
+		//vacationStart.before(request.getEndDate()) && vacationEnd.after(request.getStartDate())
+		
+		Boolean con1 = isSameDay(c1.getTime(), c3.getTime());
+		Boolean con2 = c1.get(Calendar.HOUR_OF_DAY) <= c4.get(Calendar.HOUR_OF_DAY) && c2.get(Calendar.HOUR_OF_DAY) > c3.get(Calendar.HOUR_OF_DAY);
+		System.out.println(c1.get(Calendar.HOUR_OF_DAY));
+		return (con1 && con2);
+	}
+	
 	public long getHoursBetween(Date d1, Date d2)
 	{
 		Calendar cal = Calendar.getInstance();
@@ -60,12 +85,14 @@ public class DateUtil {
 	
 	public Boolean isSameDay(Date date1, Date date2)
 	{
-		Calendar cal1 = Calendar.getInstance();
-		Calendar cal2 = Calendar.getInstance();
-		cal1.setTime(date1);
-		cal2.setTime(date2);
-		return cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR) &&
-		                  cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR);
+		Calendar c1 = Calendar.getInstance();
+		Calendar c2 = Calendar.getInstance();
+		c1.setTime(date1);
+		c2.setTime(date2);
+		
+		return (c1.get(Calendar.YEAR) == c2.get(Calendar.YEAR) && 
+	            c1.get(Calendar.MONTH) == c2.get(Calendar.MONTH) &&
+	            c1.get(Calendar.DAY_OF_MONTH) == c2.get(Calendar.DAY_OF_MONTH));
 	}
 	
 	public Date now(String format)
@@ -84,4 +111,5 @@ public class DateUtil {
 		
 		return instance;
 	}
+	
 }
