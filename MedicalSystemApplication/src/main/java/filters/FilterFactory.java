@@ -27,6 +27,11 @@ public class FilterFactory {
 			return new PatientFilter();
 		}
 		
+		if(filterType.equalsIgnoreCase("DOCTOR"))
+		{
+			return new DoctorFilter();
+		}
+		
 		return null;
 	}
 	

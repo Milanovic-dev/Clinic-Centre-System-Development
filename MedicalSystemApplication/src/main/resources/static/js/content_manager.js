@@ -75,8 +75,8 @@ function displayError(id,text)
 	let spanId = id + "_mesSpan"
 	if($('#'+spanId).length > 0)
 	{
-		$('#'+spanID).text(text+"fds")
-		$('#'+spanID).css("color","#FF1103")
+		$('#'+spanId).text(text)
+		$('#'+spanId).css("color","#FF1103")
 		return
 	}
 	
@@ -299,5 +299,16 @@ function showBread(name)
 function isString(obj)
 {
     return obj !== undefined && obj !== null && obj.constructor == String;
+}
+
+function convertToMMDDYYYY(date)
+{
+	let dd = date.split(' ')[0].split('-')[0]
+	let mm = date.split(' ')[0].split('-')[1]
+	let yyyy = date.split(' ')[0].split('-')[2]
+	let hh = date.split(' ')[1].split(':')[0]
+	let ss = date.split(' ')[1].split(':')[1]
+	
+	return mm+"-"+dd+"-"+yyyy+" "+hh+":"+mm
 }
 
