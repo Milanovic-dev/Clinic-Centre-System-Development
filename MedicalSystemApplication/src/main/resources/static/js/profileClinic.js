@@ -39,7 +39,7 @@ function addClinicInformations(data)
 		$("#sClinicRating").text(parseFloat(clinic.rating).toPrecision(3))
 	}
 	
-	setDoctorRatings(clinic)
+	
 	setHallTableClinicProfile(clinic.name)
 	setPricelistTableClinicProfile(clinic.name)
 	
@@ -52,6 +52,8 @@ function addClinicInformations(data)
 		{
 			sessionUser = data.responseJSON			
 
+			setDoctorRatings(clinic,sessionUser)
+			
 			if(sessionUser.role == "ClinicAdmin")
 			{
 				
@@ -91,6 +93,7 @@ function addClinicInformations(data)
 				
 				
 			}
+			
 			
 		}
 			
@@ -171,7 +174,7 @@ function getRevanue(apps)
 	return sum
 }
 
-function setDoctorRatings(clinic)
+function setDoctorRatings(clinic, user)
 {
 	let headersTypes = ["Tip", "Ime ","Prezime ", "Email", "Prosečna ocena","Lista zauzeca", ""]
 	createDataTable("tableDoctorRatings","doctorsTab","Lista lekara i njihovih prosečnih ocena",headersTypes,0)
@@ -222,7 +225,7 @@ function setDoctorRatings(clinic)
 				emptyTable("tableDoctorRatings")
 				for(d of doctors)
 				{	
-					listDoctor(d, index, clinic)
+					listDoctor(d, index, clinic, user)
 					index++
 				}
 			
@@ -259,7 +262,7 @@ function setDoctorRatings(clinic)
 }
 
 
-function listDoctor(doctor, i, clinic)
+function listDoctor(doctor, i, clinic, user)
 {
 	let dates = "<p>Morate uneti datum</p>"
 	let makeApp = "<p>Morate uneti datum i tip</p>"
@@ -283,26 +286,33 @@ function listDoctor(doctor, i, clinic)
 		complete: function(data)
 		{
 
-			let listOfDates = []
-			$.each(data.responseJSON, function(i, item){
-				let dateTime = "Zauzece("+(i+1)+"): Datum: <b>" +item.date.split(" ")[0] + "</b>,  Vreme: <b>" + item.date.split(" ")[1] + "</b> - <b>" + item.endDate.split(" ")[1] + "</b>\n"
-				listOfDates.push(dateTime)
-			});
+			let listOfDates = getDoctorOccupancy(data.responseJSON)
 			
-			console.log(listOfDates)
-			
+					
 			$('#occupation'+i).off('click')
 			$('#occupation'+i).click(function(e){
 				e.preventDefault()
 				$('#warningModalLabel').text("Zauzece " + d.user.email)
-				
+							
 				$('#warningBodyModal').empty()
+				
+				if(listOfDates.length == 0)
+				{
+					$('#warningBodyModal').append("Doktor nema zauzeca za ovaj dan.")		
+				}
+				
 				$.each(listOfDates, function(i, item){
 					$('#warningBodyModal').append("<p>"+item+"</p>")					
 				});
 				
 				$('#warningModal').modal('show')
 			})
+			
+			if(user.role != "Patient")
+			{
+				$('#makeApp'+i).prop('disabled',true)
+				return
+			}
 			
 			$('#makeApp'+i).off('click')
 			$('#makeApp'+i).click(function(e){
@@ -430,7 +440,7 @@ function createChartsMonthly(apps)
 		        tooltip: {
 		            crosshairs: [true],
 		            formatter: function () {
-		                return "Vreme: " + moment.utc(moment.unix(this.x/1000)).format("DD/MM-YYYY HH:mm") + "<br> Br. Pregleda: " + this.y;
+		                return "Vreme: " + moment.utc(moment.unix((this.x + 24 * 3600 * 1000)/1000)).format("DD/MM-YYYY HH:mm") + "<br> Br. Pregleda: " + this.y;
 		            }
 		        },
 		        series: [{

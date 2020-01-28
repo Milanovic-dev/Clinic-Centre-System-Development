@@ -7,6 +7,8 @@ import java.time.LocalDateTime;
 import java.util.Calendar;
 import java.util.Date;
 
+import model.Appointment;
+
 public class DateUtil {
 		
 	private static DateUtil instance;
@@ -49,6 +51,11 @@ public class DateUtil {
 	public Boolean overlappingInterval(Date start1, Date end1, Date start2, Date end2)
 	{
 		return overlappingInterval(new DateInterval(start1,end1), new DateInterval(start2,end2));
+	}
+	
+	public Boolean overlappingInterval(Appointment app1, Appointment app2)
+	{
+		return overlappingInterval(app1.getDate(),app1.getEndDate(),app2.getDate(),app2.getEndDate());
 	}
 	
 	public Boolean overlappingInterval(DateInterval d1, DateInterval d2)

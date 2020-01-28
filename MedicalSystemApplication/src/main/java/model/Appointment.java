@@ -19,7 +19,7 @@ public class Appointment
 	@Column(name= "startingDateAndTime",nullable = false)
 	private Date date;
 	
-	@Column(name= "endingDateAndTime")
+	@Column(name= "endingDateAndTime",nullable = false)
 	private Date endDate;
 	
 	@ManyToOne(fetch = FetchType.LAZY)

@@ -561,6 +561,10 @@ public class AppointmentController
 			return new ResponseEntity<>(header,HttpStatus.NOT_FOUND);
 		}
 		
+		Date date = DateUtil.getInstance().getDate(dto.getDate(), "dd-mm-yyyy HH:mm");
+		Date endDate = DateUtil.getInstance().getDate(dto.getEndDate(), "dd-mm-yyyy HH:mm");
+		
+		
 		Hall hall = hallService.findByNumber(dto.getHallNumber());
 		
 		if(hall == null)
@@ -569,6 +573,21 @@ public class AppointmentController
 
 			return new ResponseEntity<>(header,HttpStatus.NOT_FOUND);
 		}
+		
+		List<Appointment> appointments = appointmentService.findAllByHallAndClinic(hall, clinic);
+		
+		
+		for(Appointment app : appointments)
+		{
+			DateInterval d1 = new DateInterval(app.getDate(),app.getEndDate());
+			DateInterval d2 = new DateInterval(date, endDate);
+			
+			if(DateUtil.getInstance().overlappingInterval(d1, d2))
+			{
+				return new ResponseEntity<>(HttpStatus.CONFLICT);
+			}
+		}
+		
 		
 		Priceslist p = priceslistService.findByTypeOfExamination(dto.getTypeOfExamination());
 		
@@ -584,10 +603,20 @@ public class AppointmentController
 		{
 			Doctor d = (Doctor) userService.findByEmailAndDeleted(email, false);
 			
+			for(Appointment app : d.getAppointments())
+			{
+				DateInterval d1 = new DateInterval(app.getDate(),app.getEndDate());
+				DateInterval d2 = new DateInterval(date, endDate);
+				
+				if(DateUtil.getInstance().overlappingInterval(d1, d2))
+				{
+					return new ResponseEntity<>(HttpStatus.ALREADY_REPORTED);
+				}
+			}
+			
 			doctors.add(d);
 		}
 		
-		Date date = DateUtil.getInstance().getDate(dto.getDate(), "dd-mm-yyyy HH:mm");
 		
 		
 		Appointment a = appointmentService.findAppointment(date, hall, clinic);
@@ -598,6 +627,7 @@ public class AppointmentController
 		}
 		
 		Appointment app = new Appointment.Builder(date)
+				.withEndingDate(endDate)
 				.withClinic(clinic)
 				.withHall(hall)
 				.withType(dto.getType())
@@ -605,9 +635,15 @@ public class AppointmentController
 				.withDoctors(doctors)				
 				.build();
 		
-		
-		app.setPredefined(true);
+		app.setPredefined(true);		
 		appointmentService.save(app);
+		
+		for(Doctor d : doctors)
+		{
+			d.getAppointments().add(app);
+			userService.save(d);
+		}
+		
 		return new ResponseEntity<>(HttpStatus.CREATED);
 	}
 
@@ -717,17 +753,6 @@ public class AppointmentController
 		
 		request.setPriceslist(pl);
 		
-		/*
-		Hall hall = hallService.findByNumber(dto.getHallNumber());
-		
-		if(hall == null)
-		{
-			header.set("responseText","Hall not found: " + dto.getHallNumber());
-			return new ResponseEntity<>(header,HttpStatus.NOT_FOUND);
-		}
-		
-		request.setHall(hall);
-		 */ //TODO: Halu bira admin
 		
 		List<User> admins = userService.getAll(UserRole.ClinicAdmin);
 		
