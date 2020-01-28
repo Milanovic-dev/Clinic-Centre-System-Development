@@ -87,12 +87,15 @@ function insertElementIntoTable(id,element, _class)
 	part.innerHTML += element
 }
 
+
 function insertSearchIntoTable(id, search, func)
 {
 	let inputs = search.getInputs()
 	
 	let header = document.getElementById(id).getElementsByClassName("card-header")[0]
 
+	if(header.innerHTML.indexOf("<form>") != -1)return
+	
 	header.innerHTML += "<br><br><form></form><form id='form_"+id+"'></form>"
 
 	let form = header.getElementsByTagName("form")[0]
@@ -221,6 +224,11 @@ function insertTableInto(id, handle)
 function getTable(id)
 {
 	return $('#table_'+id)
+}
+
+function getTableRowCount(id)
+{
+	return $('#table_'+id).DataTable().rows().count()
 }
 
 function getTableDiv(id)

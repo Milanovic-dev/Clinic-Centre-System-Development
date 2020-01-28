@@ -255,6 +255,7 @@ public class ContainerInitialize {
 			app2.getDoctors().add(doctor2);
 
 			Appointment app3 = new Appointment.Builder(DateUtil.getInstance().getDate("24-01-2020 19:30", "dd-mm-yyyy HH:mm"))
+					.withEndingDate(DateUtil.getInstance().getDate("24-01-2020 20:30", "dd-mm-yyyy HH:mm"))
 					.withPatient(patient1)
 					.withType(AppointmentType.Surgery)
 					.withHall(hall2)

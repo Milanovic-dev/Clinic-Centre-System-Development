@@ -47,8 +47,11 @@ function createClinicTable()
 	 
 	insertSearchIntoTable("clinicTable", search, function(){
 		
-		let picker = $('#clinicDatePick').val()
-    	getClinics(picker)
+		let date = $('#clinicDatePick').val()
+		
+		if(date == "") return
+		
+    	getClinics(date)
     	
 	})
 	
@@ -58,7 +61,7 @@ function createClinicTable()
 
 function createChooseDoctorTable()
 {
-	let headers = ['Tip', 'Email', 'Ime', 'Prezime', 'Prosecna ocena', 'Pocetak smene','Kraj smene','']
+	let headers = ['Tip', 'Email', 'Ime', 'Prezime', 'Prosecna ocena','Zauzece', 'Pocetak smene','Kraj smene','']
 	createDataTable('chooseDoctorTable','showDoctorsContainer','Izaberite doktora',headers,0)
     insertElementIntoTable('chooseDoctorTable','<br><button type="button" class="btn btn-primary" id = "detailsAppointment_btn">Pregled</button>')  
     getTableDiv('chooseDoctorTable').show()
@@ -66,7 +69,7 @@ function createChooseDoctorTable()
 
 function createPreAppointmentsTable()
 {
-	let headers = ['Datum Pocetka','Datum Zavrsetka','Klinika','Sala','Doktor','Tip pregleda','Cena','']
+	let headers = ['Datum','Termin','Klinika','Sala','Doktor','Tip pregleda','Cena','']
 	createDataTable('preAppTable',"preAppointmentContainer","Unapred definisani pregledi",headers,0)
 	getTableDiv('preAppTable').show()
 }
@@ -287,9 +290,10 @@ function list_preApp(data,i,user)
 	
 	let dateSplit = data.date.split(' ')
 	let date = dateSplit[0]
-	let time = dateSplit[1]
+	let startTime = dateSplit[1]
+	let endTime = data.endDate.split(' ')[1]
 	
-	let d = [data.date,data.endDate,getClinicProfileLink(data.clinicName),data.hallNumber,getProfileLink(data.doctors[0]),data.typeOfExamination,data.price,'<button class="btn btn-primary" data-toggle="tooltip" id="submitPredefinedAppRequest'+i+'">Zakazi</button>']
+	let d = [date,startTime + " - " + endTime,getClinicProfileLink(data.clinicName),data.hallNumber,getProfileLink(data.doctors[0]),data.typeOfExamination,data.price,'<button class="btn btn-primary" data-toggle="tooltip" id="submitPredefinedAppRequest'+i+'">Zakazi</button>']
 	
 	insertTableData('preAppTable',d)
 	
@@ -491,7 +495,7 @@ function p_listClinic(data,i,user)
 		
 		$.ajax({
 			type:'GET',
-			url:"api/clinic/getDoctors/" + data.name,
+			url:"api/clinic/getDoctorsByType/" + data.name + "/" + $('#selectAppointmentType').val(),
 			complete: function(data)
 			{
 				let doctors = data.responseJSON
@@ -504,6 +508,7 @@ function p_listClinic(data,i,user)
 				search.input('<input class="form-control" type="number" placeholder="Unesite ocenu" id="chooseDoctorRating">')
 				search.input('<input class="form-control" type="text" placeholder="Unesite tip" id="chooseDoctorType">')
 					
+				
 				insertSearchIntoTable("chooseDoctorTable", search, function(){
 						
 					
@@ -663,8 +668,38 @@ function submitAppointmentRequest(user, doctorsSelected)
 function p_listDoctorActive(data, i, doctorCount)
 {
 	
-	let d = [data.type, getProfileLink(data.user.email), data.user.name, data.user.surname, data.avarageRating, data.shiftStart, data.shiftEnd, "<input type='checkbox' id='checkDoctor"+i+"'><label for='checkDoctor"+i+"'></label>"]
-	insertTableData('chooseDoctorTable',d)
+	let d = [data.type, getProfileLink(data.user.email), data.user.name, data.user.surname, data.avarageRating,"<button class='btn btn-primary' id='doctorOcc"+i+"'>Zauzece</button>", data.shiftStart, data.shiftEnd, "<input type='checkbox' id='checkDoctor"+i+"'><label for='checkDoctor"+i+"'></label>"]
+	insertTableData('chooseDoctorTable', d)
+	
+	
+	$('#doctorOcc'+i).click(function(e){
+		e.preventDefault()
+		console.log(data)
+		$.ajax({
+			type:'GET',
+			url:"api/appointments/doctor/getAllAppointmentsByDate/"+data.user.email+"/"+ $('#inputDate').val(),
+			complete: function(response)
+			{
+
+				let listOfDates = getDoctorOccupancy(response.responseJSON)
+
+				$('#warningModalLabel').text("Zauzece " + data.user.email)
+							
+				$('#warningBodyModal').empty()
+				
+				if(listOfDates.length == 0)
+				{
+					$('#warningBodyModal').append("Doktor nema zauzeca za ovaj dan.")		
+				}
+				
+				$.each(listOfDates, function(i, item){
+					$('#warningBodyModal').append("<p>"+item+"</p>")					
+				});
+				
+				$('#warningModal').modal('show')		
+			}
+		})
+	})
 	
 	$('#checkDoctor'+i).off('click')
 	$('#checkDoctor'+i).click(function(e){
@@ -682,7 +717,7 @@ function p_listDoctorActive(data, i, doctorCount)
 		}
 		
 	})
-	
+
 }
 
 function p_listDoctorDisabled(data, i, doctorCount)

@@ -213,6 +213,9 @@ function setUpClinicAdminPage(user)
 		makeDoctorTable(clinic)
 	})
 	
+	$('#inputDatePredef').datepicker({
+		dateFormat: "dd-mm-yyyy"
+	})
 	
 	$('#addHall').click(function(e){
 		
@@ -997,19 +1000,16 @@ function makeAppointment(clinic)
 			complete: function(data)
 			{
 				users = data.responseJSON
-				let i = 0
 				emptyTable('preAppTableDoctor')
 				
-				for(let u of users)
-	            {
+				$.each(users, function(i, u)
+				{
 					let d = [u.user.name, u.user.surname, getProfileLink(u.user.email), u.user.phone, u.user.address, u.user.city, u.user.state,"<input type='checkbox' id='checkDoctorSelect"+i+"'><label for='checkDoctorSelect"+i+"'></label>"]
 					insertTableData("preAppTableDoctor",d)
-					i++
 					
 					$('#checkDoctorSelect'+i).off('click')
 					$('#checkDoctorSelect'+i).click(function(e){
-						
-						for(let j = 0 ; j < users.length ; j++)
+						for(let j = 0 ; j < getTableRowCount('preAppTableDoctor')  ; j++)
 						{
 							if(j == i)
 							{
@@ -1021,37 +1021,31 @@ function makeAppointment(clinic)
 							}
 						}
 					})
-	            }
+				})
+										
 			}
 		})
 	})
 	
-
-
-			$('#submitPredefinedAppointmentRequest').click(function(e){
-				for(let j = 0 ; j < users.length ; j++)
-				{
-					if($("#checkDoctorSelect"+j).is(":checked"))
-					{
-						doctorsSelected.push(users[j].user.email)
-					}
-					
-				}
-				submitPredefinedAppointment(doctorsSelected)
-				
-			})
-
+	$('#submitPredefinedAppointmentRequest').click(function(e){
+		e.preventDefault()
+		console.log(getTableRowCount('preAppTableDoctor'))
+		for(let j = 0 ; j < getTableRowCount('preAppTableDoctor') ; j++)
+		{
+			if($("#checkDoctorSelect"+j).is(":checked"))
+			{
+				doctorsSelected.push(users[j].user.email)
+			}						
+		}
+		
+		submitPredefinedAppointment(doctorsSelected)
+	})
+	
 
 }
 
 function submitPredefinedAppointment(doctorsSelected)
 {
-	if(doctorsSelected.length == 0)
-	{
-		displayError('submitPredefinedAppointmentRequest',"Morate izabrati doktora")
-		return
-	}
-	showLoading("submitPredefinedAppointmentRequest")
 	
 	let date = $('#inputDatePredef').val()
 	let clinicName = clinic.name
@@ -1061,12 +1055,52 @@ function submitPredefinedAppointment(doctorsSelected)
 	let timeEnd = $('#inputTimeEnd').val()
 	let price = $('#inputPrice').val()
 	let typeOfExamination = $('#inputAppointmentTypeSelect').val()
-	let json = JSON.stringify({"date":date,"clinicName":clinicName,"hallNumber": hallNumber, "doctors":doctors,"duration": 0,"price": price,"typeOfExamination":typeOfExamination,"type":"Examination"})
+	let json = JSON.stringify({"date":date + " " + timeStart, "endDate":date + " " + timeEnd, "clinicName":clinicName,"hallNumber": hallNumber, "doctors":doctors,"duration": 0,"price": price,"typeOfExamination":typeOfExamination,"type":"Examination"})
 	
-	console.log(json)
+	let flag = true
+	
+	if(!validation($('#inputDatePredef'), date == "", "Morate izabrati datum"))
+	{
+		flag = false
+	}
+	
+	if(!validation($('#inputTimeBegin'), timeStart == "", "Morate izabrati pocetak"))
+	{
+		flag = false
+	}
+	
+	if(!validation($('#inputTimeEnd'), timeEnd == "", "Morate izabrati kraj."))
+	{
+		flag = false
+	}
+
+	if(!validation($('#inputAppointmentTypeSelect'),typeOfExamination == null,"Morate izabrati tip"))
+	{
+		flag = false
+	}
+	
+	console.log(doctorsSelected)
+	
+	if(doctorsSelected == undefined)
+	{
+		displayError('submitPredefinedAppointmentRequest',"Morate izabrati doktora")
+		flag = false
+	}
+	
+	if(doctorsSelected.length == 0)
+	{
+		
+		displayError('submitPredefinedAppointmentRequest',"Morate izabrati doktora")
+		flag = false
+	}
+	
+	if(!flag) return
+	
+	showLoading("submitPredefinedAppointmentRequest")
+	
 	$.ajax({
 		type: 'POST',
-		url: 'api/appointments/makePredefineded',
+		url: 'api/appointments/makePredefined',
 		data: json,
 		dataType : "json",
 		contentType : "application/json; charset=utf-8",
@@ -1075,7 +1109,16 @@ function submitPredefinedAppointment(doctorsSelected)
 			console.log(data)
 			if(data.status == '201')
 			{
-				alert('Uspesno kreiran predefinisani pregled')
+				warningModal('Uspesno','Uspesno kreiran predefinisani pregled')
+				//window.location.href= "index.html"
+			}
+			else if(data.status == "409")
+			{
+				warningModal('Neuspesno', 'Vec postoji zakazan pregled u sali br.'+hallNumber+" izmedju "+timeStart+" i "+timeEnd)
+			}
+			else if(data.status == "208")
+			{
+				warningModal('Neuspesno', "Izabrani doktor vec ima zakazan pregled izmedju "+timeStart+" i "+timeEnd)
 			}
 			
 			hideLoading("submitPredefinedAppointmentRequest")

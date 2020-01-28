@@ -20,6 +20,17 @@ function getClinicProfileLink(clinic)
 	return "<a href='"+ getPageURLWithClinic("clinicProfile", clinic) +"'>" + clinic + "</a>"
 }
 
+function getDoctorOccupancy(apps)
+{
+	let listOfDates = []
+	$.each(apps, function(i, item){
+		let dateTime = "Zauzece("+(i+1)+"): Datum: <b>" +item.date.split(" ")[0] + "</b>,  Vreme: <b>" + item.date.split(" ")[1] + "</b> - <b>" + item.endDate.split(" ")[1] + "</b>\n"
+		listOfDates.push(dateTime)
+	});
+	
+	return listOfDates
+}
+
 function getProfileFromURL(done)
 {
 	let url = window.location.href
