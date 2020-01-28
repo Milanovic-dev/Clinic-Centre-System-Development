@@ -173,7 +173,7 @@ function getRevanue(apps)
 
 function setDoctorRatings(clinic)
 {
-	let headersTypes = ["Ime ","Prezime ", "Email", "Prosečna ocena"]
+	let headersTypes = ["Tip", "Ime ","Prezime ", "Email", "Prosečna ocena","Lista zauzeca", ""]
 	createDataTable("tableDoctorRatings","doctorsTab","Lista lekara i njihovih prosečnih ocena",headersTypes,0)
 	getTableDiv('tableDoctorRatings').show()
 	
@@ -181,25 +181,137 @@ function setDoctorRatings(clinic)
 	search.input('<input class="form-control" type="text" placeholder="Unesite Ime" id="chooseDoctorName">')
 	search.input('<input class="form-control" type="text" placeholder="Unesite prezime" id="chooseDoctorSurname">')
 	search.input('<input class="form-control" type="number" placeholder="Unesite ocenu" id="chooseDoctorRating">')
-	search.input('<input class="form-control" type="text" placeholder="Unesite tip" id="chooseDoctorType">')
-	search.input('<input class="form-control datepicker-here" data-language="en" placeholder="Izaberite datum" id="clinicDatePick" readonly="true">')
+	search.input('<select class="form-control" type="text" placeholder="Unesite tip" id="chooseDoctorType"><option selected value="">Izaberite Tip</option></select>')
+	search.input('<input class="form-control datepicker-here" data-language="en" placeholder="Izaberite datum" id="chooseDoctorDate" readonly="true">')
 	
-	$.ajax({
-			type: 'GET',
-			url: 'api/clinic/getDoctors/' + clinic.name,
-			complete: function(data)
+	insertSearchIntoTable('tableDoctorRatings', search, function(){
+		
+		let srcButton = getTableSearchButton('chooseDoctorTable')
+		showLoading(srcButton)
+		
+		let name = $('#chooseDoctorName').val()
+		let surname = $('#chooseDoctorSurname').val()
+		let rating = $('#chooseDoctorRating').val()
+		let type = $('#chooseDoctorType').val()
+		let date = $('#chooseDoctorDate').val()
+		
+		let dto = 
+		{
+			user:{
+				"name" : name,
+				"surname" : surname
+			},
+			"averageRating": rating,
+			"type" : type,
+			"shiftStart": date
+		}
+		
+		
+		let json = JSON.stringify(dto)
+
+		$.ajax({
+			type: "POST",
+			url:"api/clinic/getDoctorsByFilter/" + clinic.name,
+			data: json,
+			dataType : "json",
+			contentType : "application/json; charset=utf-8",
+			complete: function(response)
 			{
-				doctors = data.responseJSON
+				let doctors = response.responseJSON
+				let index = 0
 				emptyTable("tableDoctorRatings")
 				for(d of doctors)
 				{	
-					let values = [d.user.name, d.user.surname, getProfileLink(d.user.email), d.avarageRating]
-					insertTableData("tableDoctorRatings",values)
+					listDoctor(d, index, clinic)
+					index++
 				}
-			}
+			
 				
+				hideLoading(srcButton)
+			}
 		})
+		
+	})
+	
+	
+	$.ajax({
+		type:'GET',
+		url:'api/priceList/getAll',
+		complete: function(data)
+		{		
+			let pricelists = data.responseJSON
+						
+			for(let p of pricelists)
+			{
+				$('#chooseDoctorType').append($('<option>',{
+					value: p.typeOfExamination,
+					text: p.typeOfExamination
+				}))			
+			}			
+		}
+	})
+	
+	
+	$('#chooseDoctorDate').datepicker({
+		dateFormat: "dd-mm-yyyy"
+	})
+	
+}
 
+
+function listDoctor(doctor, i, clinic)
+{
+	let dates = "<p>Morate uneti datum</p>"
+	let makeApp = "<p>Morate uneti datum i tip</p>"
+		
+	if($('#chooseDoctorDate').val() != "")
+	{
+		dates = '<button class="btn btn-info" id="occupation'+i+'">Zauzece</button>'
+	}
+	
+	if($('#chooseDoctorDate').val() != "" && $('#chooseDoctorType').val() != "")
+	{
+		makeApp = '<button class="btn btn-info" id="makeApp'+i+'">Zakazi</button>'		
+	}
+	
+	let values = [d.type, d.user.name, d.user.surname, getProfileLink(d.user.email), d.avarageRating,dates, makeApp]
+	insertTableData("tableDoctorRatings",values)
+	
+	$.ajax({
+		type:'GET',
+		url:"api/appointments/doctor/getAllAppointmentsByDate/"+d.user.email+"/"+ $('#chooseDoctorDate').val(),
+		complete: function(data)
+		{
+
+			let listOfDates = []
+			$.each(data.responseJSON, function(i, item){
+				let dateTime = "Zauzece("+(i+1)+"): Datum: <b>" +item.date.split(" ")[0] + "</b>,  Vreme: <b>" + item.date.split(" ")[1] + "</b> - <b>" + item.endDate.split(" ")[1] + "</b>\n"
+				listOfDates.push(dateTime)
+			});
+			
+			console.log(listOfDates)
+			
+			$('#occupation'+i).off('click')
+			$('#occupation'+i).click(function(e){
+				e.preventDefault()
+				$('#warningModalLabel').text("Zauzece " + d.user.email)
+				
+				$('#warningBodyModal').empty()
+				$.each(listOfDates, function(i, item){
+					$('#warningBodyModal').append("<p>"+item+"</p>")					
+				});
+				
+				$('#warningModal').modal('show')
+			})
+			
+			$('#makeApp'+i).off('click')
+			$('#makeApp'+i).click(function(e){
+				e.preventDefault()				
+				window.location.href = 'index.html?makeApp=true&clinicName='+clinic.name+'&type='+d.type+'&doctorEmail='+doctor.user.email+'&date='+$('#chooseDoctorDate').val();		
+			})
+		}
+	})
+	
 }
 
 

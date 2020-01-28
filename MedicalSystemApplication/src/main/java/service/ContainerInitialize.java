@@ -282,7 +282,6 @@ public class ContainerInitialize {
 			
 			
 			doctor1.getAppointments().add(app1);
-			doctor1.getAppointments().add(app2);
 			doctor2.getAppointments().add(app3);
 			
 

@@ -79,7 +79,7 @@ public class AppointmentController
 		
 		return new ResponseEntity<>(new AppointmentDTO(appointment),HttpStatus.OK);
 	}
-	
+	//Get By doctor and patient
 	@GetMapping(value="/getAppointments/{doctorEmail}/{patientEmail}")
 	public ResponseEntity<List<AppointmentDTO>> getAppointmentsByPatient(@PathVariable("doctorEmail") String doctorEmail,@PathVariable("patientEmail") String patientEmail )
 	{
@@ -448,6 +448,49 @@ public class AppointmentController
 		for(Appointment app : appointments)
 		{
 			dto.add(new AppointmentDTO(app));
+		}
+
+		if(appointments == null)
+		{
+			header.set("responseText","Appointments not found : ("+email+")");
+			return new ResponseEntity<>(header,HttpStatus.NOT_FOUND);
+		}
+
+		return new ResponseEntity<>(dto,HttpStatus.OK);
+
+	}
+	
+	@GetMapping(value="/doctor/getAllAppointmentsByDate/{email}/{date}")
+	public ResponseEntity<List<AppointmentDTO>> getAppointmentsDoctorByDate(@PathVariable("email") String email, @PathVariable("date") String date)
+	{
+		Doctor  d = null;
+
+		try {
+			d = (Doctor)userService.findByEmailAndDeleted(email,false);
+		}
+		catch(ClassCastException e)
+		{
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+
+		HttpHeaders header = new HttpHeaders();
+
+		if(d == null)
+		{
+			header.set("responseText","User not found : ("+email+")");
+			return new ResponseEntity<>(header,HttpStatus.NOT_FOUND);
+		}
+	
+		List<Appointment> appointments = d.getAppointments();
+		List<AppointmentDTO> dto = new ArrayList<AppointmentDTO>();
+		
+		for(Appointment app : appointments)
+		{
+			Boolean sameDay = DateUtil.getInstance().isSameDay(app.getDate(), DateUtil.getInstance().getDate(date, "dd-mm-yyyy"));
+			if(sameDay)
+			{
+				dto.add(new AppointmentDTO(app));				
+			}
 		}
 
 		if(appointments == null)

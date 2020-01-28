@@ -1,6 +1,7 @@
 package filters;
 
 import dto.DoctorDTO;
+import helpers.DateUtil;
 import model.Doctor;
 
 public class DoctorFilter implements Filter{
@@ -42,6 +43,14 @@ public class DoctorFilter implements Filter{
 			if(!dto.getType().equals(""))
 			{
 				if(!d.getType().toLowerCase().contains(dto.getType().toLowerCase()))
+				{
+					flag = false;
+				}
+			}
+			
+			if(dto.getShiftEnd() != null)
+			{
+				if(!d.IsFreeOn(DateUtil.getInstance().getDate(dto.getShiftEnd(),"dd-MM-yyyy HH:mm")))
 				{
 					flag = false;
 				}
