@@ -62,12 +62,10 @@ public class DateUtil {
 		c2.setTime(d1.getEnd());
 		c3.setTime(d2.getStart());
 		c4.setTime(d2.getEnd());
-		
-		//vacationStart.before(request.getEndDate()) && vacationEnd.after(request.getStartDate())
-		
+				
 		Boolean con1 = isSameDay(c1.getTime(), c3.getTime());
-		Boolean con2 = c1.get(Calendar.HOUR_OF_DAY) <= c4.get(Calendar.HOUR_OF_DAY) && c2.get(Calendar.HOUR_OF_DAY) > c3.get(Calendar.HOUR_OF_DAY);
-		System.out.println(c1.get(Calendar.HOUR_OF_DAY));
+		Boolean con2 = c1.get(Calendar.HOUR_OF_DAY) < c4.get(Calendar.HOUR_OF_DAY) && c2.get(Calendar.HOUR_OF_DAY) > c3.get(Calendar.HOUR_OF_DAY);
+
 		return (con1 && con2);
 	}
 	
@@ -79,7 +77,6 @@ public class DateUtil {
 		cal.clear();
 		cal.setTime(d2);
 		long end = cal.getTimeInMillis();
-		System.out.println(start + " : " + end);
 		return Math.abs(end - start);
 	}
 	

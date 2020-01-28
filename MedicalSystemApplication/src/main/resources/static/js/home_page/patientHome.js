@@ -181,8 +181,57 @@ function setUpPatientPage(user)
 		showView('showClinicContainer')
 		showBread('Lista klinika')
 	})
+	
+	if(getParameterByName("makeApp") == "true")
+	{	
+		$.ajax({
+			type:'GET',
+			url:"api/users/getDoctor/"+ getParameterByName("doctorEmail"),
+			complete: function(data)
+			{
+				let doctor = data.responseJSON
+				
+				if(data.status == "200")
+				{
+					showView('detailsAppointmentContainer')
+					showBread('Pregled zahteva')
+					
+					$.ajax({
+						type:'GET',
+						url:"api/clinic/"+getParameterByName("clinicName"),
+						complete:function(data)
+						{
+							if(data.status == "200")
+							{
+								let clinic = data.responseJSON
+								
+								$('#inputClinicName').val(clinic.name)
+								$('#inputClinicAddress').val(clinic.address+", "+clinic.city+", "+clinic.state)
+								$('#inputDate').val(getParameterByName("date"))
+								$('#inputAppointmentType').val(getParameterByName("type") + " (Pregled)")
+								$('#inputStartTime').prop('min',doctor.shiftStart)
+								$('#inputStartTime').prop('max',doctor.shiftEnd)
+								
+								
+								$('#tableDoctorsDisabled tbody').empty()
+								p_listDoctorDisabled(doctor, 0, 1);
+								
+								$('#submitAppointmentRequest').off('click')
+								$('#submitAppointmentRequest').click(function(e){
+									e.preventDefault()
+									
+									submitAppointmentRequest(user, [doctor])
+								})
+							}
+						}
+					})								
+				}			
+			}
+		})		
+	}
 
 }
+
 
 function setAppointmentsTable()
 {
@@ -546,46 +595,7 @@ function p_listClinic(data,i,user)
 				$('#submitAppointmentRequest').click(function(e){
 					e.preventDefault()
 					
-					showLoading("submitAppointmentRequest")
-					
-					let clinicName = $('#inputClinicName').val()
-					let date =  $('#inputDate').val()
-					let patientEmail = user.email
-					let typeOfExamination = $('#selectAppointmentType').val()
-					let time = $('#inputStartTime').val()
-
-					let doctorArray = []
-					
-					for(let d of doctorsSelected)
-					{
-						doctorArray.push(d.user.email)
-					}
-					
-					let timeInput = $('#inputStartTime')
-					if(!validation(timeInput, time == "", "Morate izabrati vreme"))
-					{
-						hideLoading("submitAppointmentRequest")
-						return
-					}
-					
-					let json = JSON.stringify({"date":date+" "+time,"clinicName":clinicName,"patientEmail":patientEmail,"doctors":doctorArray,"typeOfExamination":typeOfExamination,"type":"Examination"})
-
-					$.ajax({
-						type:'POST',
-						url:'api/appointments/sendRequest',
-						data: json,
-						dataType : "json",
-						contentType : "application/json; charset=utf-8",
-						complete: function(data)
-						{
-							hideLoading('submitAppointmentRequest')
-							if(data.status == "201")
-							{
-								listAppRequests(user)
-							}
-														
-						}
-					})
+					submitAppointmentRequest(user, doctorsSelected)
 				})
 			
 			
@@ -597,6 +607,57 @@ function p_listClinic(data,i,user)
 		
 	})
 	
+}
+
+
+function submitAppointmentRequest(user, doctorsSelected)
+{
+	showLoading("submitAppointmentRequest")
+	
+	let clinicName = $('#inputClinicName').val()
+	let date =  $('#inputDate').val()
+	let patientEmail = user.email
+	let typeOfExamination = $('#inputAppointmentType').val()
+	let time = $('#inputStartTime').val()
+
+	let doctorArray = []
+	
+	for(let d of doctorsSelected)
+	{
+		doctorArray.push(d.user.email)
+	}
+	
+	let timeInput = $('#inputStartTime')
+	
+	if(!validation(timeInput, time == "", "Morate izabrati vreme"))
+	{
+		hideLoading("submitAppointmentRequest")
+		return
+	}
+		
+	let json = JSON.stringify({"date":date+" "+time,"clinicName":clinicName,"patientEmail":patientEmail,"doctors":doctorArray,"typeOfExamination":typeOfExamination.split(" ")[0],"type":"Examination"})
+	console.log(json)
+	$.ajax({
+		type:'POST',
+		url:'api/appointments/sendRequest',
+		data: json,
+		dataType : "json",
+		contentType : "application/json; charset=utf-8",
+		complete: function(data)
+		{
+			if(data.status == "201")
+			{
+				listAppRequests(user)
+			}
+			else
+			{
+				warningModal("Neuspesno " + data.status, "Server nije uspeo da odgovori. Molimo pokusajte kasnije")
+			}
+										
+			hideLoading('submitAppointmentRequest')
+		}
+	})
+
 }
 
 function p_listDoctorActive(data, i, doctorCount)
