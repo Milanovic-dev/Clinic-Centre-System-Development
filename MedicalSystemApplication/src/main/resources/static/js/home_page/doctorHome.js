@@ -752,42 +752,42 @@ function getAppointment(clinicName, date, hallNumber, user){
                 var input = $('#report')
                 input.removeClass('is-invalid')
            }
-           
+
            if(!validation(nextDate, nextDate.val() == "", "Morate uneti datum."))
            {
-        	   flag = false        	   
+        	   flag = false
            }
-           
+
            if(!validation(nextType, nextType.val() == "", "Morate izabrati tip."))
            {
         	   flag = false
            }
-                 
+
            if(!validation(ToE, ToE.val() == "", "Morate izabrati tip pregleda"))
            {
         	   flag = false
            }
-           
+
 
            if(flag == false){
                 return
            }
-           			
-           
+
+
            		let typeOfExam
-           		
+
            		if(nextType.val() == "Pregled")
            		{
            			typeOfExam = "Examination"
-           			
+
            		}
            		else
            		{
-           			typeOfExam = "Surgery"           			
+           			typeOfExam = "Surgery"
            		}
-           
+
            		let nextAppRequestJSON = JSON.stringify({"date":nextDate.val(), "patientEmail":patient.email, "clinicName":clinicName, "doctors":[user.email], "typeOfExamination":ToE.val(), "type":typeOfExam})
-           		
+
            		$.ajax({
 						type:'POST',
 						url:'api/appointments/sendRequest',
@@ -799,10 +799,10 @@ function getAppointment(clinicName, date, hallNumber, user){
 							if(data.status != "201")
 							{
 								alert("Error pri cuvanju sledeceg pregleda")
-							}													
+							}
 						}
 					})
-           
+
 
                 let prescriptionDTO = {"description":description,"drugs":drugs,"nurse":"","isValid":false, "validationDate":""}
                 let prescription = JSON.stringify({"description":description,"drugs":drugs,"nurse":"","isValid":false, "validationDate":""})

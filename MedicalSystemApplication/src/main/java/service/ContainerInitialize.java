@@ -88,13 +88,20 @@ public class ContainerInitialize {
 					.withPhone("34023423")	
 					.withInsuranceID("13858342343")
 					.build();
-			
-			patient.getMedicalRecord().setBloodType(BloodType.AB);
-			patient.getMedicalRecord().setAlergies(Arrays.asList("Polen","Secer"));
-			patient.getMedicalRecord().setHeight("195cm");
-			patient.getMedicalRecord().setWeight("85kg");
-			patient.getMedicalRecord().setPatient(patient);
-					
+
+			MedicalRecord record = new MedicalRecord();
+
+			record.setBloodType(BloodType.AB);
+			record.setAlergies(Arrays.asList("Polen","Secer"));
+			record.setHeight("195cm");
+			record.setWeight("85kg");
+			record.setPatient(patient);
+
+			userRepository.save(patient);
+
+			medicalRecordRepository.save(record);
+
+			patient.setMedicalRecord(record);
 
 			Patient patient2 = new Patient.Builder("patient1@gmail.com")
 					.withPassword(hash)
@@ -118,8 +125,20 @@ public class ContainerInitialize {
 					.withInsuranceID("35654645")
 					.build();
 
+			MedicalRecord record1 = new MedicalRecord();
 
-			patient1.getMedicalRecord().setPatient(patient1);
+			record.setBloodType(BloodType.A);
+			record.setAlergies(Arrays.asList("Trava","Prasina","Grinje"));
+			record.setHeight("180cm");
+			record.setWeight("75kg");
+			record.setPatient(patient1);
+
+			userRepository.save(patient1);
+
+			medicalRecordRepository.save(record1);
+
+			patient.setMedicalRecord(record1);
+
 
 			userRepository.save(patient);
 			userRepository.save(patient1);
@@ -248,6 +267,15 @@ public class ContainerInitialize {
 					.withClinic(clinic)
 					.withDuration(1)
 					.build();
+
+
+			Appointment app4 = new Appointment.Builder(DateUtil.getInstance().GetDate("05-01-2020 17:30", "dd-mm-yyyy HH:mm"))
+					.withPatient(patient)
+					.withType(AppointmentType.Surgery)
+					.withHall(hall2)
+					.withClinic(clinic)
+					.withDuration(2)
+					.build();
 			
 			app2.getDoctors().add(doctor1);
 			app2.getDoctors().add(doctor3);
@@ -255,11 +283,13 @@ public class ContainerInitialize {
 			appointmentRepository.save(app3);
 			
 			
-			doctor1.getAppointments().add(app1);
+			//doctor1.getAppointments().add(app1);
 			doctor1.getAppointments().add(app2);
 			doctor2.getAppointments().add(app3);
-			
+			doctor1.getAppointments().add(app4);
 
+			app4.getDoctors().add(doctor1);
+			appointmentRepository.save(app4);
 			
 			Nurse nurse = new Nurse.Builder("nurse@gmail.com")
 					.withPassword(hash)
@@ -309,6 +339,19 @@ public class ContainerInitialize {
 			prescription3.setDescription("terapijaaaaa a a a a a ");
 
 			prescriptionRepository.save(prescription3);
+
+			PatientMedicalReport report = new PatientMedicalReport.Builder(DateUtil.getInstance().GetDate("03-01-2020 19:30", "dd-mm-yyyy HH:mm"))
+					.withPatient(patient1)
+					.withDescription("opis neki")
+					.withDoctor(doctor1)
+					.withPrescription(prescription)
+					.withClinic(clinic)
+					.build();
+			patientMedicalReportRepository.save(report);
+			patient1.getMedicalRecord().getReports().add(report);
+			userRepository.save(patient);
+
+
 			
 			Diagnosis d1 = new Diagnosis("123","tag","name");
 			List<Diagnosis> listDiag = new ArrayList<>();
