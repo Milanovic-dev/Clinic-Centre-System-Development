@@ -16,7 +16,7 @@ public class HallFilter implements Filter{
 		
 		if(!hdto.getName().equals(""))
 		{
-			if(!h.getName().contains(hdto.getName()))
+			if(!h.getName().toLowerCase().contains(hdto.getName().toLowerCase()))
 			{
 				flag = false;
 			}
@@ -31,6 +31,7 @@ public class HallFilter implements Filter{
 		}
 		
 		//TODO: Date
+		
 		
 		return flag;
 	}

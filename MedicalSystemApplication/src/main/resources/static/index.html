@@ -170,15 +170,72 @@
     </div>
   </div>
   
-   <div class="card mb-3" id ="showHallContainer" style="display:none"> 
-    	
+   <div id ="showHallContainer" style="display:none"> </div>
+   <div id ="showReportContainer" style="display:none"></div>
+   
+   <div id =showVacationRequestListContainer style="display:none"></div>
+   
+<!-- -------------------MODAL ZA ODBIJANJE ZAHTEVA ZA GODISNJI ODMOR ILI ODSUSTVO--------------------- -->
+       <div class="modal fade" id="vacationRequestModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Razlog odbijanja zahteva</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="formMail">
+                        <div class="form-group">
+                            <label for="recipient-name"  class="col-form-label">Za:</label>
+                            <input type="text" disabled class="form-control" id="vacation-user">
+                        </div>
+                        <div class="form-group">
+                            <label for="message-text" class="col-form-label">Poruka:</label>
+                            <textarea class="form-control" id="messageVacationDeny-text"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Odustani</button>
+                    <button type="button" class="btn btn-primary" id="modalDeny">Posalji</button>
+                </div>
+            </div>
+        </div>
     </div>
+<!-- -------------------KRAJ MODALA ZA ODBIJANJE ZAHTEVA ZA GODISNJI ODMOR ILI ODSUSTVO--------------------- -->
     
-    <div class="card mb-3" id ="showReportContainer" style="display:none"> 
-    	
-    </div>
-    
-<!-- WARNING MODAL -->
+<!-- -------------------ZAHTEV ZA GODISNJI ODMOR----------- -->
+<div class="card mb-3" id ="showVacationRequestContainer" style="display:none">
+  <div class="card card-register mx-auto mt-5">
+  <div class="card-header">Zahtev za godišnji odmor ili odsustvo</div>
+  <div class="card-body">
+   <form>
+	  <div class="form-group">
+	    <label for="startDateVacationRequest">Prvi dan godišnjeg odmora ili odsustva: </label>
+        <input class="form-control datepicker-here" data-language="en" placeholder="Izaberite datum" id="startDayInputVacationRequest" readonly="true">
+	  </div>
+	  <div class="form-group">
+	    <label for="endDateVacationRequest">Poslednji dan godišnjeg odmora ili odsustva: </label>
+        <input class="form-control datepicker-here" data-language="en" placeholder="Izaberite datum" id="endDayInputVacationRequest" readonly="true">
+	  </div>
+	  <p>
+	  <div>
+	  <img src="images/checked.png" id="checkedImageVacationRequest" style="display:none ; width:10% ; height:auto" >
+	  <img src="images/unchecked.png" id="uncheckedImageVacationRequest" style="display:none ; width:5% ; height:auto">
+	  </div>
+	  	<div class="spinner-border text-primary" id="vacationRequestSpinner" role="status" style="display:none">
+  			<span class="sr-only">Provera mogućnosti slanja zahteva...</span>
+		</div>
+	  </p>
+	  <button type="submit" id = "submitVacationRequest"class="btn btn-primary" disabled="true">Pošalji zahtev</button>
+	</form>
+   </div>
+  </div>
+</div>
+<!-- ------------------- KRAJ ZAHTEVA ZA GODISNJI ODMOR----------- -->
+<!-- ZAUZUECE MODAL -->
 <div class="modal fade" id="warningModal" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -197,7 +254,7 @@
     </div>
   </div>
 </div> 
-<!-- KRAJ WARNING MODAL -->
+<!-- ZAUZUECE WARNING MODAL -->
 <!-- SEARCH MODAL -->
 <div class="modal fade" id="_searchModal" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-dialog" role="document">
@@ -217,6 +274,29 @@
   </div>
 </div> 
 <!-- KRAJ SEARCH MODAL -->
+
+<!-- ---------KALENDAR ZAUZECA SALE-------------- -->
+<div class="modal fade" id="hallCalendar" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="calendarModalLabel"></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+ 		<div class="table-responsive">
+             <div id="calendarHall"></div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal">Zatvori</button>
+      </div>
+    </div>
+  </div>
+</div> 
+<!-- -------KRAJ KALENDARA ZAUZECA SALE----------- -->
    
    	  <div  id = "showClinicContainer" style="display:none"></div>        
       <div  id = "showUserContainer" style="display:none"></div>
@@ -249,6 +329,20 @@
           </div>
     </div>
     
+    <!--  
+    <div role="alert" aria-live="assertive" aria-atomic="true" style="position: absolute; top: 70; right: 15;" class="toast" id="toast" data-delay="4000">
+  		<div class="toast-header">
+    <strong class="mr-auto">Bootstrap</strong>
+    <small>11 mins ago</small>
+    <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="toast-body">
+    Hello, world! This is a toast message.
+  </div>
+</div>
+    -->
     
     <div class="container" id="showAppointmentsPatient" style="display:none">
     	
@@ -257,14 +351,19 @@
      <!-- ZAKAZIVANJE PREGLEDA -->
     <div class="container" id ="makeAppointmentContainer" style="display:none">
        
-    	  <div class="card mb-3" id = "showDoctorsContainer">
+    	  <div  id = "showDoctorsContainer">
           
           </div>
           <br>
       </div>
 
 	<div id="preAppointmentContainer" style="display:none">
-		
+		<div class="alert alert-info" role="alert">
+ 			 <h5 class="alert-heading">Kako do brzog pregleda.</h5>
+ 			 <p>U tabeli se nalaze unapred zakazni pregledi koje mozete da izaberete. Ukoliko trazite odredjeni pregled koristite filter kako bi ga brze nasli, i ako ste sigurni da zelite odabrani pregled pritisnite na dugme "Zakazi" u tabeli i dobicete potvrdu na vasu email adresu. Ukoliko ne mozete da pronadjete pregled koji vama odgovara preporucujemo vam da sami napravite zahtev na <a href="#" id="listClinicsLink" class="alert-link">Lista klinika</a></p>
+ 			 <hr>
+ 			 <p><b>Napomena: </b> Ukoliko zakazete pregled necete moci da ga otkazete. Budite pazljivi u odabiru.</p>
+		</div>
 	</div>
   
   <div class="container" id ="detailsAppointmentContainer" style="display:none">   
@@ -287,7 +386,7 @@
           <div class="form-group">
           <label>Datum</label>
             <div class="form-label-group">        
-              <input type="text" id="inputDate" class="form-control"  autofocus="autofocus" disabled>
+              <input class="form-control datepicker-here" data-language="en" placeholder="Izaberite datum" id="inputDate" readonly="true">
             </div>
           </div>   
           <div class="form-group">
@@ -321,7 +420,7 @@
           </div>
           </div>
           <br>
-          <button type="button" class="btn btn-primary" id = "submitAppointmentRequest">Zakazi&nbsp<span class="spinner-border spinner-border-sm"  style="display:none" role="status" id="submitAppSpinner"  aria-hidden="true"></span></button>         
+          <button type="button" class="btn btn-primary" id = "submitAppointmentRequest">Zakazi</button>         
         </form>
       </div>
     </div>
@@ -540,12 +639,16 @@
           <button type="button" class="btn btn-primary btn-block" id = "submitChangesClinicProfile">Sacuvaj izmene</button>
         </form>
       </div>
-    <div id = "doctorContainer"></div>
- 	<div id = "hallContainer"></div>
- 	<div id = "pricesContainer"></div>
+  		<div class="card mb-3" id = "doctorClinicProfileContainer" style="display:none">
+        </div>
+        <div class="card mb-3" id = "hallClinicProfileContainer" style="display:none">
+        </div>
+        <div class="card mb-3" id = "pricesContainer" style="display:none">
+        </div>
  
  </div>
  </div>
+
 <!-- ------------------KRAJ IZMENE PROFILA KLINIKE---------------------- -->
   
 <!-- -----------------------REGISTRACIJA LEKARA------------------------- -->
@@ -1018,7 +1121,7 @@
           <div class="form-group">
           <label>Datum</label>
             <div class="form-label-group">        
-              <input type="date" id="inputDate" class="form-control"  autofocus="autofocus" >
+              <input class="form-control datepicker-here" data-language="en" placeholder="Izaberite datum" id="inputDatePredef" readonly="true">
             </div>
           </div>
           <div class="form-group">
@@ -1034,41 +1137,19 @@
             <div class="form-group">
       		<label for="inputAppointmentTypeSelect">Tip pregleda</label>
       		<select id="inputAppointmentTypeSelect" class="form-control">
-        		
+        		<option selected="selected" disabled value="">
+					Izaberite Tip
+				</option>
      		</select>
     	   </div>
           <div class="form-group">
       		<label for="inputAppointmentHall">Sala</label>
       		<select id="inputAppointmentHall" class="form-control">
      		</select>
-    	   </div>
-    	   <div class="form-group">
-          <label>Cena</label>
-            <div class="form-label-group">        
-              <input type="number" id="inputPrice" class="form-control"  autofocus="autofocus" >
-            </div>
-          </div>   
+    	   </div> 
     	   <br>
-    	   <div class="card mb-3">
-          <div class="card-header">
-            Lekari koji vrse odabrani tip pregleda</div>
-          <div class="card-body">
-            <div class="table-responsive">
-              <table class="table table-hover" id="tableDoctorsList" cellspacing="0">
-                <thead>
-					<tr>
-					<th scope="col">Ime</th>
-      				<th scope="col">Prezime</th>
-      				<th scope="col">Email</th>
-      				<th scope="col">Phone</th>
-      				<th scope="col"> </th>
-            		</tr>					
-					</thead>
-					<tbody>             	
-                </tbody>
-              </table>
-            </div>
-          </div>
+    	  <div id="makePredefined_chooseDoctor" class="card mb-3">
+			
           </div>
           <br>
           <button type="button" class="btn btn-primary" id="submitPredefinedAppointmentRequest">Zakazi</button>         

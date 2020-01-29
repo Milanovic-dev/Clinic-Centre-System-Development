@@ -10,6 +10,7 @@ import model.Appointment.AppointmentType;
 public class AppointmentDTO {
 
 	private String date;
+	private String endDate;
 	private String patientEmail;
 	private String clinicName;
 	private int hallNumber;
@@ -19,7 +20,7 @@ public class AppointmentDTO {
 	private String typeOfExamination;
 	private AppointmentType type;
 	private int version;
-	
+	private String startTimestamp;
 	
 	public AppointmentDTO() {
 		super();
@@ -41,7 +42,9 @@ public class AppointmentDTO {
 	
 	public AppointmentDTO(Appointment appointment)
 	{
-		this.date = DateUtil.getInstance().GetString(appointment.getDate(),"dd-MM-yyyy HH:mm");
+		this.date = DateUtil.getInstance().getString(appointment.getDate(),"dd-MM-yyyy HH:mm");
+		if(appointment.getEndDate() != null)
+			this.endDate = DateUtil.getInstance().getString(appointment.getEndDate(), "dd-MM-yyyy HH:mm");
 		if(appointment.getPatient() != null)
 			this.patientEmail = appointment.getPatient().getEmail();
 		this.clinicName = appointment.getClinic().getName();
@@ -63,7 +66,8 @@ public class AppointmentDTO {
 	
 	public AppointmentDTO(AppointmentRequest appointment)
 	{
-		this.date = appointment.getDate().toString();
+		this.date = DateUtil.getInstance().getString(appointment.getDate(),"dd-MM-yyyy HH:mm");
+		this.startTimestamp = DateUtil.getInstance().getString(appointment.getTimestamp(), "dd-MM-yyyy HH:mm");
 		this.patientEmail = appointment.getPatient().getEmail();
 		this.clinicName = appointment.getClinic().getName();
 		if(appointment.getHall() != null)
@@ -80,6 +84,22 @@ public class AppointmentDTO {
 	
 	
 	
+	public String getEndDate() {
+		return endDate;
+	}
+
+	public void setEndDate(String endDate) {
+		this.endDate = endDate;
+	}
+
+	public String getStartTimestamp() {
+		return startTimestamp;
+	}
+
+	public void setStartTimestamp(String startTimestamp) {
+		this.startTimestamp = startTimestamp;
+	}
+
 	public int getVersion() {
 		return version;
 	}

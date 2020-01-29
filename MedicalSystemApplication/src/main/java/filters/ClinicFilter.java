@@ -18,7 +18,7 @@ public class ClinicFilter implements Filter{
 			
 			if(!d.getName().equals(""))
 			{
-				if(!c.getName().contains(d.getName()))
+				if(!c.getName().toLowerCase().contains(d.getName().toLowerCase()))
 				{
 					flag = false;
 				}				
@@ -26,7 +26,7 @@ public class ClinicFilter implements Filter{
 			
 			if(!d.getAddress().equals(""))
 			{
-				if(!c.getAddress().contains(d.getAddress()))
+				if(!c.getAddress().toLowerCase().contains(d.getAddress().toLowerCase()))
 				{
 					flag = false;
 				}				
@@ -34,7 +34,7 @@ public class ClinicFilter implements Filter{
 			
 			if(!d.getState().equals(""))
 			{
-				if(!c.getState().contains(d.getState()))
+				if(!c.getState().toLowerCase().contains(d.getState().toLowerCase()))
 				{
 					flag = false;
 				}				
@@ -42,14 +42,13 @@ public class ClinicFilter implements Filter{
 			
 			if(!d.getCity().equals(""))
 			{			
-				if(!c.getCity().contains(d.getCity()))
+				if(!c.getCity().toLowerCase().contains(d.getCity().toLowerCase()))
 				{
 					flag = false;
 				}
 			}
 			
-			
-			
+						
 			if(d.getRating() != 0)
 			{
 				if(Math.abs(c.calculateRating() - d.getRating()) > 1f)

@@ -1,6 +1,6 @@
 package model;
 
-import java.sql.Date;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,6 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -27,7 +28,10 @@ public class VacationRequest
     
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
-	private User vacationUser;
+	private User user;
+    
+    @ManyToOne(fetch = FetchType.EAGER)
+    private Clinic clinic;
 
 	public VacationRequest() {
 		super();
@@ -35,10 +39,22 @@ public class VacationRequest
 	}
 	
 
-	public VacationRequest(Date startDate, Date endDate, User vacationUser) {
+	public VacationRequest(Date startDate, Date endDate,Clinic clinic, User vacationUser) {
 		this.startDate = startDate;
 		this.endDate = endDate;
-		this.vacationUser = vacationUser;
+		this.user = vacationUser;
+		this.clinic = clinic;
+	}
+
+	
+
+	public Clinic getClinic() {
+		return clinic;
+	}
+
+
+	public void setClinic(Clinic clinic) {
+		this.clinic = clinic;
 	}
 
 
@@ -56,8 +72,8 @@ public class VacationRequest
 	}
 
 
-	public void setStartDate(Date startDate) {
-		this.startDate = startDate;
+	public void setStartDate(java.util.Date date) {
+		this.startDate = date;
 	}
 
 
@@ -70,17 +86,12 @@ public class VacationRequest
 		this.endDate = endDate;
 	}
 
-
-	public User getVacationUser() {
-		return vacationUser;
+	public User getUser() {
+		return user;
 	}
 
-
-	public void setVacationUser(User vacationUser) {
-		this.vacationUser = vacationUser;
+	public void setUser(User vacationUser) {
+		this.user = vacationUser;
 	}
-	
-	
-	
 
 }

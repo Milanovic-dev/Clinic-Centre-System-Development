@@ -40,7 +40,7 @@ function createTable(id,name,headers,tableClass)
 
 function createDataTable(id,div,name,headers,orderBy)
 {
-	let handle = createTable(id,name,headers,"stripe")
+	let handle = createTable(id,name,headers)
 	
 	insertTableInto(div,handle)
 	
@@ -87,15 +87,19 @@ function insertElementIntoTable(id,element, _class)
 	part.innerHTML += element
 }
 
+
 function insertSearchIntoTable(id, search, func)
 {
 	let inputs = search.getInputs()
 	
 	let header = document.getElementById(id).getElementsByClassName("card-header")[0]
+
+	if(header.innerHTML.indexOf("<form>") != -1)return
 	
-	header.innerHTML += "<br><br><form class='needs-validation' id='form_"+id+"'></form>"
-		
+	header.innerHTML += "<br><br><form></form><form id='form_"+id+"'></form>"
+
 	let form = header.getElementsByTagName("form")[0]
+	
 	let rowCount = -1
 	for(let i = 0 ; i < inputs.length ; i++)
 	{
@@ -110,7 +114,7 @@ function insertSearchIntoTable(id, search, func)
 			
 	}
 	
-	form.innerHTML += '<button class="btn btn-primary" type="button"><span>Trazi</span>&nbsp<span class="spinner-border spinner-border-sm"  style="display:none" role="status" aria-hidden="true"></span></button>'
+	form.innerHTML += '<button class="btn btn-primary" id="tableSearch_btn_'+id+'" type="button">Trazi</button>'
 	
 	let loadedInputs = header.getElementsByTagName("input")
 	let loadedSelects = header.getElementsByTagName("select")
@@ -130,12 +134,21 @@ function insertSearchIntoTable(id, search, func)
 	button.addEventListener("click",function(e){
 		e.preventDefault()
 		
-		$('#table_'+id).DataTable().sort()
+		if($.fn.DataTable.isDataTable('#table_'+id))
+		{
+			$('#table_'+id).DataTable().sort()			
+		}
 
 
 		if(func != undefined)
 			func()
 	})
+}
+
+
+function getTableSearchButton(id)
+{
+	return $('#tableSearch_btn_'+id)
 }
 
 
@@ -203,7 +216,7 @@ function insertTableData(id,data)
 }
 
 
-function insertTableInto(id,handle)
+function insertTableInto(id, handle)
 {
 	$('#'+id).append(handle)
 }
@@ -211,6 +224,11 @@ function insertTableInto(id,handle)
 function getTable(id)
 {
 	return $('#table_'+id)
+}
+
+function getTableRowCount(id)
+{
+	return $('#table_'+id).DataTable().rows().count()
 }
 
 function getTableDiv(id)

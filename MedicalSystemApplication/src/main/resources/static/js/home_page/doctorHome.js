@@ -12,22 +12,21 @@ function initDoctor(user)
 			complete: function(data)
 			{
 				doctorClinic = data.responseJSON
-				setUpPageDoctor()
+				setUpPageDoctor(user)
 				//findPatients(data)
 			}
 	})
 }
-function setUpPageDoctor()
+function setUpPageDoctor(user)
 {
 	let sideBar = $("#sideBar")
 	sideBar.append("<li class='nav-item active'><a class='nav-link' href='userProfileNew.html'><span id='profileUser'>Profil</span></a></li>")
 	sideBar.append("<li class='nav-item active'><a class='nav-link' href='index.html'><span id='pacientList'>Lista pacijenata</span></a></li>")
-	sideBar.append("<li class='nav-item active'><a class='nav-link' href='index.html'><span id='examinationStart'>Zapocni pregled</span></a></li>")
 	sideBar.append("<li class='nav-item active'><a class='nav-link' href='index.html'><span id='workCalendar'>Radni kalendar</span></a></li>")
-	sideBar.append("<li class='nav-item active'><a class='nav-link' href='index.html'><span id='vacationRequest'>Zahtev za odustvo</span></a></li>")
 	sideBar.append("<li class='nav-item active'><a class='nav-link' href='index.html'><span id='examinationRequest'>Zakazivanje pregleda</span></a></li>")
 	sideBar.append("<li class='nav-item active'><a class='nav-link' href='index.html'><span id='operationRequest'>Zakazivanje operacija</span></a></li>")
-	
+	sideBar.append("<li class='nav-item active'><a class='nav-link' href='index.html'><span id='vacationRequest'>Zahtev za godišnji odmor</span></a></li>")
+
 	clearViews()
 	addView("addHallContainer")
 	addView("showHallContainer")
@@ -39,6 +38,7 @@ function setUpPageDoctor()
 	addView("showStartExaminationContainer")
 	addView("showCalendarContainer")
 	addView("updateMedicalRecordContainer")
+	addView("showVacationRequestContainer")
 
 	var bc1 = new BreadLevel()
     bc1.append('Radni kalendar').append('Pregled u toku').append('Izmena zdravstvenog kartona')
@@ -97,6 +97,12 @@ function setUpPageDoctor()
     insertTableInto("updateMedicalRecordContainer",handle)
     getTableDiv("historyTable").show()
     
+    $('#vacationRequest').click(function(e){
+    	e.preventDefault()
+    	showView("showVacationRequestContainer")
+    	addVacationRequest(user)
+    })
+    
     
 	$('#pacientList').click(function(e){
 		e.preventDefault()
@@ -117,29 +123,6 @@ function setUpPageDoctor()
 
 	})
 	
-
-	$('#examinationStart').click(function(e){
-		e.preventDefault()
-		showView("showAppointmentContainerWithCheckBox")
-        showBread('Zapocni pregled')
-
-        $.ajax({
-        	type:'GET',
-        	url: "api/appointments/doctor/getAllAppointments/"+user.email,
-        	complete: function(data)
-        	{
-        		let apps = data.responseJSON
-        		let index = 0
-        		emptyTable('listAppointmentTable')
-        		for(app of apps)
-        		{
-        			listAppointmentWithCheckBox(app,index,apps.length,user)
-        			index++
-        		}
-        	}
-        })
-        
-	})
 	
 	$.ajax({
         	type:'GET',
@@ -218,6 +201,101 @@ function setUpPageDoctor()
     	getAppointment(doctorClinic.name,getParameterByName("date"),getParameterByName("hall"),user)
     }
     
+
+}
+
+function addVacationRequest(user)
+{
+	let selectChanged = function()
+	{
+		let startDate = $('#startDayInputVacationRequest').val()
+		let endDate = $('#endDayInputVacationRequest').val()
+		
+		if(startDate == "" || endDate == "")
+		{
+			$('#vacationRequestSpinner').hide()
+			return
+		}
+		
+		let json = JSON.stringify({"startDate": startDate,"endDate": endDate,"userEmail": user.email })
+		
+		$('#vacationRequestSpinner').show()
+		$.ajax({
+			type:'POST',
+			url: "api/vacation/checkAvailability/" + doctorClinic.name,
+			data: json,
+			dataType : "json",
+			contentType : "application/json; charset=utf-8",		
+			complete:function(data)
+			{
+				$('#vacationRequestSpinner').hide()
+
+				$('#submitVacationRequest').prop('disabled', !data.responseJSON)
+				if(data.responseJSON)
+				{
+					$('#checkedImageVacationRequest').show()
+					$('#uncheckedImageVacationRequest').hide()
+
+				}
+				else
+				{
+					$('#uncheckedImageVacationRequest').show()
+					$('#checkedImageVacationRequest').hide()
+				}
+			}
+		})
+	}
+	
+	
+	
+	$('#startDayInputVacationRequest').datepicker({
+		dateFormat: "dd-mm-yyyy",
+		onSelect: function(formattedDate, date, inst){			
+			let endPicker = $('#endDayInputVacationRequest').datepicker().data('datepicker')
+			endPicker.update('minDate', date)
+			
+			selectChanged()
+		}
+	})
+	
+	$('#endDayInputVacationRequest').datepicker({
+		dateFormat: "dd-mm-yyyy",
+		onSelect: function(formattedDate, date, inst){
+			let startPicker = $('#startDayInputVacationRequest').datepicker().data('datepicker')
+			startPicker.update('maxDate', date)
+			selectChanged()
+		}
+	})
+	
+	
+	
+	
+	$('#submitVacationRequest').click(function(e){
+		
+		e.preventDefault()
+		
+		let startDate = $('#startDayInputVacationRequest').val()
+		let endDate = $('#endDayInputVacationRequest').val()
+		let json = JSON.stringify({"startDate": startDate,"endDate": endDate,"userEmail": user.email })
+		showLoading('submitVacationRequest')
+		
+		$.ajax({
+			type: 'POST',
+			url: 'api/vacation/makeVacationRequest/' + doctorClinic.name ,
+			data: json,
+            dataType: "json",
+            contentType : "application/json; charset=utf-8",
+			complete: function(data)
+			{
+				if(data.status!='201')
+				{
+					warningModal("Greska","Vaš zahtev za godišnjim odmorom ili odsustvom nije uspešno kreiran.Pokušajte ponovo.")
+				}
+				
+				hideLoading('submitVacationRequest')
+			}
+		})
+	})
 
 }
 
@@ -553,24 +631,6 @@ function setUpHall(){
 	})
 }
 
-function setUpDiagnosis(){
-	$.ajax({
-        type: 'GET',
-        url:"api/diagnosis/getAllDiagnosis",
-        complete: function(data)
-        {
-           let select = $('#selectDiagnosisStartExamin').val()
-
-           			$.each(data.responseJSON, function (i, item) {
-           			    $('#selectDiagnosisStartExamin').append($('<option>', {
-           			        value: item.name,
-           			        text : item.name
-           			    }));
-           			});
-        }
-    })
-
-}
 
 function setUpCodebooks(){
 
@@ -602,7 +662,7 @@ function setUpCodebooks(){
                			$.each(data.responseJSON, function (i, item) {
                			    $('#selectDiagnosis').append($('<option>', {
                			        value: item.name,
-               			        text : item.name
+               			        text : item.name + "(" + item.code + ")"
                			    }));
                			});
                			$('.selectpicker').selectpicker('refresh');
@@ -614,8 +674,13 @@ function setUpCodebooks(){
 
 function getAppointment(clinicName, date, hallNumber, user){
 
-
+		$('#collapseThree').collapse('toggle')
         hallNumber = parseInt(hallNumber)
+        
+        $('#nextAppType').change(function(e)
+        {
+        	$('#nextAppToE').prop('disabled', $('#nextAppType').val() != "Pregled")
+        })
 
         var appointment
         var patient
@@ -703,8 +768,9 @@ function getAppointment(clinicName, date, hallNumber, user){
 
                     })
         });
-
-
+        
+        
+ 
 
         $('#submitReport').off("click").click(function(e){
             e.preventDefault()
@@ -727,6 +793,7 @@ function getAppointment(clinicName, date, hallNumber, user){
            let nextDate = $('#nextAppDate')
            let nextType = $('#nextAppType')
            let ToE = $('#nextAppToE')
+           
 
 // if(!drugs == [] && !description == '')
 // {
@@ -752,43 +819,44 @@ function getAppointment(clinicName, date, hallNumber, user){
                 var input = $('#report')
                 input.removeClass('is-invalid')
            }
-
+           
+           /*
            if(!validation(nextDate, nextDate.val() == "", "Morate uneti datum."))
            {
-        	   flag = false
+        	   flag = false        	   
            }
-
+           
            if(!validation(nextType, nextType.val() == "", "Morate izabrati tip."))
            {
         	   flag = false
            }
-
+                 
            if(!validation(ToE, ToE.val() == "", "Morate izabrati tip pregleda"))
            {
         	   flag = false
            }
-
+           */
 
            if(flag == false){
                 return
            }
-
-
-           		let typeOfExam
-
-           		if(nextType.val() == "Pregled")
-           		{
-           			typeOfExam = "Examination"
-
-           		}
-           		else
-           		{
-           			typeOfExam = "Surgery"
-           		}
-
-           		let nextAppRequestJSON = JSON.stringify({"date":nextDate.val(), "patientEmail":patient.email, "clinicName":clinicName, "doctors":[user.email], "typeOfExamination":ToE.val(), "type":typeOfExam})
-
-           		$.ajax({
+           
+           if(nextDate.val() != "" && ToE.val() != "" && nextType.val() != "")
+           {
+        	   let typeOfExam
+          		
+          		if(nextType.val() == "Pregled")
+          		{
+          			typeOfExam = "Examination"      			
+          		}
+          		else
+          		{
+          			typeOfExam = "Surgery"           			
+          		}
+        	   	
+          		let nextAppRequestJSON = JSON.stringify({"date":nextDate.val(), "patientEmail":patient.email, "clinicName":clinicName, "doctors":[user.email], "typeOfExamination":ToE.val(), "type":typeOfExam})
+          		
+          		$.ajax({
 						type:'POST',
 						url:'api/appointments/sendRequest',
 						data: nextAppRequestJSON,
@@ -799,10 +867,13 @@ function getAppointment(clinicName, date, hallNumber, user){
 							if(data.status != "201")
 							{
 								alert("Error pri cuvanju sledeceg pregleda")
-							}
+							}													
 						}
 					})
-
+           }
+           
+           		
+           
 
                 let prescriptionDTO = {"description":description,"drugs":drugs,"nurse":"","isValid":false, "validationDate":""}
                 let prescription = JSON.stringify({"description":description,"drugs":drugs,"nurse":"","isValid":false, "validationDate":""})

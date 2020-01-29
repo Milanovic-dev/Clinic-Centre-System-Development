@@ -2,6 +2,7 @@ package controller;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -12,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.Mapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -23,6 +25,7 @@ import dto.ClinicDTO;
 import dto.HallDTO;
 import filters.FilterFactory;
 import filters.HallFilter;
+import helpers.DateUtil;
 import model.Appointment;
 import model.Clinic;
 import model.Hall;
@@ -42,6 +45,37 @@ public class HallController {
 	private AppointmentService appointmentService;
 	@Autowired
 	private ClinicService clinicService;
+	
+	@GetMapping(value = "/getHallBusyDays/{clinicName}/{hallNumber}")
+	public ResponseEntity<List<Date>> getHallBusyFromHallAndClinic(@PathVariable("clinicName") String clinicName,@PathVariable ("hallNumber") int hallNumber)
+	{
+		Clinic c = clinicService.findByName(clinicName);
+		Hall h = hallService.findByNumber(hallNumber);
+		List<Appointment> app = appointmentService.findAllByHallAndClinic(h, c);
+		List<Date> busyHall = new ArrayList<Date>();
+		
+		if(c == null)
+		{
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+		
+		if(h == null)
+		{
+			 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+		
+		if(app == null)
+		{
+			 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+		
+		for(Appointment a : app)
+		{
+			busyHall.add(a.getDate());
+		}
+		return new ResponseEntity<>(busyHall,HttpStatus.OK);
+		
+	}
 	
 	@GetMapping(value = "/getAll")
 	public ResponseEntity<List<HallDTO>> getHalls()
@@ -69,8 +103,9 @@ public class HallController {
 	@PostMapping(value = "/getAllByFilter",consumes = "application/json")
 	public ResponseEntity<List<HallDTO>> getHallsFilter(@RequestBody HallDTO dto)
 	{
+
 		HttpHeaders header = new HttpHeaders();
-		Clinic c = clinicService.findByName(dto.getClinicName());
+		Clinic c = clinicService.findByName(dto.getClinicName());		
 		
 		if(c == null)
 		{
@@ -81,8 +116,28 @@ public class HallController {
 		List<HallDTO> ret = new ArrayList<HallDTO>();
 		HallFilter filter = (HallFilter) FilterFactory.getInstance().get("hall");
 		
+		Date startDate = DateUtil.getInstance().getDate(dto.getDate(), "dd-MM-yyyy");
+		
+		List<Appointment> appointments = appointmentService.findAllByDate(startDate);
+		
 		for(Hall hall : c.getHalls())
 		{
+			if(dto.getDate() != null)
+			{
+				long hours = 0; //miliisecs
+				
+				for(Appointment app : appointments)
+				{
+					hours += DateUtil.getInstance().getHoursBetween(app.getDate(), app.getEndDate());
+				}
+				
+				
+				if(hours > 23 * DateUtil.HOUR_MILLIS)
+				{
+					continue;
+				}			
+			}
+			
 			if(!hall.getDeleted())
 			{
 				if(filter.test(hall, dto))
@@ -91,6 +146,8 @@ public class HallController {
 				}				
 			}
 		}
+		
+		
 		
 		return new ResponseEntity<>(ret,HttpStatus.OK);
 	}

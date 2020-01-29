@@ -22,7 +22,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import dto.DoctorDTO;
 import dto.MedicalRecordDTO;
+import dto.NurseDTO;
 import dto.PasswordDTO;
 import dto.UserDTO;
 import helpers.SecurePasswordHasher;
@@ -130,17 +132,69 @@ public class UserController
 		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 	}
 	
+	@GetMapping(value="/getPatient/{email}")
+	public ResponseEntity<UserDTO> getPatient(@PathVariable("email") String email)
+	{
+		Patient ret = (Patient) userService.findByEmailAndDeleted(email,false);
+		
+		if(ret == null || ret.getDeleted())
+		{
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+		
+		return new ResponseEntity<>(new UserDTO(ret),HttpStatus.OK);
+	}
+	
+	@GetMapping(value="/getDoctor/{email}")
+	public ResponseEntity<DoctorDTO> getDoctor(@PathVariable("email") String email)
+	{
+		Doctor ret = (Doctor) userService.findByEmailAndDeleted(email,false);
+		
+		if(ret == null || ret.getDeleted())
+		{
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+		
+		return new ResponseEntity<>(new DoctorDTO(ret),HttpStatus.OK);
+	}
+	
+	@GetMapping(value="/getNurse/{email}")
+	public ResponseEntity<NurseDTO> getNurse(@PathVariable("email") String email)
+	{
+		Nurse ret = (Nurse) userService.findByEmailAndDeleted(email,false);
+		
+		if(ret == null || ret.getDeleted())
+		{
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+		
+		return new ResponseEntity<>(new NurseDTO(ret),HttpStatus.OK);
+	}
+	
+	@GetMapping(value="/getClinicAdmin/{email}")
+	public ResponseEntity<UserDTO> getClinicAdmin(@PathVariable("email") String email)
+	{
+		User ret = (User) userService.findByEmailAndDeleted(email,false);
+		
+		if(ret == null || ret.getDeleted())
+		{
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+		
+		return new ResponseEntity<>(new UserDTO(ret),HttpStatus.OK);
+	}
+	
 	@GetMapping(value = "/getUser/{email}")
-	public ResponseEntity<User> getUser(@PathVariable("email") String email)
+	public ResponseEntity<UserDTO> getUser(@PathVariable("email") String email)
 	{
 		User ret = userService.findByEmailAndDeleted(email,false);
 		
 		if(ret == null || ret.getDeleted())
 		{
-			return new ResponseEntity<>(ret,HttpStatus.NOT_FOUND);
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 		
-		return new ResponseEntity<>(ret,HttpStatus.OK);
+		return new ResponseEntity<>(new UserDTO(ret),HttpStatus.OK);
 	}
 	
 	@GetMapping(value = "/getAll/{role}")

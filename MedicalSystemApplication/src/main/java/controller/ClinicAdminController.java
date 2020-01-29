@@ -1,8 +1,14 @@
 package controller;
 
 import helpers.SecurePasswordHasher;
+import model.Appointment;
 import model.Clinic;
 import model.ClinicAdmin;
+import model.Doctor;
+import model.User;
+import model.User.UserRole;
+import model.VacationRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -16,11 +22,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import dto.ClinicDTO;
 import dto.UserDTO;
+import dto.VacationDTO;
+import service.AppointmentService;
 import service.ClinicService;
 import service.UserService;
 
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping(value = "api/admins/clinic")
@@ -31,6 +40,10 @@ public class ClinicAdminController {
     
     @Autowired
     private ClinicService clinicService;
+    
+    @Autowired 
+    private AppointmentService appointmentService;
+     
     
     @GetMapping(value = "/getClinicFromAdmin/{email}")
     public ResponseEntity<ClinicDTO>getClinicFromAdmin(@PathVariable("email") String email)
@@ -45,6 +58,7 @@ public class ClinicAdminController {
 		return new ResponseEntity<ClinicDTO>(dto , HttpStatus.OK);
     	
     }
+    
 
     @PostMapping(value = "/registerClinicAdmin/{clinicName}")
     public ResponseEntity<Void> registerClinicAdmin(@RequestBody UserDTO dto,@PathVariable("clinicName") String clinicName)

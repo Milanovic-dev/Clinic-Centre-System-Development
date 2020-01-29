@@ -37,7 +37,7 @@ public class Clinic
     @OneToMany(fetch = FetchType.LAZY)
     private List<Appointment> appointments;
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<ClinicReview> reviews;
 
 

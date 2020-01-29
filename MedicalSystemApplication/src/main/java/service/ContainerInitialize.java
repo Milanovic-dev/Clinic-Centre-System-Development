@@ -53,6 +53,9 @@ public class ContainerInitialize {
 	@Autowired
 	private MedicalRecordRepository medicalRecordRepository;
 	
+	@Autowired
+	private VacationRequestRepository vacationRequestRepository;
+	
 	@PostConstruct
 	public void init()
 	{	
@@ -88,20 +91,13 @@ public class ContainerInitialize {
 					.withPhone("34023423")	
 					.withInsuranceID("13858342343")
 					.build();
-
-			MedicalRecord record = new MedicalRecord();
-
-			record.setBloodType(BloodType.AB);
-			record.setAlergies(Arrays.asList("Polen","Secer"));
-			record.setHeight("195cm");
-			record.setWeight("85kg");
-			record.setPatient(patient);
-
-			userRepository.save(patient);
-
-			medicalRecordRepository.save(record);
-
-			patient.setMedicalRecord(record);
+			
+			patient.getMedicalRecord().setBloodType(BloodType.AB);
+			patient.getMedicalRecord().setAlergies(Arrays.asList("Polen","Secer"));
+			patient.getMedicalRecord().setHeight("195cm");
+			patient.getMedicalRecord().setWeight("85kg");
+			patient.getMedicalRecord().setPatient(patient);
+					
 
 			Patient patient2 = new Patient.Builder("patient1@gmail.com")
 					.withPassword(hash)
@@ -125,20 +121,8 @@ public class ContainerInitialize {
 					.withInsuranceID("35654645")
 					.build();
 
-			MedicalRecord record1 = new MedicalRecord();
 
-			record.setBloodType(BloodType.A);
-			record.setAlergies(Arrays.asList("Trava","Prasina","Grinje"));
-			record.setHeight("180cm");
-			record.setWeight("75kg");
-			record.setPatient(patient1);
-
-			userRepository.save(patient1);
-
-			medicalRecordRepository.save(record1);
-
-			patient.setMedicalRecord(record1);
-
+			patient1.getMedicalRecord().setPatient(patient1);
 
 			userRepository.save(patient);
 			userRepository.save(patient1);
@@ -176,12 +160,12 @@ public class ContainerInitialize {
 					.withInsuranceID("123484654324")
 					.withType("Stomatoloski")
 					.withClinic(clinic)					
-					.withShiftStart(DateUtil.getInstance().GetDate("08:00","HH:mm"))
-					.withShiftEnd(DateUtil.getInstance().GetDate("14:00","HH:mm"))
+					.withShiftStart(DateUtil.getInstance().getDate("08:00","HH:mm"))
+					.withShiftEnd(DateUtil.getInstance().getDate("14:00","HH:mm"))
 					.build();
 			
 			doctor1.setIsFirstLog(false);
-			doctor1.setAvarageRating(8.81f);
+			doctor1.setAvarageRating(3.98f);
 			userRepository.save(doctor1);
 			
 			Doctor doctor2 = new Doctor.Builder("doktor2@gmail.com")
@@ -195,14 +179,14 @@ public class ContainerInitialize {
 					.withInsuranceID("12345674864")
 					.withType("Opsti pregled")
 					.withClinic(clinic)					
-					.withShiftStart(DateUtil.getInstance().GetDate("09:00","HH:mm"))
-					.withShiftEnd(DateUtil.getInstance().GetDate("18:00","HH:mm"))
+					.withShiftStart(DateUtil.getInstance().getDate("09:00","HH:mm"))
+					.withShiftEnd(DateUtil.getInstance().getDate("18:00","HH:mm"))
 					.build();
 
-			doctor2.setAvarageRating(6.4f);
+			doctor2.setAvarageRating(4.4f);
 			userRepository.save(doctor2);
 			
-			Doctor doctor3 = new Doctor.Builder("doktor3@gmail.com")
+			Doctor doctor3 = new Doctor.Builder("nikolamilanovic21@gmail.com")
 					.withPassword(hash)
 					.withName("Petar")
 					.withSurname("Pertrovic")
@@ -213,11 +197,11 @@ public class ContainerInitialize {
 					.withInsuranceID("1897654856456")
 					.withType("Opsti pregled")
 					.withClinic(clinic)
-					.withShiftStart(DateUtil.getInstance().GetDate("08:00","HH:mm"))
-					.withShiftEnd(DateUtil.getInstance().GetDate("18:00","HH:mm"))
+					.withShiftStart(DateUtil.getInstance().getDate("08:00","HH:mm"))
+					.withShiftEnd(DateUtil.getInstance().getDate("18:00","HH:mm"))
 					.build();
 
-			doctor3.setAvarageRating(9.91f);
+			doctor3.setAvarageRating(2.0f);
 			userRepository.save(doctor3);
 			
 			Hall hall1 = new Hall(clinic,1,"Prva sala");
@@ -235,11 +219,18 @@ public class ContainerInitialize {
 			Priceslist p1 = new Priceslist();
 			p1.setClinic(clinic);
 			p1.setTypeOfExamination("Opsti pregled");
-			p1.setPrice(500L);
+			p1.setPrice(1000L);
+			
+			Priceslist p2 = new Priceslist();
+			p2.setClinic(clinic);
+			p2.setTypeOfExamination("Stomatoloski");
+			p2.setPrice(1500L);
+			
+			pricelistRepository.save(p2);
 			
 			pricelistRepository.save(p1);
-
-			Appointment app1 = new Appointment.Builder(DateUtil.getInstance().GetDate("15-01-2020 07:30","dd-mm-yyyy HH:mm"))
+			Appointment app1 = new Appointment.Builder(DateUtil.getInstance().getDate("21-01-2020 07:30","dd-mm-yyyy HH:mm"))
+					.withEndingDate(DateUtil.getInstance().getDate("21-01-2020 09:00","dd-mm-yyyy HH:mm"))
 					.withType(AppointmentType.Examination)
 					.withHall(hall1)
 					.withClinic(clinic)
@@ -249,47 +240,52 @@ public class ContainerInitialize {
 			
 			app1.setPredefined(true);
 			app1.getDoctors().add(doctor1);
-			app1.getDoctors().add(doctor2);
 			appointmentRepository.save(app1);
 
-			Appointment app2 = new Appointment.Builder(DateUtil.getInstance().GetDate("01-01-2020 18:30", "dd-mm-yyyy HH:mm"))
+			Appointment app2 = new Appointment.Builder(DateUtil.getInstance().getDate("21-01-2020 07:40", "dd-mm-yyyy HH:mm"))
+					.withEndingDate(DateUtil.getInstance().getDate("21-01-2020 09:40", "dd-mm-yyyy HH:mm"))
 					.withPatient(patient1)
 					.withType(AppointmentType.Surgery)
 					.withHall(hall2)
 					.withClinic(clinic)
 					.withDuration(1)
-					.build();
-
-			Appointment app3 = new Appointment.Builder(DateUtil.getInstance().GetDate("03-01-2020 19:30", "dd-mm-yyyy HH:mm"))
-					.withPatient(patient1)
-					.withType(AppointmentType.Surgery)
-					.withHall(hall2)
-					.withClinic(clinic)
-					.withDuration(1)
-					.build();
-
-
-			Appointment app4 = new Appointment.Builder(DateUtil.getInstance().GetDate("05-01-2020 17:30", "dd-mm-yyyy HH:mm"))
-					.withPatient(patient)
-					.withType(AppointmentType.Surgery)
-					.withHall(hall2)
-					.withClinic(clinic)
-					.withDuration(2)
+					.withPriceslist(p2)
 					.build();
 			
-			app2.getDoctors().add(doctor1);
-			app2.getDoctors().add(doctor3);
+			app2.getDoctors().add(doctor2);
+
+			Appointment app3 = new Appointment.Builder(DateUtil.getInstance().getDate("24-01-2020 19:30", "dd-mm-yyyy HH:mm"))
+					.withEndingDate(DateUtil.getInstance().getDate("24-01-2020 20:30", "dd-mm-yyyy HH:mm"))
+					.withPatient(patient1)
+					.withType(AppointmentType.Surgery)
+					.withHall(hall2)
+					.withClinic(clinic)
+					.withDuration(1)
+					.withPriceslist(p1)
+					.build();
+			
+			Appointment app4 = new Appointment.Builder(DateUtil.getInstance().getDate("21-01-2020 07:00","dd-mm-yyyy HH:mm"))
+					.withEndingDate(DateUtil.getInstance().getDate("21-01-2020 08:00","dd-mm-yyyy HH:mm"))
+					.withType(AppointmentType.Examination)
+					.withHall(hall1)
+					.withClinic(clinic)
+					.withDuration(1)
+					.withPriceslist(p1)
+					.build();
+			
+			app4.setPredefined(true);
+			app4.getDoctors().add(doctor2);
+			appointmentRepository.save(app4);
+			
+			app3.getDoctors().add(doctor3);
 			appointmentRepository.save(app2);
 			appointmentRepository.save(app3);
 			
 			
-			//doctor1.getAppointments().add(app1);
-			doctor1.getAppointments().add(app2);
+			doctor1.getAppointments().add(app1);
 			doctor2.getAppointments().add(app3);
-			doctor1.getAppointments().add(app4);
+			
 
-			app4.getDoctors().add(doctor1);
-			appointmentRepository.save(app4);
 			
 			Nurse nurse = new Nurse.Builder("nurse@gmail.com")
 					.withPassword(hash)
@@ -312,13 +308,7 @@ public class ContainerInitialize {
 			userRepository.save(doctor2);
 			
 			
-			Priceslist p2 = new Priceslist();
-			p2.setClinic(clinic);
-			p2.setTypeOfExamination("Stomatoloski");
-			p2.setPrice(1000L);
-			
-			pricelistRepository.save(p2);
-
+		
 			Prescription prescription = new Prescription();
 			prescription.getDrugs().add(drug);
 			prescription.getDrugs().add(drug2);
@@ -339,23 +329,19 @@ public class ContainerInitialize {
 			prescription3.setDescription("terapijaaaaa a a a a a ");
 
 			prescriptionRepository.save(prescription3);
-
-			PatientMedicalReport report = new PatientMedicalReport.Builder(DateUtil.getInstance().GetDate("03-01-2020 19:30", "dd-mm-yyyy HH:mm"))
-					.withPatient(patient1)
-					.withDescription("opis neki")
-					.withDoctor(doctor1)
-					.withPrescription(prescription)
-					.withClinic(clinic)
-					.build();
-			patientMedicalReportRepository.save(report);
-			patient1.getMedicalRecord().getReports().add(report);
-			userRepository.save(patient);
-
-
 			
 			Diagnosis d1 = new Diagnosis("123","tag","name");
 			List<Diagnosis> listDiag = new ArrayList<>();
 			listDiag.add(d1);
+			 
+			DateUtil dateInstance = DateUtil.getInstance();
+			VacationRequest vrq = new VacationRequest(dateInstance.getDate("21-02-2020", "dd-MM-yyyy"),dateInstance.getDate("08-03-2020", "dd-MM-yyyy"),clinic,doctor3);
+			vacationRequestRepository.save(vrq);
+			
+			VacationRequest vrq2 = new VacationRequest(dateInstance.getDate("26-05-2020", "dd-MM-yyyy"),dateInstance.getDate("15-06-2020", "dd-MM-yyyy"),clinic,doctor1);
+			vacationRequestRepository.save(vrq2);
+			
+			
 					
 		} catch (Exception e) {
 			// TODO Auto-generated catch block

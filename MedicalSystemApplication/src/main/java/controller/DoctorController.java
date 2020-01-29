@@ -24,6 +24,8 @@ import org.springframework.web.bind.annotation.RestController;
 import dto.AppointmentDTO;
 import dto.ClinicDTO;
 import dto.DoctorDTO;
+import dto.ReviewDTO;
+import helpers.DateUtil;
 import helpers.SecurePasswordHasher;
 import model.*;
 import model.Appointment.AppointmentType;
@@ -48,6 +50,9 @@ public class DoctorController
 	
 	@Autowired 
 	private ClinicService clinicService;
+	
+	@Autowired
+	private NotificationService notificationService;
 	
 	@PostMapping(value="/makeNewDoctor", consumes = "application/json")
 	public ResponseEntity<Void> addNewDoctor(@RequestBody DoctorDTO dto)
@@ -88,27 +93,35 @@ public class DoctorController
 		return new ResponseEntity<>(HttpStatus.CREATED);
 	}
 	
-	@GetMapping(value="/getAll/{type}/{clinicName}")
-	public ResponseEntity<List<DoctorDTO>> getDoctorsByType(@PathVariable ("type") String typeOfExamination,@PathVariable ("clinicName") String clinicName)
+	@PostMapping(value="/addReview")
+	public ResponseEntity<Void> addReview(@RequestBody ReviewDTO dto)
 	{
-		Clinic c = clinicService.findByName(clinicName);
+		Doctor doctor = (Doctor) userService.findByEmailAndDeleted(dto.getDoctorEmail(),false);
+		Patient patient = (Patient) userService.findByEmailAndDeleted(dto.getPatientEmail(), false);
 		
-		if(c == null)
+		if(doctor == null)
 		{
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 		
-		List<DoctorDTO> dtos = new ArrayList<DoctorDTO>();
-		List<Doctor> doctors = c.getDoctors();
-		for(Doctor d : doctors)
+		
+		for(ReviewDoctor review : doctor.getReviews())
 		{
-			if(d.getType().equalsIgnoreCase(typeOfExamination))
+			if(review.getPatient().getEmail().equals(dto.getPatientEmail()))
 			{
-				dtos.add(new DoctorDTO(d));
+				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 			}
 		}
 		
-		return new ResponseEntity<>(dtos,HttpStatus.OK);
+		ReviewDoctor rd = new ReviewDoctor(dto.getRating(), DateUtil.getInstance().now("dd-MM-yyyy"), patient);
+		
+		doctor.getReviews().add(rd);
+		
+		userService.save(doctor);
+		
+    	notificationService.sendNotification(patient.getEmail(), "Ocenili ste doktora!", "Vasa ocena od " + dto.getRating() + " zvezdice za doktora "+dto.getDoctorEmail()+" je uspesno zabelezena! Hvala vam na recenziji!");
+    	notificationService.sendNotification(doctor.getEmail(), "Ocenjeni ste!", "Vasa rad je ocenjen od strane " + dto.getPatientEmail() + " sa ocenom od " + dto.getRating() + " zvezdice!");
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 		
 	@GetMapping(value="/getClinic/{email}")
@@ -119,7 +132,6 @@ public class DoctorController
 		if(d == null)
 		{
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-
 		}
 		
 		Clinic c = clinicService.findByDoctor(d);

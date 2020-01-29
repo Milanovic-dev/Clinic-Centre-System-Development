@@ -2,13 +2,33 @@
 
 function getPageURLWithUser(page, email)
 {
-	console.log(page + ".html?u=" + email)
 	return page + ".html?u=" + email
+}
+
+function getPageURLWithClinic(page, clinicName)
+{
+	return page + ".html?clinic=" + clinicName
 }
 
 function getProfileLink(email)
 {
 	return "<a href = '" + getPageURLWithUser("userProfileNew",email)+ "'>" + email + "</a>";
+}
+
+function getClinicProfileLink(clinic)
+{
+	return "<a href='"+ getPageURLWithClinic("clinicProfile", clinic) +"'>" + clinic + "</a>"
+}
+
+function getDoctorOccupancy(apps)
+{
+	let listOfDates = []
+	$.each(apps, function(i, item){
+		let dateTime = "Zauzece("+(i+1)+"): Datum: <b>" +item.date.split(" ")[0] + "</b>,  Vreme: <b>" + item.date.split(" ")[1] + "</b> - <b>" + item.endDate.split(" ")[1] + "</b>\n"
+		listOfDates.push(dateTime)
+	});
+	
+	return listOfDates
 }
 
 function getProfileFromURL(done)
@@ -22,13 +42,36 @@ function getProfileFromURL(done)
 		complete: function(data)
 		{
 			let user = data.responseJSON
-		
-			done(user)
-
+			
+			if(user == undefined)
+			{
+				done(undefined, undefined)
+				return
+			}
+			
+			getRoleUser(user.email, user.role, function(myUser){
+				
+				done(myUser, user.role)
+				
+			})
+			
 		}
 			
 		
 	})
+}
+
+
+function getRoleUser(email, role, complete)
+{
+		$.ajax({
+			type:'GET',
+			url: "api/users/get"+role+"/" + email,
+			complete:function(data)
+			{
+				complete(data.responseJSON)
+			}
+		})
 }
 
 function validationError(id, errorMessage)

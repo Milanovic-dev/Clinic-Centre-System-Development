@@ -44,6 +44,11 @@ public class AppointmentService {
 		return appointmentRepository.findByDateAndHallAndClinic(date, hall, clinic);
 	}
 	
+	public List<Appointment> findAllByHallAndClinic(Hall hall,Clinic clinic)
+	{
+		return appointmentRepository.findAllByHallAndClinic(hall,clinic);
+	}
+	
 	public List<Appointment> findAll()
 	{
 		return appointmentRepository.findAll();
@@ -57,7 +62,7 @@ public class AppointmentService {
 
 	public Appointment findAppointment(String date, int hallNumber, String clinic)
 	{	
-		Date d = DateUtil.getInstance().GetDate(date, "dd-MM-yyyy HH:mm");
+		Date d = DateUtil.getInstance().getDate(date, "dd-MM-yyyy HH:mm");
 			
 		Hall h = hallRepository.findByNumber(hallNumber);
 		Clinic c = clinicRepository.findByName(clinic);
@@ -134,6 +139,11 @@ public class AppointmentService {
 	public List<Appointment> findAllByHall(Hall hall)
 	{
 		return appointmentRepository.findAllByHall(hall);
+	}
+	
+	public List<Appointment> findAllByDate(Date date)
+	{
+		return appointmentRepository.findAllByDate(date);
 	}
 	
 	public List<Appointment> findAllByClinic(Clinic c)

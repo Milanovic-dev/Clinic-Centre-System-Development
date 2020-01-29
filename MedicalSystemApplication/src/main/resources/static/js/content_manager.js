@@ -72,13 +72,73 @@ function displayError(id,text)
 {
 	let button = $("#"+id)
 	
-	let spanId = id + "_errorSpan"
+	let spanId = id + "_mesSpan"
 	if($('#'+spanId).length > 0)
 	{
+		$('#'+spanId).text(text)
+		$('#'+spanId).css("color","#FF1103")
 		return
 	}
 	
 	button.before('<span style="color:#FF1103" id="'+spanId+'">'+text+'</span><br>')
+}
+
+function displaySuccess(id, text)
+{
+let button = $("#"+id)
+	
+	let spanId = id + "_mesSpan"
+	if($('#'+spanId).length > 0)
+	{
+		$('#'+spanID).text(text)
+		$('#'+spanID).css("color","#4BB543")
+		return
+	}
+	
+	button.before('<span style="color:#4BB543" id="'+spanId+'">'+text+'</span><br>')
+}
+
+function warningModal(header, content)
+{
+	$('#warningModal').modal('show')
+	$('#warningModalLabel').text(header)
+	$('#warningBodyModal').text(content)
+}
+
+
+function showLoading(button)
+{
+	let buttonElem;
+	
+	if(isString(button))
+	{
+		buttonElem = $('#'+button)
+	}
+	else
+	{
+		buttonElem = button
+	}
+	
+	buttonElem.append('<span class="spin">&nbsp<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span></span>')
+	buttonElem.prop('disabled', true)
+}
+
+
+function hideLoading(button)
+{
+	let buttonElem;
+	
+	if(isString(button))
+	{
+		buttonElem = $('#'+button)
+	}
+	else
+	{
+		buttonElem = button
+	}
+	
+	buttonElem.children(".spin").remove()
+	buttonElem.prop('disabled', false)
 }
 
 
@@ -125,8 +185,8 @@ function validation(element, condition, errorMessage)
 	
 	if(!condition)
 	{
-		elem.addClass('is-valid')	
 		elem.removeClass('is-invalid')
+		elem.addClass('is-valid')	
 		return true
 	}
 	else
@@ -239,5 +299,16 @@ function showBread(name)
 function isString(obj)
 {
     return obj !== undefined && obj !== null && obj.constructor == String;
+}
+
+function convertToMMDDYYYY(date)
+{
+	let dd = date.split(' ')[0].split('-')[0]
+	let mm = date.split(' ')[0].split('-')[1]
+	let yyyy = date.split(' ')[0].split('-')[2]
+	let hh = date.split(' ')[1].split(':')[0]
+	let ss = date.split(' ')[1].split(':')[1]
+	
+	return mm+"-"+dd+"-"+yyyy+" "+hh+":"+mm
 }
 

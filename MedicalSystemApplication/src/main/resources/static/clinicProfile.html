@@ -1,7 +1,6 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <!-- Required meta tags -->
+<head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
@@ -12,10 +11,24 @@
   crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 <script src ="js/navbar.js"></script>
+<!-- dataTable -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.12/js/jquery.dataTables.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css">
+<script src="js/moment.js"></script>
+<script src="https://code.highcharts.com/highcharts.src.js"></script>
+<script src="https://code.highcharts.com/highcharts-more.js" type='text/javascript'></script>
+    <script src="https://code.highcharts.com/modules/exporting.js" type='text/javascript'></script>
+    <link href="css/datepicker.min.css" rel="stylesheet" type="text/css">
+<script src="js/datepicker.min.js"></script>
+<script src="js/datepicker.en.js"></script>
+<script src="js/table_manager.js"></script>
+<script src="js/content_manager.js"></script>
+<script src="js/profile_manager.js"></script>
 <script src="js/profileClinic.js"></script>
+<link rel="stlyesheet" href="css/custom.css">
 <link rel = "stylesheet" href="css/profile.css">
   </head>
-  <body>
+ <body>
 <!---------------------------------------NAVBAR---------------------------------------->
 <header>
     	<nav class="navbar navbar-expand navbar-dark bg-dark">
@@ -29,7 +42,7 @@
           <div class="collapse navbar-collapse" id="navbarsExampleDefault">
            	<ul class="navbar-nav mr-auto"></ul>
                 <form class="form-inline my-2 my-lg-0" id="log_buttons" hidden="true">
-                    <button type="button" class="btn btn-outline-light" id = "navbar_prijava_btn">Prijava</button>
+                    <button type="button" class="btn btn-primary" id = "navbar_prijava_btn">Prijava</button>
                     &nbsp&nbsp
                     <button type="button" class="btn btn-light" id = "navbar_registracija_btn">Registracija</button>
                 </form>
@@ -45,7 +58,6 @@
     					<a class="dropdown-item" href="index.html" id="dropdown-item_logout">Odjavi se</a>
   					</div>
 					</div>
-  					</div>
                 </form>
               </div>
          </nav>
@@ -53,8 +65,31 @@
 
 <!---------------------------------------NAVBAR END---------------------------------------->
 
+<!-- WARNING MODAL -->
+<div class="modal fade" id="warningModal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="warningModalLabel"></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <span id="warningBodyModal"></span>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal">Zatvori</button>
+      </div>
+    </div>
+  </div>
+</div> 
+<!-- KRAJ WARNING MODAL -->
+
+
 <div class = "prikaz">
 	<div class="container emp-profile">
+	<h2>Profil Klinike</h2>
             <form method="post">
                 <div class="row">
                     <div class="col-md-4">
@@ -70,15 +105,26 @@
                                     <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Informacije</a>                     
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link inactive" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Spisak lekara</a>                     
+                                    <a class="nav-link inactive" id="doctorsTab-tab" data-toggle="tab" href="#doctorsTab" role="tab" aria-controls="doctorsTab" aria-selected="true">Spisak lekara</a>                     
+                                </li>
+                                 <li class="nav-item">
+                                    <a class="nav-link inactive" id="hallTab-tab" data-toggle="tab" href="#hallTab" role="tab" aria-controls="hallTab" aria-selected="true">Spisak sala</a>                     
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link inactive" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Spisak sala</a>                     
+                                    <a class="nav-link inactive" id="pricelistTab-tab" data-toggle="tab" href="#pricelistTab" role="tab" aria-controls="pricelistTab" aria-selected="true">Cenovnik</a>                     
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link inactive" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Cenovnik</a>                     
+                                    <a class="nav-link inactive" id="chartTab-tab" data-toggle="tab" href="#chartTab" role="tab" aria-controls="chartTab" aria-selected="true" style="display:none">Dnevni pregledi</a>                     
                                 </li>
-                                
+                                <li class="nav-item">
+                                    <a class="nav-link inactive" id="chartTabWeek-tab" data-toggle="tab" href="#chartTabWeek" role="tab" aria-controls="chartTabWeek" aria-selected="true" style="display:none">Nedeljeni pregledi</a>                     
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link inactive" id="chartTabMonth-tab" data-toggle="tab" href="#chartTabMonth" role="tab" aria-controls="chartTabMonth" aria-selected="true" style="display:none">Mesecni pregledi</a>                     
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link inactive" id="revanueTab-tab" data-toggle="tab" href="#revanueTab" role="tab" aria-controls="revanueTab" aria-selected="true" style="display:none">Prihodi</a>                     
+                                </li>
                             </ul>
                         </div>
                     </div>
@@ -88,9 +134,8 @@
                     <div class="col-md-4">
                         <div class="profile-work">
                             <p id = "pRole"></p>
-                            <a href="profileClinicChange.html" >Izmeni informacije</a><br/>
-                            
-                            
+                            <a href="index.html?changeProfileClinic=true" id="changeClinicInfo" style="display:none">Izmeni informacije</a><br/>
+                                               
                         </div>
                     </div>
                     <div class="col-md-8">
@@ -141,11 +186,35 @@
 										
 										
                             </div>
-                            
+                           	<div class="tab-pane fade show inactive" id="doctorsTab" role="tabpanel" aria-labelledby="doctorsTab-tab"></div>
+                           	<div class="tab-pane fade show inactive" id="hallTab" role="tabpanel" aria-labelledby="hallTab-tab">
+                           		<div id="hallContainerProfileClinic">
+                           		</div>
+                           	</div>
+                           	<div class="tab-pane fade show inactive" id="pricelistTab" role="tabpanel" aria-labelledby="pricelistTab-tab">
+                           		<div id="pricelistContainerProfileClinic">
+                           		</div>
+                           	</div>
+                          	
+                           	<div class="tab-pane fade show inactive" id="chartTab" role="tabpanel" aria-labelledby="chartTab-tab">
+                           		<div id="dailyChart" style="width:100%; height:400px;"></div>             	
+                           	</div>
+                           	<div class="tab-pane fade show inactive" id="chartTabWeek" role="tabpanel" aria-labelledby="chartTabWeek-tab">
+                           		<div id="weeklyChart" style="width:100%; height:400px;"></div>             	
+                           	</div>
+                           	 <div class="tab-pane fade show inactive" id="chartTabMonth" role="tabpanel" aria-labelledby="chartTabMonth-tab">
+                           		<div id="monthlyChart" style="width:100%; height:400px;"></div>             	
+                           	</div>
+                           	<div class="tab-pane fade show inactive" id="revanueTab" role="tabpanel" aria-labelledby="revanueTab-tab">
+                           		<p id="DailyRevanue"></p> 
+                           		<p id="WeeklyRevanue"></p> 
+                           		<p id="MonthlyRevanue"></p>          	
+                           	</div>
                         </div>
                     </div>
                 </div>
-            </form>           
+            </form> 
+            <a href="index.html">Nazad na pocetnu</a>          
         </div>
      </div>
   </body>

@@ -4,8 +4,8 @@ function addRequest(request)
 
 	let tr=$('<tr></tr>');
 	let tdEmail=$('<td class="email" data-toggle="modal" data-target="#exampleModalLong">'+ request.email +'</td>');
-	let tdConfirm=$('<td> <button type="button" class="btn btn-primary">Prihvati</button></td>');
-	let tdDeny=$('<td> <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo">Odbij</button></td>');
+	let tdConfirm=$('<td> <button type="button" id="acceptRequest" class="btn btn-primary">Prihvati</button></td>');
+	let tdDeny=$('<td> <button type="button" id="denyRequest" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo">Odbij</button></td>');
 
 	tdConfirm.click(confirmRegister(request));
     tdEmail.click(addPersonalInformations(request));
@@ -58,7 +58,7 @@ $(document).ready(()=>{
 
 function confirmRegister(request){
     return function(){
-
+    showLoading('acceptRequest')
     let email = request.email
 
         $.ajax({
@@ -67,6 +67,7 @@ function confirmRegister(request){
         			contentType : "application/json; charset=utf-8",
         			success: function(data)
         			{
+        				hideLoading('acceptRequest')
         				window.location.href = "registerRequests.html"
         			}
         		})
@@ -76,6 +77,7 @@ function confirmRegister(request){
 
 function denyRegister(){
 
+	 showLoading('denyRequest')
      var email = document.getElementById("recipient-name").value;
      var text = document.getElementById("message-text").value;
 
@@ -88,6 +90,7 @@ function denyRegister(){
         			contentType : "application/json; charset=utf-8",
         			success: function(data)
         			{
+        				hideLoading('denyRequest')
         			    window.location.href = "registerRequests.html"
         			}
         		})

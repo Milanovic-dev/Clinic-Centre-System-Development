@@ -19,6 +19,9 @@ public class Appointment
 	@Column(name= "startingDateAndTime",nullable = false)
 	private Date date;
 	
+	@Column(name= "endingDateAndTime",nullable = false)
+	private Date endDate;
+	
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Hall hall;
 	
@@ -70,6 +73,17 @@ public class Appointment
 	}
 
 	
+	
+	public Date getEndDate() {
+		return endDate;
+	}
+
+
+	public void setEndDate(Date endDate) {
+		this.endDate = endDate;
+	}
+
+
 	public Integer getVersion() {
 		return version;
 	}
@@ -170,6 +184,7 @@ public class Appointment
 	public static class Builder
 	{
 		private Date date;
+		private Date endDate;
 		private Hall hall;
 		private Patient patient;
 		private Clinic clinic;
@@ -201,6 +216,13 @@ public class Appointment
 		public Builder withClinic(Clinic clinic)
 		{
 			this.clinic = clinic;
+			
+			return this;
+		}
+		
+		public Builder withEndingDate(Date date)
+		{
+			this.endDate = date;
 			
 			return this;
 		}
@@ -244,6 +266,7 @@ public class Appointment
 			app.setAppointmentType(this.appointmentType);
 			app.setAppointmentType(this.appointmentType);
 			app.setDuration(this.duration);
+			app.setEndDate(this.endDate);
 			return app;
 		}
 
