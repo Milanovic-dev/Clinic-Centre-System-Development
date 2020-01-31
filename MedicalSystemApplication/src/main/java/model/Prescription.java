@@ -1,5 +1,7 @@
 package model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -25,6 +27,7 @@ public class Prescription {
 	@Column(name = "valid", nullable = false)
 	private Boolean isValid = false;
 
+	@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "nurse_id",  nullable = true)
 	private Nurse nurse;

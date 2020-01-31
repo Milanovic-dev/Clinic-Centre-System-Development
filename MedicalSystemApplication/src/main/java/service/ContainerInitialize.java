@@ -97,7 +97,8 @@ public class ContainerInitialize {
 			patient.getMedicalRecord().setHeight("195cm");
 			patient.getMedicalRecord().setWeight("85kg");
 			patient.getMedicalRecord().setPatient(patient);
-					
+
+
 
 			Patient patient2 = new Patient.Builder("patient1@gmail.com")
 					.withPassword(hash)
@@ -242,9 +243,9 @@ public class ContainerInitialize {
 			app1.getDoctors().add(doctor1);
 			appointmentRepository.save(app1);
 
-			Appointment app2 = new Appointment.Builder(DateUtil.getInstance().getDate("21-01-2020 07:40", "dd-mm-yyyy HH:mm"))
-					.withEndingDate(DateUtil.getInstance().getDate("21-01-2020 09:40", "dd-mm-yyyy HH:mm"))
-					.withPatient(patient1)
+			Appointment app2 = new Appointment.Builder(DateUtil.getInstance().getDate("09-04-2020 07:40", "dd-mm-yyyy HH:mm"))
+					.withEndingDate(DateUtil.getInstance().getDate("09-04-2020 09:40", "dd-mm-yyyy HH:mm"))
+					.withPatient(patient)
 					.withType(AppointmentType.Surgery)
 					.withHall(hall2)
 					.withClinic(clinic)
@@ -252,10 +253,10 @@ public class ContainerInitialize {
 					.withPriceslist(p2)
 					.build();
 			
-			app2.getDoctors().add(doctor2);
+			app2.getDoctors().add(doctor1);
 
-			Appointment app3 = new Appointment.Builder(DateUtil.getInstance().getDate("24-01-2020 19:30", "dd-mm-yyyy HH:mm"))
-					.withEndingDate(DateUtil.getInstance().getDate("24-01-2020 20:30", "dd-mm-yyyy HH:mm"))
+			Appointment app3 = new Appointment.Builder(DateUtil.getInstance().getDate("18-03-2020 19:30", "dd-mm-yyyy HH:mm"))
+					.withEndingDate(DateUtil.getInstance().getDate("18-03-2020 20:30", "dd-mm-yyyy HH:mm"))
 					.withPatient(patient1)
 					.withType(AppointmentType.Surgery)
 					.withHall(hall2)
@@ -264,8 +265,8 @@ public class ContainerInitialize {
 					.withPriceslist(p1)
 					.build();
 			
-			Appointment app4 = new Appointment.Builder(DateUtil.getInstance().getDate("21-01-2020 07:00","dd-mm-yyyy HH:mm"))
-					.withEndingDate(DateUtil.getInstance().getDate("21-01-2020 08:00","dd-mm-yyyy HH:mm"))
+			Appointment app4 = new Appointment.Builder(DateUtil.getInstance().getDate("19-02-2020 07:00","dd-mm-yyyy HH:mm"))
+					.withEndingDate(DateUtil.getInstance().getDate("19-02-2020 08:00","dd-mm-yyyy HH:mm"))
 					.withType(AppointmentType.Examination)
 					.withHall(hall1)
 					.withClinic(clinic)
@@ -283,7 +284,10 @@ public class ContainerInitialize {
 			
 			
 			doctor1.getAppointments().add(app1);
-			doctor2.getAppointments().add(app3);
+			doctor1.getAppointments().add(app2);
+			doctor1.getAppointments().add(app3);
+			doctor1.getAppointments().add(app4);
+			//doctor2.getAppointments().add(app3);
 			
 
 			
@@ -329,12 +333,38 @@ public class ContainerInitialize {
 			prescription3.setDescription("terapijaaaaa a a a a a ");
 
 			prescriptionRepository.save(prescription3);
-			
+
+
+			PatientMedicalReport report = new PatientMedicalReport();
+			report.setDescription("Izvestaj lekara");
+			report.setPatient(patient);
+			report.setDoctor(doctor1);
+			report.setPrescription(prescription);
+			report.setClinic(clinic);
+			report.getDiagnosis().add(diagnosis);
+			DateUtil dateInstance = DateUtil.getInstance();
+			report.setDateAndTime(dateInstance.getDate("05-01-2020 07:00","dd-mm-yyyy HH:mm"));
+			patientMedicalReportRepository.save(report);
+			patient.getMedicalRecord().getReports().add(report);
+
+			PatientMedicalReport report1 = new PatientMedicalReport();
+			report1.setDescription("Izvestaj drugog lekara");
+			report1.setPatient(patient);
+			report1.setDoctor(doctor2);
+			report1.setPrescription(prescription2);
+			report1.setClinic(clinic);
+			report1.getDiagnosis().add(diagnosis3);
+			report1.setDateAndTime(dateInstance.getDate("08-01-2020 08:00","dd-mm-yyyy HH:mm"));
+			patientMedicalReportRepository.save(report1);
+			patient.getMedicalRecord().getReports().add(report1);
+			userRepository.save(patient);
+
+
+
 			Diagnosis d1 = new Diagnosis("123","tag","name");
 			List<Diagnosis> listDiag = new ArrayList<>();
 			listDiag.add(d1);
-			 
-			DateUtil dateInstance = DateUtil.getInstance();
+
 			VacationRequest vrq = new VacationRequest(dateInstance.getDate("21-02-2020", "dd-MM-yyyy"),dateInstance.getDate("08-03-2020", "dd-MM-yyyy"),clinic,doctor3);
 			vacationRequestRepository.save(vrq);
 			

@@ -21,6 +21,7 @@ public class AppointmentDTO {
 	private AppointmentType type;
 	private int version;
 	private String startTimestamp;
+	private boolean done = false;
 	
 	public AppointmentDTO() {
 		super();
@@ -38,6 +39,7 @@ public class AppointmentDTO {
 		this.duration = duration;
 		this.typeOfExamination = priceslist;
 		this.type = type;
+		this.done = false;
 	}
 	
 	public AppointmentDTO(Appointment appointment)
@@ -62,6 +64,7 @@ public class AppointmentDTO {
 		}
 		this.type = appointment.getAppointmentType();	
 		this.version = appointment.getVersion();
+		this.done = appointment.getDone();
 	}
 	
 	public AppointmentDTO(AppointmentRequest appointment)
@@ -179,6 +182,12 @@ public class AppointmentDTO {
 	public void setType(AppointmentType type) {
 		this.type = type;
 	}
-	
-	
+
+	public boolean isDone() {
+		return done;
+	}
+
+	public void setDone(boolean done) {
+		this.done = done;
+	}
 }

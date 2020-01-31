@@ -12,8 +12,8 @@ public class PrescriptionDTO {
 
     private String description;
     private Date validationDate;
-    private List<String> drugs;
-    private Nurse nurse;
+    private List<String> drugs = new ArrayList<>();
+    private String nurseEmail;
     private Boolean isValid;
     private long id;
 
@@ -36,7 +36,7 @@ public class PrescriptionDTO {
     }
 
     public PrescriptionDTO(String description, Date validationDate,
-                           List<String> drugs, Nurse nurse, Boolean isValid) {
+                           List<String> drugs, String nurseEmail, Boolean isValid) {
         super();
         this.description = description;
         this.validationDate = validationDate;
@@ -45,7 +45,7 @@ public class PrescriptionDTO {
         {
             drugs.add(drug);
         }
-        this.nurse = nurse;
+        this.nurseEmail = nurseEmail;
         this.isValid = false;
     }
 
@@ -73,12 +73,12 @@ public class PrescriptionDTO {
         this.drugs = drugs;
     }
 
-    public Nurse getNurse() {
-        return nurse;
+    public String getNurseEmail() {
+        return nurseEmail;
     }
 
-    public void setNurse(Nurse nurse) {
-        this.nurse = nurse;
+    public void setNurseEmail(String nurseEmail) {
+        this.nurseEmail = nurseEmail;
     }
 
     public Boolean getValid() {

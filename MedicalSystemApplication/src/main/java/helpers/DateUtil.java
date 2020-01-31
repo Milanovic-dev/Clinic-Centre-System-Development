@@ -25,7 +25,7 @@ public class DateUtil {
 	
 	public Date getDate(String date,String format)
 	{
-		date = date.strip();
+		//date = date.strip();
 		DateFormat df = new SimpleDateFormat(format);
 		
 		try {

@@ -906,5 +906,27 @@ public class AppointmentController
 		
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
-	
+
+
+	@PutMapping(value="/appointmentIsDone")
+	public ResponseEntity<Void> appointmentIsDone(@RequestBody AppointmentDTO dto)
+	{
+		HttpHeaders headers = new HttpHeaders();
+
+		Appointment app = appointmentService.findAppointment(dto.getDate(), dto.getHallNumber(), dto.getClinicName());
+
+		if(app == null)
+		{
+			headers.set("responseText","App not found for: " + dto.getDate() + " " + dto.getHallNumber() + " " + dto.getClinicName());
+			return new ResponseEntity<>(headers,HttpStatus.NOT_FOUND);
+		}
+
+		app.setDone(true);
+		appointmentService.save(app);
+
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
+
+
+
 }

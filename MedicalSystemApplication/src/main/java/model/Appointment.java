@@ -48,7 +48,10 @@ public class Appointment
 	
 	@Column(name="predefined",nullable = true)
 	private Boolean predefined = false;
-	
+
+	@Column(name="done",nullable = true)
+	private Boolean done = false;
+
 	@Version
 	private Integer version;
 	
@@ -179,6 +182,14 @@ public class Appointment
 
 	public void setAppointmentType(AppointmentType appointmentType) {
 		this.appointmentType = appointmentType;
+	}
+
+	public Boolean getDone() {
+		return done;
+	}
+
+	public void setDone(Boolean done) {
+		this.done = done;
 	}
 
 	public static class Builder
