@@ -3,13 +3,14 @@
 $(document).ready(function(){
 
 	
+	
 	$.ajax({
 		type: 'GET',
 		url: 'api/auth/sessionUser',
 		complete: function(data)
 		{
 			let sessionUser = data.responseJSON
-			console.log(sessionUser)
+
 			getProfileFromURL(function(profile, role){
 				
 				if(profile == undefined)

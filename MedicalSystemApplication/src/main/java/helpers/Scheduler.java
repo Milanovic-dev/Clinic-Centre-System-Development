@@ -129,7 +129,7 @@ public class Scheduler {
 			
 			if(i < dates.length - 1)
 			{
-				if(DateUtil.getInstance().getHoursBetween(endDate, startDate) >= 60000)
+				if(DateUtil.getInstance().getTimeBetween(endDate, startDate) >= 60000)
 				{
 					intervals.add(new DateInterval(endDate, startDate));	
 					i++;

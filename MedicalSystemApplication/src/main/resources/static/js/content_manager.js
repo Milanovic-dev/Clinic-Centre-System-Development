@@ -232,6 +232,17 @@ function arrayRemove(arr, value)
 
 }
 
+
+function getDateHours(dateObj)
+{
+	var date = new Date(dateObj);
+    var hours = date.getHours();
+    var minutes = date.getMinutes();
+    minutes = minutes < 10 ? '0'+minutes : minutes;
+    var strTime = hours + ':' + minutes;
+    return strTime
+}
+
 class BreadLevel
 {
 	constructor()
