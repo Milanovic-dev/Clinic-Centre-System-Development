@@ -496,7 +496,7 @@ function p_listClinic(data,i,user)
 		
 		$.ajax({
 			type:'GET',
-			url:"api/clinic/getDoctorsByType/" + data.name + "/" + $('#selectAppointmentType').val(),
+			url:"api/clinic/getDoctorsByTypeAndVacation/" + data.name + "/" + $('#selectAppointmentType').val() + "/" + $('#clinicDatePick').val(),
 			complete: function(data)
 			{
 				let doctors = data.responseJSON

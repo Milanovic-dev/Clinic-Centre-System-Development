@@ -1,6 +1,12 @@
 
 $(document).ready(function(){
 
+	checkSession(function(exists){
+		if(!exists) window.location.href = "index.html"
+	})
+	
+	
+	
 	let n = getParameterByName("clinic")
 
 		$.ajax({

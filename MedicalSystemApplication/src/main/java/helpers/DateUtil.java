@@ -76,7 +76,7 @@ public class DateUtil {
 		return (con1 && con2);
 	}
 	
-	public long getHoursBetween(Date d1, Date d2)
+	public long getTimeBetween(Date d1, Date d2)
 	{
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(d1);

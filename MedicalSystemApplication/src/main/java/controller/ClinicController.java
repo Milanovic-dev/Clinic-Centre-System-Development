@@ -280,6 +280,33 @@ public class ClinicController {
     	return new ResponseEntity<>(dtos,HttpStatus.OK);
 
     }
+    
+    @GetMapping(value="/getDoctorsByTypeAndVacation/{clinicName}/{typeOfExamination}/{date}")
+    public ResponseEntity<List<DoctorDTO>> getClinicDoctorsByTypeAndVacation(@PathVariable("clinicName") String clinicName,@PathVariable("typeOfExamination") String typeOfExamination
+    																		,@PathVariable("date") String date)
+    {
+    	Clinic clinic = clinicService.findByName(clinicName);
+    	if(clinic == null)
+    	{
+    		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    	}
+    	
+    	List<Doctor> doctors = clinic.getDoctors();
+    	List<DoctorDTO> dtos = new ArrayList<DoctorDTO>();
+    	
+    	for(Doctor doc : doctors)
+    	{
+    		if(doc.getDeleted() == false && doc.getType().equalsIgnoreCase(typeOfExamination)
+    		   && doc.IsFreeOn(DateUtil.getInstance().getDate(date, "dd-mm-yyyy")))
+    		{
+    			DoctorDTO dto = new DoctorDTO(doc);
+    			dtos.add(dto);	
+    		}
+    	}
+    	
+    	return new ResponseEntity<>(dtos,HttpStatus.OK);
+
+    }
 
     @GetMapping(value="/getDoctors/{name}")
     public ResponseEntity<List<DoctorDTO>> getClinicsDoctors(@PathVariable("name") String name)

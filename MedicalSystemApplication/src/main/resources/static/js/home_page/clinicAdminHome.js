@@ -3,6 +3,7 @@
  */
 
 var clinic = null
+var hallCalendar = null
 
 //ULAZNA FUNKCIJA
 function initClinicAdmin(user)
@@ -50,7 +51,7 @@ function setUpClinicAdminPage(user)
 	
 	
 	
-
+	setUpHallCalendar()
 	let headersTypes = ["Ime tipa","Klinika","Cena","",""]
 	createDataTable("tableTypeOfExamination","showTypeOfExaminationContainer","Lista Tipova Pregleda",headersTypes,0)
 		
@@ -649,14 +650,13 @@ function submitDoctorForm(clinic)
 
 function listHall(data,i)
 {	
-	let d = [data.number,data.name,data.clinicName,'<button type="button" class="btn btn-warning" id = "calendarHall_btn'+i+'">Zauzeće</button>','<button type="button" class="btn btn-primary" id = "changeHall_btn'+i+'">Izmeni</button>','<button type="button" class="btn btn-danger" id = "deleteHall_btn'+i+'">Izbrisi</button>']
+	let d = [data.number,data.name,data.clinicName,'<button type="button" class="btn btn-primary" id = "calendarHall_btn'+i+'">Zauzeće</button>','<button type="button" class="btn btn-primary" id = "changeHall_btn'+i+'">Izmeni</button>','<button type="button" class="btn btn-danger" id = "deleteHall_btn'+i+'">Izbrisi</button>']
 	
 	insertTableData("tableHall",d)
+	
 	$('#calendarHall_btn' + i).click(function(e){
-		setUpCalendar()
-		$('#hallCalendar').modal('show');
-		$('#hallCalendarModalLabel').text("Kalendar zauzeća sale " + data.number)
-
+		fillHallCalendar(data)
+		$('#hallCalendarModal').modal('show')
 	})
 	
 	$('#deleteHall_btn'+i).click(function(e)
@@ -712,6 +712,84 @@ function listHall(data,i)
 	})
 	
 }
+
+function setUpHallCalendar()
+{
+	  hallCalendar = $('#calendarHall').fullCalendar({
+		    plugins: [ 'dayGridPlugin' ],
+		    defaultDate: '2020-01-01',
+	        buttonText: {
+	               today:    'danas',
+	               month:    'mesec',
+	               week:     'nedelja',
+	               day:      'dan',
+	               year:     'godina',
+	               list:     'list'
+	             },
+	        monthNames: ['Januar', 'Februar', 'Mart', 'April', 'Maj', 'Jun', 'Jul',
+	                      'Avgust', 'Septembar', 'Oktobar', 'Novembar', 'Decembar'],
+	        monthNamesShort: ['Jan','Feb','Mar','Apr','Maj','Jun','Jul','Avg','Sep','Okt','Nov','Dec'],
+	        dayNames: ['Nedelja','Ponedeljak','Utorak','Sreda','Cetvrtak','Petak','Subota'],
+	        dayNamesShort: ['Ned','Pon','Uto','Sre','Cet','Pet','Sub'],
+	        fixedWeekCount: false,
+	        timeFormat: 'HH:mm',
+	        views: {
+	            timelineCustom: {
+	                type: 'timeline',
+	                buttonText: 'godina',
+	                dateIncrement: { years: 1 },
+	                slotDuration: { months: 1 },
+	                visibleRange: function (currentDate) {
+	                    return {
+	                        start: currentDate.clone().startOf('year'),
+	                        end: currentDate.clone().endOf("year")
+	                    };
+	                }
+
+	            }
+	        },
+	        eventColor: '#2f989d',
+	        eventRender: function(event, element){
+	        	$(element).tooltip({title: event.extendedProps.tooltip, container: "body"})
+	        },
+	        schedulerLicenseKey: 'GPL-My-Project-Is-Open-Source'
+		  });	
+}
+
+
+//KALENDAR ZAUZECA SALE
+function fillHallCalendar(hall)
+{
+	
+	hallCalendar.fullCalendar('removeEvents')
+  
+	  $.ajax({
+		  type:'GET',
+		  url:"api/appointments/hall/getAll/"+clinic.name+"/"+hall.number,
+		  complete: function(data)
+		  {
+			  $.each(data.responseJSON, function(i, item){
+				
+				  let event = {
+						  title: "",
+					      start: item.date,
+					      end: item.endDate,
+					      stick: true,
+					      extendedProps: {
+					          tooltip: getDateHours(item.date) + "-" + getDateHours(item.endDate)
+					      }
+				  }
+				  
+				  hallCalendar.fullCalendar('renderEvent', event, true)
+				  
+			  })
+			  
+		  }
+	  })
+	 
+}
+
+
 
 function makeTypeOfExaminationTable(clinic)
 {

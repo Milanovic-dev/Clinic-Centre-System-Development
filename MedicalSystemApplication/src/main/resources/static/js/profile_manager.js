@@ -61,6 +61,18 @@ function getProfileFromURL(done)
 	})
 }
 
+function checkSession(done)
+{
+	$.ajax({
+		type: 'GET',
+		url:"api/auth/sessionUser",
+		complete:function(data)
+		{
+			done(data.resposneJSON != undefined)
+		}
+	})
+}
+
 
 function getRoleUser(email, role, complete)
 {
