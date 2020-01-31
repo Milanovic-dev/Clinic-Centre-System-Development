@@ -1,8 +1,11 @@
 package controller;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,15 +13,26 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import dto.DateIntervalDTO;
 import dto.MonthDTO;
 import dto.WeekDTO;
 import helpers.DateInterval;
 import helpers.DateUtil;
+import helpers.Scheduler;
+import model.Appointment;
+import model.Doctor;
+import model.Hall;
+import service.AppointmentService;
+import service.HallService;
+import service.UserService;
 
 @RestController
 @RequestMapping(value = "api/utility")
 public class UtilityController 
 {
+	
+	@Autowired
+	private UserService userService;
 	
 	@GetMapping(value="/date/getWeekInfo")
 	public ResponseEntity<WeekDTO> getWeekInfo()
@@ -84,5 +98,43 @@ public class UtilityController
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 	
+	@GetMapping(value = "/getBusyTime/{doctor}")
+	public ResponseEntity<List<DateIntervalDTO>> getBusy(@PathVariable("doctor") String doctorEmail)
+	{
+		Doctor d = (Doctor) userService.findByEmailAndDeleted(doctorEmail, false);
+		
+		List<DateInterval> intervals =  Scheduler.getFreeIntervals(d, DateUtil.getInstance().getDate("21-01-2020", "dd-mm-yyyy"));
+		List<DateIntervalDTO> dtos = new ArrayList<DateIntervalDTO>();
+		
+		for(DateInterval di : intervals)
+		{
+			dtos.add(new DateIntervalDTO(di, "HH:mm"));
+		}
+		
+		return new ResponseEntity<>(dtos, HttpStatus.OK);
+	}
 	
+	@Autowired
+	private HallService hallService;
+	
+	@Autowired
+	private AppointmentService apService;
+	
+	@GetMapping(value="/hall/getBusyTime/{hallNumber}/{date}")
+	public ResponseEntity<List<DateIntervalDTO>> getBusyHall(@PathVariable("hallNumber") int num, @PathVariable("date") String date)
+	{
+		Hall hall = hallService.findByNumber(num);
+		
+		List<Appointment> apps = apService.findAllByHall(hall);
+		
+		List<DateInterval> intervals = Scheduler.getBusyIntervals(apps, DateUtil.getInstance().getDate(date, "dd-mm-yyyy"));
+		List<DateIntervalDTO> dtos = new ArrayList<DateIntervalDTO>();
+		
+		for(DateInterval di : intervals)
+		{
+			dtos.add(new DateIntervalDTO(di, "HH:mm"));
+		}
+		
+		return new ResponseEntity<>(dtos, HttpStatus.OK);
+	}
 }

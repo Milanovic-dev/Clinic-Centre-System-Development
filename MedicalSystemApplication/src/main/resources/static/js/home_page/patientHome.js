@@ -152,7 +152,8 @@ function setUpPatientPage(user)
     }
     
     $('#clinicDatePick').datepicker({
-    	dateFormat: "dd-mm-yyyy"   	
+    	dateFormat: "dd-mm-yyyy",
+    	minDate: new Date()
 	})
 	
 	$('#Apps').click(function(e){
@@ -211,7 +212,7 @@ function setUpPatientPage(user)
 								$('#inputClinicName').val(clinic.name)
 								$('#inputClinicAddress').val(clinic.address+", "+clinic.city+", "+clinic.state)
 								$('#inputDate').val(getParameterByName("date"))
-								$('#inputAppointmentType').val(getParameterByName("type") + " (Pregled)")
+								$('#inputAppointmentType').val(getParameterByName("type"))
 								$('#inputStartTime').prop('min',doctor.shiftStart)
 								$('#inputStartTime').prop('max',doctor.shiftEnd)
 								
@@ -489,7 +490,7 @@ function p_listClinic(data,i,user)
 		$('#inputClinicName').val(data.name)
 		$('#inputClinicAddress').val(data.address+", "+data.city+", "+data.state)
 		$('#inputDate').val($('#clinicDatePick').val())
-		$('#inputAppointmentType').val($('#selectAppointmentType').val() + " (Pregled)")	
+		$('#inputAppointmentType').val($('#selectAppointmentType').val())	
 		
 		showBread('Zakazivanje')
 		
@@ -640,7 +641,7 @@ function submitAppointmentRequest(user, doctorsSelected)
 		return
 	}
 		
-	let json = JSON.stringify({"date":date+" "+time,"clinicName":clinicName,"patientEmail":patientEmail,"doctors":doctorArray,"typeOfExamination":typeOfExamination.split(" ")[0],"type":"Examination"})
+	let json = JSON.stringify({"date":date+" "+time,"clinicName":clinicName,"patientEmail":patientEmail,"doctors":doctorArray,"typeOfExamination":typeOfExamination,"type":"Examination"})
 	console.log(json)
 	$.ajax({
 		type:'POST',
@@ -650,6 +651,7 @@ function submitAppointmentRequest(user, doctorsSelected)
 		contentType : "application/json; charset=utf-8",
 		complete: function(data)
 		{
+			console.log(data)
 			if(data.status == "201")
 			{
 				listAppRequests(user)
@@ -668,33 +670,37 @@ function submitAppointmentRequest(user, doctorsSelected)
 function p_listDoctorActive(data, i, doctorCount)
 {
 	
-	let d = [data.type, getProfileLink(data.user.email), data.user.name, data.user.surname, data.avarageRating,"<button class='btn btn-primary' id='doctorOcc"+i+"'>Zauzece</button>", data.shiftStart, data.shiftEnd, "<input type='checkbox' id='checkDoctor"+i+"'><label for='checkDoctor"+i+"'></label>"]
+	let d = [data.type, getProfileLink(data.user.email), data.user.name, data.user.surname, data.avarageRating,"<button class='btn btn-primary' id='doctorOcc"+i+"'>Sl.Termini</button>", data.shiftStart, data.shiftEnd, "<input type='checkbox' id='checkDoctor"+i+"'><label for='checkDoctor"+i+"'></label>"]
 	insertTableData('chooseDoctorTable', d)
 	
 	
 	$('#doctorOcc'+i).click(function(e){
 		e.preventDefault()
-		console.log(data)
+
 		$.ajax({
 			type:'GET',
-			url:"api/appointments/doctor/getAllAppointmentsByDate/"+data.user.email+"/"+ $('#inputDate').val(),
+			url:"api/doctors/getFreeTime/"+data.user.email+"/"+ $('#inputDate').val(),
 			complete: function(response)
 			{
 
-				let listOfDates = getDoctorOccupancy(response.responseJSON)
+				let listOfDates = response.responseJSON
 
-				$('#warningModalLabel').text("Zauzece " + data.user.email)
+				$('#warningModalLabel').text("Zauzece " + data.user.name + " " + data.user.surname)
 							
 				$('#warningBodyModal').empty()
 				
-				if(listOfDates.length == 0)
+				if(listOfDates.length == 1)
 				{
-					$('#warningBodyModal').append("Doktor nema zauzeca za ovaj dan.")		
+					$('#warningBodyModal').append("<p>Doktor je slobodan.</p>")
+					$('#warningBodyModal').append("<p>Radno vreme: <b>"+listOfDates[0].start + " - " + listOfDates[0].end + "</b>")
+					
 				}
-				
-				$.each(listOfDates, function(i, item){
-					$('#warningBodyModal').append("<p>"+item+"</p>")					
-				});
+				else
+				{
+					$.each(listOfDates, function(i, item){
+						$('#warningBodyModal').append("<p>"+item.start + " - " + item.end +"</p>")					
+					});				
+				}
 				
 				$('#warningModal').modal('show')		
 			}
