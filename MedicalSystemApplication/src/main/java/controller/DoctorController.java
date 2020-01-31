@@ -23,9 +23,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import dto.AppointmentDTO;
 import dto.ClinicDTO;
+import dto.DateIntervalDTO;
 import dto.DoctorDTO;
 import dto.ReviewDTO;
+import helpers.DateInterval;
 import helpers.DateUtil;
+import helpers.Scheduler;
 import helpers.SecurePasswordHasher;
 import model.*;
 import model.Appointment.AppointmentType;
@@ -170,6 +173,48 @@ public class DoctorController
 		doc.setDeleted(true);
 		userService.save(doc);
 		return new ResponseEntity<>(HttpStatus.OK);
+	}
+	
+	@GetMapping(value = "/getBusyTime/{doctor}/{date}")
+	public ResponseEntity<List<DateIntervalDTO>> getBusyTime(@PathVariable("doctor") String doctorEmail, @PathVariable("date") String date)
+	{
+		Doctor d = (Doctor) userService.findByEmailAndDeleted(doctorEmail, false);
+		
+		if(d == null)
+		{
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+		
+		List<DateInterval> intervals =  Scheduler.getFreeIntervals(d, DateUtil.getInstance().getDate(date, "dd-mm-yyyy"));
+		List<DateIntervalDTO> dtos = new ArrayList<DateIntervalDTO>();
+		
+		for(DateInterval di : intervals)
+		{
+			dtos.add(new DateIntervalDTO(di, "HH:mm"));
+		}
+		
+		return new ResponseEntity<>(dtos, HttpStatus.OK);
+	}
+	
+	@GetMapping(value = "/getFreeTime/{doctor}/{date}")
+	public ResponseEntity<List<DateIntervalDTO>> getFreeTime(@PathVariable("doctor") String doctorEmail, @PathVariable("date") String date)
+	{
+		Doctor d = (Doctor) userService.findByEmailAndDeleted(doctorEmail, false);
+		
+		if(d == null)
+		{
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+		
+		List<DateInterval> intervals =  Scheduler.getFreeIntervals(d, DateUtil.getInstance().getDate(date, "dd-mm-yyyy"));
+		List<DateIntervalDTO> dtos = new ArrayList<DateIntervalDTO>();
+		
+		for(DateInterval di : intervals)
+		{
+			dtos.add(new DateIntervalDTO(di, "HH:mm"));
+		}
+		
+		return new ResponseEntity<>(dtos, HttpStatus.OK);
 	}
 
 }

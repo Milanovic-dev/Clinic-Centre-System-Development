@@ -38,11 +38,13 @@ import service.HallService;
 @RestController
 @RequestMapping(value = "api/hall")
 public class HallController {
+	
 	@Autowired
     private HallService hallService;
 	
 	@Autowired
 	private AppointmentService appointmentService;
+	
 	@Autowired
 	private ClinicService clinicService;
 	
