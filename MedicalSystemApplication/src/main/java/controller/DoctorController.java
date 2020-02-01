@@ -185,7 +185,7 @@ public class DoctorController
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 		
-		List<DateInterval> intervals =  Scheduler.getFreeIntervals(d, DateUtil.getInstance().getDate(date, "dd-mm-yyyy"));
+		List<DateInterval> intervals =  Scheduler.getFreeIntervals(d, DateUtil.getInstance().getDate(date, "dd-MM-yyyy"));
 		List<DateIntervalDTO> dtos = new ArrayList<DateIntervalDTO>();
 		
 		for(DateInterval di : intervals)
@@ -205,8 +205,8 @@ public class DoctorController
 		{
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
-		
-		List<DateInterval> intervals =  Scheduler.getFreeIntervals(d, DateUtil.getInstance().getDate(date, "dd-mm-yyyy"));
+
+		List<DateInterval> intervals =  Scheduler.getFreeIntervals(d, DateUtil.getInstance().getDate(date, "dd-MM-yyyy"));
 		List<DateIntervalDTO> dtos = new ArrayList<DateIntervalDTO>();
 		
 		for(DateInterval di : intervals)

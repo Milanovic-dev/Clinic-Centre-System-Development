@@ -55,7 +55,8 @@ function createClinicTable()
     	
 	})
 	
-	 getTableDiv('clinicTable').show()
+	
+	getTableDiv('clinicTable').show()
 }
 
 
@@ -69,7 +70,7 @@ function createChooseDoctorTable()
 
 function createPreAppointmentsTable()
 {
-	let headers = ['Datum','Termin','Klinika','Sala','Doktor','Tip pregleda','Cena','']
+	let headers = ['Datum','Termin','Klinika','Sala','Doktor','Tip pregleda','Cena','Cena Sa popustom(20%)','']
 	createDataTable('preAppTable',"preAppointmentContainer","Unapred definisani pregledi",headers,0)
 	getTableDiv('preAppTable').show()
 }
@@ -294,7 +295,7 @@ function list_preApp(data,i,user)
 	let startTime = dateSplit[1]
 	let endTime = data.endDate.split(' ')[1]
 	
-	let d = [date,startTime + " - " + endTime,getClinicProfileLink(data.clinicName),data.hallNumber,getProfileLink(data.doctors[0]),data.typeOfExamination,data.price,'<button class="btn btn-primary" data-toggle="tooltip" id="submitPredefinedAppRequest'+i+'">Zakazi</button>']
+	let d = [date,startTime + " - " + endTime,getClinicProfileLink(data.clinicName),data.hallNumber,getProfileLink(data.doctors[0]),data.typeOfExamination,data.price, getDiscountPrice(data.price,20), '<button class="btn btn-primary" data-toggle="tooltip" id="submitPredefinedAppRequest'+i+'">Zakazi</button>']
 	
 	insertTableData('preAppTable',d)
 	

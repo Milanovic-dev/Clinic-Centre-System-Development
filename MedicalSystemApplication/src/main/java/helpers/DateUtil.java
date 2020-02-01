@@ -93,6 +93,8 @@ public class DateUtil {
 		Calendar c2 = Calendar.getInstance();
 		c1.setTime(date1);
 		c2.setTime(date2);
+		System.out.println(date1.toString() + " - " + date2.toString());
+		System.out.println(c1.get(Calendar.MONTH) + " - " + c2.get(Calendar.MONTH));
 		
 		return (c1.get(Calendar.YEAR) == c2.get(Calendar.YEAR) && 
 	            c1.get(Calendar.MONTH) == c2.get(Calendar.MONTH) &&

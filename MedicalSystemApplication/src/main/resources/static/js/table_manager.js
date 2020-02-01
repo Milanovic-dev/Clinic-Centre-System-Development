@@ -110,8 +110,7 @@ function insertSearchIntoTable(id, search, func)
 		}
 		
 		let row = form.getElementsByClassName("form-group row")[rowCount]
-		row.innerHTML += "&nbsp&nbsp&nbsp" + inputs[i]
-			
+		row.innerHTML += "&nbsp&nbsp&nbsp" + inputs[i]	
 	}
 	
 	form.innerHTML += '<button class="btn btn-primary" id="tableSearch_btn_'+id+'" type="button">Trazi</button>'
@@ -258,9 +257,10 @@ class TableSearch
 	{
 		this.inputs.push(inpt)
 	}
-	
+		
 	getInputs()
 	{
-		return this.inputs
+		return this.inputs;
 	}
+
 }

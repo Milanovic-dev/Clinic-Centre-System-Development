@@ -230,8 +230,8 @@ public class ContainerInitialize {
 			pricelistRepository.save(p2);
 			
 			pricelistRepository.save(p1);
-			Appointment app1 = new Appointment.Builder(DateUtil.getInstance().getDate("21-01-2020 07:30","dd-mm-yyyy HH:mm"))
-					.withEndingDate(DateUtil.getInstance().getDate("21-01-2020 09:00","dd-mm-yyyy HH:mm"))
+			Appointment app1 = new Appointment.Builder(DateUtil.getInstance().getDate("21-01-2020 07:30","dd-MM-yyyy HH:mm"))
+					.withEndingDate(DateUtil.getInstance().getDate("21-01-2020 09:00","dd-MM-yyyy HH:mm"))
 					.withType(AppointmentType.Examination)
 					.withHall(hall1)
 					.withClinic(clinic)
@@ -244,8 +244,8 @@ public class ContainerInitialize {
 			appointmentRepository.save(app1);
 
 
-			Appointment app2 = new Appointment.Builder(DateUtil.getInstance().getDate("21-01-2020 10:30", "dd-mm-yyyy HH:mm"))
-					.withEndingDate(DateUtil.getInstance().getDate("21-01-2020 13:00", "dd-mm-yyyy HH:mm"))
+			Appointment app2 = new Appointment.Builder(DateUtil.getInstance().getDate("21-01-2020 10:30", "dd-MM-yyyy HH:mm"))
+					.withEndingDate(DateUtil.getInstance().getDate("21-01-2020 13:00", "dd-MM-yyyy HH:mm"))
 					.withPatient(patient1)
 					.withType(AppointmentType.Surgery)
 					.withHall(hall2)
@@ -256,8 +256,8 @@ public class ContainerInitialize {
 			
 			app2.getDoctors().add(doctor1);
 
-			Appointment app3 = new Appointment.Builder(DateUtil.getInstance().getDate("18-03-2020 19:30", "dd-mm-yyyy HH:mm"))
-					.withEndingDate(DateUtil.getInstance().getDate("18-03-2020 20:30", "dd-mm-yyyy HH:mm"))
+			Appointment app3 = new Appointment.Builder(DateUtil.getInstance().getDate("18-03-2020 19:30", "dd-MM-yyyy HH:mm"))
+					.withEndingDate(DateUtil.getInstance().getDate("18-03-2020 20:30", "dd-MM-yyyy HH:mm"))
 					.withPatient(patient1)
 					.withType(AppointmentType.Surgery)
 					.withHall(hall2)
@@ -267,8 +267,8 @@ public class ContainerInitialize {
 					.build();
 			
 
-			Appointment app4 = new Appointment.Builder(DateUtil.getInstance().getDate("21-01-2020 12:00","dd-mm-yyyy HH:mm"))
-					.withEndingDate(DateUtil.getInstance().getDate("21-01-2020 13:00","dd-mm-yyyy HH:mm"))
+			Appointment app4 = new Appointment.Builder(DateUtil.getInstance().getDate("21-01-2020 12:00","dd-MM-yyyy HH:mm"))
+					.withEndingDate(DateUtil.getInstance().getDate("21-01-2020 13:00","dd-MM-yyyy HH:mm"))
 					.withType(AppointmentType.Examination)
 					.withHall(hall1)
 					.withClinic(clinic)
@@ -346,7 +346,7 @@ public class ContainerInitialize {
 			report.setClinic(clinic);
 			report.getDiagnosis().add(diagnosis);
 			DateUtil dateInstance = DateUtil.getInstance();
-			report.setDateAndTime(dateInstance.getDate("05-01-2020 07:00","dd-mm-yyyy HH:mm"));
+			report.setDateAndTime(dateInstance.getDate("05-01-2020 07:00","dd-MM-yyyy HH:mm"));
 			patientMedicalReportRepository.save(report);
 			patient.getMedicalRecord().getReports().add(report);
 
@@ -357,7 +357,7 @@ public class ContainerInitialize {
 			report1.setPrescription(prescription2);
 			report1.setClinic(clinic);
 			report1.getDiagnosis().add(diagnosis3);
-			report1.setDateAndTime(dateInstance.getDate("08-01-2020 08:00","dd-mm-yyyy HH:mm"));
+			report1.setDateAndTime(dateInstance.getDate("08-01-2020 08:00","dd-MM-yyyy HH:mm"));
 			patientMedicalReportRepository.save(report1);
 			patient.getMedicalRecord().getReports().add(report1);
 			userRepository.save(patient);

@@ -297,7 +297,7 @@ public class ClinicController {
     	for(Doctor doc : doctors)
     	{
     		if(doc.getDeleted() == false && doc.getType().equalsIgnoreCase(typeOfExamination)
-    		   && doc.IsFreeOn(DateUtil.getInstance().getDate(date, "dd-mm-yyyy")))
+    		   && doc.IsFreeOn(DateUtil.getInstance().getDate(date, "dd-MM-yyyy")))
     		{
     			DoctorDTO dto = new DoctorDTO(doc);
     			dtos.add(dto);	
