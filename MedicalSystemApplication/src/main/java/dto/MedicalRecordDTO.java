@@ -3,19 +3,20 @@ package dto;
 import java.util.ArrayList;
 import java.util.List;
 
+import model.Diagnosis;
 import model.MedicalRecord;
 import model.PatientMedicalReport;
 import model.MedicalRecord.BloodType;
 
 public class MedicalRecordDTO {
 
-	
+
 	private List<PatientMedicalReportDTO> reports = new ArrayList<>();
-	private List<String> alergies;	
+	private List<String> alergies;
 	private String weight;
-	private BloodType bloodType;	
+	private BloodType bloodType;
 	private String height;
-	
+
 
 	public MedicalRecordDTO() {
 		super();
@@ -40,13 +41,13 @@ public class MedicalRecordDTO {
 		this.weight = record.getWeight();
 		this.height = record.getHeight();
 		this.bloodType = record.getBloodType();
-		
+
 		for(PatientMedicalReport pmr : record.getReports())
 		{
 			PatientMedicalReportDTO dto = new PatientMedicalReportDTO(pmr);
 			this.reports.add(dto);
 		}
-		
+
 	}
 
 
@@ -58,7 +59,7 @@ public class MedicalRecordDTO {
 		this.reports = reports;
 	}
 
-	
+
 
 	public List<String> getAlergies() {
 		return alergies;
@@ -91,5 +92,5 @@ public class MedicalRecordDTO {
 	public void setHeight(String height) {
 		this.height = height;
 	}
-		
+
 }

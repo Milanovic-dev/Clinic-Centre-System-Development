@@ -49,18 +49,18 @@ function setUpPageDoctor(user)
     var bc4 = new BreadLevel()
 
     initBreadcrumb([bc1,bc2,bc3])
-    
-    
-    
+
+
+
     let patientSearch = new TableSearch()
 	patientSearch.input("<input class='form-control' type='text' placeholder='Ime pacijenta' id='patientNameLabel'>")
 	patientSearch.input("<input class='form-control' type='text' placeholder='Prezime pacijenta' id='patientSurnameLabel'>")
 	patientSearch.input("<input class='form-control' type='text' placeholder='Broj osiguranika' id='patientIdLabel'>")
-    
+
 	let headersPatients = ["Ime","Prezime","Email","Telefon","Adresa","Grad","Drzava","Broj zdravstvenog osiguranja"]
 	createDataTable("listPatientTable","showPatientContainer","Lista pacijenata",headersPatients,0)
 	getTableDiv("listPatientTable").show()
-	
+
 	insertSearchIntoTable("listPatientTable",patientSearch,function(){
 		pname = $('#patientNameLabel').val()
 		psurname = $('#patientSurnameLabel').val()
@@ -83,9 +83,9 @@ function setUpPageDoctor(user)
 					i++
 				}
 			}
-			
+
 		})
-		
+
 	})
 
 	let headersApps = ["Datum","Pacijent","Doktori","Klinika","Sala","Tip pregleda","Tip zakazivanja"]
@@ -96,19 +96,19 @@ function setUpPageDoctor(user)
     let handle = createTable("historyTable","Istorija bolesti",historyHeaders)
     insertTableInto("updateMedicalRecordContainer",handle)
     getTableDiv("historyTable").show()
-    
+
     $('#vacationRequest').click(function(e){
     	e.preventDefault()
     	showView("showVacationRequestContainer")
     	addVacationRequest(user)
     })
-    
-    
+
+
 	$('#pacientList').click(function(e){
 		e.preventDefault()
 		showView("showPatientContainer")
         showBread('Lista pacijenata')
-        
+
     /*
         $.ajax({
 			type: 'GET',
@@ -122,25 +122,25 @@ function setUpPageDoctor(user)
 	*/
 
 	})
-	
-	
+
+
 	$.ajax({
         	type:'GET',
         	url:'api/priceList/getAll',
         	complete: function(data)
         	{
-			
+
         		let pricelists = data.responseJSON
-				console.log(pricelists.length)		
+				console.log(pricelists.length)
         		for(p of pricelists)
         		{
         			$('#nextAppToE').append($('<option>',{
         				value: p.typeOfExamination,
         				text: p.typeOfExamination
         			}))
-				
+
         		}
-			
+
         	}
         })
 
@@ -151,7 +151,7 @@ function setUpPageDoctor(user)
         showView("showCalendarContainer")
         showBread('Radni kalendar')
      });
-	
+
 	$('#nextAppDate').datepicker({
 		dateFormat: "dd-mm-yyyy",
 		position: "top left"
@@ -163,11 +163,10 @@ function setUpPageDoctor(user)
       $("#modalCalendar").modal('toggle')
       showBread('Pregled u toku')
       showView("showExaminationContainer")
-      $('#collapseThree').collapse('toggle')
-      
+
     });
-    
-    
+
+
     $('#btnOK').click(function(e){
         e.preventDefault()
         $('#modalOK').modal('hide')
@@ -200,7 +199,7 @@ function setUpPageDoctor(user)
         showView("showExaminationContainer")
     	getAppointment(doctorClinic.name,getParameterByName("date"),getParameterByName("hall"),user)
     }
-    
+
 
 }
 
@@ -210,22 +209,22 @@ function addVacationRequest(user)
 	{
 		let startDate = $('#startDayInputVacationRequest').val()
 		let endDate = $('#endDayInputVacationRequest').val()
-		
+
 		if(startDate == "" || endDate == "")
 		{
 			$('#vacationRequestSpinner').hide()
 			return
 		}
-		
+
 		let json = JSON.stringify({"startDate": startDate,"endDate": endDate,"userEmail": user.email })
-		
+
 		$('#vacationRequestSpinner').show()
 		$.ajax({
 			type:'POST',
 			url: "api/vacation/checkAvailability/" + doctorClinic.name,
 			data: json,
 			dataType : "json",
-			contentType : "application/json; charset=utf-8",		
+			contentType : "application/json; charset=utf-8",
 			complete:function(data)
 			{
 				$('#vacationRequestSpinner').hide()
@@ -245,19 +244,19 @@ function addVacationRequest(user)
 			}
 		})
 	}
-	
-	
-	
+
+
+
 	$('#startDayInputVacationRequest').datepicker({
 		dateFormat: "dd-mm-yyyy",
-		onSelect: function(formattedDate, date, inst){			
+		onSelect: function(formattedDate, date, inst){
 			let endPicker = $('#endDayInputVacationRequest').datepicker().data('datepicker')
 			endPicker.update('minDate', date)
-			
+
 			selectChanged()
 		}
 	})
-	
+
 	$('#endDayInputVacationRequest').datepicker({
 		dateFormat: "dd-mm-yyyy",
 		onSelect: function(formattedDate, date, inst){
@@ -266,19 +265,19 @@ function addVacationRequest(user)
 			selectChanged()
 		}
 	})
-	
-	
-	
-	
+
+
+
+
 	$('#submitVacationRequest').click(function(e){
-		
+
 		e.preventDefault()
-		
+
 		let startDate = $('#startDayInputVacationRequest').val()
 		let endDate = $('#endDayInputVacationRequest').val()
 		let json = JSON.stringify({"startDate": startDate,"endDate": endDate,"userEmail": user.email })
 		showLoading('submitVacationRequest')
-		
+
 		$.ajax({
 			type: 'POST',
 			url: 'api/vacation/makeVacationRequest/' + doctorClinic.name ,
@@ -291,7 +290,7 @@ function addVacationRequest(user)
 				{
 					warningModal("Greska","Vaš zahtev za godišnjim odmorom ili odsustvom nije uspešno kreiran.Pokušajte ponovo.")
 				}
-				
+
 				hideLoading('submitVacationRequest')
 			}
 		})
@@ -304,11 +303,13 @@ function getReports(report, i, user){
     var sd = formatDateHours(report.dateAndTime)
 
     var btn = '<button type="button" class="btn btn-primary" id="updateBtn'+i+'">Izmeni</button>'
+    var btn2 = '<button type="button" class="btn btn-primary" id="previewBtn'+i+'">Pregled</button>'
+
     if(report.doctorEmail != user.email){
         btn = ""
     }
 
-    let data = [ report.patientEmail, report.doctorEmail, sd, report.diagnosis, btn]
+    let data = [ report.patientEmail, report.doctorEmail, sd, report.diagnosis, btn2, btn]
 	insertTableData("historyTable",data)
 
     $('#updateBtn'+i).click(function(e){
@@ -316,7 +317,13 @@ function getReports(report, i, user){
 		patientMedicalReportUpdate(report)
 	})
 
+	$('#previewBtn'+i).click(function(e){
+        e.preventDefault()
+        patientMedicalReportPreview(report)
+    })
+
 }
+
 
 function patientMedicalReportUpdate(report){
 
@@ -325,14 +332,23 @@ function patientMedicalReportUpdate(report){
     $("#updateRecord").hide()
     $("#submitReport").hide()
     $("#updateReportBtn").show()
+    $("#updateReportBtnCancel").show()
+    $("#previewOkBtn").hide()
+
     $("#additional").hide()
 
     $('#selectDiagnosis').val(report.diagnosis)
 
     $('#report').val(report.description)
-
     $('select[name=selectDiagnosis]').val(report.diagnosis);
     $('.selectpicker').selectpicker('refresh');
+
+
+    $('#selectDrug').attr('disabled', false)
+    $('#selectDiagnosis').attr('disabled', false)
+    $('#description').attr('disabled', false)
+    $('#report').attr('disabled', false)
+
 
     $.ajax({
         type: 'GET',
@@ -340,12 +356,16 @@ function patientMedicalReportUpdate(report){
         complete: function(data)
         {
             let prescription = data.responseJSON
-
             $('#selectDrug').val(prescription.drugs)
             $('#description').val(prescription.description)
             $('select[name=selectDrug]').val(prescription.drugs);
             $('.selectpicker').selectpicker('refresh');
         }
+    })
+
+    $('#updateReportBtnCancel').click(function(e){
+        e.preventDefault()
+        showView("updateMedicalRecordContainer")
     })
 
     $('#updateReportBtn').click(function(e){
@@ -416,6 +436,51 @@ function patientMedicalReportUpdate(report){
 }
 
 
+function patientMedicalReportPreview(report){
+
+    showView("showExaminationContainer")
+    $("#updateRecord").hide()
+    $("#submitReport").hide()
+    $("#updateReportBtn").hide()
+    $("#additional").hide()
+
+    $("#previewOkBtn").show()
+    $("#updateRecordBtnCancel").hide()
+
+    $('#selectDiagnosis').val(report.diagnosis)
+
+    $('#report').val(report.description)
+    $('select[name=selectDiagnosis]').val(report.diagnosis);
+    $('.selectpicker').selectpicker('refresh');
+
+    $.ajax({
+        type: 'GET',
+        url: 'api/reports/getReportPrescription/' + report.id,
+        complete: function(data)
+        {
+            let prescription = data.responseJSON
+            $('#selectDrug').val(prescription.drugs)
+            $('#description').val(prescription.description)
+            $('select[name=selectDrug]').val(prescription.drugs);
+            $('.selectpicker').selectpicker('refresh');
+        }
+    })
+
+    $('#selectDrug').attr('disabled', true)
+    $('#selectDiagnosis').attr('disabled', true)
+    $('#description').attr('disabled', true)
+    $('#report').attr('disabled', true)
+
+
+    $('#previewOkBtn').click(function(e){
+        e.preventDefault()
+        showView("updateMedicalRecordContainer")
+    })
+
+}
+
+
+
 function findPatients(data)
 {
 	let clinic = data.responseJSON
@@ -452,7 +517,7 @@ function listAppointmentWithCheckBox(data,i,appCount,user)
 	/*
 	 * $("#startExamin_btn"+i).off('click')
 	 * $("#startExamin_btn"+i).click(function(e){
-	 * 
+	 *
 	 * showView("showExaminationContainer") showBread('Pregled u toku ')
 	 * setUpDiagnosis() setUpCodebooks() getAppointment(data.clinicName,
 	 * data.date, data.hallNumber, user)
@@ -476,7 +541,7 @@ function initCalendarDoc(user)
                   // plugins: [ 'interaction', 'dayGrid', 'timeGrid',
 					// 'monthGrid', 'timeline' ],
                   // defaultView: 'dayGridMonth',
-                  defaultDate: '2020-01-01',
+                  defaultDate: '2020-02-01',
                   buttonText: {
                          today:    'danas',
                          month:    'mesec',
@@ -528,6 +593,18 @@ function initCalendarDoc(user)
                       getAppointment(info.clinicName ,sd, info.hallNumber, user)
 
                       $('#modalCalendar').modal('show');
+
+
+                          if(!info.done)
+                          {
+                             $('#modalCalendar').modal('show');
+                             $('#startExamination').show();
+                          }
+                          else
+                          {
+                              $('#modalCalendar').modal('show');
+                              $('#startExamination').hide();
+                          }
 
                       },
                       header: {
@@ -589,26 +666,6 @@ function formatDateHours (dateObj) {
       return date.getDate() + "-" + month+ "-" + date.getFullYear() + " " + strTime;
 }
 
-function setUpDrugs(){
-	$.ajax({
-        type: 'GET',
-        url:"api/drug/getAllDrugs",
-        complete: function(data)
-        {
-        	drugs = data.responseJSON
-            $('#selectDrugStartExamin').empty()
-				for(let d of drugs)
-				{
-					$('#selectDrugStartExamin').append($('<option>',{
-						value: d.name,
-						text: d.name
-					}))
-
-				}
-        }
-    })
-
-}
 
 function setUpHall(){
 	$.ajax({
@@ -644,7 +701,7 @@ function setUpCodebooks(){
            			$.each(data.responseJSON, function (i, item) {
            			    $('#selectDrug').append($('<option>', {
            			        value: item.name,
-           			        text : item.name
+           			        text : item.code + "  " + item.name
            			    }));
            			});
            			$('.selectpicker').selectpicker('refresh');
@@ -662,7 +719,7 @@ function setUpCodebooks(){
                			$.each(data.responseJSON, function (i, item) {
                			    $('#selectDiagnosis').append($('<option>', {
                			        value: item.name,
-               			        text : item.name + "(" + item.code + ")"
+               			        text : item.code + "  " + item.tag + "  " + item.name
                			    }));
                			});
                			$('.selectpicker').selectpicker('refresh');
@@ -676,7 +733,7 @@ function getAppointment(clinicName, date, hallNumber, user){
 
 		$('#collapseThree').collapse('toggle')
         hallNumber = parseInt(hallNumber)
-        
+
         $('#nextAppType').change(function(e)
         {
         	$('#nextAppToE').prop('disabled', $('#nextAppType').val() != "Pregled")
@@ -717,9 +774,9 @@ function getAppointment(clinicName, date, hallNumber, user){
                             $("#typeExamin").text('Tip pregleda: ' + type);
                             $("#clinicExamin").text('Klinika: ' + appointment.clinicName);
                             $("#doctorExamin").text('Doktor: ' + user.name + ' ' + user.surname);
-                            
-                            
-                            
+
+
+
 
                         },
 
@@ -768,9 +825,9 @@ function getAppointment(clinicName, date, hallNumber, user){
 
                     })
         });
-        
-        
- 
+
+
+
 
         $('#submitReport').off("click").click(function(e){
             e.preventDefault()
@@ -789,11 +846,11 @@ function getAppointment(clinicName, date, hallNumber, user){
            let report = $('#report').val()
 
            let today = new Date();
-           
+
            let nextDate = $('#nextAppDate')
            let nextType = $('#nextAppType')
            let ToE = $('#nextAppToE')
-           
+
 
 // if(!drugs == [] && !description == '')
 // {
@@ -808,7 +865,7 @@ function getAppointment(clinicName, date, hallNumber, user){
           {
               $('#reportLabel').text("Izvestaj i recept su uspesno kreirani. Recept se nalazi na listi recepata za overu kod medicinske sestre.")
           }
-           
+
 
            flag = true
            if(report == ""){
@@ -819,18 +876,18 @@ function getAppointment(clinicName, date, hallNumber, user){
                 var input = $('#report')
                 input.removeClass('is-invalid')
            }
-           
+
            /*
            if(!validation(nextDate, nextDate.val() == "", "Morate uneti datum."))
            {
-        	   flag = false        	   
+        	   flag = false
            }
-           
+
            if(!validation(nextType, nextType.val() == "", "Morate izabrati tip."))
            {
         	   flag = false
            }
-                 
+
            if(!validation(ToE, ToE.val() == "", "Morate izabrati tip pregleda"))
            {
         	   flag = false
@@ -840,22 +897,22 @@ function getAppointment(clinicName, date, hallNumber, user){
            if(flag == false){
                 return
            }
-           
+
            if(nextDate.val() != "" && ToE.val() != "" && nextType.val() != "")
            {
         	   let typeOfExam
-          		
+
           		if(nextType.val() == "Pregled")
           		{
-          			typeOfExam = "Examination"      			
+          			typeOfExam = "Examination"
           		}
           		else
           		{
-          			typeOfExam = "Surgery"           			
+          			typeOfExam = "Surgery"
           		}
-        	   	
+
           		let nextAppRequestJSON = JSON.stringify({"date":nextDate.val(), "patientEmail":patient.email, "clinicName":clinicName, "doctors":[user.email], "typeOfExamination":ToE.val(), "type":typeOfExam})
-          		
+
           		$.ajax({
 						type:'POST',
 						url:'api/appointments/sendRequest',
@@ -867,13 +924,21 @@ function getAppointment(clinicName, date, hallNumber, user){
 							if(data.status != "201")
 							{
 								alert("Error pri cuvanju sledeceg pregleda")
-							}													
+							}
 						}
 					})
            }
-           
-           		
-           
+
+
+                    let appointmentJSON = JSON.stringify({"date":date, "hallNumber":hallNumber, "clinicName":clinicName})
+                    $.ajax({
+                        type: 'PUT',
+                        url: 'api/appointments/appointmentIsDone',
+                        data: appointmentJSON,
+                        dataType: "json",
+                        contentType : "application/json; charset=utf-8",
+
+                    })
 
                 let prescriptionDTO = {"description":description,"drugs":drugs,"nurse":"","isValid":false, "validationDate":""}
                 let prescription = JSON.stringify({"description":description,"drugs":drugs,"nurse":"","isValid":false, "validationDate":""})
@@ -905,7 +970,6 @@ function getMedicalRecord(patient, user){
 			complete: function(data)
 			{
 				record = data.responseJSON
-
 				let index = 0
                 $('#tableAlergiesID tbody').html('')
 

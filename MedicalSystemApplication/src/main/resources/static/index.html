@@ -457,11 +457,11 @@
           <label class="form-control-label" id="clinicExamin">Klinika: </label> <br>
           <hr>
 
-          <select title="Dijagnoze" class="selectpicker" id="selectDiagnosis" name="selectDiagnosis" style="height: 40px !important;" multiple data-live-search="true">
-              <div class="invalid-feedback"></div>
+          <select title="kod, oznaka, dijagnoza" class="selectpicker" id="selectDiagnosis" name="selectDiagnosis" style="height: 40px !important;" multiple data-live-search="true">
+
           </select>
 
-          <select title="Lekovi za recept" class="selectpicker" id="selectDrug" name="selectDrug" style="height: 40px !important;" multiple data-live-search="true">
+          <select title="kod, lek za recept" class="selectpicker" id="selectDrug" name="selectDrug" style="height: 40px !important;" multiple data-live-search="true">
 
           </select>
             <hr>
@@ -509,6 +509,8 @@
           <button type="button" style="margin:20 0 0" class="btn btn-secondary" id = "updateRecord" >Izmeni zdravstveni karton</button>
           <button type="button" style="margin:20 0 0" class="btn btn-primary" id = "submitReport" >Sacuvaj</button>
           <button type="button" style="margin:20 0 0; display:none" class="btn btn-primary" id = "updateReportBtn" >Sacuvaj izmene</button>
+          <button type="button" style="margin:20 0 0; display:none" class="btn btn-secondary" id = "updateReportBtnCancel" >Odustani</button>
+          <button type="button" style="margin:20 0 0; display:none" class="btn btn-primary" id = "previewOkBtn" >Ok</button>
 
           <!-- Modal -->
           <div class="modal fade bd-example-modal-sm" id="modalOK" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">

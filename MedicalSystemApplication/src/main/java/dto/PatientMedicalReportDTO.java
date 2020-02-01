@@ -37,6 +37,15 @@ public class PatientMedicalReportDTO {
 	public PatientMedicalReportDTO(PatientMedicalReport report)
 	{
 		PrescriptionDTO dto = new PrescriptionDTO();
+		dto.setValid(report.getPrescription().getValid());
+		if(report.getPrescription().getNurse() != null){
+            dto.setNurseEmail(report.getPrescription().getNurse().getEmail());
+        }
+		dto.setDescription(report.getPrescription().getDescription());
+		dto.setValidationDate(report.getPrescription().getValidationDate());
+		for(Drug dr: report.getPrescription().getDrugs()) {
+			dto.getDrugs().add(dr.getName());
+		}
 		this.description = report.getDescription();
 		this.dateAndTime = report.getDateAndTime();
 		this.clinicName = report.getClinic().getName();
