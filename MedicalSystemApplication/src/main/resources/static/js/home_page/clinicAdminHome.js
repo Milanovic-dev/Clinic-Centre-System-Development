@@ -28,6 +28,7 @@ function setUpClinicAdminPage(user)
 	sideBar.append("<li class='nav-item active'><a class='nav-link' href = 'clinicProfile.html?clinic=" + clinic.name +"'><span id='showReport'>Profil klinike</span></a></li>")
 	sideBar.append("<li class='nav-item active'><a class='nav-link' type='button'><span id='changeProfileClinic'>Uredi profil klinike</span></a></li>")
 	sideBar.append("<li class='nav-item active'><a class='nav-link' type='button'><span id='vacationRequestList'>Zahtevi za godišnji odmor</span></a></li>")
+	sideBar.append("<li class='nav-item active'><a class='nav-link' type='button'><span id='examinationRequestList'>Zahtevi za pregled</span></a></li>")
 	sideBar.append("<li class='nav-item active'><a class='nav-link' type='button'><span id='addHall'>Dodaj salu</span></a></li>")	
 	sideBar.append("<li class='nav-item active'><a class='nav-link' type='button'><span id='showHalls'>Lista sala</span></a></li>")
 	sideBar.append("<li class='nav-item active'><a class='nav-link' type='button'><span id='addDoctor'>Dodaj lekara</span></a></li>")
@@ -47,7 +48,7 @@ function setUpClinicAdminPage(user)
 	addView("AppointmentContainer")
 	addView("changeProfileClinicContainer")
 	addView("showVacationRequestListContainer")
-	
+	addView("showExaminationRequestListContainer")
 	
 	
 
@@ -103,6 +104,11 @@ function setUpClinicAdminPage(user)
 		
 	})
 	
+	appointmentHeaders = ["Ime pacijenta","Datum pocetka","Datum kraja","Cena","Tip pregleda","Lekari"]
+	let appTable = createTable("appReqTable","Lista zahteva za pregled",appointmentHeaders)
+	insertTableInto("showExaminationRequestListContainer",appTable)
+	getTableDiv('appReqTable').show()
+	
 	vacationHeaders = ["Tip medicinskog osoblja" , "Ime","Prezime","Email","Datum početka odsustva","Datum kraja odsustva","Šifra zahteva","",""]
 	let table = createTable("vacationReqTable","Lista zahteva za godišnji odmor ili odsustvo",vacationHeaders)
 	insertTableInto("showVacationRequestListContainer",table)
@@ -134,6 +140,14 @@ function setUpClinicAdminPage(user)
 		
 	})
 	//KRAJ LISTE ZAHTEVA ZA GODISNJI ODMOR
+	//LISTA ZAHTEVA ZA PREGLED
+	$('#examinationRequestList').click(function(e){
+		e.preventDefault()
+		
+		listAppointmentRequest(clinic)
+		
+	})
+	//KRAJ LISTE ZAHTEVA ZA PREGLED
 	
 	//IZMENA PROFILA KLINIKE
 	$('#changeProfileClinic').click(function(e){
@@ -300,6 +314,7 @@ function listVacationRequest(admin,clinic)
 	
 }
 
+
 function getAllVacationRequestsByClinic(clinic)
 {
 	$.ajax({
@@ -389,7 +404,40 @@ function listVacationRequests(clinic,data,i)
 	
 }
 
+function listAppointmentRequest(clinic)
+{
+	showView("showExaminationRequestListContainer")
+	getAllAppointmentRequestsByClinic(clinic)
 
+}
+
+function getAllAppointmentRequestsByClinic(clinic)
+{
+	$.ajax({
+		type: 'GET',
+		url: 'api/appointments/clinic/getAllAppointments/' + clinic.name,
+		complete: function(data)
+		{
+			let apps = data.responseJSON
+			console.log(apps)
+			emptyTable("appReqTable")
+			let i=0
+			for(a of apps)
+			{
+				
+				listAppointmentRequests(clinic,a,i)
+				i++
+			}
+		}
+	
+	})
+}
+function listAppointmentRequests(clinic,appointment,i)
+{	
+	let values = [appointment.patientEmail, appointment.date,appointment.endDate,appointment.price,appointment.typeOfExamination,appointment.doctors]
+	insertTableData("appReqTable",values)
+	
+}
 
 	
 function changeProfileClinicFunction(clinic)
