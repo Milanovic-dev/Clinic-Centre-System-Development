@@ -6,15 +6,17 @@ var doctorClinic = null
 
 function initDoctor(user)
 {
-	  $.ajax({
-			type: 'GET',
-			url:"api/doctors/getClinic/" + user.email,
-			complete: function(data)
-			{
-				doctorClinic = data.responseJSON
-				setUpPageDoctor(user)
-				//findPatients(data)
-			}
+
+	
+	 $.ajax({
+		type: 'GET',
+		url:"api/doctors/getClinic/" + user.email,
+		complete: function(data)
+		{
+			doctorClinic = data.responseJSON
+			setUpPageDoctor(user)
+			//findPatients(data)
+		}
 	})
 }
 function setUpPageDoctor(user)

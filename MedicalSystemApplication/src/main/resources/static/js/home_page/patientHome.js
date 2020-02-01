@@ -7,7 +7,7 @@
 var thisUser = ""
 
 function initPatient(user)
-{
+{	
 	thisUser = user
 	let sideBar = $("#sideBar")
 	sideBar.append("<li class='nav-item active'><a class='nav-link' href='userProfileNew.html'><span id='profileUser'>Profil</span></a></li>")

@@ -5,8 +5,6 @@ $(document).ready(function(){
 		if(!exists) window.location.href = "index.html"
 	})
 	
-	
-	
 	let n = getParameterByName("clinic")
 
 		$.ajax({

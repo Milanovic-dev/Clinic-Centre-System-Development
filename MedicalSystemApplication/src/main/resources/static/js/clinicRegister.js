@@ -4,7 +4,11 @@
 
 
 $(document).ready(function(){
-
+	
+	checkSession(function(exists){
+		if(!exists) window.location.href = "index.html"
+	})
+	
 	$('#submitRegister').click(function(e){
 		e.preventDefault()
 

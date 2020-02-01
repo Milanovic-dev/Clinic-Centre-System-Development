@@ -6,20 +6,21 @@ var nurseClinic = null;
 
 function initNurse(user)
 {
+
 	$.ajax({
 		type: 'GET',
 		url: 'api/clinic/getNurse/' + user.email,
 		complete: function(data)
 		{
 			nurseClinic = data.responseJSON
-			setUpPageNurse()
+			setUpPageNurse(nurseClinic,user)
 		}
 		
 	})
 }
 
 
-function setUpPageNurse()
+function setUpPageNurse(nurseClinic,user)
 {
 	let sideBar = $("#sideBar")
 	sideBar.append("<li class='nav-item active'><a class='nav-link' href='userProfileNew.html'><span id='profileUser'>Profil</span></a></li>")

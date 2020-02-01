@@ -1,6 +1,10 @@
 
 function extractUser()
 {	
+	checkSession(function(exists){
+		if(!exists) window.location.href = "index.html"
+	})
+	
 	getProfileFromURL(function(profile)
 	{
 		if(profile == undefined)
