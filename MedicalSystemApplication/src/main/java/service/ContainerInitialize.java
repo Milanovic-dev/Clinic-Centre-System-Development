@@ -243,9 +243,10 @@ public class ContainerInitialize {
 			app1.getDoctors().add(doctor1);
 			appointmentRepository.save(app1);
 
-			Appointment app2 = new Appointment.Builder(DateUtil.getInstance().getDate("09-04-2020 07:40", "dd-mm-yyyy HH:mm"))
-					.withEndingDate(DateUtil.getInstance().getDate("09-04-2020 09:40", "dd-mm-yyyy HH:mm"))
-					.withPatient(patient)
+
+			Appointment app2 = new Appointment.Builder(DateUtil.getInstance().getDate("21-01-2020 10:30", "dd-mm-yyyy HH:mm"))
+					.withEndingDate(DateUtil.getInstance().getDate("21-01-2020 13:00", "dd-mm-yyyy HH:mm"))
+					.withPatient(patient1)
 					.withType(AppointmentType.Surgery)
 					.withHall(hall2)
 					.withClinic(clinic)
@@ -265,8 +266,9 @@ public class ContainerInitialize {
 					.withPriceslist(p1)
 					.build();
 			
-			Appointment app4 = new Appointment.Builder(DateUtil.getInstance().getDate("19-02-2020 07:00","dd-mm-yyyy HH:mm"))
-					.withEndingDate(DateUtil.getInstance().getDate("19-02-2020 08:00","dd-mm-yyyy HH:mm"))
+
+			Appointment app4 = new Appointment.Builder(DateUtil.getInstance().getDate("21-01-2020 12:00","dd-mm-yyyy HH:mm"))
+					.withEndingDate(DateUtil.getInstance().getDate("21-01-2020 13:00","dd-mm-yyyy HH:mm"))
 					.withType(AppointmentType.Examination)
 					.withHall(hall1)
 					.withClinic(clinic)
@@ -288,6 +290,7 @@ public class ContainerInitialize {
 			doctor1.getAppointments().add(app3);
 			doctor1.getAppointments().add(app4);
 			//doctor2.getAppointments().add(app3);
+
 			
 
 			

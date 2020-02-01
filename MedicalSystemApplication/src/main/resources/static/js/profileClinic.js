@@ -1,6 +1,12 @@
 
 $(document).ready(function(){
 
+	checkSession(function(exists){
+		if(!exists) window.location.href = "index.html"
+	})
+	
+	
+	
 	let n = getParameterByName("clinic")
 
 		$.ajax({
@@ -176,7 +182,7 @@ function getRevanue(apps)
 
 function setDoctorRatings(clinic, user)
 {
-	let headersTypes = ["Tip", "Ime ","Prezime ", "Email", "Prosečna ocena","Lista zauzeca", ""]
+	let headersTypes = ["Tip", "Ime ","Prezime ", "Email", "Prosečna ocena","Sl. Termini", ""]
 	createDataTable("tableDoctorRatings","doctorsTab","Lista lekara i njihovih prosečnih ocena",headersTypes,0)
 	getTableDiv('tableDoctorRatings').show()
 	
@@ -256,7 +262,8 @@ function setDoctorRatings(clinic, user)
 	
 	
 	$('#chooseDoctorDate').datepicker({
-		dateFormat: "dd-mm-yyyy"
+		dateFormat: "dd-mm-yyyy",
+		minDate: new Date()
 	})
 	
 }
@@ -269,7 +276,7 @@ function listDoctor(doctor, i, clinic, user)
 		
 	if($('#chooseDoctorDate').val() != "")
 	{
-		dates = '<button class="btn btn-info" id="occupation'+i+'">Zauzece</button>'
+		dates = '<button class="btn btn-info" id="occupation'+i+'">Proveri</button>'
 	}
 	
 	if($('#chooseDoctorDate').val() != "" && $('#chooseDoctorType').val() != "")
@@ -277,33 +284,40 @@ function listDoctor(doctor, i, clinic, user)
 		makeApp = '<button class="btn btn-info" id="makeApp'+i+'">Zakazi</button>'		
 	}
 	
-	let values = [d.type, d.user.name, d.user.surname, getProfileLink(d.user.email), d.avarageRating,dates, makeApp]
+	let values = [d.type, d.user.name, d.user.surname, getProfileLink(d.user.email), d.avarageRating, dates, makeApp]
 	insertTableData("tableDoctorRatings",values)
+	
+	let name = d.user.name
+	let surname = d.user.surname
 	
 	$.ajax({
 		type:'GET',
-		url:"api/appointments/doctor/getAllAppointmentsByDate/"+d.user.email+"/"+ $('#chooseDoctorDate').val(),
+		url:"api/doctors/getFreeTime/"+d.user.email+"/"+ $('#chooseDoctorDate').val(),
 		complete: function(data)
 		{
 
-			let listOfDates = getDoctorOccupancy(data.responseJSON)
+			let listOfDates = data.responseJSON
 			
 					
 			$('#occupation'+i).off('click')
 			$('#occupation'+i).click(function(e){
 				e.preventDefault()
-				$('#warningModalLabel').text("Zauzece " + d.user.email)
+				$('#warningModalLabel').text("Slobodni termini: " + name + " " + surname)
 							
 				$('#warningBodyModal').empty()
 				
-				if(listOfDates.length == 0)
+				if(listOfDates.length == 1)
 				{
-					$('#warningBodyModal').append("Doktor nema zauzeca za ovaj dan.")		
+					$('#warningBodyModal').append("<p>Doktor je slobodan.</p>")
+					$('#warningBodyModal').append("<p>Radno vreme: <b>"+listOfDates[0].start + " - " + listOfDates[0].end + "</b>")
+					
 				}
-				
-				$.each(listOfDates, function(i, item){
-					$('#warningBodyModal').append("<p>"+item+"</p>")					
-				});
+				else
+				{
+					$.each(listOfDates, function(i, item){
+						$('#warningBodyModal').append("<p>"+item.start + " - " + item.end +"</p>")					
+					});				
+				}
 				
 				$('#warningModal').modal('show')
 			})

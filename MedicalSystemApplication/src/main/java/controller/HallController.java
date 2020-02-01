@@ -1,6 +1,7 @@
 package controller;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -22,10 +23,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import dto.ClinicDTO;
+import dto.DateIntervalDTO;
 import dto.HallDTO;
 import filters.FilterFactory;
 import filters.HallFilter;
+import helpers.DateInterval;
 import helpers.DateUtil;
+import helpers.Scheduler;
 import model.Appointment;
 import model.Clinic;
 import model.Hall;
@@ -38,11 +42,13 @@ import service.HallService;
 @RestController
 @RequestMapping(value = "api/hall")
 public class HallController {
+	
 	@Autowired
     private HallService hallService;
 	
 	@Autowired
 	private AppointmentService appointmentService;
+	
 	@Autowired
 	private ClinicService clinicService;
 	
@@ -118,20 +124,23 @@ public class HallController {
 		
 		Date startDate = DateUtil.getInstance().getDate(dto.getDate(), "dd-MM-yyyy");
 		
-		List<Appointment> appointments = appointmentService.findAllByDate(startDate);
 		
 		for(Hall hall : c.getHalls())
 		{
 			if(dto.getDate() != null)
 			{
 				long hours = 0; //miliisecs
+				List<Appointment> appointments = appointmentService.findAllByHall(hall);
 				
 				for(Appointment app : appointments)
 				{
-					hours += DateUtil.getInstance().getHoursBetween(app.getDate(), app.getEndDate());
+					if(DateUtil.getInstance().isSameDay(app.getDate(), startDate))
+					{
+						hours += DateUtil.getInstance().getTimeBetween(app.getDate(), app.getEndDate());						
+					}
 				}
 				
-				
+				System.out.println(hall.getNumber() + " : " +hours);
 				if(hours > 23 * DateUtil.HOUR_MILLIS)
 				{
 					continue;
@@ -223,8 +232,7 @@ public class HallController {
 		
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
-	
-	
+			
 	 @GetMapping(value="/get/{number}")
 	    public ResponseEntity<HallDTO> getHallByNumber(@PathVariable("number") int number)
 	    {

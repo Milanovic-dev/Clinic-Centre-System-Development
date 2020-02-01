@@ -335,6 +335,36 @@ public class AppointmentController
 		return new ResponseEntity<>(dtos,HttpStatus.OK);
 	}
 	
+	@GetMapping(value="/hall/getAll/{clinicName}/{hallNumber}")
+	public ResponseEntity<List<AppointmentDTO>> getAllByHall(@PathVariable("clinicName") String clinicName, @PathVariable("hallNumber") int hallNumber)
+	{
+		Clinic clinic = clinicService.findByName(clinicName);
+		
+		if(clinic == null)
+		{
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+		
+		Hall hall = hallService.findByNumber(hallNumber);
+		
+		if(hall == null)
+		{
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+		
+		List<Appointment> apps = appointmentService.findAllByHallAndClinic(hall, clinic);
+		List<AppointmentDTO> dtos = new ArrayList<AppointmentDTO>();
+		
+		for(Appointment app : apps)
+		{
+			AppointmentDTO dto = new AppointmentDTO(app);
+			dto.setDate(app.getDate().toString());
+			dto.setEndDate(app.getEndDate().toString());
+			dtos.add(dto);		
+		}
+		
+		return new ResponseEntity<>(dtos, HttpStatus.OK);
+	}
 	
 	@GetMapping(value="/patient/getAllRequests/{email}")
 	public ResponseEntity<List<AppointmentDTO>> getPatientRequests(@PathVariable("email") String email)
