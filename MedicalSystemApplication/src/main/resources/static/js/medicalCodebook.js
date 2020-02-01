@@ -1,7 +1,7 @@
 function addDrug(drug)
 {
-	console.log(drug);
-
+	
+	
 	let tr=$('<tr></tr>');
 	let tdCode=$('<td>'+ drug.code +'</td>');
 	let tdName=$('<td>'+ drug.name +'</td>');
@@ -54,6 +54,10 @@ function deleteDrug(drug){
 
 
 $(document).ready(()=>{
+	
+	checkSession(function(exists){
+		if(!exists) window.location.href = "index.html"
+	})
 
     getDrugs();
 
@@ -99,7 +103,6 @@ $(document).ready(()=>{
             	if(flag == false) return
 
            let data = JSON.stringify({"name":name,"code":code})
-           console.log(data)
 
     		$.ajax({
             			type: 'POST',
@@ -109,7 +112,6 @@ $(document).ready(()=>{
             			contentType : "application/json; charset=utf-8",
             			complete: function(data)
             			{
-            				console.log(data.status)
 
             				if(data.status == "200")
             				{

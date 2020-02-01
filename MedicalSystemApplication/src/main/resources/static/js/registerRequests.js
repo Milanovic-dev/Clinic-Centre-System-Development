@@ -1,6 +1,5 @@
 function addRequest(request)
 {
-	console.log(request);
 
 	let tr=$('<tr></tr>');
 	let tdEmail=$('<td class="email" data-toggle="modal" data-target="#exampleModalLong">'+ request.email +'</td>');

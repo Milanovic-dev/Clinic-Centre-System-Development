@@ -1,13 +1,17 @@
 function sessionCheck()
 {
-		$.ajax({
-			type: 'GET',
-			url: 'api/auth/sessionUser',
-			complete: function(data){
-				addPersonalInformations(data)
-			}
+	checkSession(function(exists){
+		if(!exists) window.location.href = "index.html"
+	})
+	
+	$.ajax({
+		type: 'GET',
+		url: 'api/auth/sessionUser',
+		complete: function(data){
+			addPersonalInformations(data)
+		}
 
-		})
+	})
 
 }
 

@@ -2,7 +2,9 @@
 
 $(document).ready(function(){
 
-	
+	checkSession(function(exists){
+		if(!exists) window.location.href = "index.html"
+	})
 	
 	$.ajax({
 		type: 'GET',

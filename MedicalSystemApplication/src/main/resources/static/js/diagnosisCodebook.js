@@ -1,6 +1,9 @@
 function addDiagnosis(diagnosis)
 {
-
+	checkSession(function(exists){
+		if(!exists) window.location.href = "index.html"
+	})
+	
 	let tr=$('<tr></tr>');
 	let tdCode=$('<td style="width:100px;">'+ diagnosis.code +'</td>');
 	let tdTag=$('<td style="width:120px;">'+ diagnosis.tag +'</td>');
