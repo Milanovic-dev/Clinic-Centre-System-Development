@@ -516,7 +516,7 @@ public class AppointmentController
 		
 		for(Appointment app : appointments)
 		{
-			Boolean sameDay = DateUtil.getInstance().isSameDay(app.getDate(), DateUtil.getInstance().getDate(date, "dd-mm-yyyy"));
+			Boolean sameDay = DateUtil.getInstance().isSameDay(app.getDate(), DateUtil.getInstance().getDate(date, "dd-MM-yyyy"));
 			if(sameDay)
 			{
 				dto.add(new AppointmentDTO(app));				
@@ -591,8 +591,8 @@ public class AppointmentController
 			return new ResponseEntity<>(header,HttpStatus.NOT_FOUND);
 		}
 		
-		Date date = DateUtil.getInstance().getDate(dto.getDate(), "dd-mm-yyyy HH:mm");
-		Date endDate = DateUtil.getInstance().getDate(dto.getEndDate(), "dd-mm-yyyy HH:mm");
+		Date date = DateUtil.getInstance().getDate(dto.getDate(), "dd-MM-yyyy HH:mm");
+		Date endDate = DateUtil.getInstance().getDate(dto.getEndDate(), "dd-MM-yyyy HH:mm");
 		
 		
 		Hall hall = hallService.findByNumber(dto.getHallNumber());

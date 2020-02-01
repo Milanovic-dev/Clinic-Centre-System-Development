@@ -68,7 +68,7 @@ function checkSession(done)
 		url:"api/auth/sessionUser",
 		complete:function(data)
 		{
-			done(data.resposneJSON != undefined)
+			done(data.status == 200)
 		}
 	})
 }

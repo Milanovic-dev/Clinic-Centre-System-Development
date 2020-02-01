@@ -243,6 +243,12 @@ function getDateHours(dateObj)
     return strTime
 }
 
+
+function getDiscountPrice(price, percent)
+{
+	return price - (price * percent/ 100);
+}
+
 class BreadLevel
 {
 	constructor()
