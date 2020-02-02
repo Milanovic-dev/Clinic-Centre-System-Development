@@ -230,6 +230,11 @@ function getTableRowCount(id)
 	return $('#table_'+id).DataTable().rows().count()
 }
 
+function getRowData(id, i)
+{
+	return $('#table_'+id).DataTable().row(i).data()
+}
+
 function getTableDiv(id)
 {
 	return $('#'+id)

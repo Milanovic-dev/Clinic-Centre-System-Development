@@ -682,19 +682,49 @@ public class AppointmentController
 	public ResponseEntity<Void> confirmAppointmentRequest(@RequestBody AppointmentDTO dto)
 	{
 		HttpHeaders header = new HttpHeaders();
-		AppointmentRequest request = appointmentRequestService.findAppointmentRequest(dto.getDate(), dto.getHallNumber(), dto.getClinicName());
+		
+		AppointmentRequest request = appointmentRequestService.findAppointmentRequest(dto.getDate(), 0, dto.getClinicName());
+		
 		Clinic clinic = clinicService.findByName(dto.getClinicName());
+		
 		if(request == null)
 		{
 			header.set("responseText","Request not found: " + dto.getDate() +" ,"+ dto.getHallNumber() +", "+ dto.getClinicName());
 			return new ResponseEntity<>(header,HttpStatus.NOT_FOUND);
 		}
 		
-		Appointment appointment = new Appointment.Builder(request.getDate())
+		Hall hall = hallService.findByNumber(dto.getHallNumber());
+		
+		if(hall == null)
+		{
+			header.set("responseText","Hall not found " + dto.getHallNumber());
+			return new ResponseEntity<>(header,HttpStatus.NOT_FOUND);
+		}
+		
+		List<Appointment> apps = appointmentService.findAllByHall(hall);
+		
+		DateUtil util = DateUtil.getInstance();
+		Date desiredStartTime = util.getDate(dto.getDate(), "dd-MM-yyyy HH:mm");
+		Date desiredEndTime = util.getDate(dto.getEndDate(), "dd-MM-yyyy HH:mm");
+		DateInterval di1 = new DateInterval(desiredStartTime, desiredEndTime);
+		
+		for(Appointment app : apps)
+		{
+			DateInterval di2 = new DateInterval(app.getDate(), app.getEndDate());
+			
+			if(util.overlappingInterval(di1, di2))
+			{
+				return new ResponseEntity<>(HttpStatus.CONFLICT);
+			}
+		}
+		
+		Appointment appointment = new Appointment.Builder(desiredStartTime)
 				.withClinic(request.getClinic())
-				.withHall(request.getHall())//TODO: Admin treba da bira salu
+				.withHall(hall)//TODO: Admin treba da bira salu
 				.withPatient(request.getPatient())
 				.withType(request.getAppointmentType())
+				.withPriceslist(request.getPriceslist())
+				.withEndingDate(desiredEndTime)
 				.build();
 
 		for(Doctor doc : request.getDoctors())
@@ -703,10 +733,19 @@ public class AppointmentController
 		}		
 		clinic.getAppointments().add(appointment);
 		
-		//TODO: Dodati salu, dodati svakom doktoru appointment
-		//Send mail
-		appointmentRequestService.delete(request);
+		//TODO:Send mail Pacijentu (Prihavti ili odbije)
+		//TODO:Send mail Doktoru
+		
 		appointmentService.save(appointment);	
+		
+		appointmentRequestService.delete(request);
+		
+		for(Doctor doc : request.getDoctors())
+		{
+			doc.getAppointments().add(appointment);
+			userService.save(doc);
+		}		
+		
 		clinicService.save(clinic);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}

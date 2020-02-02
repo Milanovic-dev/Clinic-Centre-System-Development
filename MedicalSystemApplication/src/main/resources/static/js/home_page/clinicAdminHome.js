@@ -50,6 +50,7 @@ function setUpClinicAdminPage(user)
 	addView("changeProfileClinicContainer")
 	addView("showVacationRequestListContainer")
 	addView("showExaminationRequestListContainer")
+	addView("showReserveAppointmentContainer")
 	
 	
 	setUpHallCalendar()
@@ -72,7 +73,6 @@ function setUpClinicAdminPage(user)
 
 	let headersHall = ["Broj sale","Ime sale","Ime klinike" ,"","",""]
 	createDataTable("tableHall","showHallContainer","Lista sala",headersHall,0)
-	
 	
 
 	insertSearchIntoTable("tableHall",hallSearch,function(){
@@ -105,14 +105,46 @@ function setUpClinicAdminPage(user)
 		
 	})
 	
-	appointmentHeaders = ["Ime pacijenta","Datum pocetka","Datum kraja","Cena","Tip pregleda","Lekari"]
-	let appTable = createTable("appReqTable","Lista zahteva za pregled",appointmentHeaders)
-	insertTableInto("showExaminationRequestListContainer",appTable)
+	let appointmentHeaders = ["Ime pacijenta","Datum pocetka","Cena","Tip pregleda","Lekari",""]
+	createDataTable("appReqTable","showExaminationRequestListContainer","Lista zahteva za pregled",appointmentHeaders,0)
 	getTableDiv('appReqTable').show()
 	
-	vacationHeaders = ["Tip medicinskog osoblja" , "Ime","Prezime","Email","Datum početka odsustva","Datum kraja odsustva","Šifra zahteva","",""]
-	let table = createTable("vacationReqTable","Lista zahteva za godišnji odmor ili odsustvo",vacationHeaders)
-	insertTableInto("showVacationRequestListContainer",table)
+	let chooseHallHeaders = ["Ime Sale","Br. Sale","",""]
+	createDataTable("chooseHallTable","showChooseAppointmentHall","Izaberite salu za pregled",chooseHallHeaders,0)
+	getTableDiv('chooseHallTable').show()
+	
+	//TABELA SALA ZA REZERVISANJE PREGLEDA
+	let hallSearch2 = new TableSearch()
+	hallSearch2.input("<input class='form-control' type='text' placeholder='Ime sale' id='hallNameSearch'>")
+	hallSearch2.input("<input class='form-control' type='text' placeholder='Broj sale' id='hallNumberSearch'>")
+	hallSearch2.input('<input class="form-control datepicker-here" data-language="en" placeholder="Izaberite datum" id="hallDateSearch" readonly="true">')
+	insertSearchIntoTable("chooseHallTable",hallSearch2,function(){
+		hname = $('#hallNameSearch').val()
+		hnumber = $('#hallNumberSearch').val()
+		hdate = $('#hallDateSearch').val()
+		let json = JSON.stringify({"name": hname,"number": hnumber, "clinicName": clinic.name, "date": hdate})
+		
+		$.ajax({
+			type: 'POST',
+			url: "api/hall/getAllByFilter/",
+			data: json,
+			dataType: "json",
+			contentType : "application/json; charset=utf-8",
+			complete:function(data)
+			{
+				listChooseHalls(data.responseJSON)
+			}
+		})
+		
+	})
+	
+	$('#hallDateSearch').datepicker({
+		dateFormat:"dd-MM-yyyy"
+	})
+	
+	
+	let vacationHeaders = ["Tip medicinskog osoblja" , "Ime","Prezime","Email","Datum početka odsustva","Datum kraja odsustva","Šifra zahteva","",""]
+	createDataTable("vacationReqTable","showVacationRequestListContainer","Lista zahteva za godišnji odmor ili odsustvo",vacationHeaders,0)
 	getTableDiv('vacationReqTable').show()
 
 	$('#hallDateLabel').datepicker({
@@ -416,7 +448,7 @@ function getAllAppointmentRequestsByClinic(clinic)
 {
 	$.ajax({
 		type: 'GET',
-		url: 'api/appointments/clinic/getAllAppointments/' + clinic.name,
+		url: 'api/appointments/clinic/getAllRequests/' + clinic.name,
 		complete: function(data)
 		{
 			let apps = data.responseJSON
@@ -433,13 +465,136 @@ function getAllAppointmentRequestsByClinic(clinic)
 	
 	})
 }
-function listAppointmentRequests(clinic,appointment,i)
+
+//FUNCKIJA ZA REZERVISANJE PREGLEDA SALE
+function listAppointmentRequests(clinic, appointment, i)
 {	
-	let values = [appointment.patientEmail, appointment.date,appointment.endDate,appointment.price,appointment.typeOfExamination,appointment.doctors]
+	let values = [appointment.patientEmail, appointment.date,appointment.price,appointment.typeOfExamination,appointment.doctors,'<button class="btn btn-primary" id="reserve_btn'+i+'">Rezervisi</button>']
 	insertTableData("appReqTable",values)
 	
+	
+	let type = appointment.type
+	
+	$('#reserve_btn'+i).click(function(e){ 
+		e.preventDefault()
+			
+		$('#showChooseAppointmentHall').append("<br><button class='btn btn-primary' id='submitApp'>Rezervisi</button>")
+		$('#appStartTime').val(appointment.date.split(' ')[1])
+		$.ajax({
+			type: 'GET',
+			url: 'api/hall/getAllByClinic/'+clinic.name,
+			complete: function(data)
+			{
+				listChooseHalls(data.responseJSON)
+				
+				showView("showReserveAppointmentContainer")
+			}
+		})
+		
+		$('#submitApp').off('click')
+		$('#submitApp').click(function(e){
+			e.preventDefault()
+			
+			let selectedHallNumber = null;
+			
+			for(let j = 0 ; j < getTableRowCount('chooseHallTable') ; j++)
+			{
+				if($("#checkHall"+j).is(":checked"))
+				{
+					selectedHallNumber = getRowData('chooseHallTable',j)[1]// Uzeti br odabrane sale
+				}
+			}
+			
+			if(selectedHallNumber == null)
+			{
+				displayError('submitApp',"Morate izabrati salu.")
+				return
+			}
+			
+			if(type == "Examination")
+			{
+				//TODO: Za pregled			
+				let json = JSON.stringify({"date":appointment.date,"endDate":appointment.date.split(' ')[0] + " " + $('#appEndTime').val(),"patientEmail":appointment.patientEmail,"hallNumber":selectedHallNumber,"clinicName":clinic.name})
+				console.log(json)
+			
+				sendRequestAnswer(json, true)
+			}
+			else
+			{
+				//TODO: Za operaciju
+			}
+			
+		})
+		
+		//TODO: Dodati opciju za odbijanje
+	})
 }
 
+function sendRequestAnswer(json, isAccepted)
+{
+	if(isAccepted)
+	{		
+		showLoading('submitApp')
+		$.ajax({
+			type:'POST',
+			url:"api/appointments/confirmRequest",
+			data: json,
+			dataType : "json",
+			contentType : "application/json; charset=utf-8",
+			complete: function(data)
+			{
+				console.log(data.status)
+				if(data.status == 200)
+				{
+					window.location.href = "index.html"
+				}
+				else if(data.status == 409)
+				{
+					warningModal("Neuspesno!","U izabrano vreme u sali je vec zakazan pregled!")
+				}
+				hideLoading('submitApp')
+			}
+		})			
+	}
+	else
+	{
+		//TODO: Deny
+	}
+}
+
+
+function listChooseHalls(halls)
+{
+	emptyTable("chooseHallTable")
+	$.each(halls, function(i, item){
+		let d = [item.name, item.number, "<button class='btn btn-info' id='hallOcc"+i+"'>Zauzece</button>","<input type='checkbox' id='checkHall"+i+"'><label for='checkHall"+i+"'></label>"]
+		insertTableData("chooseHallTable", d)
+		
+		$('#hallOcc'+i).click(function(e){
+			e.preventDefault()
+			fillHallCalendar(item)
+			$('#hallCalendarModal').modal('show')
+		})
+		
+		$('#checkHall'+i).off('click')
+		$('#checkHall'+i).click(function(e){
+
+			for(let j = 0 ; j < getTableRowCount('chooseHallTable') ; j++)
+			{
+				if(j == i)
+				{
+					$("#checkHall"+j).prop('checked',true)
+				}
+				else
+				{
+					$("#checkHall"+j).prop('checked',false)
+				}
+			}
+
+		});
+							
+	});
+}
 	
 function changeProfileClinicFunction(clinic)
 {

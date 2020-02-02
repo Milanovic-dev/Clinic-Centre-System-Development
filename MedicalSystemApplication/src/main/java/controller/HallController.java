@@ -127,7 +127,7 @@ public class HallController {
 		
 		for(Hall hall : c.getHalls())
 		{
-			if(dto.getDate() != null)
+			if(dto.getDate() != null && dto.getDate() != "")
 			{
 				long hours = 0; //miliisecs
 				List<Appointment> appointments = appointmentService.findAllByHall(hall);
