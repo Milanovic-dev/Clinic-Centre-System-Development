@@ -176,6 +176,28 @@
    
    <div id ="showVacationRequestListContainer" style="display:none"></div>
    <div id ="showExaminationRequestListContainer" style="display:none"></div>
+   <div id="showReserveAppointmentContainer" style="display:none">
+   	 <div class="card">
+      <div class="card-header" >Pregled</div>
+      <div class="card-body" id="showChooseAppointmentHall">
+      <h4>Rezervisi pregled</h4>
+      <br>
+      <form>
+      	<div class="form-row">
+      		<div class="form-group col-md-6">
+      			<label for="appStartTime">Pocetak:</label>
+      			<input type="time" class="form-control" id="appStartTime">
+      		</div>
+      		<div class="form-group col-md-6">
+      			<label for="appEndTime">Kraj:</label>
+      			<input type="time" class="form-control" id="appEndTime">
+      		</div>
+      	</div>
+      </form>
+      <br>
+      </div>
+     </div>
+   </div>
    
 <!-- -------------------MODAL ZA ODBIJANJE ZAHTEVA ZA GODISNJI ODMOR ILI ODSUSTVO--------------------- -->
        <div class="modal fade" id="vacationRequestModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -207,6 +229,7 @@
         </div>
     </div>
 <!-- -------------------KRAJ MODALA ZA ODBIJANJE ZAHTEVA ZA GODISNJI ODMOR ILI ODSUSTVO--------------------- -->
+
     
 <!-- -------------------ZAHTEV ZA GODISNJI ODMOR----------- -->
 <div class="card mb-3" id ="showVacationRequestContainer" style="display:none">
@@ -1008,39 +1031,7 @@
   </div>
   
 <!-- -------------------KRAJ REGISTRACIJE LEKARA----------------------------- -->
-<!-- ----------------MODAL ZA PREBACIVANJE U LEKARA-------------------------- -->
-<div class="modal fade" id="addShiftModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">New message</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <form>
-          <div class="form-group">
-            <label for="shiftStart_input" class="col-form-label">Pocetak smene:</label>
-  				<input type="time" id="shiftStart_input" class="form-control">
- 				<label for="shiftStart_input">Izaberite pocetak radnog vremena</label>
-          </div>
-          <div class="form-group">
-            <label for="shiftEnd_input" class="col-form-label">Kraj smene:</label>
-  				<input type="time" id="shiftEnd_input" class="form-control">
-  				<label for="shiftEnd_input">Izaberite kraj radnog vremena</label>
-          </div>
-        </form>    
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Odustani</button>
-        <button type="button" class="btn btn-primary" data-dismiss="modal" id = "addShift_btn">Zapamti izmene</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- --------------------KRAJ MODALA ZA PREBACIVANJE U LEKARA--------------------- -->         
+  
 <!-- -----------------------DODAVANJE TIPA PREGLEDA------------------------ ------->
  <div class="container" id ="addTypeOfExaminationContainer" style="display:none">
     <div class="card card-login mx-auto mt-5">

@@ -10,6 +10,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.12/js/jquery.dataTables.min.js"></script>
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css">
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <link href="css/sb-admin.css" rel="stylesheet">
 <link href="css/grid.css" rel ="stylesheet">
 <script src="js/search_manager.js"></script>
@@ -20,7 +21,6 @@
 <script src="js/medicalRecord.js"></script>
 <link rel = "stylesheet" href="css/profile.css">
 <link rel="stylesheet" href="css/custom.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <style>
 .checked {
   color: orange;
@@ -112,13 +112,13 @@
                   					<label id="reviewDoctorEmail">Ocenite doktora</label>
                   				</div>
                   			</div>
-  							<div class="form-row">
-   	 							<div class="col" id="doctorStars">
-      								<span class="fa fa-star checked" id="doctorStar1"></span>
-									<span class="fa fa-star" id="doctorStar2"></span>
-									<span class="fa fa-star" id="doctorStar3"></span>
-									<span class="fa fa-star" id="doctorStar4"></span>
-									<span class="fa fa-star" id="doctorStar5"></span>
+  							<div class="form-row" style="cursor: pointer;">
+   	 							<div class="col" id="doctorStars" style="cursor: pointer;">
+      								<span class="fa fa-star checked" id="doctorStar1" style="cursor: pointer;"></span>
+									<span class="fa fa-star" id="doctorStar2" style="cursor: pointer;"></span>
+									<span class="fa fa-star" id="doctorStar3" style="cursor: pointer;"></span>
+									<span class="fa fa-star" id="doctorStar4" style="cursor: pointer;"></span>
+									<span class="fa fa-star" id="doctorStar5" style="cursor: pointer;"></span>
     							</div>
     							<div class="col">  								
       								<button class="btn btn-primary" id="submitDoctorReview">Oceni</button>
@@ -134,13 +134,13 @@
                   					<label id="reviewClinicName">Ocenite kliniku</label>
                   				</div>
                   			</div>
-  							<div class="form-row">
-   	 							<div class="col" id="clinicStars">
-      								<span class="fa fa-star checked" id="clinicStar1"></span>
-									<span class="fa fa-star" id="clinicStar2"></span>
-									<span class="fa fa-star" id="clinicStar3"></span>
-									<span class="fa fa-star" id="clinicStar4"></span>
-									<span class="fa fa-star" id="clinicStar5"></span>
+  							<div class="form-row" style="cursor: pointer;">
+   	 							<div class="col" id="clinicStars" style="cursor: pointer;">
+      								<span class="fa fa-star checked" id="clinicStar1" style="cursor: pointer;"></span>
+									<span class="fa fa-star" id="clinicStar2" style="cursor: pointer;"></span>
+									<span class="fa fa-star" id="clinicStar3" style="cursor: pointer;"></span>
+									<span class="fa fa-star" id="clinicStar4" style="cursor: pointer;"></span>
+									<span class="fa fa-star" id="clinicStar5" style="cursor: pointer;"></span>
     							</div>
     							<div class="col">
       								<button class="btn btn-primary" id="submitClinicReview">Oceni</button>

@@ -259,11 +259,14 @@ function setAppointmentsTable()
 
 function list_App(data,i,user)
 {
+	
+	console.log(data)
 	let dateSplit = data.date.split(' ')
 	let date = dateSplit[0]
 	let time = dateSplit[1]
+	let endTime = data.endDate.split(' ')[1]
 	
-	let d = [date,getClinicProfileLink(data.clinicName),time,data.hallNumber,getProfileLink(data.doctors[0]),data.typeOfExamination,data.price]
+	let d = [date,getClinicProfileLink(data.clinicName),time + "-" + endTime,data.hallNumber,getProfileLink(data.doctors[0]),data.typeOfExamination,data.price]
 	insertTableData('patientAppsTable',d)
 }
 

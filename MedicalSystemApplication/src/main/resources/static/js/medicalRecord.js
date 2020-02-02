@@ -71,6 +71,9 @@ function initMedicalRecord(record, user, foreign)
 		$('#alergies').append("<div class='col-4 themed-grid-col' >"+al+"</div>")	
 	}
 	
+	
+	setupStarRating()
+	
 	createHistoryTable(record.reports)
 }
 
@@ -94,63 +97,7 @@ function createHistoryTable(reports)
 			$('#reviewDoctorEmail').text("Ocenite doktora: " + item.doctorEmail)
 			$('#reviewClinicName').text("Ocenite kliniku: " + item.clinicName)
 		})
-		
-		for(let i = 1 ; i <= 5 ; i++)
-		{
-			$('#doctorStar'+i).click(function(e){
-				
-				if($('#doctorStar'+i).hasClass('checked'))
-				{
-					if(i != 1)
-					{
-						$('#doctorStar'+i).removeClass('checked')						
-					}
 					
-					for(let j = i ; j <= 5 ; j++)
-					{
-						if(j != 1)
-							$('#doctorStar'+j).removeClass('checked')
-					}
-				}
-				else
-				{
-					for(let j = i ; j > 1 ; j--)
-					{
-						$('#doctorStar'+j).addClass('checked')
-					}
-				}
-				
-				
-			})			
-		}
-		
-		for(let i = 1 ; i <= 5 ; i++)
-		{
-			$('#clinicStar'+i).click(function(e){
-				
-				if($('#clinicStar'+i).hasClass('checked'))
-				{
-					if(i != 1)
-						$('#clinicStar'+i).removeClass('checked')
-					
-					for(let j = i ; j <= 5 ; j++)
-					{
-						$('#clinicStar'+j).removeClass('checked')
-					}
-				}
-				else
-				{
-					for(let j = i ; j > 1 ; j--)
-					{
-						if(j != 1)
-							$('#clinicStar'+j).addClass('checked')
-					}
-				}
-				
-				
-			})			
-		}
-			
 			
 		$('#submitDoctorReview').off('click')
 		$('#submitDoctorReview').click(function(e){
@@ -220,8 +167,66 @@ function createHistoryTable(reports)
 		})
 			
 	})
-	
+}
 
+function setupStarRating()
+{
 	
+	for(let i = 1 ; i <= 5 ; i++)
+	{
+		$('#doctorStar'+i).click(function(e){
+			
+			if($('#doctorStar'+i).hasClass('checked'))
+			{
+				if(i != 1)
+				{
+					$('#doctorStar'+i).removeClass('checked')						
+				}
+				
+				for(let j = i ; j <= 5 ; j++)
+				{
+					if(j != 1)
+						$('#doctorStar'+j).removeClass('checked')
+				}
+			}
+			else
+			{
+				for(let j = i ; j > 1 ; j--)
+				{
+					$('#doctorStar'+j).addClass('checked')
+				}
+			}
+			
+			
+		})			
+	}
+	
+	for(let i = 1 ; i <= 5 ; i++)
+	{
+		$('#clinicStar'+i).click(function(e){
+			
+			if($('#clinicStar'+i).hasClass('checked'))
+			{
+				if(i != 1)
+					$('#clinicStar'+i).removeClass('checked')
+				
+				for(let j = i ; j <= 5 ; j++)
+				{
+					$('#clinicStar'+j).removeClass('checked')
+				}
+			}
+			else
+			{
+				for(let j = i ; j > 1 ; j--)
+				{
+					if(j != 1)
+						$('#clinicStar'+j).addClass('checked')
+				}
+			}
+			
+			
+		})			
+	}
+
 }
 
