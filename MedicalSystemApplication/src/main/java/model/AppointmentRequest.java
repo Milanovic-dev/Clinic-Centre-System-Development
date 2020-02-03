@@ -69,7 +69,18 @@ public class AppointmentRequest {
 		this.priceslist = priceslist;
 		this.appointmentType = appointmentType;
 	}
-	
+
+	public AppointmentRequest(Date date, Hall hall, Patient patient, Clinic clinic, Priceslist priceslist, AppointmentType appointmentType) {
+		this.date = date;
+		this.hall = hall;
+		this.patient = patient;
+		this.clinic = clinic;
+		this.doctors = new ArrayList<Doctor>();
+		this.priceslist = priceslist;
+		this.appointmentType = appointmentType;
+		this.timestamp = new Date();
+	}
+
 	public Date getTimestamp() {
 		return timestamp;
 	}

@@ -7,6 +7,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -682,11 +683,10 @@ public class AppointmentController
 	public ResponseEntity<Void> confirmAppointmentRequest(@RequestBody AppointmentDTO dto)
 	{
 		HttpHeaders header = new HttpHeaders();
-		
 		AppointmentRequest request = appointmentRequestService.findAppointmentRequest(dto.getDate(), 0, dto.getClinicName());
-		
+
 		Clinic clinic = clinicService.findByName(dto.getClinicName());
-		
+
 		if(request == null)
 		{
 			header.set("responseText","Request not found: " + dto.getDate() +" ,"+ dto.getHallNumber() +", "+ dto.getClinicName());
@@ -730,13 +730,33 @@ public class AppointmentController
 		for(Doctor doc : request.getDoctors())
 		{
 			appointment.getDoctors().add(doc);
-		}		
+		}
+
+		if(appointment.getAppointmentType() == Appointment.AppointmentType.Surgery){
+			for(String email : dto.getDoctors())
+			{
+				Doctor d = (Doctor) userService.findByEmailAndDeleted(email, false);
+				appointment.getDoctors().add(d);
+				notificationService.sendNotification(email, "Nova operacija je zakazana",  "Zakazana je nova operacija u Vasem radnom kalendaru. Datum operacije je "+ dto.getDate() +
+						", u klinici  " + appointment.getClinic().getName() + ", u sali " + appointment.getHall().getName() + ", broj " + appointment.getHall().getNumber() + ".");
+
+			}
+			notificationService.sendNotification(appointment.getPatient().getEmail(), "Vasa operacija je zakazana", "Zahtev za operaciju je prihvacen. Datum operacije je "+ dto.getDate() +
+					", u klinici  " + appointment.getClinic().getName() + ", u sali " + appointment.getHall().getName() + ", broj " + appointment.getHall().getNumber() + "." );
+
+		}
+
+
+
+
 		clinic.getAppointments().add(appointment);
 		
 		//TODO:Send mail Pacijentu (Prihavti ili odbije)
+
 		//TODO:Send mail Doktoru
-		
-		appointmentService.save(appointment);	
+
+
+		appointmentService.save(appointment);
 		
 		appointmentRequestService.delete(request);
 		
