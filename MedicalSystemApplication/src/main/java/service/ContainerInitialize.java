@@ -55,6 +55,10 @@ public class ContainerInitialize {
 	
 	@Autowired
 	private VacationRequestRepository vacationRequestRepository;
+
+	@Autowired
+	private AppointmentRequestRepository appointmentRequestRepository;
+
 	
 	@PostConstruct
 	public void init()
@@ -373,9 +377,21 @@ public class ContainerInitialize {
 			
 			VacationRequest vrq2 = new VacationRequest(dateInstance.getDate("26-05-2020", "dd-MM-yyyy"),dateInstance.getDate("15-06-2020", "dd-MM-yyyy"),clinic,doctor1);
 			vacationRequestRepository.save(vrq2);
-			
-			
-					
+
+			AppointmentRequest appReq = new AppointmentRequest(dateInstance.getDate("26-02-2020 10:00", "dd-MM-yyyy HH:mm"), null, patient, clinic,p1, AppointmentType.Surgery);
+			AppointmentRequest appReq1 = new AppointmentRequest(dateInstance.getDate("24-02-2020 11:00", "dd-MM-yyyy HH:mm"), null, patient, clinic,p1, AppointmentType.Examination);
+			AppointmentRequest appReq2 = new AppointmentRequest(dateInstance.getDate("25-02-2020 11:00", "dd-MM-yyyy HH:mm"), null, patient, clinic,p1, AppointmentType.Surgery);
+			AppointmentRequest appReq3 = new AppointmentRequest(dateInstance.getDate("26-02-2020 11:00", "dd-MM-yyyy HH:mm"), null, patient, clinic,p1, AppointmentType.Surgery);
+			AppointmentRequest appReq4 = new AppointmentRequest(dateInstance.getDate("27-02-2020 11:00", "dd-MM-yyyy HH:mm"), null, patient, clinic,p1, AppointmentType.Surgery);
+			AppointmentRequest appReq5 = new AppointmentRequest(dateInstance.getDate("28-02-2020 11:00", "dd-MM-yyyy HH:mm"), null, patient, clinic,p1, AppointmentType.Examination);
+
+			appointmentRequestRepository.save(appReq);
+			appointmentRequestRepository.save(appReq1);
+			appointmentRequestRepository.save(appReq2);
+			appointmentRequestRepository.save(appReq3);
+			appointmentRequestRepository.save(appReq4);
+			appointmentRequestRepository.save(appReq5);
+
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

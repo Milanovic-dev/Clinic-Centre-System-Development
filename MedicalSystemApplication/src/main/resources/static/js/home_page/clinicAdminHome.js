@@ -29,7 +29,7 @@ function setUpClinicAdminPage(user)
 	sideBar.append("<li class='nav-item active'><a class='nav-link' href = 'clinicProfile.html?clinic=" + clinic.name +"'><span id='showReport'>Profil klinike</span></a></li>")
 	sideBar.append("<li class='nav-item active'><a class='nav-link' type='button'><span id='changeProfileClinic'>Uredi profil klinike</span></a></li>")
 	sideBar.append("<li class='nav-item active'><a class='nav-link' type='button'><span id='vacationRequestList'>Zahtevi za godišnji odmor</span></a></li>")
-	sideBar.append("<li class='nav-item active'><a class='nav-link' type='button'><span id='examinationRequestList'>Zahtevi za pregled</span></a></li>")
+	sideBar.append("<li class='nav-item active'><a class='nav-link' type='button'><span id='examinationRequestList'>Zahtevi za preglede i operacije</span></a></li>")
 	sideBar.append("<li class='nav-item active'><a class='nav-link' type='button'><span id='addHall'>Dodaj salu</span></a></li>")	
 	sideBar.append("<li class='nav-item active'><a class='nav-link' type='button'><span id='showHalls'>Lista sala</span></a></li>")
 	sideBar.append("<li class='nav-item active'><a class='nav-link' type='button'><span id='addDoctor'>Dodaj lekara</span></a></li>")
@@ -51,7 +51,7 @@ function setUpClinicAdminPage(user)
 	addView("showVacationRequestListContainer")
 	addView("showExaminationRequestListContainer")
 	addView("showReserveAppointmentContainer")
-	
+
 	
 	setUpHallCalendar()
 	let headersTypes = ["Ime tipa","Klinika","Cena","",""]
@@ -105,12 +105,12 @@ function setUpClinicAdminPage(user)
 		
 	})
 	
-	let appointmentHeaders = ["Ime pacijenta","Datum pocetka","Cena","Tip pregleda","Lekari",""]
-	createDataTable("appReqTable","showExaminationRequestListContainer","Lista zahteva za pregled",appointmentHeaders,0)
+	let appointmentHeaders = ["Ime pacijenta","Datum pocetka","Cena","Zahtev","Tip pregleda","Lekari",""]
+	createDataTable("appReqTable","showExaminationRequestListContainer","Lista zahteva za preglede i operacije",appointmentHeaders,0)
 	getTableDiv('appReqTable').show()
 	
 	let chooseHallHeaders = ["Ime Sale","Br. Sale","",""]
-	createDataTable("chooseHallTable","showChooseAppointmentHall","Izaberite salu za pregled",chooseHallHeaders,0)
+	createDataTable("chooseHallTable","showChooseAppointmentHall","Izaberite salu",chooseHallHeaders,0)
 	getTableDiv('chooseHallTable').show()
 	
 	//TABELA SALA ZA REZERVISANJE PREGLEDA
@@ -468,18 +468,58 @@ function getAllAppointmentRequestsByClinic(clinic)
 
 //FUNCKIJA ZA REZERVISANJE PREGLEDA SALE
 function listAppointmentRequests(clinic, appointment, i)
-{	
-	let values = [appointment.patientEmail, appointment.date,appointment.price,appointment.typeOfExamination,appointment.doctors,'<button class="btn btn-primary" id="reserve_btn'+i+'">Rezervisi</button>']
+{
+    let type = appointment.type
+    let typeOfExamination = appointment.typeOfExamination
+    let tipic = "Pregled"
+    if(type == "Surgery"){
+        typeOfExamination = ""
+        tipic = "Operacija"
+    }
+
+
+
+
+	let values = [appointment.patientEmail, appointment.date,appointment.price, tipic, typeOfExamination,appointment.doctors,'<button class="btn btn-primary" id="reserve_btn'+i+'">Rezervisi</button>']
 	insertTableData("appReqTable",values)
+
+
+	    $.ajax({
+            type: 'GET',
+            url:"api/clinic/getDoctors/"+clinic.name,
+            complete: function(data)
+            {
+               let select = $('#selectDoctors').val()
+               $('#selectDoctors').empty()
+               			$.each(data.responseJSON, function (i, item) {
+               			    $('#selectDoctors').append($('<option>', {
+               			        value: item.user.email,
+               			        text : item.user.name + " " + item.user.surname + " - " + item.type
+               			    }));
+               			});
+               			$('.selectpicker').selectpicker('refresh');
+            }
+        });
 	
 	
-	let type = appointment.type
+
 	
 	$('#reserve_btn'+i).click(function(e){ 
 		e.preventDefault()
 			
 		$('#showChooseAppointmentHall').append("<br><button class='btn btn-primary' id='submitApp'>Rezervisi</button>")
 		$('#appStartTime').val(appointment.date.split(' ')[1])
+
+		 if(appointment.type == "Surgery"){
+                $("#examinationCard").text("Operacija")
+                $("#examinationReserve").text("Rezervisi operaciju")
+                $("#DoctorsPicker").show()
+         } else if(appointment.type = "Examination") {
+                $("#examinationCard").text("Pregled")
+                $("#examinationReserve").text("Rezervisi pregled")
+                $("#DoctorsPicker").hide()
+         }
+
 		$.ajax({
 			type: 'GET',
 			url: 'api/hall/getAllByClinic/'+clinic.name,
@@ -510,17 +550,41 @@ function listAppointmentRequests(clinic, appointment, i)
 				displayError('submitApp',"Morate izabrati salu.")
 				return
 			}
+
+			if($("#appEndTime").val() == "")
+            {
+                displayError('submitApp',"Morate izabrati vreme zavrsetka.")
+                return
+            }
+
+			 let doctors = []
+             $('#selectDoctors option:selected').each(function() {
+                 doctors.push($(this).val())
+             });
+
+                console.log(appointment.type)
+             if(doctors == "" && appointment.type == "Surgery")
+             {
+                 displayError('submitApp',"Morate izabrati doktore za operaciju.")
+                 return
+             }
+
+             console.log(doctors)
 			
 			if(type == "Examination")
 			{
 				//TODO: Za pregled			
 				let json = JSON.stringify({"date":appointment.date,"endDate":appointment.date.split(' ')[0] + " " + $('#appEndTime').val(),"patientEmail":appointment.patientEmail,"hallNumber":selectedHallNumber,"clinicName":clinic.name})
 				console.log(json)
-			
+
 				sendRequestAnswer(json, true)
 			}
 			else
 			{
+			    let json = JSON.stringify({"date":appointment.date,"endDate":appointment.date.split(' ')[0] + " " + $('#appEndTime').val(),"patientEmail":appointment.patientEmail,"hallNumber":selectedHallNumber,"clinicName":clinic.name, "doctors":doctors})
+                console.log(json)
+
+                sendRequestAnswer(json, true)
 				//TODO: Za operaciju
 			}
 			
