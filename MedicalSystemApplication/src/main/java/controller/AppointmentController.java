@@ -7,7 +7,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -685,6 +684,7 @@ public class AppointmentController
 		HttpHeaders header = new HttpHeaders();
 		AppointmentRequest request = appointmentRequestService.findAppointmentRequest(dto.getDate(), 0, dto.getClinicName());
 
+
 		Clinic clinic = clinicService.findByName(dto.getClinicName());
 
 		if(request == null)
@@ -714,7 +714,22 @@ public class AppointmentController
 			
 			if(util.overlappingInterval(di1, di2))
 			{
-				return new ResponseEntity<>(HttpStatus.CONFLICT);
+				header.set("responseText", "hall");
+				return new ResponseEntity<>(header, HttpStatus.CONFLICT);
+			}
+		}
+
+		for(String email : dto.getDoctors()){
+			Doctor d = (Doctor) userService.findByEmailAndDeleted(email, false);
+			List<Appointment> appsByDoc = appointmentService.findAllByDoctor(d);
+
+			for(Appointment app : appsByDoc) {
+				DateInterval di2 = new DateInterval(app.getDate(), app.getEndDate());
+
+				if (util.overlappingInterval(di1, di2)) {
+					header.set("responseText", "doctor,"+d.getName() + " " + d.getSurname());
+					return new ResponseEntity<>(header, HttpStatus.CONFLICT);
+				}
 			}
 		}
 		
