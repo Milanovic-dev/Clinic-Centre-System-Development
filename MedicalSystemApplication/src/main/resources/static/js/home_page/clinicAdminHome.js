@@ -176,8 +176,8 @@ function setUpClinicAdminPage(user)
 	//LISTA ZAHTEVA ZA PREGLED
 	$('#examinationRequestList').click(function(e){
 		e.preventDefault()
-		
-		listAppointmentRequest(clinic)
+		showView("showExaminationRequestListContainer")
+		listAppointmentRequests(clinic)
 		
 	})
 	//KRAJ LISTE ZAHTEVA ZA PREGLED
@@ -437,11 +437,9 @@ function listVacationRequests(clinic,data,i)
 	
 }
 
-function listAppointmentRequest(clinic)
+function listAppointmentRequests(clinic)
 {
-	showView("showExaminationRequestListContainer")
-	getAllAppointmentRequestsByClinic(clinic)
-
+	setTimeout(getAllAppointmentRequestsByClinic(clinic),10000)
 }
 
 function getAllAppointmentRequestsByClinic(clinic)
@@ -457,56 +455,52 @@ function getAllAppointmentRequestsByClinic(clinic)
 			let i=0
 			for(a of apps)
 			{
-				
-				listAppointmentRequests(clinic,a,i)
+				listAppointmentRequest(clinic,a,i)
 				i++
 			}
 		}
 	
 	})
+	
+	$.ajax({
+        type: 'GET',
+        url:"api/clinic/getDoctors/"+clinic.name,
+        complete: function(data)
+        {
+           let select = $('#selectDoctors').val()
+           $('#selectDoctors').empty()
+           			$.each(data.responseJSON, function (i, item) {
+           			    $('#selectDoctors').append($('<option>', {
+           			        value: item.user.email,
+           			        text : item.user.name + " " + item.user.surname + " - " + item.type
+           			    }));
+           			});
+           			$('.selectpicker').selectpicker('refresh');
+        }
+    });
 }
 
 //FUNCKIJA ZA REZERVISANJE PREGLEDA SALE
-function listAppointmentRequests(clinic, appointment, i)
+function listAppointmentRequest(clinic, appointment, i)
 {
     let type = appointment.type
     let typeOfExamination = appointment.typeOfExamination
     let tipic = "Pregled"
+    	
     if(type == "Surgery"){
         typeOfExamination = ""
         tipic = "Operacija"
     }
 
-
-
-
 	let values = [appointment.patientEmail, appointment.date,appointment.price, tipic, typeOfExamination,appointment.doctors,'<button class="btn btn-primary" id="reserve_btn'+i+'">Rezervisi</button>']
 	insertTableData("appReqTable",values)
-
-
-	    $.ajax({
-            type: 'GET',
-            url:"api/clinic/getDoctors/"+clinic.name,
-            complete: function(data)
-            {
-               let select = $('#selectDoctors').val()
-               $('#selectDoctors').empty()
-               			$.each(data.responseJSON, function (i, item) {
-               			    $('#selectDoctors').append($('<option>', {
-               			        value: item.user.email,
-               			        text : item.user.name + " " + item.user.surname + " - " + item.type
-               			    }));
-               			});
-               			$('.selectpicker').selectpicker('refresh');
-            }
-        });
-	
-	
 
 	
 	$('#reserve_btn'+i).click(function(e){ 
 		e.preventDefault()
 			
+		showView("showReserveAppointmentContainer")
+		$('#submitApp').remove()
 		$('#showChooseAppointmentHall').append("<br><button class='btn btn-primary' id='submitApp'>Rezervisi</button>")
 		$('#appStartTime').val(appointment.date.split(' ')[1])
 
@@ -517,7 +511,8 @@ function listAppointmentRequests(clinic, appointment, i)
          } else if(appointment.type = "Examination") {
                 $("#examinationCard").text("Pregled")
                 $("#examinationReserve").text("Rezervisi pregled")
-                $("#DoctorsPicker").hide()
+                $("#DoctorsPicker").show()
+                $('#selectDoctors').val(appointment.doctors[0])
          }
 
 		$.ajax({
@@ -525,9 +520,7 @@ function listAppointmentRequests(clinic, appointment, i)
 			url: 'api/hall/getAllByClinic/'+clinic.name,
 			complete: function(data)
 			{
-				listChooseHalls(data.responseJSON)
-				
-				showView("showReserveAppointmentContainer")
+				listChooseHalls(data.responseJSON)			
 			}
 		})
 		
@@ -562,19 +555,17 @@ function listAppointmentRequests(clinic, appointment, i)
                  doctors.push($(this).val())
              });
 
-                console.log(appointment.type)
-             if(doctors == "" && appointment.type == "Surgery")
+             if(doctors == "")
              {
                  displayError('submitApp',"Morate izabrati doktore za operaciju.")
                  return
              }
 
-             console.log(doctors)
 			
 			if(type == "Examination")
 			{
 				//TODO: Za pregled			
-				let json = JSON.stringify({"date":appointment.date,"endDate":appointment.date.split(' ')[0] + " " + $('#appEndTime').val(),"patientEmail":appointment.patientEmail,"hallNumber":selectedHallNumber,"clinicName":clinic.name})
+				let json = JSON.stringify({"date":appointment.date,"endDate":appointment.date.split(' ')[0] + " " + $('#appEndTime').val(),"patientEmail":appointment.patientEmail,"hallNumber":selectedHallNumber,"clinicName":clinic.name, "doctors":doctors})
 				console.log(json)
 
 				sendRequestAnswer(json, true)
@@ -631,7 +622,7 @@ function listChooseHalls(halls)
 {
 	emptyTable("chooseHallTable")
 	$.each(halls, function(i, item){
-		let d = [item.name, item.number, "<button class='btn btn-info' id='hallOcc"+i+"'>Zauzece</button>","<input type='checkbox' id='checkHall"+i+"'><label for='checkHall"+i+"'></label>"]
+		let d = [item.name, item.number, "<button class='btn btn-info' id='hallOcc"+i+"'>Zauzece</button>","<input type='checkbox' id='checkHall"+i+"'><label id='checkHallLabel"+i+"' for='checkHall"+i+"'></label>"]
 		insertTableData("chooseHallTable", d)
 		
 		$('#hallOcc'+i).click(function(e){
@@ -639,6 +630,8 @@ function listChooseHalls(halls)
 			fillHallCalendar(item)
 			$('#hallCalendarModal').modal('show')
 		})
+		
+		$('#checkHallLabel'+i).tooltip({title:"Izaberi salu",placement:"left"})
 		
 		$('#checkHall'+i).off('click')
 		$('#checkHall'+i).click(function(e){
@@ -1300,30 +1293,15 @@ function makeAppointment(clinic)
 {
 	$('#inputClinicNameAppointment').val(clinic.name)
 	$('#inputClinicAddressAppointment').val(clinic.address)
-	
-	$.ajax({
-		type: 'GET',
-		url: 'api/hall/getAllByClinic/' + clinic.name,
-		complete: function(data)
-		{
-			let halls = data.responseJSON
-			for(let h of halls)
-			{
-				$('#inputAppointmentHall').append($('<option>',{
-					value: h.number,
-					text: h.number
-				}))
-			}
-		}
 		
-	})
-	
 	$.ajax({
 		type: 'GET',
 		url: 'api/priceList/getAllByClinic/' + clinic.name,
 		complete: function(data)
 		{
 			let types = data.responseJSON
+			
+			$('#inputAppointmentTypeSelect')
 			for(let t of types)
 			{
 				$('#inputAppointmentTypeSelect').append($('<option>',{
@@ -1335,6 +1313,42 @@ function makeAppointment(clinic)
 		}
 
 	})
+	
+	let timeChange = function(event){
+		
+		let start = $('#inputTimeBegin').val()
+		let end = $('#inputTimeEnd').val()
+		let date = $('#inputDatePredef').val()
+		
+		if(start != "" && end != "" && date != "")
+		{
+			let json = JSON.stringify({"clinicName":clinic.name,"date":date,"name":"","number":"0"})
+			
+			$.ajax({
+				type: 'POST',
+				url: 'api/hall/getAllByFilter/',
+				data: json,
+				dataType : "json",
+				contentType : "application/json; charset=utf-8",
+				complete: function(data)
+				{
+					let halls = data.responseJSON
+					for(let h of halls)
+					{
+						$('#inputAppointmentHall').append($('<option>',{
+							value: h.number,
+							text: h.number
+						}))
+					}
+				}
+				
+			})
+		}
+	}
+	
+
+	$('#inputTimeBegin').change(timeChange)
+	$('#inputTimeEnd').change(timeChange)
 	
 	doctorsSelected = []
 	let users = null
@@ -1359,10 +1373,19 @@ function makeAppointment(clinic)
 							if(j == i)
 							{
 								$("#checkDoctorSelect"+j).prop('checked',true)
+								$('#inputTimeBegin').prop('disabled',false);
+								$('#inputTimeEnd').prop('disabled', false);
+								
+								$('#inputTimeBegin').prop('min',u.shiftStart)
+								$('#inputTimeBegin').prop('max',u.shiftEnd)
+								$('#inputTimeEnd').prop('min',u.shiftStart)
+								$('#inputTimeEnd').prop('max',u.shiftEnd)
 							}
 							else
 							{
 								$("#checkDoctorSelect"+j).prop('checked',false)
+								$('#inputTimeBegin').prop('disabled',true);
+								$('#inputTimeEnd').prop('disabled', true);
 							}
 						}
 					})
@@ -1374,7 +1397,8 @@ function makeAppointment(clinic)
 	
 	$('#submitPredefinedAppointmentRequest').click(function(e){
 		e.preventDefault()
-		console.log(getTableRowCount('preAppTableDoctor'))
+		
+		doctorsSelected = []
 		for(let j = 0 ; j < getTableRowCount('preAppTableDoctor') ; j++)
 		{
 			if($("#checkDoctorSelect"+j).is(":checked"))
@@ -1464,6 +1488,10 @@ function submitPredefinedAppointment(doctorsSelected)
 			else if(data.status == "208")
 			{
 				warningModal('Neuspesno', "Izabrani doktor vec ima zakazan pregled izmedju "+timeStart+" i "+timeEnd)
+			}
+			else if(data.status == "500")
+			{
+				warningModal('Neuspesno',"Server nije uspeo da odgovori. Molimo pokusajte kasnije.")
 			}
 			
 			hideLoading("submitPredefinedAppointmentRequest")

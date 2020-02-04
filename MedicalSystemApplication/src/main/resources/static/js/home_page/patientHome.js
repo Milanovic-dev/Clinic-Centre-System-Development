@@ -265,8 +265,13 @@ function list_App(data,i,user)
 	let date = dateSplit[0]
 	let time = dateSplit[1]
 	let endTime = data.endDate.split(' ')[1]
+	let price = data.price
 	
-	let d = [date,getClinicProfileLink(data.clinicName),time + "-" + endTime,data.hallNumber,getProfileLink(data.doctors[0]),data.typeOfExamination,data.price]
+	if(data.predefined)
+	{
+		price = getDiscountPrice(price,20)
+	}
+	let d = [date,getClinicProfileLink(data.clinicName),time + "-" + endTime,data.hallNumber,getProfileLink(data.doctors[0]),data.typeOfExamination,price]
 	insertTableData('patientAppsTable',d)
 }
 

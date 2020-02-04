@@ -1,23 +1,34 @@
 package service;
 
 import java.security.NoSuchAlgorithmException;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import javax.annotation.PostConstruct;
+import javax.mail.Session;
 
 import model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import helpers.DateInterval;
 import helpers.DateUtil;
+import helpers.InvokeControl;
+import helpers.InvokeFunction;
+import helpers.Scheduler;
 import helpers.SecurePasswordHasher;
 import model.Appointment.AppointmentType;
 import model.MedicalRecord.BloodType;
+import model.User.UserRole;
 import repository.*;
 
 @Component
@@ -271,8 +282,8 @@ public class ContainerInitialize {
 					.build();
 			
 
-			Appointment app4 = new Appointment.Builder(DateUtil.getInstance().getDate("21-01-2020 12:00","dd-MM-yyyy HH:mm"))
-					.withEndingDate(DateUtil.getInstance().getDate("21-01-2020 13:00","dd-MM-yyyy HH:mm"))
+			Appointment app4 = new Appointment.Builder(DateUtil.getInstance().getDate("04-02-2020 12:00","dd-MM-yyyy HH:mm"))
+					.withEndingDate(DateUtil.getInstance().getDate("04-02-2020 13:00","dd-MM-yyyy HH:mm"))
 					.withType(AppointmentType.Examination)
 					.withHall(hall1)
 					.withClinic(clinic)
@@ -391,11 +402,132 @@ public class ContainerInitialize {
 			appointmentRequestRepository.save(appReq3);
 			appointmentRequestRepository.save(appReq4);
 			appointmentRequestRepository.save(appReq5);
+			
+			
+			
+			InvokeFunction func = ()-> 
+			{ 
+				
+				DateUtil util = DateUtil.getInstance();
+				Date currentDate = util.now("dd-MM-yyyy");
+				
+				List<AppointmentRequest> requests = appointmentRequestRepository.findAll();
+				
+				try {
+					HashMap<Hall, DateInterval> map = getPossibleHallsAndTimes(requests.get(0));
+					
+					for(Hall h: map.keySet())
+					{
+						System.out.println(map.get(h));
+					}
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+				/*
+				for(AppointmentRequest request : requests)
+				{
+					Date startTimestamp = request.getTimestamp();
+					
+					if(!util.isSameDay(startTimestamp, currentDate))
+					{
+						
+					}
+				}
+				*/
+			};
+			
+			
+			//InvokeControl.InvokeRepeating(func, 10, TimeUnit.SECONDS);
+			
+			
 
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	private HashMap<Hall,DateInterval> getPossibleHallsAndTimes(AppointmentRequest req) throws Exception
+	{
+		HashMap<Hall, DateInterval> ret = new HashMap<Hall, DateInterval>();
+		Clinic clinic = req.getClinic();
+		List<Hall> halls = req.getClinic().getHalls();
+		
+		if(halls.size() == 0) return null;
+
+		LocalDateTime date = convertToLocalDate(req.getDate());
+		Date temp = convertToDate(date);
+		
+		long twoDaysInMilisec = 1728 * 100000; 
+		
+		//while(DateUtil.getInstance().getTimeBetween(req.getDate(), temp) < twoDaysInMilisec)
+		//{
+			temp = convertToDate(date);
+			
+			for(Hall hall : halls)
+			{
+				List<Appointment> hallAppsThisDay = appointmentRepository.findAllByHallAndClinic(hall, clinic);		
+				List<DateInterval> hallFreeIntervals = Scheduler.getFreeIntervals(hallAppsThisDay, temp);
+				
+				List<Doctor> doctors = getDoctorsByClinicAndType(clinic, req.getPriceslist().getTypeOfExamination());
+							
+				for(Doctor doc : doctors)
+				{
+					List<DateInterval> doctorBusyIntervals = Scheduler.getBusyIntervals(doc, temp);
+					
+					
+					for(DateInterval di1 : hallFreeIntervals)
+					{
+						for(DateInterval di2 : doctorBusyIntervals)
+						{
+							if(!DateUtil.getInstance().overlappingInterval(di1, di2))
+							{
+								ret.put(hall, di1);
+							}
+						}
+					}
+				}
+			}
+			//date.plusDays(1);
+		//}
+		
+		return ret;
+	}
+	
+	private List<Doctor> getDoctorsByClinicAndType(Clinic clinic, String type)
+	{
+		List<User> userDoctors = userRepository.findAllByRole(UserRole.Doctor);
+		List<Doctor> ret = new ArrayList<Doctor>();
+		
+		for(User u : userDoctors)
+		{
+			if(u instanceof Doctor)
+			{
+				Doctor doc = (Doctor) u;
+				
+				if(doc.getClinic().getName().equals(clinic.getName()))
+				{
+					if(doc.getType().equals(type))
+					ret.add(doc);
+				}
+			}
+		}
+		
+		return ret;
+	}
+	
+	private LocalDateTime convertToLocalDate(Date dateToConvert) {
+	    return dateToConvert.toInstant()
+	      .atZone(ZoneId.systemDefault())
+	      .toLocalDateTime();
+	}
+	
+	private Date convertToDate(LocalDateTime dateToConvert) {
+	    return java.util.Date
+	      .from(dateToConvert.atZone(ZoneId.systemDefault())
+	      .toInstant());
 	}
 	
 }

@@ -34,9 +34,6 @@ public class Clinic
     @OneToMany(fetch = FetchType.LAZY)
     private List<Doctor> doctors;
 
-    @OneToMany(fetch = FetchType.LAZY)
-    private List<Appointment> appointments;
-
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<ClinicReview> reviews;
 
@@ -58,7 +55,6 @@ public class Clinic
 	    this.description = description;
 	    this.halls = new ArrayList<Hall>();
 	    this.doctors = new ArrayList<Doctor>();
-	    this.appointments = new ArrayList<Appointment>();
 	    this.reviews = new ArrayList<ClinicReview>();
     }
 
@@ -127,14 +123,6 @@ public class Clinic
     
     public void setDoctors(List<Doctor> doctors) {
     	this.doctors = doctors;
-    }
-    
-    public List<Appointment> getAppointments() {
-    	return appointments;
-    }
-    
-    public void setAppointments(List<Appointment> appointments) {
-    	this.appointments = appointments;
     }
     
     public List<ClinicReview> getReviews() {

@@ -52,6 +52,12 @@ public class VacationController {
 	@PostMapping(value ="/checkAvailability/{clinicName}")
 	public ResponseEntity<Boolean> checkAvailabillity(@RequestBody VacationDTO vdto, @PathVariable("clinicName") String clinicName)
 	{
+		
+		if(vdto.getUser() == null)
+		{
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		
 		User user = userService.findByEmailAndDeleted(vdto.getUser().getEmail(), false);
 
     	if(user == null)
@@ -68,23 +74,22 @@ public class VacationController {
     	{
     		for(VacationRequest request : requests)
     		{
-    			Boolean flag = true;
     			
     			if(vacationStart.before(request.getEndDate()) && vacationEnd.after(request.getStartDate()))
     			{
-    				flag = false;
+    				return new ResponseEntity<>(false, HttpStatus.OK);
     			}
     			
-    			return new ResponseEntity<>(flag, HttpStatus.OK);
     		}
     	}
+    	
     	
     	if(user instanceof Doctor)
     	{
     		Doctor doctor = (Doctor)user;
     		
     		List<Appointment> appointments = doctor.getAppointments();
-    		
+    		   		
     		for(Appointment app : appointments)
     		{
     			Date date = app.getDate();
@@ -106,6 +111,11 @@ public class VacationController {
 	@PostMapping(value="/makeVacationRequest/{clinicName}")
     public ResponseEntity<Void> makeVacationRequest(@RequestBody VacationDTO vdto,@PathVariable ("clinicName") String clinicName)
     {
+		if(vdto.getUser() == null)
+		{
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		
     	User user = userService.findByEmailAndDeleted(vdto.getUser().getEmail(), false);
 
     	if(user == null)

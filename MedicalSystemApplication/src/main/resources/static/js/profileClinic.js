@@ -57,6 +57,7 @@ function addClinicInformations(data)
 			sessionUser = data.responseJSON			
 
 			setDoctorRatings(clinic,sessionUser)
+			setPreAppsTable(clinic.name)
 			
 			if(sessionUser.role == "ClinicAdmin")
 			{
@@ -106,6 +107,40 @@ function addClinicInformations(data)
 	
 	
 	
+}
+
+function setPreAppsTable(clinicName)
+{
+	let headers = ['Datum','Termin','Klinika','Sala','Doktor','Tip pregleda','Cena','Cena Sa popustom(20%)']
+	createDataTable('preAppTable',"preApps","Unapred definisani pregledi",headers,0)
+	getTableDiv('preAppTable').show()
+	
+	$.ajax({		
+		type: 'GET',
+		url: "api/appointments/getAllPredefined",
+		complete: function(data)
+		{
+			let apps = data.responseJSON
+		
+			emptyTable('preAppTable')		
+			
+			$.each(apps, function(i, data){
+				
+				if(data.clinicName == clinicName)
+				{
+					let dateSplit = data.date.split(' ')
+					let date = dateSplit[0]
+					let startTime = dateSplit[1]
+					let endTime = data.endDate.split(' ')[1]
+					
+					let d = [date,startTime + " - " + endTime,getClinicProfileLink(data.clinicName),data.hallNumber,getProfileLink(data.doctors[0]),data.typeOfExamination,data.price, getDiscountPrice(data.price,20)]
+					insertTableData('preAppTable',d)
+				}
+				
+			});
+			
+		}
+	})
 }
 
 function setPricelistTableClinicProfile(clinicName)
