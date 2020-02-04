@@ -36,7 +36,7 @@ public class Doctor extends User
 	private List<ReviewDoctor> reviews;
 
 	@JsonIgnore
-	@OneToMany(fetch = FetchType.LAZY)
+	@ManyToMany(fetch = FetchType.LAZY)
 	private List<Appointment> appointments;
 	
 	@OneToMany(fetch = FetchType.LAZY)

@@ -706,20 +706,30 @@ public class AppointmentController
 		DateUtil util = DateUtil.getInstance();
 		Date desiredStartTime = util.getDate(dto.getDate(), "dd-MM-yyyy HH:mm");
 		Date desiredEndTime = util.getDate(dto.getEndDate(), "dd-MM-yyyy HH:mm");
+
+
+		String parts[] = dto.getNewDate().split(" ");
+		String dat = parts[0];
+
+		if(!dat.equals("undefined")){
+			desiredStartTime = util.getDate(dto.getNewDate(), "dd-MM-yyyy HH:mm");
+			desiredEndTime = util.getDate(dto.getNewEndDate(), "dd-MM-yyyy HH:mm");
+		}
+
 		DateInterval di1 = new DateInterval(desiredStartTime, desiredEndTime);
-		
+
 		for(Appointment app : apps)
 		{
 			DateInterval di2 = new DateInterval(app.getDate(), app.getEndDate());
 			
 			if(util.overlappingInterval(di1, di2))
 			{
-				header.set("responseText","Sala je zauzeta u dato vreme!");
-				return new ResponseEntity<>(HttpStatus.CONFLICT);
+				header.set("responseText","hall");
+				return new ResponseEntity<>(header, HttpStatus.CONFLICT);
 			}
 		}
-		
-		
+
+
 		Appointment appointment = new Appointment.Builder(desiredStartTime)
 				.withClinic(request.getClinic())
 				.withHall(hall)//TODO: Admin treba da bira salu
@@ -740,8 +750,8 @@ public class AppointmentController
 				DateInterval di2 = new DateInterval(app.getDate(), app.getEndDate());
 				if(util.overlappingInterval(di1, di2) || !doctor.IsFreeOn(desiredStartTime))
 				{
-					header.set("responseText","Doktor "+email+" je zauzet u dato vreme!");
-					return new ResponseEntity<>(HttpStatus.CONFLICT);
+					header.set("responseText","doctor,"+doctor.getName() + " " + doctor.getSurname());
+					return new ResponseEntity<>(header, HttpStatus.CONFLICT);
 				}
 				
 			}
@@ -752,18 +762,20 @@ public class AppointmentController
 		if(appointment.getAppointmentType() == Appointment.AppointmentType.Surgery){
 			for(Doctor doctor: doctors)
 			{
-				notificationService.sendNotification(doctor.getEmail(), "Nova operacija je zakazana",  "Zakazana je nova operacija u Vasem radnom kalendaru. Datum operacije je "+ dto.getDate() +
+				notificationService.sendNotification(doctor.getEmail(), "Nova operacija je zakazana",  "Zakazana je nova operacija u Vasem radnom kalendaru. Datum operacije je "+ desiredStartTime +
 						", u klinici  " + appointment.getClinic().getName() + ", u sali " + appointment.getHall().getName() + ", broj " + appointment.getHall().getNumber() + ".");
 
 			}
-//
-//			if(util.isSameDay(request.getDate(), desiredStartTime)){
-//				notificationService.sendNotification("miaknezevic5@gmail.com", "Vasa operacija je zakazana", "Zahtev za operaciju je prihvacen. Datum operacije je "+ dto.getDate() +
-//						", u klinici  " + appointment.getClinic().getName() + ", u sali " + appointment.getHall().getName() + ", broj " + appointment.getHall().getNumber() + "." );
-//			} else {
-//				notificationService.sendNotification("miaknezevic5@gmail.com", "Datum operacije je promenjen", "Datum operacije koja je bila zakazana " + dto.getDate() +  ", promenjen je na  "+ dto.getDate() +
-//						". Operacija je zakazana u klinici  " + appointment.getClinic().getName() + ", u sali " + appointment.getHall().getName() + ", broj " + appointment.getHall().getNumber() + "." );
-//			}
+
+			if(dat!= "undefined"){
+				notificationService.sendNotification("miaknezevic5@gmail.com", "Vasa operacija je zakazana", "Zahtev za operaciju je prihvacen. Datum operacije je "+  dto.getNewDate() +
+						", u klinici  " + appointment.getClinic().getName() + ", u sali " + appointment.getHall().getName() + ", broj " + appointment.getHall().getNumber() + "." );
+			} else {
+				notificationService.sendNotification("miaknezevic5@gmail.com", "Datum operacije je promenjen", "Datum operacije, koja je bila zakazana " +
+						dto.getDate() +  ", promenjen je na  " + dto.getNewDate() +
+						". Operacija je zakazana u klinici  " + appointment.getClinic().getName() + ", u sali " + appointment.getHall().getName() +
+						", broj " + appointment.getHall().getNumber() + "." );
+			}
 
 		}
 
@@ -778,12 +790,12 @@ public class AppointmentController
 		
 		appointmentRequestService.delete(request);
 		
-		
+
 		for(Doctor doc : doctors)
 		{
 			doc.getAppointments().add(appointment);
 			userService.save(doc);
-		}		
+		}
 		
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
