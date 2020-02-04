@@ -218,7 +218,7 @@ function addVacationRequest(user)
 			return
 		}
 
-		let json = JSON.stringify({"startDate": startDate,"endDate": endDate,"userEmail": user.email })
+		let json = JSON.stringify({"startDate": startDate,"endDate": endDate,"user": user })
 
 		$('#vacationRequestSpinner').show()
 		$.ajax({
@@ -232,7 +232,7 @@ function addVacationRequest(user)
 				$('#vacationRequestSpinner').hide()
 
 				$('#submitVacationRequest').prop('disabled', !data.responseJSON)
-				if(data.responseJSON)
+				if(data.responseJSON == true)
 				{
 					$('#checkedImageVacationRequest').show()
 					$('#uncheckedImageVacationRequest').hide()
@@ -274,10 +274,13 @@ function addVacationRequest(user)
 	$('#submitVacationRequest').click(function(e){
 
 		e.preventDefault()
-
+		
+		$('#uncheckedImageVacationRequest').hide()
+		$('#checkedImageVacationRequest').hide()
+		$('#submitVacationRequest').prop('disabled',true)
 		let startDate = $('#startDayInputVacationRequest').val()
 		let endDate = $('#endDayInputVacationRequest').val()
-		let json = JSON.stringify({"startDate": startDate,"endDate": endDate,"userEmail": user.email })
+		let json = JSON.stringify({"startDate": startDate,"endDate": endDate,"user": user })
 		showLoading('submitVacationRequest')
 
 		$.ajax({
@@ -290,10 +293,15 @@ function addVacationRequest(user)
 			{
 				if(data.status!='201')
 				{
-					warningModal("Greska","Vaš zahtev za godišnjim odmorom ili odsustvom nije uspešno kreiran.Pokušajte ponovo.")
+					warningModal("Greska","Vaš zahtev za godišnjim odmorom ili odsustvom nije uspešno kreiran.Pokušajte ponovo kasnije.")
+				}
+				else
+				{
+					warningModal("Uspesno","Vaš zahtev je poslat.")
 				}
 
 				hideLoading('submitVacationRequest')
+				$('#submitVacationRequest').prop('disabled',true)
 			}
 		})
 	})

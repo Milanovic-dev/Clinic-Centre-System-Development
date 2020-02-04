@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import model.Appointment;
 
@@ -48,6 +49,41 @@ public class DateUtil {
 		return getDate(getString(date,format) , format);
 	}
 	
+	public Boolean overlappingInterval(List<DateInterval> dl1, List<DateInterval> dl2)
+	{
+		for(DateInterval di1 : dl1)
+		{
+			for(DateInterval di2 : dl2)
+			{
+				if(overlappingInterval(di1,di2))
+				{
+					return true;
+				}
+			}
+		}
+		
+		return false;
+	}
+	
+	public Boolean overlappingIntervalHours(DateInterval d1, DateInterval d2)
+	{
+		Calendar c1 = Calendar.getInstance();
+		Calendar c2 = Calendar.getInstance();
+		Calendar c3 = Calendar.getInstance();
+		Calendar c4 = Calendar.getInstance();
+		
+		c1.setTime(d1.getStart());
+		c2.setTime(d1.getEnd());
+		c3.setTime(d2.getStart());
+		c4.setTime(d2.getEnd());
+				
+		//Boolean con1 = isSameDay(c1.getTime(), c3.getTime());
+		Boolean con2 = c1.get(Calendar.HOUR_OF_DAY) < c4.get(Calendar.HOUR_OF_DAY) && c2.get(Calendar.HOUR_OF_DAY) > c3.get(Calendar.HOUR_OF_DAY);
+		Boolean con3 = c1.get(Calendar.MINUTE) < c4.get(Calendar.MINUTE) && c2.get(Calendar.MINUTE) > c3.get(Calendar.MINUTE);
+		
+		return (con2 && con3);
+	}
+	
 	public Boolean overlappingInterval(Date start1, Date end1, Date start2, Date end2)
 	{
 		return overlappingInterval(new DateInterval(start1,end1), new DateInterval(start2,end2));
@@ -72,8 +108,9 @@ public class DateUtil {
 				
 		Boolean con1 = isSameDay(c1.getTime(), c3.getTime());
 		Boolean con2 = c1.get(Calendar.HOUR_OF_DAY) < c4.get(Calendar.HOUR_OF_DAY) && c2.get(Calendar.HOUR_OF_DAY) > c3.get(Calendar.HOUR_OF_DAY);
-
-		return (con1 && con2);
+		Boolean con3 = c1.get(Calendar.MINUTE) <= c4.get(Calendar.MINUTE) && c2.get(Calendar.MINUTE) >= c3.get(Calendar.MINUTE);
+		
+		return (con1 && con2 && con3);
 	}
 	
 	public long getTimeBetween(Date d1, Date d2)
@@ -93,9 +130,7 @@ public class DateUtil {
 		Calendar c2 = Calendar.getInstance();
 		c1.setTime(date1);
 		c2.setTime(date2);
-		System.out.println(date1.toString() + " - " + date2.toString());
-		System.out.println(c1.get(Calendar.MONTH) + " - " + c2.get(Calendar.MONTH));
-		
+	
 		return (c1.get(Calendar.YEAR) == c2.get(Calendar.YEAR) && 
 	            c1.get(Calendar.MONTH) == c2.get(Calendar.MONTH) &&
 	            c1.get(Calendar.DAY_OF_MONTH) == c2.get(Calendar.DAY_OF_MONTH));

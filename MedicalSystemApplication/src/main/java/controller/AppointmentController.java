@@ -611,9 +611,9 @@ public class AppointmentController
 		{
 			DateInterval d1 = new DateInterval(app.getDate(),app.getEndDate());
 			DateInterval d2 = new DateInterval(date, endDate);
-			
 			if(DateUtil.getInstance().overlappingInterval(d1, d2))
 			{
+				System.out.println("FOR");
 				return new ResponseEntity<>(HttpStatus.CONFLICT);
 			}
 		}
@@ -684,7 +684,6 @@ public class AppointmentController
 		HttpHeaders header = new HttpHeaders();
 		AppointmentRequest request = appointmentRequestService.findAppointmentRequest(dto.getDate(), 0, dto.getClinicName());
 
-
 		Clinic clinic = clinicService.findByName(dto.getClinicName());
 
 		if(request == null)
@@ -692,6 +691,7 @@ public class AppointmentController
 			header.set("responseText","Request not found: " + dto.getDate() +" ,"+ dto.getHallNumber() +", "+ dto.getClinicName());
 			return new ResponseEntity<>(header,HttpStatus.NOT_FOUND);
 		}
+
 		
 		Hall hall = hallService.findByNumber(dto.getHallNumber());
 		
@@ -702,7 +702,7 @@ public class AppointmentController
 		}
 		
 		List<Appointment> apps = appointmentService.findAllByHall(hall);
-		
+		List<Doctor> doctors = new ArrayList<Doctor>();
 		DateUtil util = DateUtil.getInstance();
 		Date desiredStartTime = util.getDate(dto.getDate(), "dd-MM-yyyy HH:mm");
 		Date desiredEndTime = util.getDate(dto.getEndDate(), "dd-MM-yyyy HH:mm");
@@ -714,24 +714,11 @@ public class AppointmentController
 			
 			if(util.overlappingInterval(di1, di2))
 			{
-				header.set("responseText", "hall");
-				return new ResponseEntity<>(header, HttpStatus.CONFLICT);
+				header.set("responseText","Sala je zauzeta u dato vreme!");
+				return new ResponseEntity<>(HttpStatus.CONFLICT);
 			}
 		}
-
-		for(String email : dto.getDoctors()){
-			Doctor d = (Doctor) userService.findByEmailAndDeleted(email, false);
-			List<Appointment> appsByDoc = appointmentService.findAllByDoctor(d);
-
-			for(Appointment app : appsByDoc) {
-				DateInterval di2 = new DateInterval(app.getDate(), app.getEndDate());
-
-				if (util.overlappingInterval(di1, di2)) {
-					header.set("responseText", "doctor,"+d.getName() + " " + d.getSurname());
-					return new ResponseEntity<>(header, HttpStatus.CONFLICT);
-				}
-			}
-		}
+		
 		
 		Appointment appointment = new Appointment.Builder(desiredStartTime)
 				.withClinic(request.getClinic())
@@ -742,17 +729,30 @@ public class AppointmentController
 				.withEndingDate(desiredEndTime)
 				.build();
 
-		for(Doctor doc : request.getDoctors())
+		for(String email : dto.getDoctors())
 		{
-			appointment.getDoctors().add(doc);
+			Doctor doctor = (Doctor) userService.findByEmailAndDeleted(email, false);
+			
+			List<Appointment> appointments = doctor.getAppointments();
+			
+			for(Appointment app : appointments)
+			{
+				DateInterval di2 = new DateInterval(app.getDate(), app.getEndDate());
+				if(util.overlappingInterval(di1, di2) || !doctor.IsFreeOn(desiredStartTime))
+				{
+					header.set("responseText","Doktor "+email+" je zauzet u dato vreme!");
+					return new ResponseEntity<>(HttpStatus.CONFLICT);
+				}
+				
+			}
+			
+			doctors.add(doctor);
 		}
 
 		if(appointment.getAppointmentType() == Appointment.AppointmentType.Surgery){
-			for(String email : dto.getDoctors())
+			for(Doctor doctor: doctors)
 			{
-				Doctor d = (Doctor) userService.findByEmailAndDeleted(email, false);
-				appointment.getDoctors().add(d);
-				notificationService.sendNotification(email, "Nova operacija je zakazana",  "Zakazana je nova operacija u Vasem radnom kalendaru. Datum operacije je "+ dto.getDate() +
+				notificationService.sendNotification(doctor.getEmail(), "Nova operacija je zakazana",  "Zakazana je nova operacija u Vasem radnom kalendaru. Datum operacije je "+ dto.getDate() +
 						", u klinici  " + appointment.getClinic().getName() + ", u sali " + appointment.getHall().getName() + ", broj " + appointment.getHall().getNumber() + ".");
 
 			}
@@ -767,27 +767,24 @@ public class AppointmentController
 
 		}
 
+		appointment.getDoctors().addAll(doctors);
 
-
-
-		clinic.getAppointments().add(appointment);
 		
 		//TODO:Send mail Pacijentu (Prihavti ili odbije)
 
 		//TODO:Send mail Doktoru
 
-
 		appointmentService.save(appointment);
 		
 		appointmentRequestService.delete(request);
 		
-		for(Doctor doc : request.getDoctors())
+		
+		for(Doctor doc : doctors)
 		{
 			doc.getAppointments().add(appointment);
 			userService.save(doc);
 		}		
 		
-		clinicService.save(clinic);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 	
@@ -877,6 +874,9 @@ public class AppointmentController
 			}
 		}
 		
+		request.setAppointmentType(dto.getType());
+		request.setTimestamp(DateUtil.getInstance().getDate(dto.getStartTimestamp(),"dd-MM-yyyy"));
+		
 		appointmentRequestService.save(request);
 		
 		return new ResponseEntity<>(HttpStatus.CREATED);
@@ -954,7 +954,9 @@ public class AppointmentController
 		
 		Patient p = (Patient) userService.findByEmailAndDeleted(email, false);
 
+		Doctor doctor = (Doctor) userService.findByEmailAndDeleted(dto.getDoctors().get(0),false);
 
+		
 		if(p == null)
 		{
 			headers.set("responseText","Patient with email " + email + " not found");
@@ -1005,7 +1007,6 @@ public class AppointmentController
 			strBuilder.append(". Cena pregleda je ");
 			strBuilder.append(app.getPriceslist().getPrice());
 			strBuilder.append("rsd.");
-			System.out.println(strBuilder.toString());
 			notificationService.sendNotification(p.getEmail(), "Zakazali ste pregled!", strBuilder.toString());
 			appointmentService.save(app);			
 		}

@@ -189,11 +189,11 @@
       			<input type="time" class="form-control" id="appStartTime">
       		</div>
       		<div class="form-group col-md-6">
-      			<label for="appEndTime">Kraj:</label>
+      			<label for="appEndTime">*Kraj:</label>
       			<input type="time" class="form-control" id="appEndTime">
       		</div>
             <div class="form-group col-md-6" id="DoctorsPicker" style="display:none">
-                <label for="selectDoctors">Doktori koji ce prisustvovati operaciji:</label><br>
+                <label for="selectDoctors">*Doktori koji ce prisustvovati operaciji:</label><br>
                 <select title="Doktori" class="selectpicker" id="selectDoctors" name="selectDiagnosis" style="height: 40px !important;" multiple data-live-search="true"></select>
             </div>
       	</div>
@@ -236,7 +236,7 @@
 
     
 <!-- -------------------ZAHTEV ZA GODISNJI ODMOR----------- -->
-<div class="card mb-3" id ="showVacationRequestContainer" style="display:none">
+<div id ="showVacationRequestContainer" style="display:none">
   <div class="card card-register mx-auto mt-5">
   <div class="card-header">Zahtev za godišnji odmor ili odsustvo</div>
   <div class="card-body">
@@ -249,15 +249,27 @@
 	    <label for="endDateVacationRequest">Poslednji dan godišnjeg odmora ili odsustva: </label>
         <input class="form-control datepicker-here" data-language="en" placeholder="Izaberite datum" id="endDayInputVacationRequest" readonly="true">
 	  </div>
-	  <p>
 	  <div>
-	  <img src="images/checked.png" id="checkedImageVacationRequest" style="display:none ; width:10% ; height:auto" >
-	  <img src="images/unchecked.png" id="uncheckedImageVacationRequest" style="display:none ; width:5% ; height:auto">
+	  <div id="checkedImageVacationRequest" style="display:none">
+	  	<svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 130.2 130.2">
+  			<circle class="path circle" fill="none" stroke="#73AF55" stroke-width="6" stroke-miterlimit="10" cx="65.1" cy="65.1" r="62.1"/>
+  			<polyline class="path check" fill="none" stroke="#73AF55" stroke-width="6" stroke-linecap="round" stroke-miterlimit="10" points="100.2,40.2 51.5,88.8 29.8,67.5 "/>
+	 	</svg>
+		<p class="success">Nema konflikta! Spremno za slanje.</p>
+	  </div>
+	  <div id="uncheckedImageVacationRequest" style="display:none">
+		<svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 130.2 130.2">
+  			<circle class="path circle" fill="none" stroke="#D06079" stroke-width="6" stroke-miterlimit="10" cx="65.1" cy="65.1" r="62.1"/>
+  			<line class="path line" fill="none" stroke="#D06079" stroke-width="6" stroke-linecap="round" stroke-miterlimit="10" x1="34.4" y1="37.9" x2="95.8" y2="92.3"/>
+  			<line class="path line" fill="none" stroke="#D06079" stroke-width="6" stroke-linecap="round" stroke-miterlimit="10" x1="95.8" y1="38" x2="34.4" y2="92.2"/>
+  			Bummer!
+		</svg>
+		<p class="error">Konflikt! U ovom periodu imate neispunjenih obaveza!</p>	  
+	  </div>
 	  </div>
 	  	<div class="spinner-border text-primary" id="vacationRequestSpinner" role="status" style="display:none">
   			<span class="sr-only">Provera mogućnosti slanja zahteva...</span>
 		</div>
-	  </p>
 	  <button type="submit" id = "submitVacationRequest"class="btn btn-primary" disabled="true">Pošalji zahtev</button>
 	</form>
    </div>
@@ -1123,16 +1135,6 @@
               <input class="form-control datepicker-here" data-language="en" placeholder="Izaberite datum" id="inputDatePredef" readonly="true">
             </div>
           </div>
-          <div class="form-group">
-          <label>Vreme pocetka pregleda</label>
-            <div class="form-label-group">        
-              <input type="time" id="inputTimeBegin" class="form-control"  autofocus="autofocus" >
-            </div>
-            <label>Vreme kraja pregleda</label>
-            <div class="form-label-group">        
-              <input type="time" id="inputTimeEnd" class="form-control"  autofocus="autofocus" >
-            </div>
-          </div>
             <div class="form-group">
       		<label for="inputAppointmentTypeSelect">Tip pregleda</label>
       		<select id="inputAppointmentTypeSelect" class="form-control">
@@ -1141,16 +1143,29 @@
 				</option>
      		</select>
     	   </div>
-          <div class="form-group">
-      		<label for="inputAppointmentHall">Sala</label>
-      		<select id="inputAppointmentHall" class="form-control">
-     		</select>
-    	   </div> 
     	   <br>
     	  <div id="makePredefined_chooseDoctor" class="card mb-3">
 			
           </div>
           <br>
+          <div class="form-group">
+          <label>Vreme pocetka pregleda</label>
+            <div class="form-label-group">        
+              <input type="time" id="inputTimeBegin" class="form-control"  autofocus="autofocus" disabled>
+            </div>
+            <label>Vreme kraja pregleda</label>
+            <div class="form-label-group">        
+              <input type="time" id="inputTimeEnd" class="form-control"  autofocus="autofocus" disabled>
+            </div>
+          </div>
+          <div class="form-group">
+      		<label for="inputAppointmentHall">Sala</label>
+      		<select id="inputAppointmentHall" class="form-control">
+      		<option selected="selected" disabled value="">
+					Izaberite Salu
+				</option>
+     		</select>
+    	   </div> 
           <button type="button" class="btn btn-primary" id="submitPredefinedAppointmentRequest">Zakazi</button>         
         </form>
       </div>

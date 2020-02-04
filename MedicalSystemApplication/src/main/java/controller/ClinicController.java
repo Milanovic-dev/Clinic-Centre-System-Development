@@ -79,7 +79,6 @@ public class ClinicController {
             clinic.setCity(dto.getCity());
             clinic.setDescription(dto.getDescription());
             clinic.setState(dto.getState());
-            clinic.setAppointments(new ArrayList<>());
             clinic.setDoctors(new ArrayList<>());
             clinic.setHalls(new ArrayList<>());
             clinic.setReviews(new ArrayList<>());

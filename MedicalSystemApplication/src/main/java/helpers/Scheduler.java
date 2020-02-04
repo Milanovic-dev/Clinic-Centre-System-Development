@@ -114,8 +114,6 @@ public class Scheduler {
 				break;
 			}
 			
-			System.out.println(dates[i]);
-			System.out.println(dates[i + 1]);
 			Date endDate = dates[i];
 			Date startDate = dates[i + 1];
 			

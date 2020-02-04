@@ -22,6 +22,7 @@ public class AppointmentDTO {
 	private int version;
 	private String startTimestamp;
 	private boolean done = false;
+	private Boolean predefined = false;
 	
 	public AppointmentDTO() {
 		super();
@@ -65,6 +66,7 @@ public class AppointmentDTO {
 		this.type = appointment.getAppointmentType();	
 		this.version = appointment.getVersion();
 		this.done = appointment.getDone();
+		this.predefined = appointment.getPredefined();
 	}
 	
 	public AppointmentDTO(AppointmentRequest appointment)
@@ -87,6 +89,14 @@ public class AppointmentDTO {
 	
 	
 	
+	public Boolean getPredefined() {
+		return predefined;
+	}
+
+	public void setPredefined(Boolean predefined) {
+		this.predefined = predefined;
+	}
+
 	public String getEndDate() {
 		return endDate;
 	}
