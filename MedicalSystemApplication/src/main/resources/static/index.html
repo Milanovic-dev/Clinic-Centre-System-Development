@@ -286,7 +286,7 @@
 	  	<div class="spinner-border text-primary" id="vacationRequestSpinner" role="status" style="display:none">
   			<span class="sr-only">Provera mogućnosti slanja zahteva...</span>
 		</div>
-	  <button type="submit" id = "submitVacationRequest"class="btn btn-primary" disabled="true">Pošalji zahtev</button>
+	  <button type="submit" id = "submitVacationRequest" class="btn btn-primary" disabled="true">Pošalji zahtev</button>
 	</form>
    </div>
   </div>
@@ -348,7 +348,9 @@
         </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-primary" data-dismiss="modal">Zatvori</button>
+          <input class="form-control" type="date" id="newDate">
+          <button type="button" class="btn btn-primary" data-dismiss="modal" id="setNewDate">Izmeni datum</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Zatvori</button>
       </div>
     </div>
   </div>
@@ -627,7 +629,7 @@
                 <div class="form-group">
                     <label>Krvna grupa:</label>
                     <div class="form-label-group">
-                        <select  class="form-control" id="updateBloodType" class="form-control">
+                        <select class="form-control" id="updateBloodType">
                             <option disabled selected value>-- Krvna grupa --</option>
                             <option>A</option>
                             <option>B</option>
@@ -802,7 +804,7 @@
                 <option value="Antigua and Barbuda">Antigua and Barbuda</option>
                 <option value="Argentina">Argentina</option>
                 <option value="Armenia">Armenia</option>
-                <option valu="Aruba">Aruba</option>
+                <option value="Aruba">Aruba</option>
                 <option value="Australia">Australia</option>
                 <option value="Austria">Austria</option>
                 <option value="Azerbaijan">Azerbaijan</option>

@@ -52,6 +52,9 @@ public class Appointment
 	@Column(name="done",nullable = true)
 	private Boolean done = false;
 
+	private Date newDate;
+	private Date newEndDate;
+
 	@Version
 	private Integer version;
 	
@@ -75,12 +78,25 @@ public class Appointment
 		this.appointmentType = appointmentType; 
 	}
 
-	
-	
-	public Date getEndDate() {
+    public Date getNewEndDate() {
+        return newEndDate;
+    }
+
+    public void setNewEndDate(Date newEndDate) {
+        this.newEndDate = newEndDate;
+    }
+
+    public Date getEndDate() {
 		return endDate;
 	}
 
+	public Date getNewDate() {
+		return newDate;
+	}
+
+	public void setNewDate(Date newDate) {
+		this.newDate = newDate;
+	}
 
 	public void setEndDate(Date endDate) {
 		this.endDate = endDate;

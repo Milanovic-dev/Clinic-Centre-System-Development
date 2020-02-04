@@ -564,6 +564,14 @@ function listAppointmentRequest(clinic, appointment, i)
 				listChooseHalls(data.responseJSON)			
 			}
 		})
+
+		let newDate
+		$('#setNewDate').click(function(e){
+		    e.preventDefault()
+		    newDate = $('#newDate').val()
+		    newDate = dateFormat(newDate)
+		    console.log(newDate)
+		})
 		
 		$('#submitApp').off('click')
 		$('#submitApp').click(function(e){
@@ -622,15 +630,18 @@ function listAppointmentRequest(clinic, appointment, i)
 			
 			if(type == "Examination")
 			{
-				//TODO: Za pregled			
-				let json = JSON.stringify({"date":appointment.date,"endDate":appointment.date.split(' ')[0] + " " + $('#appEndTime').val(),"patientEmail":appointment.patientEmail,"hallNumber":selectedHallNumber,"clinicName":clinic.name, "doctors":doctors})
+				//TODO: Za pregled
+				console.log(newDate)
+				console.log(appointment.date)
+				console.log(appointment.date.split(' ')[0] + " " + $('#appEndTime').val())
+				let json = JSON.stringify({"date":appointment.date,"endDate":appointment.date.split(' ')[0] + " " + $('#appEndTime').val(),"patientEmail":appointment.patientEmail,"hallNumber":selectedHallNumber,"clinicName":clinic.name, "doctors":doctors, "newDate":newDate+ " " + $('#appStartTime').val(), "newEndDate":newDate+ " " + $('#appEndTime').val()})
 				console.log(json)
 
 				sendRequestAnswer(json, true)
 			}
 			else
 			{
-			    let json = JSON.stringify({"date":appointment.date,"endDate":appointment.date.split(' ')[0] + " " + $('#appEndTime').val(),"patientEmail":appointment.patientEmail,"hallNumber":selectedHallNumber,"clinicName":clinic.name, "doctors":doctors})
+			    let json = JSON.stringify({"date":appointment.date,"endDate":appointment.date.split(' ')[0] + " " + $('#appEndTime').val(),"patientEmail":appointment.patientEmail,"hallNumber":selectedHallNumber,"clinicName":clinic.name, "doctors":doctors, "newDate":newDate+ " " + $('#appStartTime').val(), "newEndDate":newDate+ " " + $('#appEndTime').val()})
                 console.log(json)
 
                 sendRequestAnswer(json, true)
@@ -1614,4 +1625,8 @@ function makeDoctor(d,i)
 
 }
 
-
+function dateFormat (dateObj) {
+      var date = new Date(dateObj);
+      var month = date.getMonth()+1
+      return date.getDate() + "-" + month+ "-" + date.getFullYear();
+}

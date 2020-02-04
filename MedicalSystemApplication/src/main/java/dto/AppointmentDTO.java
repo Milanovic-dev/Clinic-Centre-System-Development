@@ -23,6 +23,8 @@ public class AppointmentDTO {
 	private String startTimestamp;
 	private boolean done = false;
 	private Boolean predefined = false;
+	private String newDate;
+	private String newEndDate;
 	
 	public AppointmentDTO() {
 		super();
@@ -67,6 +69,10 @@ public class AppointmentDTO {
 		this.version = appointment.getVersion();
 		this.done = appointment.getDone();
 		this.predefined = appointment.getPredefined();
+		if(appointment.getNewDate() != null)
+			this.newDate = DateUtil.getInstance().getString(appointment.getNewDate(), "dd-MM-yyyy HH:mm");
+		if(appointment.getNewEndDate() != null)
+			this.newDate = DateUtil.getInstance().getString(appointment.getNewEndDate(), "dd-MM-yyyy HH:mm");
 	}
 	
 	public AppointmentDTO(AppointmentRequest appointment)
@@ -86,9 +92,23 @@ public class AppointmentDTO {
 		this.price = appointment.getPriceslist().getPrice();
 		this.type = appointment.getAppointmentType();	
 	}
-	
-	
-	
+
+	public String getNewEndDate() {
+		return newEndDate;
+	}
+
+	public void setNewEndDate(String newEndDate) {
+		this.newEndDate = newEndDate;
+	}
+
+	public String getNewDate() {
+		return newDate;
+	}
+
+	public void setNewDate(String newDate) {
+		this.newDate = newDate;
+	}
+
 	public Boolean getPredefined() {
 		return predefined;
 	}
