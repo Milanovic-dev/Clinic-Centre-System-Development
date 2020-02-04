@@ -804,7 +804,7 @@ public class AppointmentController
 	public ResponseEntity<Void> denyAppoinmtnetRequest(@RequestBody AppointmentDTO dto)
 	{
 		HttpHeaders header = new HttpHeaders();
-		AppointmentRequest request = appointmentRequestService.findAppointmentRequest(dto.getDate(), dto.getHallNumber(), dto.getClinicName());
+		AppointmentRequest request = appointmentRequestService.findAppointmentRequest(dto.getDate(), dto.getPatientEmail(), dto.getClinicName());
 		
 		if(request == null)
 		{
@@ -813,6 +813,7 @@ public class AppointmentController
 		}
 		
 		//Send mail
+		notificationService.sendNotification(dto.getPatientEmail(), "Vas zahtev za pregled je odbijen", "Vas zahtev za pregled("+request.getPriceslist().getTypeOfExamination()+") datuma "+ dto.getDate() + " je odbijen od strane admina klinike.");
 		appointmentRequestService.delete(request);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}

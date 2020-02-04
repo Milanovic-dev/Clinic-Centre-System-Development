@@ -105,7 +105,7 @@ function setUpClinicAdminPage(user)
 		
 	})
 	
-	let appointmentHeaders = ["Ime pacijenta","Datum pocetka","Cena","Zahtev","Tip pregleda","Lekari",""]
+	let appointmentHeaders = ["Pacijent","Datum pocetka","Cena","Zahtev","Tip pregleda","Lekari","",""]
 	createDataTable("appReqTable","showExaminationRequestListContainer","Lista zahteva za preglede i operacije",appointmentHeaders,0)
 	getTableDiv('appReqTable').show()
 	
@@ -444,6 +444,7 @@ function listAppointmentRequests(clinic)
 
 function getAllAppointmentRequestsByClinic(clinic)
 {
+	
 	$.ajax({
 		type: 'GET',
 		url: 'api/appointments/clinic/getAllRequests/' + clinic.name,
@@ -486,15 +487,22 @@ function listAppointmentRequest(clinic, appointment, i)
     let type = appointment.type
     let typeOfExamination = appointment.typeOfExamination
     let tipic = "Pregled"
+    let doctorsDisplay = ""
+    	
+    for(d of appointment.doctors)
+    {
+    	doctorsDisplay += getProfileLink(d) + " "
+    }
     	
     if(type == "Surgery"){
         typeOfExamination = ""
         tipic = "Operacija"
+        
     }
 
-	let values = [appointment.patientEmail, appointment.date,appointment.price, tipic, typeOfExamination,appointment.doctors,'<button class="btn btn-primary" id="reserve_btn'+i+'">Rezervisi</button>']
+	let values = [getProfileLink(appointment.patientEmail), appointment.date,appointment.price, tipic, typeOfExamination,doctorsDisplay,'<button class="btn btn-primary" id="reserve_btn'+i+'">Rezervisi</button>','<button class="btn btn-danger" id="deny_btn'+i+'">Odbij</button>']
 	insertTableData("appReqTable",values)
-
+	
 	
 	$('#reserve_btn'+i).click(function(e){ 
 		e.preventDefault()
@@ -505,14 +513,47 @@ function listAppointmentRequest(clinic, appointment, i)
 		$('#appStartTime').val(appointment.date.split(' ')[1])
 
 		 if(appointment.type == "Surgery"){
-                $("#examinationCard").text("Operacija")
-                $("#examinationReserve").text("Rezervisi operaciju")
-                $("#DoctorsPicker").show()
+			 
+			 $("#examinationCard").text("Operacija")
+             $("#examinationReserve").text("Rezervisi operaciju")
+             $("#DoctorsPicker").show()
+             $('#DoctorPicker').hide()
+             $('#appPatient').val(appointment.patientEmail)
+             $('#appDate').val(appointment.date.split(" ")[0])
+
          } else if(appointment.type = "Examination") {
-                $("#examinationCard").text("Pregled")
-                $("#examinationReserve").text("Rezervisi pregled")
-                $("#DoctorsPicker").show()
-                $('#selectDoctors').val(appointment.doctors[0])
+        	 
+        	 $("#examinationCard").text("Pregled")
+        	 $("#examinationReserve").text("Rezervisi pregled")
+        	 $("#DoctorsPicker").hide()
+             $('#DoctorPicker').show()
+        	 $('#appPatient').val(appointment.patientEmail)
+        	 $('#appDate').val(appointment.date.split(" ")[0])
+        	 
+        	 $.ajax({
+                 type: 'GET',
+                 url:"api/clinic/getDoctorsByType/"+clinic.name + "/" + typeOfExamination,
+                 complete: function(data)
+                 {
+
+                    $('#selectDoctor').empty()
+                    $.each(data.responseJSON, function (i, item) {
+                 	   $('#selectDoctor').append($('<option>', {
+                    			   value: item.user.email,
+                    			   text : item.user.name + " " + item.user.surname + " - " + item.type
+                    		}));
+                 	   if(item.user.email == appointment.doctors[0])
+                 	   {
+                 		   
+                 		   $('#selectDoctor').val(item.user.email)
+                 	   }
+                 	   $('#selectDoctor').selectpicker('refresh');
+                 		   
+                    	});
+                         
+                 }
+             });
+        	 
          }
 
 		$.ajax({
@@ -559,16 +600,33 @@ function listAppointmentRequest(clinic, appointment, i)
             }
 
 			 let doctors = []
-             $('#selectDoctors option:selected').each(function() {
-                 doctors.push($(this).val())
-             });
+			 if(appointment.type == "Surgery")
+			 {
+				 $('#selectDoctors option:selected').each(function() {
+					 doctors.push($(this).val())
+				 });			 
+			 }	
+			 else
+			 {
+				 $('#selectDoctor option:selected').each(function() {
+					 doctors.push($(this).val())
+				 });	
+			 }
 
              if(doctors == "")
              {
-                 displayError('submitApp',"Morate izabrati doktore.")
+            	 if(appointment.type == "Surgery")
+                 {
+            		 displayError('submitApp',"Morate izabrati doktore za operaciju.")    		 
+                 }
+            	 else
+                 {
+            		 displayError('submitApp', 'Morate izabrati doktora za pregled.')
+                 }
                  return
              }
-
+             
+             displaySuccess('submitApp',"Izgleda dobro!")
 			
 			if(type == "Examination")
 			{
@@ -592,11 +650,20 @@ function listAppointmentRequest(clinic, appointment, i)
 			
 		})
 		
-		//TODO: Dodati opciju za odbijanje
+	})
+	//TODO: Dodati opciju za odbijanje
+	$('#deny_btn'+i).off('click')
+	$('#deny_btn'+i).click(function(e){
+		e.preventDefault()
+		
+		let json = JSON.stringify({"date":appointment.date,"clinicName":clinic.name,"patientEmail":appointment.patientEmail})
+		console.log(json)
+		sendRequestAnswer(json, false, i)
+		
 	})
 }
 
-function sendRequestAnswer(json, isAccepted)
+function sendRequestAnswer(json, isAccepted, i)
 {
 	if(isAccepted)
 	{		
@@ -640,7 +707,21 @@ function sendRequestAnswer(json, isAccepted)
 	}
 	else
 	{
-		//TODO: Deny
+		let button = $('#deny_btn'+i)
+		showLoading(button)
+		$('#reserve_btn'+i).prop('disabled',true)
+		$.ajax({
+			type:'DELETE',
+			url:"api/appointments/denyRequest",
+			data: json,
+			dataType : "json",
+			contentType : "application/json; charset=utf-8",
+			complete: function(data)
+			{
+				hideLoading(button)
+				listAppointmentRequests(clinic)			
+			}
+		})
 	}
 }
 

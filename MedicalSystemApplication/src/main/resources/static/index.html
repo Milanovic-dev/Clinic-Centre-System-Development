@@ -184,6 +184,18 @@
       <br>
       <form>
       	<div class="form-row">
+      		<div class="form-group col">
+      			<label for="appPatient">Pacijent</label>
+      			<input type="text" class="form-control" id="appPatient" readonly>
+      		</div>
+      	</div>
+      	<div class="form-row">
+      		<div class="form-group col">
+      			<label for="appDate">Datum</label>
+      			<input class="form-control datepicker-here" data-language="en" placeholder="Izaberite datum" id="appDate" readonly>
+      		</div>
+      	</div>
+      	<div class="form-row">
       		<div class="form-group col-md-6">
       			<label for="appStartTime">Pocetak:</label>
       			<input type="time" class="form-control" id="appStartTime">
@@ -193,8 +205,12 @@
       			<input type="time" class="form-control" id="appEndTime">
       		</div>
             <div class="form-group col-md-6" id="DoctorsPicker" style="display:none">
-                <label for="selectDoctors">*Doktori koji ce prisustvovati operaciji:</label><br>
+                <label for="selectDoctors">*Doktori koji ce obavljati operaciju:</label><br>
                 <select title="Doktori" class="selectpicker" id="selectDoctors" name="selectDiagnosis" style="height: 40px !important;" multiple data-live-search="true"></select>
+            </div>
+            <div class="form-group col-md-6" id="DoctorPicker" style="display:none">
+                <label for="selectDoctor">*Doktor koji ce obavljati pregled:</label><br>
+                <select title="Doktori" class="selectpicker" id="selectDoctor" name="selectDiagnosis" style="height: 40px !important;" data-live-search="true"></select>
             </div>
       	</div>
       </form>
