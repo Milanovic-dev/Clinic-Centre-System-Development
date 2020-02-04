@@ -74,11 +74,11 @@ function initMedicalRecord(record, user, foreign)
 	
 	setupStarRating()
 	
-	createHistoryTable(record.reports)
+	createHistoryTable(record.reports, foreign.email != user.email)
 }
 
 
-function createHistoryTable(reports)
+function createHistoryTable(reports, foreign)
 {
 	let headers = ['Tip','Datum','Klinika','Doktor/i','Pacijent','Razlog pregleda','Dijagnoza','Recepti','Dodaj ocenu']
 	createDataTable("historyTable","history","Istorija pregleda/operacija",headers,0)
@@ -89,6 +89,7 @@ function createHistoryTable(reports)
 		let data = ['Pregled', item.dateAndTime, getClinicProfileLink(item.clinicName), getProfileLink(item.doctorEmail), item.patientEmail, item.description, "", "", "<button class='btn btn-primary' id='review_btn"+i+"'>Oceni...</button>"]
 		insertTableData("historyTable",data)
 		
+		$('#review_btn'+i).prop('disabled', foreign)
 		
 		$('#review_btn'+i).click(function(e){
 			e.preventDefault()

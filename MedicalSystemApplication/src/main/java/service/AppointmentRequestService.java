@@ -77,6 +77,7 @@ public class AppointmentRequestService {
 		return null;
 	}
 	
+	
 	public AppointmentRequest findAppointmentRequest(String date, int hallNumber,String clinic)
 	{
 		DateFormat df = new SimpleDateFormat("dd-MM-yyyy HH:mm");
