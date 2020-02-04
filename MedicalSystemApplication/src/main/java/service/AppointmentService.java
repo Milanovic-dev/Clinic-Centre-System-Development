@@ -70,7 +70,7 @@ public class AppointmentService {
 		return findAppointment(d,h,c);
 	}
 	
-	@Transactional(readOnly = false)
+	@Transactional(isolation = Isolation.SERIALIZABLE, readOnly = false)
 	public void save(Appointment appointment)
 	{
 		appointmentRepository.save(appointment);
