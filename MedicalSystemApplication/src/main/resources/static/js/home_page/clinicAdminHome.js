@@ -599,13 +599,29 @@ function sendRequestAnswer(json, isAccepted)
 			complete: function(data)
 			{
 				console.log(data.status)
+
+
 				if(data.status == 200)
 				{
 					window.location.href = "index.html"
 				}
-				else if(data.status == 409)
+				else if(data.status == 409 )
 				{
-					warningModal("Neuspesno!","U izabrano vreme u sali je vec zakazan pregled!")
+				    var responseText = data.getResponseHeader('responseText')
+                    console.log(responseText)
+                    var fields = responseText.split(',');
+
+                    var indicator = fields[0];
+                    var doctor = fields[1];
+                    console.log("indicator", indicator)
+                    console.log("doctor", doctor)
+
+                    if(indicator == "hall"){
+                        warningModal("Neuspesno!","U izabrano vreme u sali je vec zakazan pregled!")
+                    } else if(indicator=="doctor") {
+                        warningModal("Neuspesno!","U izabrano vreme, doktor " + doctor + " nema slobodan termin!")
+                    }
+
 				}
 				hideLoading('submitApp')
 			}

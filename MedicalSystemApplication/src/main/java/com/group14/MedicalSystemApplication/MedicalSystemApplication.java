@@ -17,6 +17,7 @@ import helpers.InvokeFunction;
 import helpers.SecurePasswordHasher;
 import model.CentreAdmin;
 import model.Patient;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 import service.AppointmentRequestService;
 import service.AuthService;
 import service.UserService;

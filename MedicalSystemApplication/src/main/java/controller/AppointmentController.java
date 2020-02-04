@@ -683,6 +683,15 @@ public class AppointmentController
 	{
 		HttpHeaders header = new HttpHeaders();
 		AppointmentRequest request = appointmentRequestService.findAppointmentRequest(dto.getDate(), 0, dto.getClinicName());
+
+		Clinic clinic = clinicService.findByName(dto.getClinicName());
+
+		if(request == null)
+		{
+			header.set("responseText","Request not found: " + dto.getDate() +" ,"+ dto.getHallNumber() +", "+ dto.getClinicName());
+			return new ResponseEntity<>(header,HttpStatus.NOT_FOUND);
+		}
+
 		
 		Hall hall = hallService.findByNumber(dto.getHallNumber());
 		
@@ -747,8 +756,14 @@ public class AppointmentController
 						", u klinici  " + appointment.getClinic().getName() + ", u sali " + appointment.getHall().getName() + ", broj " + appointment.getHall().getNumber() + ".");
 
 			}
-			notificationService.sendNotification(appointment.getPatient().getEmail(), "Vasa operacija je zakazana", "Zahtev za operaciju je prihvacen. Datum operacije je "+ dto.getDate() +
-					", u klinici  " + appointment.getClinic().getName() + ", u sali " + appointment.getHall().getName() + ", broj " + appointment.getHall().getNumber() + "." );
+//
+//			if(util.isSameDay(request.getDate(), desiredStartTime)){
+//				notificationService.sendNotification("miaknezevic5@gmail.com", "Vasa operacija je zakazana", "Zahtev za operaciju je prihvacen. Datum operacije je "+ dto.getDate() +
+//						", u klinici  " + appointment.getClinic().getName() + ", u sali " + appointment.getHall().getName() + ", broj " + appointment.getHall().getNumber() + "." );
+//			} else {
+//				notificationService.sendNotification("miaknezevic5@gmail.com", "Datum operacije je promenjen", "Datum operacije koja je bila zakazana " + dto.getDate() +  ", promenjen je na  "+ dto.getDate() +
+//						". Operacija je zakazana u klinici  " + appointment.getClinic().getName() + ", u sali " + appointment.getHall().getName() + ", broj " + appointment.getHall().getNumber() + "." );
+//			}
 
 		}
 

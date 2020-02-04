@@ -26,7 +26,7 @@ public class AppointmentRequest {
 	
 	@Column(name= "startingDateAndTime",nullable = false)
 	private Date date;
-		
+
 	@OneToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "patient_id")
 	private Patient patient;
@@ -45,7 +45,7 @@ public class AppointmentRequest {
 	@JoinColumn(name = "priceslist_id")
 	private Priceslist priceslist;
 	
-	@Column(name = "appointmentType",nullable = true)
+	@Column(name = "appointmentType", nullable = true)
 	private AppointmentType appointmentType;
 	
 	@Column(name = "timestamp")
@@ -54,7 +54,7 @@ public class AppointmentRequest {
 	public AppointmentRequest()
 	{
 		super();
-		this.doctors = new ArrayList<Doctor>();
+		this.doctors = new ArrayList<>();
 	}
 		
 	public AppointmentRequest(Long id, Date date,Hall hall, Patient patient, Clinic clinic,
@@ -65,7 +65,7 @@ public class AppointmentRequest {
 		this.hall = hall;
 		this.patient = patient;
 		this.clinic = clinic;
-		this.doctors = new ArrayList<Doctor>();
+		this.doctors = new ArrayList<>();
 		this.priceslist = priceslist;
 		this.appointmentType = appointmentType;
 	}
@@ -75,7 +75,7 @@ public class AppointmentRequest {
 		this.hall = hall;
 		this.patient = patient;
 		this.clinic = clinic;
-		this.doctors = new ArrayList<Doctor>();
+		this.doctors = new ArrayList<>();
 		this.priceslist = priceslist;
 		this.appointmentType = appointmentType;
 		this.timestamp = new Date();
