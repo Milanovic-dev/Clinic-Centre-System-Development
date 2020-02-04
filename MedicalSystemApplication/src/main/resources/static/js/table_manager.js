@@ -214,6 +214,10 @@ function insertTableData(id,data)
 	$('#table_'+id+' tbody').append(tr)
 }
 
+function deleteTableRow(id, i)
+{
+	$('#table_'+id).DataTable().rows(i).delete()
+}
 
 function insertTableInto(id, handle)
 {

@@ -90,8 +90,8 @@ let button = $("#"+id)
 	let spanId = id + "_mesSpan"
 	if($('#'+spanId).length > 0)
 	{
-		$('#'+spanID).text(text)
-		$('#'+spanID).css("color","#4BB543")
+		$('#'+spanId).text(text)
+		$('#'+spanId).css("color","#4BB543")
 		return
 	}
 	
