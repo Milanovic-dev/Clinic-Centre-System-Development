@@ -98,7 +98,7 @@ public class AppointmentController
 		}
 		
 		List<Appointment> app = appointmentService.findAllByDoctorAndPatient(d, p);
-		List<AppointmentDTO> appDTO = new ArrayList<AppointmentDTO>();
+		List<AppointmentDTO> appDTO = new ArrayList<>();
 		
 		if(app == null)
 		{
@@ -359,7 +359,7 @@ public class AppointmentController
 		{
 			AppointmentDTO dto = new AppointmentDTO(app);
 			dto.setDate(app.getDate().toString());
-			dto.setEndDate(app.getEndDate().toString());
+			dto.setEnd(app.getEndDate().toString());
 			dtos.add(dto);		
 		}
 		
@@ -564,6 +564,7 @@ public class AppointmentController
 			{
 				AppointmentDTO dt = new AppointmentDTO(app);
 				dt.setDate(app.getDate().toString());
+				dt.setEnd(app.getEndDate().toString());
 				dto.add(dt);			
 			}
 		}
@@ -592,7 +593,7 @@ public class AppointmentController
 		}
 		
 		Date date = DateUtil.getInstance().getDate(dto.getDate(), "dd-MM-yyyy HH:mm");
-		Date endDate = DateUtil.getInstance().getDate(dto.getEndDate(), "dd-MM-yyyy HH:mm");
+		Date endDate = DateUtil.getInstance().getDate(dto.getEnd(), "dd-MM-yyyy HH:mm");
 		
 		
 		Hall hall = hallService.findByNumber(dto.getHallNumber());
@@ -705,7 +706,7 @@ public class AppointmentController
 		List<Doctor> doctors = new ArrayList<Doctor>();
 		DateUtil util = DateUtil.getInstance();
 		Date desiredStartTime = util.getDate(dto.getDate(), "dd-MM-yyyy HH:mm");
-		Date desiredEndTime = util.getDate(dto.getEndDate(), "dd-MM-yyyy HH:mm");
+		Date desiredEndTime = util.getDate(dto.getEnd(), "dd-MM-yyyy HH:mm");
 
 
 		String parts[] = dto.getNewDate().split(" ");
@@ -768,7 +769,7 @@ public class AppointmentController
 			}
 
 			if(dat!= "undefined"){
-				notificationService.sendNotification("miaknezevic5@gmail.com", "Vasa operacija je zakazana", "Zahtev za operaciju je prihvacen. Datum operacije je "+  dto.getNewDate() +
+				notificationService.sendNotification("miaknezevic5@gmail.com", "Vasa operacija je zakazana", "Zahtev za operaciju je prihvacen. Datum operacije je "+  dto.getDate() +
 						", u klinici  " + appointment.getClinic().getName() + ", u sali " + appointment.getHall().getName() + ", broj " + appointment.getHall().getNumber() + "." );
 			} else {
 				notificationService.sendNotification("miaknezevic5@gmail.com", "Datum operacije je promenjen", "Datum operacije, koja je bila zakazana " +

@@ -10,7 +10,7 @@ import model.Appointment.AppointmentType;
 public class AppointmentDTO {
 
 	private String date;
-	private String endDate;
+	private String end;
 	private String patientEmail;
 	private String clinicName;
 	private int hallNumber;
@@ -49,7 +49,7 @@ public class AppointmentDTO {
 	{
 		this.date = DateUtil.getInstance().getString(appointment.getDate(),"dd-MM-yyyy HH:mm");
 		if(appointment.getEndDate() != null)
-			this.endDate = DateUtil.getInstance().getString(appointment.getEndDate(), "dd-MM-yyyy HH:mm");
+			this.end = DateUtil.getInstance().getString(appointment.getEndDate(), "dd-MM-yyyy HH:mm");
 		if(appointment.getPatient() != null)
 			this.patientEmail = appointment.getPatient().getEmail();
 		this.clinicName = appointment.getClinic().getName();
@@ -117,12 +117,12 @@ public class AppointmentDTO {
 		this.predefined = predefined;
 	}
 
-	public String getEndDate() {
-		return endDate;
+	public String getEnd() {
+		return end;
 	}
 
-	public void setEndDate(String endDate) {
-		this.endDate = endDate;
+	public void setEnd(String end) {
+		this.end = end;
 	}
 
 	public String getStartTimestamp() {

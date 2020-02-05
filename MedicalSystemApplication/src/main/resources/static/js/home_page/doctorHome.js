@@ -548,9 +548,6 @@ function initCalendarDoc(user)
                   var calendarEl = document.getElementById('calendar');
 
                   var calendar = $('#calendar').fullCalendar({
-                  // plugins: [ 'interaction', 'dayGrid', 'timeGrid',
-					// 'monthGrid', 'timeline' ],
-                  // defaultView: 'dayGridMonth',
                   defaultDate: '2020-02-01',
                   buttonText: {
                          today:    'danas',
@@ -566,9 +563,24 @@ function initCalendarDoc(user)
                   dayNames: ['Nedelja','Ponedeljak','Utorak','Sreda','Cetvrtak','Petak','Subota'],
                   dayNamesShort: ['Ned','Pon','Uto','Sre','Cet','Pet','Sub'],
 
-                  selectable:true,
+
+                  selectable: true,
+                  eventRender: function(event, element) {
+                      if(event.source.uid == 2){
+                          element.find('.fc-title').append("Godisnji odmor");
+                          element.find('.fc-time').hide();
+                          $(element).tooltip({title: "od " + dateFormat(event.date) + " do " + dateFormat(event.end), container: "body"})
+                      }
+
+                  },
+
                   eventClick: function(info)
                   {
+
+                      if(info.source.uid == 2){
+                        return
+                      }
+
                       var type
                       if(info.type == 'Surgery'){
                             type = 'Operacija'
@@ -576,7 +588,7 @@ function initCalendarDoc(user)
                             type = 'Pregled'
                        }
 
-                      var sd=info.start._i
+                      var sd = info.start._i
                            sd = formatDateHours(sd)
 
 
@@ -641,20 +653,28 @@ function initCalendarDoc(user)
 
                       }
                   },
-                  eventColor: '#2f989d',
+
                   eventSources: [
                          {
                            url: 'api/appointments/doctor/getAllAppointmentsCalendar/'+user.email,
                            method: 'GET',
-                           extraParams: {
-
-                           },
-
+                           color: '#2f989d',
+                           textColor: 'black',
                            failure: function() {
                              alert('there was an error while fetching events!');
                            },
 
                          },
+                         {
+                            url: 'api/vacation/getAllVacationsByUser/'+user.email,
+                            method: 'GET',
+                            color: '#28a745',
+                            textColor: 'black',
+                            failure: function() {
+                              alert('there was an error while fetching vac events!');
+                            },
+
+                          },
                        ],
                     schedulerLicenseKey: 'GPL-My-Project-Is-Open-Source'
                 });

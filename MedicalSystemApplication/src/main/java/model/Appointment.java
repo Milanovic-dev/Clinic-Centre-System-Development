@@ -16,10 +16,10 @@ public class Appointment
 	@GeneratedValue( strategy = GenerationType.AUTO)
 	private Long id;
 	
-	@Column(name= "startingDateAndTime",nullable = false)
+	@Column(name= "startingDateAndTime")
 	private Date date;
 	
-	@Column(name= "endingDateAndTime",nullable = false)
+	@Column(name= "endingDateAndTime")
 	private Date endDate;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -33,7 +33,7 @@ public class Appointment
 	@JoinColumn(name = "clinic_id")
 	private Clinic clinic;
 	
-	@Column(name = "duration",nullable = true)
+	@Column(name = "duration", nullable = true)
 	private long duration;
 
 	@ManyToMany(fetch = FetchType.LAZY)
@@ -43,24 +43,26 @@ public class Appointment
 	@JoinColumn(name = "priceslist_id")
 	private Priceslist priceslist;
 	
-	@Column(name = "appointmentType",nullable = true)
+	@Column(name = "appointmentType")
 	private AppointmentType appointmentType;
 	
-	@Column(name="predefined",nullable = true)
+	@Column(name="predefined")
 	private Boolean predefined = false;
 
-	@Column(name="done",nullable = true)
+	@Column(name="done")
 	private Boolean done = false;
 
 	private Date newDate;
 	private Date newEndDate;
+
+
 
 	@Version
 	private Integer version;
 	
 	public Appointment() {
 		super();
-		this.doctors = new ArrayList<Doctor>();
+		this.doctors = new ArrayList<>();
 		// TODO Auto-generated constructor stub
 	}
 
@@ -73,7 +75,7 @@ public class Appointment
 		this.patient = patient;
 		this.clinic = clinic;
 		this.duration = duration;
-		this.doctors = new ArrayList<Doctor>();
+		this.doctors = new ArrayList<>();
 		this.priceslist = priceslist;
 		this.appointmentType = appointmentType; 
 	}
@@ -223,7 +225,7 @@ public class Appointment
 		public Builder(Date date)
 		{
 			this.date = date;
-			doctors = new ArrayList<Doctor>();
+			doctors = new ArrayList<>();
 		}
 		
 		public Builder withHall(Hall hall)
@@ -232,7 +234,7 @@ public class Appointment
 			
 			return this;
 		}
-		
+
 		public Builder withPatient(Patient patient)
 		{
 			this.patient = patient;
