@@ -65,7 +65,7 @@ public class AppointmentDTO {
 			this.typeOfExamination = appointment.getPriceslist().getTypeOfExamination();
 			this.price = appointment.getPriceslist().getPrice();
 		}
-		this.type = appointment.getAppointmentType();	
+		this.type = appointment.getAppointmentType();
 		this.version = appointment.getVersion();
 		this.done = appointment.getDone();
 		this.predefined = appointment.getPredefined();
@@ -74,7 +74,7 @@ public class AppointmentDTO {
 		if(appointment.getNewEndDate() != null)
 			this.newDate = DateUtil.getInstance().getString(appointment.getNewEndDate(), "dd-MM-yyyy HH:mm");
 	}
-	
+
 	public AppointmentDTO(AppointmentRequest appointment)
 	{
 		this.date = DateUtil.getInstance().getString(appointment.getDate(),"dd-MM-yyyy HH:mm");
@@ -90,7 +90,7 @@ public class AppointmentDTO {
 		}
 		this.typeOfExamination = appointment.getPriceslist().getTypeOfExamination();
 		this.price = appointment.getPriceslist().getPrice();
-		this.type = appointment.getAppointmentType();	
+		this.type = appointment.getAppointmentType();
 	}
 
 	public String getNewEndDate() {

@@ -62,7 +62,7 @@ public class UserService {
 	{
 		return userRepository.findByEmailAndDeleted(email,deleted);
 	}
-	
+
 	public void save(User user)
 	{
 		userRepository.save(user);

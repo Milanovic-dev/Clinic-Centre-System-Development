@@ -2,14 +2,7 @@ package model;
 
 import java.util.Date;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 public class Vacation 
@@ -23,6 +16,10 @@ public class Vacation
 	
 	@Column(name = "endDate", nullable = false)
 	private Date endDate;
+
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "user_id", referencedColumnName = "id")
+	private User user;
 	
 	public Vacation() {
 		super();
@@ -32,12 +29,13 @@ public class Vacation
 		super();
 		this.startDate = startDate;
 		this.endDate = endDate;
+		this.user = vacationUser;
 	}
 	
 	public Vacation(VacationRequest request)
 	{
-		this.startDate = request.getStartDate();
-		this.endDate = request.getEndDate();
+		this.startDate = request.getDate();
+		this.endDate = request.getEnd();
 	}
 	
 	public Long getId() {
@@ -59,6 +57,11 @@ public class Vacation
 		this.endDate = endDate;
 	}
 
-	
-	
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
 }

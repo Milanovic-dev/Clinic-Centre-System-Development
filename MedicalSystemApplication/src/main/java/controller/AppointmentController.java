@@ -98,7 +98,7 @@ public class AppointmentController
 		}
 		
 		List<Appointment> app = appointmentService.findAllByDoctorAndPatient(d, p);
-		List<AppointmentDTO> appDTO = new ArrayList<AppointmentDTO>();
+		List<AppointmentDTO> appDTO = new ArrayList<>();
 		
 		if(app == null)
 		{
@@ -564,6 +564,7 @@ public class AppointmentController
 			{
 				AppointmentDTO dt = new AppointmentDTO(app);
 				dt.setDate(app.getDate().toString());
+				dt.setEndDate(app.getEndDate().toString());
 				dto.add(dt);			
 			}
 		}
@@ -768,7 +769,7 @@ public class AppointmentController
 			}
 
 			if(dat!= "undefined"){
-				notificationService.sendNotification("miaknezevic5@gmail.com", "Vasa operacija je zakazana", "Zahtev za operaciju je prihvacen. Datum operacije je "+  dto.getNewDate() +
+				notificationService.sendNotification("miaknezevic5@gmail.com", "Vasa operacija je zakazana", "Zahtev za operaciju je prihvacen. Datum operacije je "+  dto.getDate() +
 						", u klinici  " + appointment.getClinic().getName() + ", u sali " + appointment.getHall().getName() + ", broj " + appointment.getHall().getNumber() + "." );
 			} else {
 				notificationService.sendNotification("miaknezevic5@gmail.com", "Datum operacije je promenjen", "Datum operacije, koja je bila zakazana " +

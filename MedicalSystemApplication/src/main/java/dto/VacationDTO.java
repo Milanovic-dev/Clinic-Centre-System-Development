@@ -3,59 +3,69 @@ package dto;
 import java.util.Date;
 
 import helpers.DateUtil;
+import model.Vacation;
 import model.VacationRequest;
 
-public class VacationDTO 
+public class VacationDTO
 {
-	private String startDate;
-	private String endDate;
+	private String date;
+	private String end;
 	private UserDTO user;
 	private Long id;
-	
-	
-	public VacationDTO(String startDate, String endDate,UserDTO userDTO,Long id) {
+
+
+	public VacationDTO(String date, String end,UserDTO userDTO,Long id) {
 		super();
-		this.startDate = startDate;
-		this.endDate = endDate;
+		this.date = date;
+		this.end = end;
 		this.user = userDTO;
 		this.id = id;
 	}
 	public VacationDTO(VacationRequest vrq)
 	{
-		this.startDate = DateUtil.getInstance().getString(vrq.getStartDate(), "dd-MM-yyyy");
-		this.endDate = DateUtil.getInstance().getString(vrq.getEndDate(), "dd-MM-yyyy");
+		this.date = DateUtil.getInstance().getString(vrq.getDate(), "dd-MM-yyyy");
+		this.end = DateUtil.getInstance().getString(vrq.getEnd(), "dd-MM-yyyy");
 		this.user = new UserDTO(vrq.getUser());
 		this.id = vrq.getId();
-		
+
 	}
-	
+
+	public VacationDTO(Vacation vac)
+	{
+		this.date = DateUtil.getInstance().getString(vac.getStartDate(), "dd-MM-yyyy HH:mm");
+		this.end = DateUtil.getInstance().getString(vac.getEndDate(), "dd-MM-yyyy HH:mm");
+		this.user = new UserDTO(vac.getUser());
+	}
+
+
+
 	public VacationDTO() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
 
-	
+
 	public Long getId() {
 		return id;
 	}
 	public void setId(Long id) {
 		this.id = id;
 	}
-	public String getStartDate() {
-		return startDate;
+	public String getDate() {
+		return date;
 	}
 
-	public void setStartDate(String startDate) {
-		this.startDate = startDate;
+	public void setDate(String date) {
+		this.date = date;
 	}
 
-	public String getEndDate() {
-		return endDate;
+	public String getEnd() {
+		return end;
 	}
 
-	public void setEndDate(String endDate) {
-		this.endDate = endDate;
+	public void setEnd(String end) {
+		this.end = end;
 	}
 	public UserDTO getUser() {
 		return user;
@@ -65,6 +75,6 @@ public class VacationDTO
 	}
 
 
-	
-	
+
+
 }

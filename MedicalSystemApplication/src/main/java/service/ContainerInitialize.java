@@ -68,6 +68,9 @@ public class ContainerInitialize {
 	private VacationRequestRepository vacationRequestRepository;
 
 	@Autowired
+	private VacationRepository vacationRepository;
+
+	@Autowired
 	private AppointmentRequestRepository appointmentRequestRepository;
 
 	
@@ -182,7 +185,20 @@ public class ContainerInitialize {
 			
 			doctor1.setIsFirstLog(false);
 			doctor1.setAvarageRating(3.98f);
+			DateUtil dateInstance = DateUtil.getInstance();
+
 			userRepository.save(doctor1);
+
+			Vacation vac = new Vacation(dateInstance.getDate("04-05-2020", "dd-MM-yyyy"),dateInstance.getDate("15-05-2020", "dd-MM-yyyy"),doctor1);
+			Vacation vac2 = new Vacation(dateInstance.getDate("05-07-2020", "dd-MM-yyyy"),dateInstance.getDate("25-07-2020", "dd-MM-yyyy"),doctor1);
+			vacationRepository.save(vac);
+			vacationRepository.save(vac2);
+			doctor1.getVacations().add(vac);
+			doctor1.getVacations().add(vac2);
+
+
+
+
 			
 			Doctor doctor2 = new Doctor.Builder("doktor2@gmail.com")
 					.withPassword(hash)
@@ -326,6 +342,15 @@ public class ContainerInitialize {
 			nurse.setClinic(clinic);
 			userRepository.save(nurse);
 
+			Vacation vac3 = new Vacation(dateInstance.getDate("04-05-2020", "dd-MM-yyyy"),dateInstance.getDate("15-05-2020", "dd-MM-yyyy"),nurse);
+			Vacation vac4 = new Vacation(dateInstance.getDate("05-07-2020", "dd-MM-yyyy"),dateInstance.getDate("25-07-2020", "dd-MM-yyyy"),nurse);
+			vacationRepository.save(vac3);
+			vacationRepository.save(vac4);
+
+			nurse.getVacations().add(vac3);
+			nurse.getVacations().add(vac4);
+
+
 			userRepository.save(doctor1);
 			userRepository.save(doctor2);
 			
@@ -360,7 +385,7 @@ public class ContainerInitialize {
 			report.setPrescription(prescription);
 			report.setClinic(clinic);
 			report.getDiagnosis().add(diagnosis);
-			DateUtil dateInstance = DateUtil.getInstance();
+
 			report.setDateAndTime(dateInstance.getDate("05-01-2020 07:00","dd-MM-yyyy HH:mm"));
 			patientMedicalReportRepository.save(report);
 			patient.getMedicalRecord().getReports().add(report);
@@ -388,6 +413,8 @@ public class ContainerInitialize {
 			
 			VacationRequest vrq2 = new VacationRequest(dateInstance.getDate("26-05-2020", "dd-MM-yyyy"),dateInstance.getDate("15-06-2020", "dd-MM-yyyy"),clinic,doctor1);
 			vacationRequestRepository.save(vrq2);
+
+
 
 			AppointmentRequest appReq = new AppointmentRequest(dateInstance.getDate("26-02-2020 10:00", "dd-MM-yyyy HH:mm"), null, patient, clinic,p1, AppointmentType.Surgery);
 			AppointmentRequest appReq1 = new AppointmentRequest(dateInstance.getDate("24-02-2020 11:00", "dd-MM-yyyy HH:mm"), null, patient, clinic,p1, AppointmentType.Examination);

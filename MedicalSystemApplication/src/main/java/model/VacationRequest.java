@@ -21,10 +21,10 @@ public class VacationRequest
 	private Long id;
 	
     @Column(name = "startDate", nullable = false)
-	private Date startDate;
+	private Date date;
     
     @Column(name = "endDate", nullable = false)
-	private Date endDate;
+	private Date end;
     
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
@@ -40,8 +40,8 @@ public class VacationRequest
 	
 
 	public VacationRequest(Date startDate, Date endDate,Clinic clinic, User vacationUser) {
-		this.startDate = startDate;
-		this.endDate = endDate;
+		this.date = startDate;
+		this.end = endDate;
 		this.user = vacationUser;
 		this.clinic = clinic;
 	}
@@ -67,23 +67,20 @@ public class VacationRequest
 	}
 
 
-	public Date getStartDate() {
-		return startDate;
+	public Date getDate() {
+		return date;
 	}
 
-
-	public void setStartDate(java.util.Date date) {
-		this.startDate = date;
+	public void setDate(Date date) {
+		this.date = date;
 	}
 
-
-	public Date getEndDate() {
-		return endDate;
+	public Date getEnd() {
+		return end;
 	}
 
-
-	public void setEndDate(Date endDate) {
-		this.endDate = endDate;
+	public void setEnd(Date end) {
+		this.end = end;
 	}
 
 	public User getUser() {
