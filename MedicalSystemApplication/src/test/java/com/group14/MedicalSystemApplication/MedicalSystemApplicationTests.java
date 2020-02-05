@@ -21,6 +21,9 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
 import dto.AppointmentDTO;
+import dto.DoctorDTO;
+import dto.UserDTO;
+import dto.VacationDTO;
 import helpers.DateInterval;
 import helpers.DateUtil;
 import helpers.SecurePasswordHasher;
@@ -28,9 +31,11 @@ import model.Appointment;
 import model.Clinic;
 import model.Doctor;
 import model.Hall;
+import model.Nurse;
 import model.Priceslist;
 import model.RegistrationRequest;
 import model.User;
+import model.VacationRequest;
 import model.Appointment.AppointmentType;
 import service.AppointmentRequestService;
 import service.AppointmentService;
@@ -40,6 +45,7 @@ import service.HallService;
 import service.NotificationService;
 import service.PriceListService;
 import service.UserService;
+import service.VacationRequestService;
 
 
 @SpringBootTest
@@ -71,6 +77,9 @@ class MedicalSystemApplicationTests {
 	
 	@Autowired
 	private AuthService authService;
+	
+	@Autowired
+	private VacationRequestService vacationRequestService;
 	
 	@Test
 	void contextLoads() {
@@ -233,5 +242,149 @@ class MedicalSystemApplicationTests {
 		
 		assertEquals(requestTest.getPhone(), request.getPhone());
 	}
+	@Test
+	@Transactional
+	@Rollback(true)
+	void check_vacation_available()
+	{
+		UserDTO udto = new UserDTO();
+		udto.setAddress("Kisacka 11");
+		udto.setCity("Novi Sad");
+		udto.setEmail("doktor2@gmail.com");
+		
+		VacationDTO vdto = new VacationDTO();
+		vdto.setStartDate("12-02-2020");
+		vdto.setEndDate("18-02-2020");
+		vdto.setUser(udto);
+		
+		assertFalse(vdto.getUser() == null);
+		
+		User user = userService.findByEmailAndDeleted(vdto.getUser().getEmail(), false);
+
+		assertFalse(user == null);
+    	
+    	Date vacationStart = DateUtil.getInstance().getDate(vdto.getStartDate(), "dd-MM-yyyy");
+		Date vacationEnd = DateUtil.getInstance().getDate(vdto.getEndDate(), "dd-MM-yyyy");
+    	
+    	List<VacationRequest> requests  = vacationRequestService.findAllByUser(user);
+  	 	    
+    	for(VacationRequest request : requests)
+    	{
+    		assertFalse(vacationStart.before(request.getEndDate()) && vacationEnd.after(request.getStartDate()));	
+    	}
+
+    	
+    	
+    	if(user instanceof Doctor)
+    	{
+    		Doctor doctor = (Doctor)user;
+    		
+    		List<Appointment> appointments = doctor.getAppointments();
+    		   		
+    		for(Appointment app : appointments)
+    		{
+    			Date date = app.getDate();
+    			assertFalse(date.after(vacationStart) && date.before(vacationEnd));
+    		}
+    	}
+    	
+	}
 	
+	@Test
+	@Transactional
+	@Rollback(true)
+	void make_vacation_request()
+	{
+		UserDTO udto = new UserDTO();
+		udto.setAddress("Kisacka 11");
+		udto.setCity("Novi Sad");
+		udto.setEmail("doktor2@gmail.com");
+		
+		VacationDTO vdto = new VacationDTO();
+		vdto.setStartDate("12-02-2020");
+		vdto.setEndDate("18-02-2020");
+		vdto.setUser(udto);
+		
+		assertFalse(vdto.getUser() == null);
+
+    	User user = userService.findByEmailAndDeleted(vdto.getUser().getEmail(), false);
+		assertFalse(user == null);
+
+    	Clinic clinic = null;
+    	
+    	if(user instanceof Doctor)
+    	{
+    		Doctor doctor = (Doctor)user;
+    		clinic = doctor.getClinic();
+    	}
+    	else if(user instanceof Nurse)
+    	{
+    		Nurse nurse = (Nurse)user;
+    		clinic = nurse.getClinic();
+    	}
+    	    	
+    	VacationRequest vr = new VacationRequest();
+    	vr.setStartDate(DateUtil.getInstance().getDate(vdto.getStartDate(), "dd-MM-yyyy"));
+    	vr.setEndDate(DateUtil.getInstance().getDate(vdto.getEndDate(), "dd-MM-yyyy"));
+    	vr.setClinic(clinic);
+    	vr.setUser(user);
+    	   	
+    	vacationRequestService.save(vr);
+    	
+    	List<VacationRequest> vacations = vacationRequestService.findAllByUser(user);
+    	
+    	assertNotEquals(vacations.size(),0);
+	}
+	
+	@Test
+	@Transactional
+	@Rollback(true)
+	void make_new_doctor()
+	{
+		UserDTO udto = new UserDTO();
+		udto.setAddress("Kisacka 11");
+		udto.setCity("Novi Sad");
+		udto.setEmail("doktor5@gmail.com");
+		
+		udto.setAddress("Karadjordjeva 8");
+		udto.setCity("Novi Sad");
+		udto.setState("Srbija");
+		udto.setInsuranceId("123422432423");
+		udto.setName("Nikola");
+		udto.setSurname("Milanovic");
+		udto.setPhone("06549643");
+		
+		
+		DoctorDTO dto = new DoctorDTO();
+		dto.setClinicName("KlinikaA");
+		dto.setUser(udto);
+		dto.setShiftStart("14:00");
+		dto.setShiftEnd("20:00");
+		
+		Doctor d = (Doctor) userService.findByEmailAndDeleted(dto.getUser().getEmail(),false);
+	
+		Clinic c = clinicService.findByName(dto.getClinicName());
+		
+		assertFalse(d != null);
+		assertFalse(c == null);
+		
+		String pass = "";
+		try {
+			pass = SecurePasswordHasher.getInstance().encode("123");
+		} catch (NoSuchAlgorithmException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+				
+		Doctor doctor = new Doctor(dto);
+		doctor.setPassword(pass);
+		doctor.setClinic(c);
+		userService.save(doctor);
+		
+		c.getDoctors().add(doctor);
+		clinicService.save(c);
+		
+		Doctor doc = (Doctor) userService.findByEmailAndDeleted(doctor.getEmail(), false);
+		assertEquals(doc.getEmail(),doctor.getEmail());
+	}
 }
