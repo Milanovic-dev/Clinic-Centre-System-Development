@@ -823,7 +823,7 @@ public class AppointmentController
 	{
 		HttpHeaders header = new HttpHeaders();
 		AppointmentRequest request = new AppointmentRequest();
-		request.setTimestamp(new Date());
+		request.setTimestamp(DateUtil.getInstance().getDate(new Date().getTime(), "dd-MM-yyyy HH:mm"));
 		Clinic clinic = clinicService.findByName(dto.getClinicName());
 		
 		if(clinic == null)
@@ -888,7 +888,6 @@ public class AppointmentController
 		}
 		
 		request.setAppointmentType(dto.getType());
-		request.setTimestamp(DateUtil.getInstance().getDate(dto.getStartTimestamp(),"dd-MM-yyyy"));
 		
 		appointmentRequestService.save(request);
 		
@@ -966,9 +965,6 @@ public class AppointmentController
 		HttpHeaders headers = new HttpHeaders();
 		
 		Patient p = (Patient) userService.findByEmailAndDeleted(email, false);
-
-		Doctor doctor = (Doctor) userService.findByEmailAndDeleted(dto.getDoctors().get(0),false);
-
 		
 		if(p == null)
 		{

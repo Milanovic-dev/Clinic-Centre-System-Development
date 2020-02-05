@@ -74,7 +74,14 @@ function initMedicalRecord(record, user, foreign)
 	
 	setupStarRating()
 	
-	createHistoryTable(record.reports, foreign.email != user.email)
+	let flag = false;
+	
+	if(foreign != undefined)
+	{
+		flag = foreign.email != user.email
+	}
+	
+	createHistoryTable(record.reports, flag)
 }
 
 
