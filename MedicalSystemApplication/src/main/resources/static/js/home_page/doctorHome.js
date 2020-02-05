@@ -218,7 +218,7 @@ function addVacationRequest(user)
 			return
 		}
 
-		let json = JSON.stringify({"startDate": startDate,"endDate": endDate,"user": user })
+		let json = JSON.stringify({"date": startDate,"end": endDate,"user": user })
 
 		$('#vacationRequestSpinner').show()
 		$.ajax({
@@ -280,7 +280,7 @@ function addVacationRequest(user)
 		$('#submitVacationRequest').prop('disabled',true)
 		let startDate = $('#startDayInputVacationRequest').val()
 		let endDate = $('#endDayInputVacationRequest').val()
-		let json = JSON.stringify({"startDate": startDate,"endDate": endDate,"user": user })
+		let json = JSON.stringify({"date": startDate,"end": endDate,"user": user })
 		showLoading('submitVacationRequest')
 
 		$.ajax({
@@ -578,6 +578,7 @@ function initCalendarDoc(user)
                   {
 
                       if(info.source.uid == 2){
+                      console.log(info)
                         return
                       }
 
@@ -664,12 +665,14 @@ function initCalendarDoc(user)
                              alert('there was an error while fetching events!');
                            },
 
+
                          },
                          {
                             url: 'api/vacation/getAllVacationsByUser/'+user.email,
                             method: 'GET',
-                            color: '#28a745',
+                            color: '#f4a896',
                             textColor: 'black',
+
                             failure: function() {
                               alert('there was an error while fetching vac events!');
                             },

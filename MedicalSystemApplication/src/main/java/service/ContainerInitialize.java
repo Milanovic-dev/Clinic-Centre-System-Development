@@ -198,6 +198,7 @@ public class ContainerInitialize {
 
 
 
+
 			
 			Doctor doctor2 = new Doctor.Builder("doktor2@gmail.com")
 					.withPassword(hash)
@@ -340,6 +341,15 @@ public class ContainerInitialize {
 			nurse.setIsFirstLog(false);
 			nurse.setClinic(clinic);
 			userRepository.save(nurse);
+
+			Vacation vac3 = new Vacation(dateInstance.getDate("04-05-2020", "dd-MM-yyyy"),dateInstance.getDate("15-05-2020", "dd-MM-yyyy"),nurse);
+			Vacation vac4 = new Vacation(dateInstance.getDate("05-07-2020", "dd-MM-yyyy"),dateInstance.getDate("25-07-2020", "dd-MM-yyyy"),nurse);
+			vacationRepository.save(vac3);
+			vacationRepository.save(vac4);
+
+			nurse.getVacations().add(vac3);
+			nurse.getVacations().add(vac4);
+
 
 			userRepository.save(doctor1);
 			userRepository.save(doctor2);

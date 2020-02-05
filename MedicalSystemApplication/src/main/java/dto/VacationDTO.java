@@ -6,14 +6,14 @@ import helpers.DateUtil;
 import model.Vacation;
 import model.VacationRequest;
 
-public class VacationDTO 
+public class VacationDTO
 {
 	private String date;
 	private String end;
 	private UserDTO user;
 	private Long id;
-	
-	
+
+
 	public VacationDTO(String date, String end,UserDTO userDTO,Long id) {
 		super();
 		this.date = date;
@@ -23,8 +23,8 @@ public class VacationDTO
 	}
 	public VacationDTO(VacationRequest vrq)
 	{
-		this.date = DateUtil.getInstance().getString(vrq.getStartDate(), "dd-MM-yyyy");
-		this.end = DateUtil.getInstance().getString(vrq.getEndDate(), "dd-MM-yyyy");
+		this.date = DateUtil.getInstance().getString(vrq.getDate(), "dd-MM-yyyy");
+		this.end = DateUtil.getInstance().getString(vrq.getEnd(), "dd-MM-yyyy");
 		this.user = new UserDTO(vrq.getUser());
 		this.id = vrq.getId();
 
@@ -75,6 +75,6 @@ public class VacationDTO
 	}
 
 
-	
-	
+
+
 }
