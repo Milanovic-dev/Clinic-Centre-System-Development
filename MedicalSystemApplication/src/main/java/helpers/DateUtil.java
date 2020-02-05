@@ -64,26 +64,7 @@ public class DateUtil {
 		
 		return false;
 	}
-	
-	public Boolean overlappingIntervalHours(DateInterval d1, DateInterval d2)
-	{
-		Calendar c1 = Calendar.getInstance();
-		Calendar c2 = Calendar.getInstance();
-		Calendar c3 = Calendar.getInstance();
-		Calendar c4 = Calendar.getInstance();
 		
-		c1.setTime(d1.getStart());
-		c2.setTime(d1.getEnd());
-		c3.setTime(d2.getStart());
-		c4.setTime(d2.getEnd());
-				
-		//Boolean con1 = isSameDay(c1.getTime(), c3.getTime());
-		Boolean con2 = c1.get(Calendar.HOUR_OF_DAY) < c4.get(Calendar.HOUR_OF_DAY) && c2.get(Calendar.HOUR_OF_DAY) > c3.get(Calendar.HOUR_OF_DAY);
-		Boolean con3 = c1.get(Calendar.MINUTE) < c4.get(Calendar.MINUTE) && c2.get(Calendar.MINUTE) > c3.get(Calendar.MINUTE);
-		
-		return (con2 && con3);
-	}
-	
 	public Boolean overlappingInterval(Date start1, Date end1, Date start2, Date end2)
 	{
 		return overlappingInterval(new DateInterval(start1,end1), new DateInterval(start2,end2));
@@ -105,12 +86,8 @@ public class DateUtil {
 		c2.setTime(d1.getEnd());
 		c3.setTime(d2.getStart());
 		c4.setTime(d2.getEnd());
-				
-		Boolean con1 = isSameDay(c1.getTime(), c3.getTime());
-		Boolean con2 = c1.get(Calendar.HOUR_OF_DAY) < c4.get(Calendar.HOUR_OF_DAY) && c2.get(Calendar.HOUR_OF_DAY) > c3.get(Calendar.HOUR_OF_DAY);
-		Boolean con3 = c1.get(Calendar.MINUTE) <= c4.get(Calendar.MINUTE) && c2.get(Calendar.MINUTE) >= c3.get(Calendar.MINUTE);
-		
-		return (con1 && con2 && con3);
+							
+		return c1.getTime().before(c4.getTime()) && c2.getTime().after(c3.getTime());
 	}
 	
 	public long getTimeBetween(Date d1, Date d2)
