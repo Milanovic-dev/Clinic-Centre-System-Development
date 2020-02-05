@@ -10,7 +10,7 @@ import model.Appointment.AppointmentType;
 public class AppointmentDTO {
 
 	private String date;
-	private String end;
+	private String endDate;
 	private String patientEmail;
 	private String clinicName;
 	private int hallNumber;
@@ -49,7 +49,7 @@ public class AppointmentDTO {
 	{
 		this.date = DateUtil.getInstance().getString(appointment.getDate(),"dd-MM-yyyy HH:mm");
 		if(appointment.getEndDate() != null)
-			this.end = DateUtil.getInstance().getString(appointment.getEndDate(), "dd-MM-yyyy HH:mm");
+			this.endDate = DateUtil.getInstance().getString(appointment.getEndDate(), "dd-MM-yyyy HH:mm");
 		if(appointment.getPatient() != null)
 			this.patientEmail = appointment.getPatient().getEmail();
 		this.clinicName = appointment.getClinic().getName();
@@ -65,7 +65,7 @@ public class AppointmentDTO {
 			this.typeOfExamination = appointment.getPriceslist().getTypeOfExamination();
 			this.price = appointment.getPriceslist().getPrice();
 		}
-		this.type = appointment.getAppointmentType();	
+		this.type = appointment.getAppointmentType();
 		this.version = appointment.getVersion();
 		this.done = appointment.getDone();
 		this.predefined = appointment.getPredefined();
@@ -74,7 +74,7 @@ public class AppointmentDTO {
 		if(appointment.getNewEndDate() != null)
 			this.newDate = DateUtil.getInstance().getString(appointment.getNewEndDate(), "dd-MM-yyyy HH:mm");
 	}
-	
+
 	public AppointmentDTO(AppointmentRequest appointment)
 	{
 		this.date = DateUtil.getInstance().getString(appointment.getDate(),"dd-MM-yyyy HH:mm");
@@ -90,7 +90,7 @@ public class AppointmentDTO {
 		}
 		this.typeOfExamination = appointment.getPriceslist().getTypeOfExamination();
 		this.price = appointment.getPriceslist().getPrice();
-		this.type = appointment.getAppointmentType();	
+		this.type = appointment.getAppointmentType();
 	}
 
 	public String getNewEndDate() {
@@ -117,12 +117,12 @@ public class AppointmentDTO {
 		this.predefined = predefined;
 	}
 
-	public String getEnd() {
-		return end;
+	public String getEndDate() {
+		return endDate;
 	}
 
-	public void setEnd(String end) {
-		this.end = end;
+	public void setEndDate(String endDate) {
+		this.endDate = endDate;
 	}
 
 	public String getStartTimestamp() {

@@ -359,7 +359,7 @@ public class AppointmentController
 		{
 			AppointmentDTO dto = new AppointmentDTO(app);
 			dto.setDate(app.getDate().toString());
-			dto.setEnd(app.getEndDate().toString());
+			dto.setEndDate(app.getEndDate().toString());
 			dtos.add(dto);		
 		}
 		
@@ -564,7 +564,7 @@ public class AppointmentController
 			{
 				AppointmentDTO dt = new AppointmentDTO(app);
 				dt.setDate(app.getDate().toString());
-				dt.setEnd(app.getEndDate().toString());
+				dt.setEndDate(app.getEndDate().toString());
 				dto.add(dt);			
 			}
 		}
@@ -593,7 +593,7 @@ public class AppointmentController
 		}
 		
 		Date date = DateUtil.getInstance().getDate(dto.getDate(), "dd-MM-yyyy HH:mm");
-		Date endDate = DateUtil.getInstance().getDate(dto.getEnd(), "dd-MM-yyyy HH:mm");
+		Date endDate = DateUtil.getInstance().getDate(dto.getEndDate(), "dd-MM-yyyy HH:mm");
 		
 		
 		Hall hall = hallService.findByNumber(dto.getHallNumber());
@@ -706,7 +706,7 @@ public class AppointmentController
 		List<Doctor> doctors = new ArrayList<Doctor>();
 		DateUtil util = DateUtil.getInstance();
 		Date desiredStartTime = util.getDate(dto.getDate(), "dd-MM-yyyy HH:mm");
-		Date desiredEndTime = util.getDate(dto.getEnd(), "dd-MM-yyyy HH:mm");
+		Date desiredEndTime = util.getDate(dto.getEndDate(), "dd-MM-yyyy HH:mm");
 
 
 		String parts[] = dto.getNewDate().split(" ");
