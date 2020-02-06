@@ -4,12 +4,13 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import helpers.DateUtil;
 import model.*;
 
 public class PatientMedicalReportDTO {
 
     private String description;
-    private Date dateAndTime;
+    private String dateAndTime;
     private String doctorEmail;
     private String clinicName;
     private List<String> diagnosis = new ArrayList<>();
@@ -23,7 +24,7 @@ public class PatientMedicalReportDTO {
 		// TODO Auto-generated constructor stub
 	}
 
-	public PatientMedicalReportDTO(String description, Date dateAndTime, String doctorEmail, String clinicEmail,
+	public PatientMedicalReportDTO(String description, String dateAndTime, String doctorEmail, String clinicEmail,
 			PrescriptionDTO prescription, String patientEmail) {
 		super();
 		this.description = description;
@@ -47,7 +48,7 @@ public class PatientMedicalReportDTO {
 			dto.getDrugs().add(dr.getName());
 		}
 		this.description = report.getDescription();
-		this.dateAndTime = report.getDateAndTime();
+		this.dateAndTime = DateUtil.getInstance().getString(report.getDateAndTime(),"dd-MM-yyyy");
 		this.clinicName = report.getClinic().getName();
 		this.doctorEmail = report.getDoctor().getEmail();
 		this.prescription = dto;
@@ -68,11 +69,11 @@ public class PatientMedicalReportDTO {
 		this.description = description;
 	}
 
-	public Date getDateAndTime() {
+	public String getDateAndTime() {
 		return dateAndTime;
 	}
 
-	public void setDateAndTime(Date dateAndTime) {
+	public void setDateAndTime(String dateAndTime) {
 		this.dateAndTime = dateAndTime;
 	}
 

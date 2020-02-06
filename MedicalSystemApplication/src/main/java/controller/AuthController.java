@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -60,6 +61,11 @@ public class AuthController
 			return new ResponseEntity<>(header,HttpStatus.NOT_FOUND);
 		}
 		
+		if(!u.getVerified())
+		{
+			return new ResponseEntity<>(header, HttpStatus.UNAUTHORIZED);
+		}
+		
 		String token = dto.getPassword();
 		
 		try {
@@ -80,6 +86,27 @@ public class AuthController
 		return new ResponseEntity<>(header,HttpStatus.NOT_FOUND);
 	}
 	
+	@PutMapping(value="/verifyAccount/{email}")
+	public ResponseEntity<Void> verifyAccount(@PathVariable("email") String email)
+	{
+		User u = userService.
+				findByEmailAndDeleted(email, false);
+		
+		if(u == null)
+		{
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+		
+		if(u.getVerified())
+		{
+			return new ResponseEntity<>(HttpStatus.OK);
+		}
+		
+		u.setVerified(true);
+		userService.save(u);
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
+	
 	@PostMapping(value = "/registerRequest",consumes = "application/json")
 	public ResponseEntity<Void> requestRegistration(@RequestBody RegistrationRequest request)
 	{
@@ -98,7 +125,7 @@ public class AuthController
 	}	
 	
 	@PostMapping(value = "/confirmRegister/{email}")
-	public ResponseEntity<Void> confirmRegister(@PathVariable("email") String email)
+	public ResponseEntity<Void> confirmRegister(@PathVariable("email") String email, HttpServletRequest httpRequest)
 	{
 		RegistrationRequest req = authService.
 				findByEmail(email);
@@ -109,6 +136,7 @@ public class AuthController
 		}
 		
 		Patient patient = new Patient(req);
+		patient.setVerified(false);
 		String token = patient.getPassword();
 		
 		try {
@@ -116,8 +144,10 @@ public class AuthController
 			
 			patient.setPassword(hash);
 			userService.save(patient);
+			String requestURL = httpRequest.getRequestURL().toString();
+			String root = requestURL.split("api")[0] + "confirmRequest.html?reg="+req.getEmail();
 			notificationService.sendNotification(req.getEmail(), "Registracija Klinicki centar",
-					"Postovani, Vas zahtev za registraciju naloga za Klinicki centar je prihvacen. Mozete se ulogovati u svoj nalog.");
+					"Postovani, Vas zahtev za registraciju naloga za Klinicki centar je prihvacen.\n\n Molim vas potvrdite vašu registraciju posećivanjem linka:"+root);
 			authService.delete(req);
 			return new ResponseEntity<>(HttpStatus.CREATED);
 		} catch (NoSuchAlgorithmException e) {

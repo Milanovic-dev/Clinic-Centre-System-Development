@@ -51,10 +51,14 @@ public class User
 	@Column(name = "role", nullable = false)
 	private UserRole role;
 	
+	@Column(name="verified")
+	private Boolean verified;
+	
 	public User()
 	{
 		super();
 		this.deleted = false;
+		this.verified = true;
 	}
 
 	public User(String password, String email, String name, String surname, String city,
@@ -70,6 +74,7 @@ public class User
 		this.phone = phone;
 		this.role = role;
 		this.deleted = false;
+		this.verified = true;
 	}
 	
 	public User(RegistrationRequest request, UserRole role)
@@ -86,6 +91,7 @@ public class User
 		this.insuranceId = request.getInsuranceId();
 		this.role = role;
 		this.deleted = false;
+		this.verified = true;
 	}
 	
 	
@@ -102,6 +108,7 @@ public class User
 		this.role = user.getRole();
 		this.insuranceId = user.getInsuranceId();
 		this.deleted = false;
+		this.verified = true;
 	}
 
 	
@@ -119,6 +126,17 @@ public class User
 		this.role = user.getRole();
 		this.insuranceId = user.getInsuranceId();
 		this.deleted = false;
+		this.verified = true;
+	}
+
+	
+	
+	public Boolean getVerified() {
+		return verified;
+	}
+
+	public void setVerified(Boolean verified) {
+		this.verified = verified;
 	}
 
 	public String getInsuranceId() {

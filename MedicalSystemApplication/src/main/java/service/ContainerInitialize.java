@@ -218,7 +218,7 @@ public class ContainerInitialize {
 			doctor2.setAvarageRating(4.4f);
 			userRepository.save(doctor2);
 			
-			Doctor doctor3 = new Doctor.Builder("nikolamilanovic21@gmail.com")
+			Doctor doctor3 = new Doctor.Builder("doktor3@gmail.com")
 					.withPassword(hash)
 					.withName("Petar")
 					.withSurname("Pertrovic")

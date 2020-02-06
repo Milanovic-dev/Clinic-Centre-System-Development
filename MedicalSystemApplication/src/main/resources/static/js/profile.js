@@ -115,6 +115,8 @@ function setPatientProfile(patient, foreign)
 						
 				$.each(apps, function(i, a){
 								
+					if(a.done) return
+					
 					let typeOfExamin = ''
 									
 					if(a.type == 'Surgery')

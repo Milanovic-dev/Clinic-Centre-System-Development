@@ -13,18 +13,22 @@ public class AppointmentDTO {
 	private String endDate;
 	private String patientEmail;
 	private String clinicName;
-	private int hallNumber;
-	private List<String> doctors;
-	private long duration;
-	private float price;
 	private String typeOfExamination;
-	private AppointmentType type;
-	private int version;
 	private String startTimestamp;
-	private boolean done = false;
-	private Boolean predefined = false;
 	private String newDate;
 	private String newEndDate;
+	
+	private Boolean done = false;
+	private Boolean predefined = false;
+	private Boolean confirmed = true;
+	
+	private int hallNumber;
+	private long duration;
+	private float price;
+	private int version;
+	
+	private List<String> doctors;
+	private AppointmentType type;
 	
 	public AppointmentDTO() {
 		super();
@@ -69,6 +73,7 @@ public class AppointmentDTO {
 		this.version = appointment.getVersion();
 		this.done = appointment.getDone();
 		this.predefined = appointment.getPredefined();
+		this.confirmed = appointment.getConfirmed();
 		if(appointment.getNewDate() != null)
 			this.newDate = DateUtil.getInstance().getString(appointment.getNewDate(), "dd-MM-yyyy HH:mm");
 		if(appointment.getNewEndDate() != null)
@@ -91,6 +96,16 @@ public class AppointmentDTO {
 		this.typeOfExamination = appointment.getPriceslist().getTypeOfExamination();
 		this.price = appointment.getPriceslist().getPrice();
 		this.type = appointment.getAppointmentType();
+	}
+	
+	
+
+	public Boolean getConfirmed() {
+		return confirmed;
+	}
+
+	public void setConfirmed(Boolean confirmed) {
+		this.confirmed = confirmed;
 	}
 
 	public String getNewEndDate() {

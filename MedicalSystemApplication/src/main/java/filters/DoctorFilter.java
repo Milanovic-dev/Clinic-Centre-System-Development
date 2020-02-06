@@ -50,7 +50,7 @@ public class DoctorFilter implements Filter{
 			
 			if(dto.getShiftEnd() != null)
 			{
-				if(!d.IsFreeOn(DateUtil.getInstance().getDate(dto.getShiftEnd(),"dd-MM-yyyy HH:mm")))
+				if(!d.IsFreeOn(DateUtil.getInstance().getDate(dto.getShiftEnd(),"dd-MM-yyyy")))
 				{
 					flag = false;
 				}

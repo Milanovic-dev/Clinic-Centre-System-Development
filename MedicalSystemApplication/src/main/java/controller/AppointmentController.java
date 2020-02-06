@@ -7,6 +7,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import dto.AppointmentDTO;
 import helpers.DateInterval;
@@ -680,7 +683,7 @@ public class AppointmentController
 
 	
 	@PostMapping(value="/confirmRequest")
-	public ResponseEntity<Void> confirmAppointmentRequest(@RequestBody AppointmentDTO dto)
+	public ResponseEntity<Void> confirmAppointmentRequest(@RequestBody AppointmentDTO dto, HttpServletRequest httpRequest)
 	{
 		HttpHeaders header = new HttpHeaders();
 		AppointmentRequest request = appointmentRequestService.findAppointmentRequest(dto.getDate(), 0, dto.getClinicName());
@@ -739,6 +742,8 @@ public class AppointmentController
 				.withPriceslist(request.getPriceslist())
 				.withEndingDate(desiredEndTime)
 				.build();
+		
+		appointment.setConfirmed(false);
 
 		for(String email : dto.getDoctors())
 		{
@@ -783,9 +788,6 @@ public class AppointmentController
 		appointment.getDoctors().addAll(doctors);
 
 		
-		//TODO:Send mail Pacijentu (Prihavti ili odbije)
-
-		//TODO:Send mail Doktoru
 
 		appointmentService.save(appointment);
 		
@@ -798,9 +800,43 @@ public class AppointmentController
 			userService.save(doc);
 		}
 		
+		//TODO:Send mail Pacijentu (Prihavti ili odbije)
+		String requestURL = httpRequest.getRequestURL().toString();
+		UriComponentsBuilder builderRootAccept = UriComponentsBuilder.fromUriString(requestURL.split("api")[0] + "confirmRequest.html")
+										.queryParam("clinic", appointment.getClinic().getName())
+										.queryParam("date", DateUtil.getInstance().getString(appointment.getDate(), "dd-MM-yyyy HH:mm"))
+										.queryParam("hall", appointment.getHall().getNumber())
+										.queryParam("confirmed", true);
+		
+		UriComponentsBuilder builderRootDeny = UriComponentsBuilder.fromUriString(requestURL.split("api")[0] + "confirmRequest.html")
+										.queryParam("clinic", appointment.getClinic().getName())
+										.queryParam("date", DateUtil.getInstance().getString(appointment.getDate(), "dd-MM-yyyy HH:mm"))
+										.queryParam("hall", appointment.getHall().getNumber())
+										.queryParam("confirmed", false);
+		
+		notificationService.sendNotification("nikolamilanovic21@gmail.com", "Potvrdite pregled","Admin klinike je odobrio vaš zahtev za pregled.\nPotvrdite odlaskom na link:" + builderRootAccept.toUriString() + " \n\n Odbijte odlaskom na link:"+ builderRootDeny.toUriString());
+		//TODO:Send mail Doktoru
+		notificationService.sendNotification(appointment.getDoctors().get(0).getEmail(), "Admin je rezervisao termin za pregled", "Admin je rezervisao pregled datuma " + DateUtil.getInstance().getString(appointment.getDate(), "dd-MM-yyyy HH:mm") + ", u klinici "+appointment.getClinic().getName() + ", u sali Br. " + appointment.getHall().getNumber()+ " i vas je izabrao za lekara.");
+		
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 	
+	@PutMapping(value="/confirmAppointment")
+	public ResponseEntity<Void> confirmAppointmetn(@RequestBody AppointmentDTO dto)
+	{
+		Appointment app = appointmentService.findAppointment(dto.getDate(), dto.getHallNumber(), dto.getClinicName());
+		
+		if(app == null)
+		{
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+		
+		app.setConfirmed(true);
+		appointmentService.save(app);
+		
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
+		
 	@DeleteMapping(value="/denyRequest")
 	public ResponseEntity<Void> denyAppoinmtnetRequest(@RequestBody AppointmentDTO dto)
 	{
@@ -883,7 +919,6 @@ public class AppointmentController
 			
 			if(admin.getClinic().getName().equals(clinic.getName()))
 			{
-				//TODO: Napisati lepo mail
 				notificationService.sendNotification(admin.getEmail(), "Novi zahtev za pregled", "Imate novi zahtev za pregled..");
 			}
 		}
@@ -928,7 +963,7 @@ public class AppointmentController
 				
 				if(admin.getClinic().getName().equals(dto.getClinicName()))
 				{
-					//TODO: Napisati lepo mail
+
 					notificationService.sendNotification(admin.getEmail(), "Pacijent je otkazao pregled", "Zahtev za pregled zakazan za " + dto.getDate() + " je otkazan od strane pacijenta: " + p.getEmail());
 				}
 			}
@@ -944,7 +979,7 @@ public class AppointmentController
 				
 				if(admin.getClinic().getName().equals(dto.getClinicName()))
 				{
-					//TODO: Napisati lepo mail
+
 					notificationService.sendNotification(admin.getEmail(), "Pregled je otkazan", "Zahtev za pregled zakazan za " + dto.getDate() + " je otkazan od strane admina klinike");
 				}
 			}
@@ -1001,6 +1036,7 @@ public class AppointmentController
 		
 		app.setPatient(p);
 			
+		
 		try
 		{
 			StringBuilder strBuilder = new StringBuilder();
