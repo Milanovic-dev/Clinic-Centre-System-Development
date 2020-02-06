@@ -211,6 +211,8 @@ public class HallController {
 		}
 		
 		hall.setDeleted(true);
+		hall.setNumber(-1);
+		hall.setName("");
 		hallService.save(hall);
 		return new ResponseEntity<>(HttpStatus.OK);
 		
@@ -225,6 +227,17 @@ public class HallController {
 		{
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
+		
+		List<Appointment> apps = appointmentService.findAllByHall(hall);
+		
+		if(apps != null)
+		{
+			if(apps.size() > 0)
+			{
+				return new ResponseEntity<>(HttpStatus.CONFLICT);
+			}
+		}
+		
 		
 		hall.setNumber(newNumber);
 		hall.setName(newName);

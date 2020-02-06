@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -14,8 +15,10 @@ import org.hibernate.Hibernate;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,6 +35,7 @@ import model.Clinic;
 import model.Doctor;
 import model.Hall;
 import model.Nurse;
+import model.Patient;
 import model.Priceslist;
 import model.RegistrationRequest;
 import model.User;
@@ -387,4 +391,95 @@ class MedicalSystemApplicationTests {
 		Doctor doc = (Doctor) userService.findByEmailAndDeleted(doctor.getEmail(), false);
 		assertEquals(doc.getEmail(),doctor.getEmail());
 	}
+	
+   //TESTOVI ZA TACKU 3.1O.
+	
+	@Test
+	@Transactional
+	@Rollback(true)
+	void find_all_predefined_appointments()
+	{
+		List<Appointment> appointments = appointmentService.findAllByPredefined();
+		
+		assertNotEquals(appointments.size(),0);
+		
+		List<AppointmentDTO> dtos = new ArrayList<AppointmentDTO>();
+		
+		for(Appointment app : appointments)
+		{
+			if(app.getPatient() == null)
+			{
+				dtos.add(new AppointmentDTO(app));						
+			}
+		}
+		
+		assertNotEquals(dtos.size(),0);
+	}
+	
+	@Test
+	@Transactional
+	@Rollback(true)
+	void reserve_predefined_examination()
+	{
+	HttpHeaders headers = new HttpHeaders();
+		
+		Patient p = (Patient) userService.findByEmailAndDeleted("nikola@gmail.com", false);
+		
+		assertFalse(p == null);
+		
+		AppointmentDTO dto = new AppointmentDTO();
+		dto.setClinicName("KlinikaA");
+		dto.setDate("21-01-2020 07:30");
+		dto.setEndDate("21-01-2020 09:00");
+		dto.setDoctors(new ArrayList<String>() {{add("doktor1@gmail.com");}});
+		dto.setHallNumber(1);
+		dto.setType(AppointmentType.Examination);
+		dto.setTypeOfExamination("Opsti pregled");
+		
+		Appointment app = appointmentService.findAppointment(dto.getDate(), dto.getHallNumber(), dto.getClinicName());
+		
+		assertFalse(app == null);
+		
+		List<Appointment> appointments = appointmentService.findAllByPatient(p);
+		
+		for(Appointment appointment : appointments)
+		{
+			DateInterval interval1 = new DateInterval(appointment.getDate(), appointment.getEndDate());
+			DateInterval interval2 = new DateInterval(app.getDate(), app.getEndDate());
+			
+			assertFalse(DateUtil.getInstance().overlappingInterval(interval1, interval2));
+		}
+		
+		assertFalse(app.getVersion() != dto.getVersion());
+		
+		app.setPatient(p);
+			
+		try
+		{
+			StringBuilder strBuilder = new StringBuilder();
+			strBuilder.append("Uspesno ste zakazali pregled(");
+			strBuilder.append(app.getPriceslist().getTypeOfExamination());
+			strBuilder.append(") za datum ");
+			strBuilder.append(app.getDate());
+			strBuilder.append(" na klinici ");
+			strBuilder.append(app.getClinic().getName());
+			strBuilder.append(" u sali Br. ");
+			strBuilder.append(app.getHall().getNumber());
+			strBuilder.append(". Vas doktor je ");
+			strBuilder.append(app.getDoctors().get(0).getName() + " " + app.getDoctors().get(0).getSurname());
+			strBuilder.append(". Cena pregleda je ");
+			strBuilder.append(app.getPriceslist().getPrice());
+			strBuilder.append("rsd.");
+			notificationService.sendNotification(p.getEmail(), "Zakazali ste pregled!", strBuilder.toString());
+			appointmentService.save(app);			
+		}
+		catch(ObjectOptimisticLockingFailureException e)
+		{
+			fail();
+		}
+		
+		assertEquals(appointmentService.findAppointment(app.getDate(), app.getHall(), app.getClinic()),app);
+	}
+	
+	
 }
