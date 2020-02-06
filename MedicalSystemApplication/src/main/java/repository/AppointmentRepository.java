@@ -11,6 +11,7 @@ import model.Clinic;
 import model.Doctor;
 import model.Hall;
 import model.Patient;
+import model.Priceslist;
 import model.User;
 
 public interface AppointmentRepository extends JpaRepository<Appointment,Long>{
@@ -25,4 +26,5 @@ public interface AppointmentRepository extends JpaRepository<Appointment,Long>{
 	public List<Appointment> findAllByClinic(Clinic c);
 	public List<Appointment> findAllByPredefined(Boolean predefined);
 	public List<Appointment> findAllByDate(Date date);
+	public List<Appointment> findAllByPriceslist(Priceslist priceslist);
 }

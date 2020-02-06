@@ -150,9 +150,19 @@ public class PriceListControler {
 	 		Priceslist oldPricesList = priceListService.findByTypeOfExaminationAndDeleted(typeOfExamination,false);
 	 		
 	 		if(oldPricesList == null)
-		    {
-			    return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-		    }
+	 		{
+	 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+	 		}
+	 		
+	 		List<Appointment> apps = appointmentService.findAllByPricesList(oldPricesList);
+			
+			if(apps != null)
+			{
+				if(apps.size() > 0)
+				{
+					return new ResponseEntity<>(HttpStatus.CONFLICT);
+				}
+			}
 	 		
 	 		oldPricesList.setPrice(pricesList.getPrice());
 	 		oldPricesList.setTypeOfExamination(pricesList.getTypeOfExamination());

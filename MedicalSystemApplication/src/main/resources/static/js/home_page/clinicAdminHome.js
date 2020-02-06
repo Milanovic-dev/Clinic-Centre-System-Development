@@ -217,6 +217,17 @@ function setUpClinicAdminPage(user)
 
 			let typeOfExaminationName = $('#inputTypeOfExamination').val()
 			let typeOfExaminationPrice = $('#inputTypeOfExaminationPrice').val()
+			
+			if(!validation($('#inputTypeOfExamination'),typeOfExaminationName == "","Morate uneti naziv tipa pregleda."))
+			{
+				return
+			}
+			
+			if(!validation($('#inputTypeOfExaminationPrice'),typeOfExaminationPrice == "","Morate uneti cenu tipa pregleda."))
+			{
+				return
+			}
+			
 			let typeOfExamination = JSON.stringify({"clinicName":clinic.name,"typeOfExamination" : typeOfExaminationName,"price" : typeOfExaminationPrice})
 			
 			$.ajax({
@@ -227,17 +238,21 @@ function setUpClinicAdminPage(user)
 				contentType : "application/json; charset=utf-8",
 				complete: function(data2)
 				{
+					hideValidation($('#inputTypeOfExamination'))
+					hideValidation($('#inputTypeOfExaminationPrice'))
+
 						
 					if(data2.status == "208")
 					{
-						$('#errorSpanTypeOfExamination').show()
-						$('#errorSpanTypeOfExamination').text("Tip pregleda koji zelite da unesete vec postoji")
+						warningModal("Neuspešno","Tip pregleda koji želite da unesete već postoji.Pokušajte ponovo.")
+						$('#inputTypeOfExamination').val("")
+						$('#inputTypeOfExaminationPrice').val("")
 					}
 					if(data2.status == "200")
 					{
-						$('#errorSpanTypeOfExamination').hide()
-						showView("showTypeOfExaminationContainer")
-						makeTypeOfExaminationTable(clinic)
+						warningModal("Uspesno","Uspešno ste uneli tip pregleda pod nazivom: " + typeOfExaminationName + " i cenom od: " + typeOfExaminationPrice)
+						$('#inputTypeOfExamination').val("")
+						$('#inputTypeOfExaminationPrice').val("")						
 					}
 					
 				}
@@ -319,7 +334,11 @@ function setUpClinicAdminPage(user)
 			{
 				return
 			}
-
+			
+			if(validation($('#inputHall'),idHall == 0,"Morate uneti validan broj sale."))
+			{
+				return;
+			}
 				
 			let hall = JSON.stringify({"clinicName":clinic.name,"number" : idHall , "name": nameHall})
 			$.ajax({
@@ -1008,14 +1027,35 @@ function submitDoctorForm(clinic)
 		{
 			if(data.status == "208")
 			{
-				$('#alreadyExistsD').text("Lekar sa tim emailom vec postoji.")
+				warningModal("Neuspešno","Lekar sa takvim emailom postoji.Pokušajte ponovo.")
 			}
 			else
 			{
-				$('#alreadyExistsD').hide()
-				$('#registrationConteiner').hide()
-				$("#showUserContainer").show()
-				makeDoctorTable(clinic)
+				warningModal("Uspešno","Uspešno ste registrovali novog lekara.Pregled svih postojećih lekara može se naći na 'Lista lekara'.")
+				$('#selectTypeOfExam').val("")
+				$('#inputStartShiftDoctor').val("")
+				$('#inputEndShiftDoctor').val("")
+				$('#inputEmailDoctor').val("")
+				$('#inputNameDoctor').val("")
+				$('#inputSurnameDoctor').val("")
+				$('#selectStateDoctor').val("")
+				$('#inputCityDoctor').val("")
+				$('#inputAddressDoctor').val("")
+				$('#inputPhoneDoctor').val("")
+				$('#inputInsuranceDoctor').val("")
+				
+				hideValidation($('#selectTypeOfExam'))
+				hideValidation($('#inputStartShiftDoctor'))
+				hideValidation($('#inputEndShiftDoctor'))
+				hideValidation($('#inputEmailDoctor'))
+				hideValidation($('#inputNameDoctor'))
+				hideValidation($('#inputSurnameDoctor'))
+				hideValidation($('#selectStateDoctor'))
+				hideValidation($('#inputCityDoctor'))
+				hideValidation($('#inputAddressDoctor'))
+				hideValidation($('#inputPhoneDoctor'))
+				hideValidation($('#inputInsuranceDoctor'))
+				
 				
 			}
 		}
@@ -1298,11 +1338,16 @@ function listTypesOfExamination(t,i,clinic)
 				contentType : "application/json; charset=utf-8",
 				complete: function(response)
 				{
-					console.log(response.status)
 					if(response.status == "200")
 					{
 						makeTypeOfExaminationTable(clinic)
 					}
+					
+					if(response.status == "409")
+					{
+						warningModal("Neuspešno","Nije moguće izmeniti tip pregleda ukoliko postoje zakazani pregledi tog tipa.")
+					}
+					
 				}
 			})	
 		})

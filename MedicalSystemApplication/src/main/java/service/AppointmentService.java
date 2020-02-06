@@ -19,6 +19,7 @@ import model.Clinic;
 import model.Doctor;
 import model.Hall;
 import model.Patient;
+import model.Priceslist;
 import model.User;
 import repository.AppointmentRepository;
 import repository.AppointmentRequestRepository;
@@ -59,6 +60,10 @@ public class AppointmentService {
 		return appointmentRepository.findAllByPredefined(true);
 	}
 	
+	public List<Appointment> findAllByPricesList(Priceslist pl)
+	{
+		return appointmentRepository.findAllByPriceslist(pl);
+	}
 
 	public Appointment findAppointment(String date, int hallNumber, String clinic)
 	{	

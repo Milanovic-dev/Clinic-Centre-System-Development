@@ -31,6 +31,11 @@ public class PriceListService {
 		return priceListRepository.findAllByPrice(price);
 	 }
 	 
+	 public List<Priceslist> findAllByTypeOfExamination(String typeOfExamination)
+	 {
+		 return priceListRepository.findAllByTypeOfExamination(typeOfExamination);
+	 }
+	 
 	public Priceslist findByTypeOfExaminationAndDeleted(String typeOfExamination, Boolean deleted)
 	{
 		return priceListRepository.findByTypeOfExaminationAndDeleted(typeOfExamination, deleted);
