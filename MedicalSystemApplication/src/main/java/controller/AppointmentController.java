@@ -822,7 +822,7 @@ public class AppointmentController
 	}
 	
 	@PutMapping(value="/confirmAppointment")
-	public ResponseEntity<Void> confirmAppointmetn(@RequestBody AppointmentDTO dto)
+	public ResponseEntity<Void> confirmAppointment(@RequestBody AppointmentDTO dto)
 	{
 		Appointment app = appointmentService.findAppointment(dto.getDate(), dto.getHallNumber(), dto.getClinicName());
 		
@@ -835,6 +835,24 @@ public class AppointmentController
 		appointmentService.save(app);
 		
 		return new ResponseEntity<>(HttpStatus.OK);
+	}
+	
+	@DeleteMapping(value="/denyAppointment")
+	public ResponseEntity<Void> denyAppointment(@RequestBody AppointmentDTO dto)
+	{
+		Appointment app = appointmentService.findAppointment(dto.getDate(), dto.getHallNumber(), dto.getClinicName());
+		
+		if(app == null)
+		{
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+		
+		app.setDate(null);
+		app.setClinic(null);
+		app.setHall(null);
+		
+		appointmentService.save(app);
+		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 	}
 		
 	@DeleteMapping(value="/denyRequest")
