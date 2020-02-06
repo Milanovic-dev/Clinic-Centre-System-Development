@@ -537,7 +537,7 @@ function p_listClinic(data,i,user)
 							"surname" : surname
 						},
 						"averageRating": rating,
-						"shiftEnd": $('#inputDate')
+						"shiftEnd": $('#inputDate'),
 						"type" : type
 					}
 					

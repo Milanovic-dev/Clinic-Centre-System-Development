@@ -71,13 +71,15 @@ function setPatientProfile(patient, foreign)
 {
 	$('#medicalRecord_btn').prop('href',getPageURLWithUser('medicalRecord',patient.email))
 	
+	
 	$("#pName").text(patient.name);
 	$("#pSurname").text(patient.surname);
 	$("#pEmail").text(patient.email);
 	$("#pPhone").text(patient.phone);
 	$("#pCity").text(patient.city);
 	$("#pState").text(patient.state);
-	$("#pAddress").text(patient.address);
+	$('#pAddress').empty()
+	$("#pAddress").append(patient.address);
 	$('#pInsurance').text(patient.insuranceId)
 	
 	$('#pRole').text("Status: Pacijent")

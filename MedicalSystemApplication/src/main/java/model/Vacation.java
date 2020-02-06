@@ -34,8 +34,8 @@ public class Vacation
 	
 	public Vacation(VacationRequest request)
 	{
-		this.startDate = request.getDate();
-		this.endDate = request.getEnd();
+		this.startDate = request.getStartDate();
+		this.endDate = request.getEndDate();
 	}
 	
 	public Long getId() {
