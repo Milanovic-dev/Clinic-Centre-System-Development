@@ -6,6 +6,7 @@ import model.User.UserRole;
 public class SessionUserDTO 
 {
 	private Boolean isFirstLog;
+	private Boolean verified;
 	private String email;
 	private String name;
 	private String surname;
@@ -47,6 +48,7 @@ public class SessionUserDTO
 		this.role = user.getRole();
 		this.insuranceId = user.getInsuranceId();
 		this.isFirstLog = user.getIsFirstLog();
+		this.verified = user.getVerified();
 	}
 
 	public String getInsuranceId() {

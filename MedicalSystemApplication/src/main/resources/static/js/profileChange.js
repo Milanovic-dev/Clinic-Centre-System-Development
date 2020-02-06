@@ -39,7 +39,7 @@ function setPersonalInformations(user)
 	$("#inputEmailChange").val(user.email);
 	$("#inputNameChange").val(user.name);
 	$("#inputSurnameChange").val(user.surname);
-	$("#selectStateChange").val(user.state).prop('selected',true)
+	$("#selectStateChange").val(user.state)
 	$("#inputCityChange").val(user.city);
 	$("#inputAddressChange").val(user.address);
 	$("#inputPhoneChange").val(user.phone);
