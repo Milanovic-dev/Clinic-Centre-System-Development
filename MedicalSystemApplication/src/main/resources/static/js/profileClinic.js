@@ -29,7 +29,8 @@ function addClinicInformations(data)
 	}
 	
 	$("#pNameClinic").text(clinic.name);
-	$("#pAdressClinic").text(clinic.address);
+	$('#pAdressClinic').empty()
+	$("#pAdressClinic").append("<a href='map.html?clinic="+clinic.name+"' target='_blank'>"+clinic.address+"</a>");
 	$("#pDescriptionClinic").text(clinic.description);
 	$("#pCityClinic").text(clinic.city);
 	$("#pStateClinic").text(clinic.state);
