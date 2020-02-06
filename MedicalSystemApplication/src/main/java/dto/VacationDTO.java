@@ -8,23 +8,23 @@ import model.VacationRequest;
 
 public class VacationDTO
 {
-	private String date;
-	private String end;
+	private String startDate;
+	private String endDate;
 	private UserDTO user;
 	private Long id;
 
 
 	public VacationDTO(String date, String end,UserDTO userDTO,Long id) {
 		super();
-		this.date = date;
-		this.end = end;
+		this.startDate = date;
+		this.endDate = end;
 		this.user = userDTO;
 		this.id = id;
 	}
 	public VacationDTO(VacationRequest vrq)
 	{
-		this.date = DateUtil.getInstance().getString(vrq.getDate(), "dd-MM-yyyy");
-		this.end = DateUtil.getInstance().getString(vrq.getEnd(), "dd-MM-yyyy");
+		this.startDate = DateUtil.getInstance().getString(vrq.getStartDate(), "dd-MM-yyyy");
+		this.endDate = DateUtil.getInstance().getString(vrq.getEndDate(), "dd-MM-yyyy");
 		this.user = new UserDTO(vrq.getUser());
 		this.id = vrq.getId();
 
@@ -32,11 +32,10 @@ public class VacationDTO
 
 	public VacationDTO(Vacation vac)
 	{
-		this.date = DateUtil.getInstance().getString(vac.getStartDate(), "dd-MM-yyyy HH:mm");
-		this.end = DateUtil.getInstance().getString(vac.getEndDate(), "dd-MM-yyyy HH:mm");
+		this.startDate = DateUtil.getInstance().getString(vac.getStartDate(), "dd-MM-yyyy HH:mm");
+		this.endDate = DateUtil.getInstance().getString(vac.getEndDate(), "dd-MM-yyyy HH:mm");
 		this.user = new UserDTO(vac.getUser());
 	}
-
 
 
 	public VacationDTO() {
@@ -45,27 +44,26 @@ public class VacationDTO
 	}
 
 
-
 	public Long getId() {
 		return id;
 	}
 	public void setId(Long id) {
 		this.id = id;
 	}
-	public String getDate() {
-		return date;
+	public String getStartDate() {
+		return startDate;
 	}
 
-	public void setDate(String date) {
-		this.date = date;
+	public void setStartDate(String date) {
+		this.startDate = date;
 	}
 
-	public String getEnd() {
-		return end;
+	public String getEndDate() {
+		return endDate;
 	}
 
-	public void setEnd(String end) {
-		this.end = end;
+	public void setEndDate(String end) {
+		this.endDate = end;
 	}
 	public UserDTO getUser() {
 		return user;
