@@ -18,6 +18,7 @@ $(document).ready(function(){
 				if(data.status == 200)
 				{
 					$('#header').text("Uspesno!")
+					$('#message').text("Nalog je uspesno aktiviran.")
 					$('#spinner').hide()
 				}
 				else

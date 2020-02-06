@@ -585,7 +585,7 @@ function p_listClinic(data,i,user)
 						return
 					}
 					
-					$('#')
+					
 
 					showView('detailsAppointmentContainer')
 					showBread('Pregled zahteva')
