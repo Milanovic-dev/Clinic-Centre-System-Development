@@ -881,6 +881,14 @@ public class AppointmentController
 		request.setTimestamp(DateUtil.getInstance().getDate(new Date().getTime(), "dd-MM-yyyy HH:mm"));
 		Clinic clinic = clinicService.findByName(dto.getClinicName());
 		
+		AppointmentRequest databaseRequest = appointmentRequestService.findAppointmentRequest(dto.getDate(), dto.getHallNumber(), dto.getClinicName());
+		
+		if(databaseRequest != null)
+		{
+			return new ResponseEntity<>(HttpStatus.CONFLICT);
+		}
+		
+		
 		if(clinic == null)
 		{
 			header.set("responseText","Clinic not found: " + dto.getClinicName());
@@ -940,6 +948,7 @@ public class AppointmentController
 				notificationService.sendNotification(admin.getEmail(), "Novi zahtev za pregled", "Imate novi zahtev za pregled..");
 			}
 		}
+		
 		
 		request.setAppointmentType(dto.getType());
 		
@@ -1047,13 +1056,9 @@ public class AppointmentController
 			}
 		}
 		
-		if(app.getVersion() != dto.getVersion())
-		{
-			return new ResponseEntity<>(HttpStatus.LOCKED);
-		}
-		
+
 		app.setPatient(p);
-			
+		app.setVersion(dto.getVersion());
 		
 		try
 		{
@@ -1072,7 +1077,7 @@ public class AppointmentController
 			strBuilder.append(app.getPriceslist().getPrice());
 			strBuilder.append("rsd.");
 			notificationService.sendNotification(p.getEmail(), "Zakazali ste pregled!", strBuilder.toString());
-			appointmentService.save(app);			
+			appointmentService.saveLock(app);			
 		}
 		catch(ObjectOptimisticLockingFailureException e)
 		{
