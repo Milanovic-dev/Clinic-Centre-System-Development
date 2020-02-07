@@ -2,46 +2,32 @@ package com.group14.MedicalSystemApplication.controller;
 
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
-import org.hibernate.Hibernate;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
+import com.group14.MedicalSystemApplication.TestConstants;
+
 import dto.AppointmentDTO;
-import helpers.DateInterval;
-import helpers.DateUtil;
 import model.Appointment;
-import model.Clinic;
-import model.Doctor;
-import model.Hall;
-import model.Patient;
-import model.Priceslist;
 import model.Appointment.AppointmentType;
-import service.AppointmentRequestService;
+import model.Doctor;
 import service.AppointmentService;
-import service.AuthService;
 import service.ClinicService;
 import service.HallService;
-import service.NotificationService;
 import service.PriceListService;
 import service.UserService;
-import service.VacationRequestService;
 
 @SpringBootTest
 public class AppointmentControllerTest {
@@ -89,6 +75,8 @@ public class AppointmentControllerTest {
 		
 		assertEquals(HttpStatus.OK, response.getStatusCode());
 		assertTrue(apps.length > 0);
+		assertEquals(TestConstants.PRE_CLINIC, apps[0].getClinicName());
+		assertEquals(TestConstants.PRE_HALL, apps[0].getHallNumber());
 	}
 	
 	@Test
