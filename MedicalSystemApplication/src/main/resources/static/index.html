@@ -357,35 +357,21 @@
 </div> 
 <!-- -------KRAJ KALENDARA ZAUZECA SALE----------- -->
    
-   	  <div  id = "showClinicContainer" style="display:none"></div>        
+   	  <div  id = "showClinicContainer" style="display:none">
+   	  	<div class="alert alert-info" role="alert">
+ 			 <h5 class="alert-heading">Kako zakazati pregled.</h5>
+ 			 <p>Ispred vas se nalazi prazna tabela. Kako bi napravili pregled, unesite datum i tip pregleda u pretragu. Ukoliko postoji neka klinika u kojoj možete da zakažete željeni pregled, u tabeli će vam se pokazati informacije te klinike i dugme za zakazivanje.</p>
+ 			 <hr>
+ 			 <p><b>Napomena:</b>Morate izabrati <b>datum</b> i <b>tip</b> pregleda da bi vam sistem pronašao klinike.</p>
+		</div>
+   	  </div>        
       <div  id = "showUserContainer" style="display:none"></div>
       <div  id = "showPatientContainer" style="display:none"></div>
       <div  id = "showAppointmentContainerWithCheckBox" style="display:none"></div>
       
           
      <div class="container" id="showAppointmentRequestsPatient" style="display:none">
-    	  <div class="card mb-3">
-          <div class="card-header">
-            Zahtevi na cekanju</div>
-          <div class="card-body">
-            <div class="table-responsive">
-              <table class="table table-bordered" id="tablePendingApps" width="100%" cellspacing="0">
-                <thead>
-					<tr>
-					<th scope="col">Datum</th>
-      				<th scope="col">Doktor</th>
-      				<th scope="col">Tip</th>
-      				<th scope="col">Adresa</th>
-      				<th scope="col">Klinika</th>     				
-      				<th scope="col"> </th>
-            </tr>					
-					</thead>
-					<tbody>             	
-                </tbody>
-              </table>
-            </div>     
-          </div>
-          </div>
+    	  
     </div>
     
     <!--  
@@ -419,9 +405,9 @@
 	<div id="preAppointmentContainer" style="display:none">
 		<div class="alert alert-info" role="alert">
  			 <h5 class="alert-heading">Kako do brzog pregleda.</h5>
- 			 <p>U tabeli se nalaze unapred zakazni pregledi koje mozete da izaberete. Ukoliko trazite odredjeni pregled koristite filter kako bi ga brze nasli, i ako ste sigurni da zelite odabrani pregled pritisnite na dugme "Zakazi" u tabeli i dobicete potvrdu na vasu email adresu. Ukoliko ne mozete da pronadjete pregled koji vama odgovara preporucujemo vam da sami napravite zahtev na <a href="#" id="listClinicsLink" class="alert-link">Lista klinika</a></p>
+ 			 <p>U tabeli se nalaze unapred zakazni pregledi koje možete da izaberete. Ukoliko tražite odredjeni pregled koristite filter kako bi ga brže našli, i ako ste sigurni da želite odabrani pregled pritisnite na dugme "Zakaži" u tabeli i dobićete potvrdu na vašu email adresu. Ukoliko ne možete da pronadjete pregled koji vama odgovara preporučujemo vam da sami napravite zahtev na <a href="#" id="listClinicsLink" class="alert-link">Lista klinika</a></p>
  			 <hr>
- 			 <p><b>Napomena: </b> Ukoliko zakazete pregled necete moci da ga otkazete. Budite pazljivi u odabiru.</p>
+ 			 <p><b>Napomena: </b> Ukoliko zakažete pregled nećete moći da ga otkažete. Budite pažljivi u odabiru.</p>
 		</div>
 	</div>
   
@@ -453,7 +439,7 @@
       		<input type="text" id="inputAppointmentType" class="form-control"  autofocus="autofocus" disabled>
     	   </div>  
     	   <div class="form-group">
-      		<label for="inputAppointmentType">Izaberite vreme</label>
+      		<label for="inputStartTime">Izaberite vreme</label>
     	   <input type="time" id="inputStartTime" class="form-control">
     	   </div> 
     	   <br>

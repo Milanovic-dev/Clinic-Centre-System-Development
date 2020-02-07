@@ -194,6 +194,7 @@ function setHallTableClinicProfile(clinicName)
 	getTableDiv("tableHallClinicProfile").show()
 }
 
+
 function listHall(data,i)
 {	
 	let d = [data.number,data.name,data.clinicName]

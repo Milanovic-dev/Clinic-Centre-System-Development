@@ -155,4 +155,6 @@ public class AppointmentService {
 	{
 		return appointmentRepository.findAllByClinic(c);
 	}
+
+
 }

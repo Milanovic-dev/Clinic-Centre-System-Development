@@ -2,6 +2,7 @@ package controller;
 
 import dto.PatientMedicalReportDTO;
 import dto.PrescriptionDTO;
+import helpers.DateUtil;
 import model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -173,7 +174,7 @@ public class PatientMedicalReportController {
         report.setDescription(dto.getDescription());
         report.setDoctor(doctor);
         report.setPrescription(pr);
-        report.setDateAndTime(dto.getDateAndTime());
+        report.setDateAndTime(DateUtil.getInstance().getDate(dto.getDateAndTime(),"dd-MM-yyyy"));
         report.setPatient(patient);
 
         for(String name : dto.getDiagnosis())

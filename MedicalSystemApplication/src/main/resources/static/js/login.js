@@ -82,6 +82,10 @@ $(document).ready(function(){
 
 						}
 				}
+				else if(data.status == "401")
+				{
+					$('#errorSpan').text("Ovaj nalog nije verifikovan! Link za verifikaciju je poslat na vaš email.")
+				}
 				else
 				{
 					var emailInput = $('#inputEmail')

@@ -99,7 +99,7 @@ public class ContainerInitialize {
 			Diagnosis diagnosis3 = new Diagnosis("222", "787", "grip");
 			diagnosisRepository.save(diagnosis3);
 
-			Patient patient = new Patient.Builder("nikola@gmail.com")
+			Patient patient = new Patient.Builder("nikolamilanovic21@gmail.com")
 					.withPassword(hash)
 					.withName("Nikola")
 					.withSurname("Milanovic")
@@ -218,7 +218,7 @@ public class ContainerInitialize {
 			doctor2.setAvarageRating(4.4f);
 			userRepository.save(doctor2);
 			
-			Doctor doctor3 = new Doctor.Builder("nikolamilanovic21@gmail.com")
+			Doctor doctor3 = new Doctor.Builder("doktor3@gmail.com")
 					.withPassword(hash)
 					.withName("Petar")
 					.withSurname("Pertrovic")
@@ -422,6 +422,9 @@ public class ContainerInitialize {
 			AppointmentRequest appReq3 = new AppointmentRequest(dateInstance.getDate("26-02-2020 11:00", "dd-MM-yyyy HH:mm"), null, patient, clinic,p1, AppointmentType.Surgery);
 			AppointmentRequest appReq4 = new AppointmentRequest(dateInstance.getDate("27-02-2020 11:00", "dd-MM-yyyy HH:mm"), null, patient, clinic,p1, AppointmentType.Surgery);
 			AppointmentRequest appReq5 = new AppointmentRequest(dateInstance.getDate("28-02-2020 11:00", "dd-MM-yyyy HH:mm"), null, patient, clinic,p1, AppointmentType.Examination);
+			AppointmentRequest appReq6 = new AppointmentRequest(dateInstance.getDate("26-02-2020 11:00", "dd-MM-yyyy HH:mm"), null, patient, clinic,p1, AppointmentType.Surgery);
+			AppointmentRequest appReq7 = new AppointmentRequest(dateInstance.getDate("26-02-2020 11:00", "dd-MM-yyyy HH:mm"), null, patient, clinic,p1, AppointmentType.Surgery);
+
 
 			List<Doctor> list = new ArrayList<Doctor>();
 			list.add(doctor2);
@@ -432,6 +435,8 @@ public class ContainerInitialize {
 			appointmentRequestRepository.save(appReq3);
 			appointmentRequestRepository.save(appReq4);
 			appointmentRequestRepository.save(appReq5);
+			appointmentRequestRepository.save(appReq6);
+			appointmentRequestRepository.save(appReq7);
 			
 			
 			

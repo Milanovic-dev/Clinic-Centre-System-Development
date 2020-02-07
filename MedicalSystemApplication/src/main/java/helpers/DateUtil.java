@@ -129,5 +129,12 @@ public class DateUtil {
 		
 		return instance;
 	}
-	
+
+	public static Date addDays(Date date, int days)
+	{
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(date);
+		calendar.add(Calendar.HOUR_OF_DAY, days*24);
+		return calendar.getTime();
+	}
 }

@@ -3,6 +3,7 @@ package service;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -107,5 +108,23 @@ public class AppointmentRequestService {
 	public void save(AppointmentRequest request)
 	{
 		appointmentRequestRepository.save(request);
+	}
+
+	public List<AppointmentRequest> findAll(){
+		return appointmentRequestRepository.findAll();
+	}
+
+	public List<AppointmentRequest> findAllSurgeries(){
+
+		List<AppointmentRequest> apps = appointmentRequestRepository.findAll();
+		List<AppointmentRequest> ret = new ArrayList<>();
+		for(AppointmentRequest app : apps)
+		{
+			if(app.getAppointmentType() == Appointment.AppointmentType.Surgery){
+				ret.add(app);
+			}
+		}
+
+		return ret;
 	}
 }
