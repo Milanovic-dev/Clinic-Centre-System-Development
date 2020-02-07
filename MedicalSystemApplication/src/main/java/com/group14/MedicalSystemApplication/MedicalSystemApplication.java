@@ -18,6 +18,7 @@ import helpers.InvokeFunction;
 import helpers.SecurePasswordHasher;
 import model.CentreAdmin;
 import model.Patient;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import service.AppointmentRequestService;
 import service.AuthService;
@@ -26,7 +27,9 @@ import java.util.*;
 
 @EntityScan("model") 
 @EnableJpaRepositories(basePackages="repository") 
-@SpringBootApplication(scanBasePackages = {"model","service","repository","controller","org.nil"})
+
+@SpringBootApplication(scanBasePackages = {"model","service","repository","controller"})
+@EnableScheduling
 public class MedicalSystemApplication {
 
 	public static void main(String[] args) {
