@@ -19,13 +19,13 @@ select {
  	background: #282c34;
 }
 
-p {
-  font-size: 12px;
-  width: 150px;
-  display: inline-block;
-  margin-left: 18px;
-  background: #282c34;
+.center {
+  margin: auto;
+  width: 50%;
+  border: 3px solid green;
+  padding: 10px;
 }
+
 h1{
   font-size: 28px;
   font-weight: 100;

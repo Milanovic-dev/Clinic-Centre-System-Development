@@ -51,18 +51,19 @@ public class Appointment
 
 	@Column(name="done")
 	private Boolean done = false;
+	
+	@Column(name="confimred")
+	private Boolean confirmed = false;
 
 	private Date newDate;
 	private Date newEndDate;
-
-
-
 	@Version
 	private Integer version;
 	
 	public Appointment() {
 		super();
 		this.doctors = new ArrayList<>();
+		this.confirmed = true;
 		// TODO Auto-generated constructor stub
 	}
 
@@ -78,9 +79,22 @@ public class Appointment
 		this.doctors = new ArrayList<>();
 		this.priceslist = priceslist;
 		this.appointmentType = appointmentType; 
+		this.confirmed = true;
+	}
+	
+	
+
+    public Boolean getConfirmed() {
+		return confirmed;
 	}
 
-    public Date getNewEndDate() {
+
+	public void setConfirmed(Boolean confirmed) {
+		this.confirmed = confirmed;
+	}
+
+
+	public Date getNewEndDate() {
         return newEndDate;
     }
 

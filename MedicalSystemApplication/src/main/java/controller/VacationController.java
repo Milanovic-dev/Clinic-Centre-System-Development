@@ -59,8 +59,8 @@ public class VacationController {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 
-		Date vacationStart = DateUtil.getInstance().getDate(vdto.getDate(), "dd-MM-yyyy");
-		Date vacationEnd = DateUtil.getInstance().getDate(vdto.getEnd(), "dd-MM-yyyy");
+		Date vacationStart = DateUtil.getInstance().getDate(vdto.getStartDate(), "dd-MM-yyyy");
+		Date vacationEnd = DateUtil.getInstance().getDate(vdto.getEndDate(), "dd-MM-yyyy");
 
 		List<VacationRequest> requests  = vacationRequestService.findAllByUser(user);
 
@@ -69,7 +69,7 @@ public class VacationController {
 			for(VacationRequest request : requests)
 			{
 
-				if(vacationStart.before(request.getEnd()) && vacationEnd.after(request.getDate()))
+				if(vacationStart.before(request.getEndDate()) && vacationEnd.after(request.getStartDate()))
 				{
 					return new ResponseEntity<>(false, HttpStatus.OK);
 				}
@@ -144,8 +144,8 @@ public class VacationController {
 
 		VacationRequest vr = new VacationRequest();
 
-		vr.setDate(DateUtil.getInstance().getDate(vdto.getDate(), "dd-MM-yyyy"));
-		vr.setEnd(DateUtil.getInstance().getDate(vdto.getEnd(), "dd-MM-yyyy"));
+		vr.setStartDate(DateUtil.getInstance().getDate(vdto.getStartDate(), "dd-MM-yyyy"));
+		vr.setEndDate(DateUtil.getInstance().getDate(vdto.getEndDate(), "dd-MM-yyyy"));
 		vr.setClinic(clinic);
 		vr.setUser(user);
 
@@ -199,7 +199,7 @@ public class VacationController {
 
 		notificationService.sendNotification(req.getUser().getEmail(), "Zahtev za godišnji odmor ili odsustvo ",
 				"Poštovani,"
-						+ "Vaš zahtev za godišnji odmor ili odsustvo u periodu od " + DateUtil.getInstance().getString(req.getDate(), "dd-MM-yyyy") + " do " + DateUtil.getInstance().getString(req.getEnd(), "dd-MM-yyyy") + " je odobren.");
+						+ "Vaš zahtev za godišnji odmor ili odsustvo u periodu od " + DateUtil.getInstance().getString(req.getStartDate(), "dd-MM-yyyy") + " do " + DateUtil.getInstance().getString(req.getEndDate(), "dd-MM-yyyy") + " je odobren.");
 		vacationRequestService.delete(req);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
@@ -227,7 +227,7 @@ public class VacationController {
 
 		notificationService.sendNotification(req.getUser().getEmail(), "Zahtev za godišnji odmor ili odsustvo ",
 				"Poštovani,"
-						+ "Vaš zahtev za godišnji odmor ili odsustvo u periodu od " + DateUtil.getInstance().getString(req.getDate(), "dd-MM-yyyy") + " do " + DateUtil.getInstance().getString(req.getEnd(), "dd-MM-yyyy") + " je odbijen.Razlog odbijanja zahteva je sledeći: " + denyText);
+						+ "Vaš zahtev za godišnji odmor ili odsustvo u periodu od " + DateUtil.getInstance().getString(req.getStartDate(), "dd-MM-yyyy") + " do " + DateUtil.getInstance().getString(req.getEndDate(), "dd-MM-yyyy") + " je odbijen.Razlog odbijanja zahteva je sledeći: " + denyText);
 		vacationRequestService.delete(req);
 		return new ResponseEntity<>(HttpStatus.OK);
 
@@ -250,8 +250,8 @@ public class VacationController {
 		for(Vacation vac : vacations)
 		{
 			VacationDTO dt = new VacationDTO(vac);
-			dt.setDate(vac.getStartDate().toString());
-			dt.setEnd(vac.getEndDate().toString());
+			dt.setStartDate(vac.getStartDate().toString());
+			dt.setEndDate(vac.getEndDate().toString());
 			vdto.add(dt);
 		}
 

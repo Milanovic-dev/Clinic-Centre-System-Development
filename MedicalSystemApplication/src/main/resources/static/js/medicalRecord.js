@@ -93,7 +93,8 @@ function createHistoryTable(reports, foreign)
 	
 	
 	$.each(reports, function(i, item){
-		let data = ['Pregled', item.dateAndTime, getClinicProfileLink(item.clinicName), getProfileLink(item.doctorEmail), item.patientEmail, item.description, "", "", "<button class='btn btn-primary' id='review_btn"+i+"'>Oceni...</button>"]
+		console.log(item)
+		let data = ['Pregled', item.dateAndTime, getClinicProfileLink(item.clinicName), getProfileLink(item.doctorEmail), item.patientEmail, item.description, item.diagnosis, item.prescription.description + "\n" + item.prescription.drugs, "<button class='btn btn-primary' id='review_btn"+i+"'>Oceni...</button>"]
 		insertTableData("historyTable",data)
 		
 		$('#review_btn'+i).prop('disabled', foreign)

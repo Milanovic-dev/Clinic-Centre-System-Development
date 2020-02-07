@@ -1,30 +1,32 @@
-<!DOCTYPE html>
 <html>
 <head>
-<meta charset="utf-8">
-
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
 <script
   src="https://code.jquery.com/jquery-3.4.1.js"
   integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
   crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflarecom/ajax/libs/materialize/1.0.0/css/materialize.min.css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-<link rel="stylesheet" href="css/index.css" >
-<script src="js/content_manager.js"></script>
 <script src ="js/navbar.js"></script>
-<script src="js/login.js"></script>
+<!----------------------MAPA ------------------ -->
+<script src="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.1.1/build/ol.js"></script>
+ <style>
+    .map {
+      height: 400px;
+      width: 100%;
+    }
+  </style>
+<script src="js/content_manager.js"></script>
+<script src="js/table_manager.js"></script>
 <script src="js/profile_manager.js"></script>
-<link rel="stylesheet" href="css/custom.css">
-<link rel="stylesheet" href="css/login.css">
+<script src="js/map.js"></script>
+<link rel="stlyesheet" href="css/custom.css">
 <meta charset="ISO-8859-1">
-<title>Insert title here</title>
+<title>Mapa klinike</title>
 </head>
 <body>
 
-<!---------------------------------------NAVBAR---------------------------------------->
-	<header>
+<header>
     	<nav class="navbar navbar-expand navbar-dark bg-dark">
     	<a class="navbar-brand" href="#">
     		<img src="images/logo.png" width="30" height="30" alt="">
@@ -52,47 +54,12 @@
     					<a class="dropdown-item" href="index.html" id="dropdown-item_logout">Odjavi se</a>
   					</div>
 					</div>
-  					</div>
                 </form>
               </div>
          </nav>
     </header>
 
-<!---------------------------------------NAVBAR END---------------------------------------->
-
-<div class="container">
-    <div class="card card-login mx-auto mt-5">
-      <div class="card-header">Prijava</div>
-      <div class="card-body">
-        <form>
-          <div class="form-group">
-            <div class="form-label-group">
-              <input type="email" id="inputEmail" class="form-control" placeholder="Email" required="required" autofocus="autofocus">
-              <div class="valid-feedback">Izgleda dobro!</div>
-              <div class="invalid-feedback"></div>
-            </div>
-          </div>
-          <div class="form-group">
-            <div class="form-label-group">
-              <input type="password" id="inputPassword" class="form-control" placeholder="Lozinka" required="required">
-              <div class="valid-feedback">Izgleda dobro!</div>
-                  <div class="invalid-feedback"></div>
-            </div>
-          </div>
-          <div class="form-group">
-            <div class="checkbox">
-            </div>
-          </div>
-          <span style="color:#FF1103" id="errorSpan"></span>
-          <input type="submit" class="btn btn-primary btn-block" id="submitLogin" value="Prijavi se">
-			
-        </form>
-        <div class="text-center">
-          <a class="d-block small mt-3" href="register.html">Registracija</a>
-        </div>
-      </div>
-    </div>
-  </div>
+<div id="map"></div>
 
 </body>
 </html>

@@ -581,6 +581,12 @@ function initCalendarDoc(user)
                       console.log(info)
                         return
                       }
+                      console.log(info)
+                      if(!info.confirmed)
+                      {
+                    	  warningModal('Neuspesno', "Pacijent nije potvrdio pregled!")
+                    	  return
+                      }
 
                       var type
                       if(info.type == 'Surgery'){

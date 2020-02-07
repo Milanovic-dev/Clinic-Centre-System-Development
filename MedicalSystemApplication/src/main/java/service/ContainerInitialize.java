@@ -99,7 +99,7 @@ public class ContainerInitialize {
 			Diagnosis diagnosis3 = new Diagnosis("222", "787", "grip");
 			diagnosisRepository.save(diagnosis3);
 
-			Patient patient = new Patient.Builder("nikola@gmail.com")
+			Patient patient = new Patient.Builder("nikolamilanovic21@gmail.com")
 					.withPassword(hash)
 					.withName("Nikola")
 					.withSurname("Milanovic")
@@ -218,7 +218,7 @@ public class ContainerInitialize {
 			doctor2.setAvarageRating(4.4f);
 			userRepository.save(doctor2);
 			
-			Doctor doctor3 = new Doctor.Builder("nikolamilanovic21@gmail.com")
+			Doctor doctor3 = new Doctor.Builder("doktor3@gmail.com")
 					.withPassword(hash)
 					.withName("Petar")
 					.withSurname("Pertrovic")

@@ -71,13 +71,15 @@ function setPatientProfile(patient, foreign)
 {
 	$('#medicalRecord_btn').prop('href',getPageURLWithUser('medicalRecord',patient.email))
 	
+	
 	$("#pName").text(patient.name);
 	$("#pSurname").text(patient.surname);
 	$("#pEmail").text(patient.email);
 	$("#pPhone").text(patient.phone);
 	$("#pCity").text(patient.city);
 	$("#pState").text(patient.state);
-	$("#pAddress").text(patient.address);
+	$('#pAddress').empty()
+	$("#pAddress").append(patient.address);
 	$('#pInsurance').text(patient.insuranceId)
 	
 	$('#pRole').text("Status: Pacijent")
@@ -113,6 +115,8 @@ function setPatientProfile(patient, foreign)
 						
 				$.each(apps, function(i, a){
 								
+					if(a.done) return
+					
 					let typeOfExamin = ''
 									
 					if(a.type == 'Surgery')
@@ -127,8 +131,16 @@ function setPatientProfile(patient, foreign)
 					let values = [a.patientEmail , a.date, a.hallNumber, typeOfExamin,a.typeOfExamination,a.duration,'<button type="button" class="btn btn-primary" id = "startExaminationDoctor_btn'+i+'">Započni pregled</button>']
 					insertTableData("listAppointmentsTable",values)
 								
+				
 					$('#startExaminationDoctor_btn'+i).click(function(e){
 						e.preventDefault()
+						
+						if(!a.confirmed)
+						{
+							displayError('startExaminationDoctor_btn'+i,"Pacijent nije potvrdio pregled.")			
+							return
+						}
+						
 						window.location.href = 'index.html?startExam=true&date='+ a.date + '&hall=' + a.hallNumber
 									
 					})					
