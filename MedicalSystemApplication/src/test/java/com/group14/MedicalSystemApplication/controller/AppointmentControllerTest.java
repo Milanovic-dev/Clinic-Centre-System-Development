@@ -75,8 +75,8 @@ public class AppointmentControllerTest {
 		
 		assertEquals(HttpStatus.OK, response.getStatusCode());
 		assertTrue(apps.length > 0);
-		assertEquals(TestConstants.PRE_CLINIC, apps[0].getClinicName());
-		assertEquals(TestConstants.PRE_HALL, apps[0].getHallNumber());
+		assertEquals(TestConstants.FOUND_PRE_CLINIC, apps[0].getClinicName());
+		assertEquals(TestConstants.FOUND_PRE_HALL, apps[0].getHallNumber());
 	}
 	
 	@Test
