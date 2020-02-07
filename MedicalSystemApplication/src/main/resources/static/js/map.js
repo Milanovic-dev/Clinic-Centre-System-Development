@@ -45,7 +45,7 @@ $(document).ready(function(){
 									  layers: [ baseMapLayer],
 									  view: new ol.View({
 									          center: ol.proj.fromLonLat(location), 
-									          zoom: 7 //Initial Zoom Level
+									          zoom: 14 //Initial Zoom Level
 									        })
 									});
 									//Adding a marker on the map

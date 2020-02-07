@@ -351,6 +351,7 @@ function list_preApp(data,i,user)
 				hideLoading('submitPredefinedAppRequest'+i)
 			}
 		})
+		
 	})
 	
 }
@@ -658,9 +659,13 @@ function submitAppointmentRequest(user, doctorsSelected)
 			{
 				listAppRequests(user)
 			}
-			else
+			else if(data.status == "500")
 			{
 				warningModal("Neuspesno " + data.status, "Server nije uspeo da odgovori. Molimo pokusajte kasnije")
+			}
+			else if(data.status == "400")
+			{
+				displayError('submitAppointmentRequest', "Upit već postoji. Pokušajte drugo vreme.")
 			}
 										
 			hideLoading('submitAppointmentRequest')

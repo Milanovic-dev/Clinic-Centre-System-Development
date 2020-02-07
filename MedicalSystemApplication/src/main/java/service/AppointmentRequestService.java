@@ -4,11 +4,14 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.ConcurrentModificationException;
 import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import model.Appointment;
 import model.AppointmentRequest;
@@ -107,6 +110,19 @@ public class AppointmentRequestService {
 	
 	public void save(AppointmentRequest request)
 	{
+		appointmentRequestRepository.save(request);
+	}
+	
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
+	public void saveLock(AppointmentRequest request) throws ConcurrentModificationException
+	{
+		AppointmentRequest req = findAppointmentRequest(request.getDate(), request.getHall(), request.getClinic());
+		
+		if(req != null)
+		{
+			throw new ConcurrentModificationException("Already made");
+		}
+		
 		appointmentRequestRepository.save(request);
 	}
 

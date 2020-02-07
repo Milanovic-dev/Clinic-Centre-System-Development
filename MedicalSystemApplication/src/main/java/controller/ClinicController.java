@@ -22,6 +22,7 @@ import model.Patient;
 import model.RegistrationRequest;
 import helpers.DateUtil;
 import helpers.ListUtil;
+import helpers.Scheduler;
 import helpers.UserSortingComparator;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -132,7 +133,7 @@ public class ClinicController {
     @PostMapping(value="/getAll/{date}/{type}")
     public ResponseEntity<List<ClinicDTO>> getClinicsWithFilter(@RequestBody ClinicFilterDTO dto, @PathVariable("date") String date,@PathVariable("type") String typeOfExamination)
     {
-    	List<Clinic> clinics = clinicService.findAll();
+    	List<Clinic> clinics = clinicService.findAllSafe();
     	List<ClinicDTO> clinicsDTO = new ArrayList<ClinicDTO>();
     	
     	if(clinics == null)
@@ -150,7 +151,9 @@ public class ClinicController {
 	    		
 	    	for(Doctor d: doctors)
 	    	{
-	    		if(d.IsFreeOn(realDate) && d.getType().equalsIgnoreCase(typeOfExamination))
+	    		int freeTime = Scheduler.getFreeIntervals(d, realDate).size();
+	    		
+	    		if(d.IsFreeOn(realDate) && d.getType().equalsIgnoreCase(typeOfExamination) && freeTime > 0)
 	    		{
 	    			if(filter.test(c, dto))
 	    			{

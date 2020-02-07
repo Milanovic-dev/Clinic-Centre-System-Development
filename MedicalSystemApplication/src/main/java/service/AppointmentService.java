@@ -8,9 +8,13 @@ import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import helpers.DateUtil;
@@ -75,9 +79,25 @@ public class AppointmentService {
 		return findAppointment(d,h,c);
 	}
 	
-	@Transactional(isolation = Isolation.SERIALIZABLE, readOnly = false)
+
 	public void save(Appointment appointment)
+	{	
+		appointmentRepository.save(appointment);
+	}
+	
+	@Transactional(isolation = Isolation.SERIALIZABLE, propagation = Propagation.REQUIRES_NEW, readOnly = false)
+	public void saveLock(Appointment appointment) throws ObjectOptimisticLockingFailureException
 	{
+		Appointment app = appointmentRepository.findByDateAndHallAndClinic(appointment.getDate(), appointment.getHall(), appointment.getClinic());
+		
+		if(app != null)
+		{
+			if(app.getVersion() != appointment.getVersion())
+			{
+				throw new ObjectOptimisticLockingFailureException("Resource Locked.", app);
+			}
+		}
+		
 		appointmentRepository.save(appointment);
 	}
 	
