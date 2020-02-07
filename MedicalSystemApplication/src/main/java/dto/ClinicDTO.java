@@ -11,6 +11,11 @@ public class ClinicDTO {
     private String description;
     private float rating;
 
+    public ClinicDTO()
+    {
+    	super();
+    }
+    
     public ClinicDTO(String name, String address, String city, String state, String description,float rating) {
         this.name = name;
         this.address = address;

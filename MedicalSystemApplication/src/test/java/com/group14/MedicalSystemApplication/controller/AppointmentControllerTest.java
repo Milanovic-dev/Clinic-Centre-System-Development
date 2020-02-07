@@ -13,14 +13,15 @@ import java.util.List;
 
 import org.hibernate.Hibernate;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.test.annotation.Rollback;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 
 import dto.AppointmentDTO;
 import helpers.DateInterval;
@@ -45,6 +46,7 @@ import service.VacationRequestService;
 @SpringBootTest
 public class AppointmentControllerTest {
 
+	private String URI_PREFIX = "http://localhost:8282/api/appointments";
 	
 	@Autowired
 	private UserService userService;
@@ -72,128 +74,28 @@ public class AppointmentControllerTest {
 		assertNotEquals(list, null);	
 	}
 	
-	
-	@Test
-	@Transactional
-	@Rollback(true)
-	void when_make_predefined_Return_isPredefined()
-	{
-		AppointmentDTO dto = new AppointmentDTO();
-		dto.setClinicName("KlinikaA");
-		dto.setDate("22-02-2020 10:00");
-		dto.setEndDate("22-02-2020 12:00");
-		dto.setDoctors(new ArrayList<String>() {{add("doktor1@gmail.com");}});
-		dto.setHallNumber(1);
-		dto.setType(AppointmentType.Examination);
-		dto.setTypeOfExamination("Opsti pregled");
 		
-		Clinic clinic = clinicService.findByName(dto.getClinicName());
-		
-		assertFalse(clinic == null);
-		
-		
-		Date date = DateUtil.getInstance().getDate(dto.getDate(), "dd-MM-yyyy HH:mm");
-		Date endDate = DateUtil.getInstance().getDate(dto.getEndDate(), "dd-MM-yyyy HH:mm");
-		
-		
-		Hall hall = hallService.findByNumber(dto.getHallNumber());
-		
-		assertFalse(hall == null);
-		
-		List<Appointment> appointments = appointmentService.findAllByHallAndClinic(hall, clinic);
-		
-		
-		for(Appointment app : appointments)
-		{
-			DateInterval d1 = new DateInterval(app.getDate(),app.getEndDate());
-			DateInterval d2 = new DateInterval(date, endDate);
-			assertFalse(DateUtil.getInstance().overlappingInterval(d1, d2));
-		}
-		
-		
-		Priceslist p = priceslistService.findByTypeOfExamination(dto.getTypeOfExamination());
-		
-		assertFalse(p == null);
-		
-		ArrayList<Doctor> doctors = new ArrayList<Doctor>();
-		
-		for(String email : dto.getDoctors())
-		{
-			Doctor d = (Doctor) userService.findByEmailAndDeleted(email, false);
-			Hibernate.initialize(d.getAppointments());
-			for(Appointment app : d.getAppointments())
-			{
-				DateInterval d1 = new DateInterval(app.getDate(),app.getEndDate());
-				DateInterval d2 = new DateInterval(date, endDate);
-				
-				assertFalse(DateUtil.getInstance().overlappingInterval(d1, d2));
-			}
-			
-			doctors.add(d);
-		}
-		
-		
-		
-		Appointment a = appointmentService.findAppointment(date, hall, clinic);
-		
-		assertFalse(a != null);
-		
-		Appointment app = new Appointment.Builder(date)
-				.withEndingDate(endDate)
-				.withClinic(clinic)
-				.withHall(hall)
-				.withType(dto.getType())
-				.withPriceslist(p)
-				.withDoctors(doctors)				
-				.build();
-		
-		app.setPredefined(true);		
-		appointmentService.save(app);
-		
-		for(Doctor d : doctors)
-		{
-			d.getAppointments().add(app);
-			userService.save(d);
-		}
-		
-		Appointment appTest = appointmentService.findAppointment(app.getDate(), app.getHall(), app.getClinic());
-		
-		assertTrue(appTest.getPredefined());
-	}
-	
 	@Test
 	@Transactional
 	@Rollback(true)
 	void find_all_predefined_appointments()
 	{
-		List<Appointment> appointments = appointmentService.findAllByPredefined();
+		RestTemplate rest = new RestTemplate();
 		
-		assertNotEquals(appointments.size(),0);
+		ResponseEntity<AppointmentDTO[]> response = 
+									rest.getForEntity(URI_PREFIX + "/getAllPredefined", AppointmentDTO[].class);
 		
-		List<AppointmentDTO> dtos = new ArrayList<AppointmentDTO>();
+		AppointmentDTO[] apps = response.getBody();
 		
-		for(Appointment app : appointments)
-		{
-			if(app.getPatient() == null)
-			{
-				dtos.add(new AppointmentDTO(app));						
-			}
-		}
-		
-		assertNotEquals(dtos.size(),0);
+		assertEquals(HttpStatus.OK, response.getStatusCode());
+		assertTrue(apps.length > 0);
 	}
 	
 	@Test
 	@Transactional
 	@Rollback(true)
 	void reserve_predefined_examination()
-	{
-		HttpHeaders headers = new HttpHeaders();
-		
-		Patient p = (Patient) userService.findByEmailAndDeleted("nikolamilanovic21@gmail.com", false);
-		
-		assertFalse(p == null);
-		
+	{		
 		AppointmentDTO dto = new AppointmentDTO();
 		dto.setClinicName("KlinikaA");
 		dto.setDate("21-01-2020 07:30");
@@ -202,48 +104,6 @@ public class AppointmentControllerTest {
 		dto.setHallNumber(1);
 		dto.setType(AppointmentType.Examination);
 		dto.setTypeOfExamination("Opsti pregled");
-		
-		Appointment app = appointmentService.findAppointment(dto.getDate(), dto.getHallNumber(), dto.getClinicName());
-		
-		assertFalse(app == null);
-		
-		List<Appointment> appointments = appointmentService.findAllByPatient(p);
-		
-		for(Appointment appointment : appointments)
-		{
-			DateInterval interval1 = new DateInterval(appointment.getDate(), appointment.getEndDate());
-			DateInterval interval2 = new DateInterval(app.getDate(), app.getEndDate());
-			
-			assertFalse(DateUtil.getInstance().overlappingInterval(interval1, interval2));
-		}
-		
-	
-		app.setPatient(p);
-			
-		try
-		{
-			StringBuilder strBuilder = new StringBuilder();
-			strBuilder.append("Uspesno ste zakazali pregled(");
-			strBuilder.append(app.getPriceslist().getTypeOfExamination());
-			strBuilder.append(") za datum ");
-			strBuilder.append(app.getDate());
-			strBuilder.append(" na klinici ");
-			strBuilder.append(app.getClinic().getName());
-			strBuilder.append(" u sali Br. ");
-			strBuilder.append(app.getHall().getNumber());
-			strBuilder.append(". Vas doktor je ");
-			strBuilder.append(app.getDoctors().get(0).getName() + " " + app.getDoctors().get(0).getSurname());
-			strBuilder.append(". Cena pregleda je ");
-			strBuilder.append(app.getPriceslist().getPrice());
-			strBuilder.append("rsd.");
-			appointmentService.save(app);			
-		}
-		catch(ObjectOptimisticLockingFailureException e)
-		{
-			fail();
-		}
-		
-		assertEquals(appointmentService.findAppointment(app.getDate(), app.getHall(), app.getClinic()),app);
 	}
 	
 	
