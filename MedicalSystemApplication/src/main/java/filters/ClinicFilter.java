@@ -16,36 +16,48 @@ public class ClinicFilter implements Filter{
 			
 			Boolean flag = true;
 			
-			if(!d.getName().equals(""))
+			if(d.getName() != null)
 			{
-				if(!c.getName().toLowerCase().contains(d.getName().toLowerCase()))
+				if(!d.getName().equals(""))
 				{
-					flag = false;
+					if(!c.getName().toLowerCase().contains(d.getName().toLowerCase()))
+					{
+						flag = false;
+					}				
+				}			
+			}
+			
+			if(d.getAddress() != null)
+			{
+				if(!d.getAddress().equals(""))
+				{
+					if(!c.getAddress().toLowerCase().contains(d.getAddress().toLowerCase()))
+					{
+						flag = false;
+					}				
+				}			
+			}
+			
+			if(d.getState() != null)
+			{
+				if(!d.getState().equals(""))
+				{
+					if(!c.getState().toLowerCase().contains(d.getState().toLowerCase()))
+					{
+						flag = false;
+					}				
 				}				
 			}
 			
-			if(!d.getAddress().equals(""))
+			if(d.getCity() != null)
 			{
-				if(!c.getAddress().toLowerCase().contains(d.getAddress().toLowerCase()))
-				{
-					flag = false;
-				}				
-			}
-			
-			if(!d.getState().equals(""))
-			{
-				if(!c.getState().toLowerCase().contains(d.getState().toLowerCase()))
-				{
-					flag = false;
-				}				
-			}
-			
-			if(!d.getCity().equals(""))
-			{			
-				if(!c.getCity().toLowerCase().contains(d.getCity().toLowerCase()))
-				{
-					flag = false;
-				}
+				if(!d.getCity().equals(""))
+				{			
+					if(!c.getCity().toLowerCase().contains(d.getCity().toLowerCase()))
+					{
+						flag = false;
+					}
+				}			
 			}
 			
 						

@@ -110,9 +110,9 @@ public class ClinicController {
     }
     
     @GetMapping(value = "/getAll")
-    public ResponseEntity<List<ClinicDTO>> getClinics()
+    public ResponseEntity<ClinicDTO[]> getClinics()
     {
-    	List<Clinic> clinics = clinicService.findAll();
+    	List<Clinic> clinics = clinicService.findAllSafe();
     	List<ClinicDTO> clinicsDTO = new ArrayList<ClinicDTO>();
     	if(clinics == null)
     	{
@@ -127,11 +127,11 @@ public class ClinicController {
     	
     	
     	
-    	return new ResponseEntity<>(clinicsDTO,HttpStatus.OK);
+    	return new ResponseEntity<>(clinicsDTO.toArray(new ClinicDTO[clinicsDTO.size()]),HttpStatus.OK);
     }
     
     @PostMapping(value="/getAll/{date}/{type}")
-    public ResponseEntity<List<ClinicDTO>> getClinicsWithFilter(@RequestBody ClinicFilterDTO dto, @PathVariable("date") String date,@PathVariable("type") String typeOfExamination)
+    public ResponseEntity<ClinicDTO[]> getClinicsWithFilter(@RequestBody ClinicFilterDTO dto, @PathVariable("date") String date,@PathVariable("type") String typeOfExamination)
     {
     	List<Clinic> clinics = clinicService.findAllSafe();
     	List<ClinicDTO> clinicsDTO = new ArrayList<ClinicDTO>();
@@ -163,8 +163,9 @@ public class ClinicController {
 	    		}
 	    	}
 	    }
+		ClinicDTO[] ret = clinicsDTO.toArray(new ClinicDTO[clinicsDTO.size()]);
 			
-		return new ResponseEntity<>(clinicsDTO,HttpStatus.OK);		
+		return new ResponseEntity<>(ret,HttpStatus.OK);		
     }
     
     

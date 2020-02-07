@@ -4,6 +4,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.ConcurrentModificationException;
 import java.util.Date;
 import java.util.List;
 
@@ -432,7 +433,7 @@ public class AppointmentController
 	
 	
 	@GetMapping(value="/getAllPredefined")
-	public ResponseEntity<List<AppointmentDTO>> getPredefined()
+	public ResponseEntity<AppointmentDTO[]> getPredefined()
 	{
 		List<Appointment> appointments = appointmentService.findAllByPredefined();
 		
@@ -451,7 +452,7 @@ public class AppointmentController
 			}
 		}
 		
-		return new ResponseEntity<>(dtos,HttpStatus.OK);
+		return new ResponseEntity<>(dtos.toArray(new AppointmentDTO[dtos.size()]),HttpStatus.OK);
 	}
 
 	@GetMapping(value="/doctor/getAllAppointments/{email}")
@@ -617,7 +618,6 @@ public class AppointmentController
 			DateInterval d2 = new DateInterval(date, endDate);
 			if(DateUtil.getInstance().overlappingInterval(d1, d2))
 			{
-				System.out.println("FOR");
 				return new ResponseEntity<>(HttpStatus.CONFLICT);
 			}
 		}
@@ -952,7 +952,13 @@ public class AppointmentController
 		
 		request.setAppointmentType(dto.getType());
 		
-		appointmentRequestService.save(request);
+		try {
+			appointmentRequestService.saveLock(request);
+		}
+		catch(ConcurrentModificationException e)
+		{
+			return new ResponseEntity<>(HttpStatus.CONFLICT);
+		}
 		
 		return new ResponseEntity<>(HttpStatus.CREATED);
 	}
