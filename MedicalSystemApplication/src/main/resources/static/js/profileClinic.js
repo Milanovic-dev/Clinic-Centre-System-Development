@@ -24,7 +24,6 @@ function addClinicInformations(data)
 	clinic = data.responseJSON
 	if(clinic == undefined)
 	{
-		console.log("no clinic data.")
 		return;
 	}
 	
@@ -37,7 +36,7 @@ function addClinicInformations(data)
 	
 	if(clinic.rating <= -1)
 	{
-		$("#sClinicRating").text("Klinika jos uvek nije ocenjena.")
+		$("#sClinicRating").text("Klinika još uvek nije ocenjena.")
 	}
 	else
 	{
@@ -379,6 +378,13 @@ function createChartsDaily(apps)
 	$('#chartTab-tab').show()
 	
 	let cd = new ChartData(apps)
+	
+	var today = new Date();
+	var dd = String(today.getDate()).padStart(2, '0');
+	var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+	var yyyy = today.getFullYear();
+
+	today = dd + '/' + mm + '/' + yyyy;
 		
 	var chart = Highcharts.chart('dailyChart', {
         chart: {
@@ -388,7 +394,7 @@ function createChartsDaily(apps)
             panKey: 'shift',
         },
         title: {
-            text: "Pregledi tokom dana"
+            text: "Pregledi tokom dana " + today
         },
         xAxis: {
         	min: cd.getToday(),
@@ -438,6 +444,9 @@ function createChartsMonthly(apps)
 {
 	$('#chartTabMonth-tab').show()
 	
+	var month = moment().startOf('isoweek').format(" MM/YYYY"); 
+
+	
 	$.ajax({
 		type: 'GET',
 		url: 'api/utility/date/getMonthInfo',
@@ -454,7 +463,7 @@ function createChartsMonthly(apps)
 		            panKey: 'shift',
 		        },
 		        title: {
-		            text: "Pregledi tokom meseca"
+		            text: "Pregledi tokom meseca " + month
 		        },
 		        xAxis: {
 		        	visible: true,
@@ -510,6 +519,10 @@ function createChartsWeekly(apps)
 	
 	$('#chartTabWeek-tab').show()
 	
+	var startOfWeek = moment().startOf('isoweek').format(" DD/MM/YYYY"); 
+	var endOfWeek = moment().endOf('isoweek').format(" DD/MM/YYYY");
+	
+	
 	$.ajax({
 		type: 'GET',
 		url: "api/utility/date/getWeekInfo",
@@ -526,7 +539,7 @@ function createChartsWeekly(apps)
 		            panKey: 'shift',
 		        },
 		        title: {
-		            text: "Pregledi tokom nedelje"
+		            text: "Pregledi tokom nedelje od " + startOfWeek + " do  " + endOfWeek
 		        },
 		        xAxis: {
 		        	visible: true,

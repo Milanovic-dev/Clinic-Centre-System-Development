@@ -64,7 +64,7 @@
     	<a class="navbar-brand" href="#">
     		<img src="images/logo.png" width="30" height="30" alt="">
   		</a>
-         <a class="navbar-brand" href="index.html">Klinicki Centar</a>
+         <a class="navbar-brand" href="index.html">Klinički Centar</a>
          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
          	<span class="navbar-toggler-icon"></span>
           </button>
@@ -96,8 +96,8 @@
 
 <div class="jumbotron" id="uu_index" hidden>
         <div class="container">
-          <h2 class="display-2">Dobrodosli!</h2>
-          <p>Pozdrav! Dobrodosli na glavnu stranicu klinickog centra, na kome mozete jednim klikom do zdravlja! Ukoliko nemate nalog, a zeleli biste da budete deo klinickog centra, kliknite na dugme za registraciju.</p>
+          <h2 class="display-2">Dobrodošli!</h2>
+          <p>Pozdrav! Dobrodošli na glavnu stranicu kliničkog centra, na kome možete jednim klikom do zdravlja! Ukoliko nemate nalog, a želeli biste da budete deo kliničkog centra, kliknite na dugme za registraciju.</p>
           <p><button class="btn btn-primary" id="register_btn" >Registruj se</button></p>
           
         </div>      
@@ -130,7 +130,7 @@
           <label>Identifikacioni broj sale</label>
             <div class="form-label-group">
            
-              <input type="text" id="inputHall" class="form-control" placeholder="Identifikacioni broj sale" required="required" autofocus="autofocus">
+              <input type="text" id="inputHall"  pattern="[0-9.]+"  class="form-control" placeholder="Identifikacioni broj sale" required="required" autofocus="autofocus">
             </div>
           </div>
           <div class="form-group">
@@ -155,7 +155,7 @@
           <label>Identifikacioni broj sale</label>
             <div class="form-label-group">
            
-              <input type="text" id="inputChangeHall" class="form-control" placeholder="Identifikacioni broj sale" required="required" autofocus="autofocus">
+              <input type="text" id="inputChangeHall"  pattern="[0-9.]+"  class="form-control" placeholder="Identifikacioni broj sale" required="required" autofocus="autofocus">
             </div>
           </div>
            <div class="form-group">
@@ -1169,7 +1169,18 @@
 					Izaberite Salu
 				</option>
      		</select>
-    	   </div> 
+    	   </div>
+    	   <div class="form-group">
+          <label>Cena pregleda u dinarima</label><label > *moguće unositi samo brojeve </label>
+            <div class="form-label-group">        
+              <input type="text" id="inputAppointmentPrice" class="form-control"  autofocus="autofocus" onkeydown="return ( event.ctrlKey || event.altKey 
+                    || (47<event.keyCode && event.keyCode<58 && event.shiftKey==false) 
+                    || (95<event.keyCode && event.keyCode<106)
+                    || (event.keyCode==8) || (event.keyCode==9) 
+                    || (event.keyCode>34 && event.keyCode<40) 
+                    || (event.keyCode==46) )"> 
+            </div>
+          </div>   
           <button type="button" class="btn btn-primary" id="submitPredefinedAppointmentRequest">Zakazi</button>         
         </form>
       </div>

@@ -198,8 +198,10 @@ function validation(element, condition, errorMessage)
 }
 
 
-function hideValidation(element){
-	
+function hideValidation(element)
+{
+	element.removeClass('is-invalid')	
+	element.removeClass('is-valid')
 }
 
 function hideView(id)

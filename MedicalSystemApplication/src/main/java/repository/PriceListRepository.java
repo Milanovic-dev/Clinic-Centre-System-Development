@@ -12,4 +12,6 @@ public interface PriceListRepository extends JpaRepository<Priceslist,Long>{
 	public Priceslist findByTypeOfExamination(String typeOfExamination);
 	public Priceslist findByTypeOfExaminationAndDeleted(String typeOfExamination, Boolean deleted);
 	public List<Priceslist> findAllByPrice(Long price);
+	
+	public List<Priceslist> findAllByTypeOfExamination(String typeOfExamination);
 }

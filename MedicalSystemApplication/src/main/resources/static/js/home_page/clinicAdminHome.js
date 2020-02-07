@@ -26,7 +26,7 @@ function setUpClinicAdminPage(user)
 	
 	let sideBar = $("#sideBar")
 	sideBar.append("<li class='nav-item active'><a class='nav-link' href='userProfileNew.html'><span id='profileUser'>Profil</span></a></li>")
-	sideBar.append("<li class='nav-item active'><a class='nav-link' href = 'clinicProfile.html?clinic=" + clinic.name +"'><span id='showReport'>Profil klinike</span></a></li>")
+	sideBar.append("<li class='nav-item active'><a class='nav-link' href = 'clinicProfile.html?clinic=" + clinic.name +"'><span id='showReport'>Profil klinike & izveštaji</span></a></li>")
 	sideBar.append("<li class='nav-item active'><a class='nav-link' type='button'><span id='changeProfileClinic'>Uredi profil klinike</span></a></li>")
 	sideBar.append("<li class='nav-item active'><a class='nav-link' type='button'><span id='vacationRequestList'>Zahtevi za godišnji odmor</span></a></li>")
 	sideBar.append("<li class='nav-item active'><a class='nav-link' type='button'><span id='examinationRequestList'>Zahtevi za preglede i operacije</span></a></li>")
@@ -150,8 +150,8 @@ function setUpClinicAdminPage(user)
 	$('#hallDateLabel').datepicker({
     	dateFormat: "dd-mm-yyyy"   	
 	})
-	
 	//KRAJ LISTE SALA
+	
 	getTableDiv("tableTypeOfExamination").show()	
 	getTableDiv("listDoctorsTable").show()
 	getTableDiv("listHallsTable").show()
@@ -172,7 +172,7 @@ function setUpClinicAdminPage(user)
 		listVacationRequest(user,clinic)
 		
 	})
-	//KRAJ LISTE ZAHTEVA ZA GODISNJI ODMOR
+
 	//LISTA ZAHTEVA ZA PREGLED
 	$('#examinationRequestList').click(function(e){
 		e.preventDefault()
@@ -180,7 +180,6 @@ function setUpClinicAdminPage(user)
 		listAppointmentRequests(clinic)
 		
 	})
-	//KRAJ LISTE ZAHTEVA ZA PREGLED
 	
 	//IZMENA PROFILA KLINIKE
 	$('#changeProfileClinic').click(function(e){
@@ -188,9 +187,7 @@ function setUpClinicAdminPage(user)
 
 		changeProfileClinicFunction(clinic)
 	})
-	
-	//KRAJ IZMENE PROFILA KLINIKE
-	
+		
 	//DODAVANJE PREDEFINISANOG PREGLEDA
 	
 	$('#addPredefinedAppointment').click(function(e){
@@ -198,9 +195,7 @@ function setUpClinicAdminPage(user)
 		
 		showView("AppointmentContainer")
 		makeAppointment(clinic)	
-	})
-	//KRAJ DODAVANJA PREDEFINISANOG PREGLEDA
-	
+	})	
 	
 	//LISTA TIPOVA PREGLEDA
 	$('#showTypeOfExamination').click(function(e){
@@ -209,7 +204,6 @@ function setUpClinicAdminPage(user)
 		makeTypeOfExaminationTable(clinic)	
 		
 	})
-	//KRAJ LISTE TIPOVA PREGLEDA
 	
 	//DODAVANJE TIPA PREGLEDA
 	$('#addTypeOfExamination').click(function(e){
@@ -223,6 +217,17 @@ function setUpClinicAdminPage(user)
 
 			let typeOfExaminationName = $('#inputTypeOfExamination').val()
 			let typeOfExaminationPrice = $('#inputTypeOfExaminationPrice').val()
+			
+			if(!validation($('#inputTypeOfExamination'),typeOfExaminationName == "","Morate uneti naziv tipa pregleda."))
+			{
+				return
+			}
+			
+			if(!validation($('#inputTypeOfExaminationPrice'),typeOfExaminationPrice == "","Morate uneti cenu tipa pregleda."))
+			{
+				return
+			}
+			
 			let typeOfExamination = JSON.stringify({"clinicName":clinic.name,"typeOfExamination" : typeOfExaminationName,"price" : typeOfExaminationPrice})
 			
 			$.ajax({
@@ -233,17 +238,21 @@ function setUpClinicAdminPage(user)
 				contentType : "application/json; charset=utf-8",
 				complete: function(data2)
 				{
+					hideValidation($('#inputTypeOfExamination'))
+					hideValidation($('#inputTypeOfExaminationPrice'))
+
 						
 					if(data2.status == "208")
 					{
-						$('#errorSpanTypeOfExamination').show()
-						$('#errorSpanTypeOfExamination').text("Tip pregleda koji zelite da unesete vec postoji")
+						warningModal("Neuspešno","Tip pregleda koji želite da unesete već postoji.Pokušajte ponovo.")
+						$('#inputTypeOfExamination').val("")
+						$('#inputTypeOfExaminationPrice').val("")
 					}
 					if(data2.status == "200")
 					{
-						$('#errorSpanTypeOfExamination').hide()
-						showView("showTypeOfExaminationContainer")
-						makeTypeOfExaminationTable(clinic)
+						warningModal("Uspesno","Uspešno ste uneli tip pregleda pod nazivom: " + typeOfExaminationName + " i cenom od: " + typeOfExaminationPrice)
+						$('#inputTypeOfExamination').val("")
+						$('#inputTypeOfExaminationPrice').val("")						
 					}
 					
 				}
@@ -317,6 +326,20 @@ function setUpClinicAdminPage(user)
 			let idHall = $('#inputHall').val()
 			let nameHall = $('#inputHallName').val()
 			
+			if(!validation($('#inputHall'),idHall == "","Morate dodati broj sale."))
+			{
+				return
+			}
+			if(!validation($('#inputHallName'),nameHall == "","Morate dodati naziv sale."))
+			{
+				return
+			}
+			
+			if(validation($('#inputHall'),idHall == 0,"Morate uneti validan broj sale."))
+			{
+				return;
+			}
+				
 			let hall = JSON.stringify({"clinicName":clinic.name,"number" : idHall , "name": nameHall})
 			$.ajax({
 				type: 'POST',
@@ -329,15 +352,19 @@ function setUpClinicAdminPage(user)
 							
 					if(data.status == "200")
 					{
-						showView("showHallContainer")
-						makeHallTable()
+						warningModal("Uspešno","Uspešno ste dodali novu salu sa brojem: "+$('#inputHall').val()+ " i  nazivom: "+$('#inputHallName').val()+".Pregled postojećih sala možete izvršiti klikom na 'Lista Hala'.")
+						let idHall = $('#inputHall').val("")
+						let nameHall = $('#inputHallName').val("")
+					}
+					
+					if(data.status == "208")
+					{
+						warningModal("Neuspešno","Hala sa brojem " + idHall + " već postoji.Pokušajte ponovo.")
 					}
 				}						
 			})	
 	})
 	
-	//KRAJ SUBMIT HALLS
-
 }
 
 function listVacationRequest(admin,clinic)
@@ -1000,14 +1027,35 @@ function submitDoctorForm(clinic)
 		{
 			if(data.status == "208")
 			{
-				$('#alreadyExistsD').text("Lekar sa tim emailom vec postoji.")
+				warningModal("Neuspešno","Lekar sa takvim emailom postoji.Pokušajte ponovo.")
 			}
 			else
 			{
-				$('#alreadyExistsD').hide()
-				$('#registrationConteiner').hide()
-				$("#showUserContainer").show()
-				makeDoctorTable(clinic)
+				warningModal("Uspešno","Uspešno ste registrovali novog lekara.Pregled svih postojećih lekara može se naći na 'Lista lekara'.")
+				$('#selectTypeOfExam').val("")
+				$('#inputStartShiftDoctor').val("")
+				$('#inputEndShiftDoctor').val("")
+				$('#inputEmailDoctor').val("")
+				$('#inputNameDoctor').val("")
+				$('#inputSurnameDoctor').val("")
+				$('#selectStateDoctor').val("")
+				$('#inputCityDoctor').val("")
+				$('#inputAddressDoctor').val("")
+				$('#inputPhoneDoctor').val("")
+				$('#inputInsuranceDoctor').val("")
+				
+				hideValidation($('#selectTypeOfExam'))
+				hideValidation($('#inputStartShiftDoctor'))
+				hideValidation($('#inputEndShiftDoctor'))
+				hideValidation($('#inputEmailDoctor'))
+				hideValidation($('#inputNameDoctor'))
+				hideValidation($('#inputSurnameDoctor'))
+				hideValidation($('#selectStateDoctor'))
+				hideValidation($('#inputCityDoctor'))
+				hideValidation($('#inputAddressDoctor'))
+				hideValidation($('#inputPhoneDoctor'))
+				hideValidation($('#inputInsuranceDoctor'))
+				
 				
 			}
 		}
@@ -1022,11 +1070,13 @@ function listHall(data,i)
 	
 	insertTableData("tableHall",d)
 	
+	$('#calendarHall_btn' + i).off('click')
 	$('#calendarHall_btn' + i).click(function(e){
 		fillHallCalendar(data)
 		$('#hallCalendarModal').modal('show')
 	})
 	
+	$('#deleteHall_btn'+i).off('click')
 	$('#deleteHall_btn'+i).click(function(e)
 	{
 		e.preventDefault()
@@ -1048,7 +1098,7 @@ function listHall(data,i)
 			
 		})
 	})
-	
+	$('#changeHall_btn'+i).off('click')
 	$('#changeHall_btn'+i).click(function(e)
 	{
 		e.preventDefault()
@@ -1057,6 +1107,7 @@ function listHall(data,i)
 		$('#inputChangeHall').val(data.number)
 		$('#inputChangeHallName').val(data.name)
 		
+		$('#submitChangeHall').off('click')
 		$('#submitChangeHall').click(function(e)
 		{
 			let newNumber = $('#inputChangeHall').val()
@@ -1070,6 +1121,10 @@ function listHall(data,i)
 					{
 						showView("showHallContainer")
 						makeHallTable(data.clinicName)
+					}
+					else if(data2.status == "409")
+					{
+						warningModal('Neuspešno!',"U sali je zakazan pregled. Ne može se izmeniti.")
 					}
 				}
 			
@@ -1283,11 +1338,16 @@ function listTypesOfExamination(t,i,clinic)
 				contentType : "application/json; charset=utf-8",
 				complete: function(response)
 				{
-					console.log(response.status)
 					if(response.status == "200")
 					{
 						makeTypeOfExaminationTable(clinic)
 					}
+					
+					if(response.status == "409")
+					{
+						warningModal("Neuspešno","Nije moguće izmeniti tip pregleda ukoliko postoje zakazani pregledi tog tipa.")
+					}
+					
 				}
 			})	
 		})
@@ -1530,11 +1590,16 @@ function submitPredefinedAppointment(doctorsSelected)
 	let doctors = doctorsSelected
 	let timeStart = $('#inputTimeBegin').val()
 	let timeEnd = $('#inputTimeEnd').val()
-	let price = $('#inputPrice').val()
+	let price = $('#inputAppointmentPrice').val()
 	let typeOfExamination = $('#inputAppointmentTypeSelect').val()
 	let json = JSON.stringify({"date":date + " " + timeStart, "endDate":date + " " + timeEnd, "clinicName":clinicName,"hallNumber": hallNumber, "doctors":doctors,"duration": 0,"price": price,"typeOfExamination":typeOfExamination,"type":"Examination"})
 	
 	let flag = true
+	
+	if(!validation($('#inputAppointmentPrice'), price == "","Morate izabrati datum"))
+	{
+		flag = false;
+	}
 	
 	if(!validation($('#inputDatePredef'), date == "", "Morate izabrati datum"))
 	{
@@ -1583,23 +1648,22 @@ function submitPredefinedAppointment(doctorsSelected)
 		contentType : "application/json; charset=utf-8",
 		complete: function(data)
 		{
-			console.log(data)
 			if(data.status == '201')
 			{
-				warningModal('Uspesno','Uspesno kreiran predefinisani pregled')
+				warningModal('Uspešno','Uspešno kreiran predefinisani pregled')
 				//window.location.href= "index.html"
 			}
 			else if(data.status == "409")
 			{
-				warningModal('Neuspesno', 'Vec postoji zakazan pregled u sali br.'+hallNumber+" izmedju "+timeStart+" i "+timeEnd)
+				warningModal('Neuspešno', 'Već postoji zakazan pregled u sali br.'+hallNumber+" izmedju "+timeStart+" i "+timeEnd)
 			}
 			else if(data.status == "208")
 			{
-				warningModal('Neuspesno', "Izabrani doktor vec ima zakazan pregled izmedju "+timeStart+" i "+timeEnd)
+				warningModal('Neuspešno', "Izabrani lekar već ima zakazan pregled izmedju "+timeStart+" i "+timeEnd)
 			}
 			else if(data.status == "500")
 			{
-				warningModal('Neuspesno',"Server nije uspeo da odgovori. Molimo pokusajte kasnije.")
+				warningModal('Neuspešno',"Server nije uspeo da odgovori. Molimo pokušajte kasnije.")
 			}
 			
 			hideLoading("submitPredefinedAppointmentRequest")
