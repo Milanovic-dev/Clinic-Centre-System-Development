@@ -20,8 +20,9 @@ import model.Doctor;
 import service.ClinicService;
 import service.UserService;
 
-@TestPropertySource("classpath:application-test.properties")
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+
 public class DoctorControllerTest {
 
 	@Autowired

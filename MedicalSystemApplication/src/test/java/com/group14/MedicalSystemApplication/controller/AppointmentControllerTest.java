@@ -13,6 +13,8 @@ import org.hibernate.Hibernate;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -43,11 +45,11 @@ import service.PriceListService;
 import service.UserService;
 import service.VacationRequestService;
 
-@TestPropertySource("classpath:application-test.properties")
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class AppointmentControllerTest {
-
-	private String URI_PREFIX = "http://localhost:8080/api/appointments";
+	
+	@LocalServerPort
+	private int port;
 	
 	@Autowired
 	private UserService userService;
@@ -83,10 +85,11 @@ public class AppointmentControllerTest {
 	@Rollback(true)
 	void find_all_predefined_appointments()
 	{
-		RestTemplate rest = new RestTemplate();
+		TestRestTemplate rest = new TestRestTemplate();
+		
 		
 		ResponseEntity<AppointmentDTO[]> response = 
-									rest.getForEntity(URI_PREFIX + "/getAllPredefined", AppointmentDTO[].class);
+									rest.getForEntity(getPath() + "/getAllPredefined", AppointmentDTO[].class);
 		
 		AppointmentDTO[] apps = response.getBody();
 		
@@ -109,9 +112,8 @@ public class AppointmentControllerTest {
 		dto.setTypeOfExamination("Opsti pregled");
 		dto.setPatientEmail("nikolamilanovic21@gmail.com");
 		
-		
-		RestTemplate rest = new RestTemplate();
-		ResponseEntity<Void> response = rest.postForEntity(URI_PREFIX + "/sendRequest", dto, Void.class);
+		TestRestTemplate rest = new TestRestTemplate();
+		ResponseEntity<Void> response = rest.postForEntity(getPath() + "/sendRequest", dto, Void.class);
 		
 		assertEquals(HttpStatus.CREATED,response.getStatusCode());
 	}
@@ -179,13 +181,18 @@ public class AppointmentControllerTest {
 		dto.setTypeOfExamination("Opsti pregled");
 		dto.setPatientEmail("nikolamilanovic21@gmail.com");
 		
-		RestTemplate rest = new RestTemplate();
-		
-		rest.put(URI_PREFIX + "/confirmAppointment", dto);
+		TestRestTemplate rest = new TestRestTemplate();
+
+		rest.put(getPath() + "/confirmAppointment", dto);
 		
 		assertTrue(appointmentService.findAppointment(dto.getDate(), dto.getHallNumber(), dto.getClinicName()) != null);
 	
 	}
 	
+	
+	private String getPath()
+	{
+		return "http://localhost:"+port+"/api/appointments";
+	}
 	
 }
