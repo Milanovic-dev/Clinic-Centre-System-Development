@@ -107,7 +107,7 @@ public class HallController {
 	
 	
 	@PostMapping(value = "/getAllByFilter",consumes = "application/json")
-	public ResponseEntity<List<HallDTO>> getHallsFilter(@RequestBody HallDTO dto)
+	public ResponseEntity<HallDTO[]> getHallsFilter(@RequestBody HallDTO dto)
 	{
 
 		HttpHeaders header = new HttpHeaders();
@@ -158,7 +158,7 @@ public class HallController {
 		
 		
 		
-		return new ResponseEntity<>(ret,HttpStatus.OK);
+		return new ResponseEntity<>(ret.toArray(new HallDTO[ret.size()]),HttpStatus.OK);
 	}
 	
 	@GetMapping(value = "/getAllByClinic/{clinicName}")
