@@ -41,7 +41,7 @@ public class EndToEndTests {
         this.base = "http://localhost:"+port;
     }
 	
-	
+	/*
 	@Test
 	public void e2e_send_appointment_request_patient()
 	{		
@@ -54,42 +54,98 @@ public class EndToEndTests {
         .until(ExpectedConditions.presenceOfElementLocated(By.id("clinicList")));
 		driver.findElement(By.id("clinicList")).click();
 		
-		sleep(3);
+		sleep(1);
 		
 		(new WebDriverWait(driver, 10))
            .until(ExpectedConditions.visibilityOf(driver.findElement(By.id("selectAppointmentType"))));
 		Select ToE = new Select(driver.findElement(By.id("selectAppointmentType")));
 		ToE.selectByValue("Stomatoloski");
 		
-		sleep(3);
+		sleep(1);
 		
 		(new WebDriverWait(driver, 10))
         .until(ExpectedConditions.visibilityOf(driver.findElement(By.id("tableSearch_btn_clinicTable"))));
 		driver.findElement(By.id("tableSearch_btn_clinicTable")).click();
 		   
-		sleep(3);
+		sleep(1);
 	
 		(new WebDriverWait(driver, 10))
         .until(ExpectedConditions.presenceOfElementLocated(By.id("makeAppointment_btn0")));
 		driver.findElement(By.id("makeAppointment_btn0")).click();
 						
-		sleep(3);
+		sleep(1);
 		
 		driver.findElement(By.id("detailsAppointment_btn")).click();
 		
-		sleep(3);
+		sleep(1);
 		
 		(new WebDriverWait(driver, 10))
         .until(ExpectedConditions.presenceOfElementLocated(By.id("inputStartTime")));
 		driver.findElement(By.id("inputStartTime")).sendKeys("1400");
 		
-		sleep(3);
+		sleep(1);
 		
 		driver.findElement(By.id("submitAppointmentRequest")).click();
 		
-		sleep(6);
+		sleep(2);
 		logger.info("e2e_send_appointment_request_patient finished successfully");
 	}
+	
+	@Test
+	public void e2e_search_clinics()
+	{
+		driver.navigate().to(base+"/login.html");
+		driver.findElement(By.id("inputEmail")).sendKeys("nikolamilanovic21@gmail.com");
+		driver.findElement(By.id("inputPassword")).sendKeys("123");
+		driver.findElement(By.id("submitLogin")).click();
+		
+		(new WebDriverWait(driver, 10))
+        .until(ExpectedConditions.presenceOfElementLocated(By.id("clinicList")));
+		driver.findElement(By.id("clinicList")).click();
+		
+		(new WebDriverWait(driver, 10))
+        .until(ExpectedConditions.visibilityOf(driver.findElement(By.id("selectAppointmentType"))));
+		Select ToE = new Select(driver.findElement(By.id("selectAppointmentType")));
+		ToE.selectByValue("Stomatoloski");
+		
+		driver.findElement(By.id("clinicAdressPick")).sendKeys("Bulevar Osl.");
+		driver.findElement(By.id("clinicRatingPick")).sendKeys("0");
+		driver.findElement(By.id("tableSearch_btn_clinicTable")).click()
+		;
+		(new WebDriverWait(driver, 10))
+        .until(ExpectedConditions.presenceOfElementLocated(By.id("makeAppointment_btn0")));
+		driver.findElement(By.id("makeAppointment_btn0")).click();
+						
+		sleep(1);
+	}
+	*/
+	@Test
+	public void e2e_confirm_appointment_request()
+	{
+		driver.navigate().to(base+"/login.html");
+		driver.findElement(By.id("inputEmail")).sendKeys("adminKlinike@gmail.com");
+		driver.findElement(By.id("inputPassword")).sendKeys("123");
+		driver.findElement(By.id("submitLogin")).click();
+		(new WebDriverWait(driver, 10))
+        .until(ExpectedConditions.visibilityOf(driver.findElement(By.id("examinationRequestList"))));
+		driver.findElement(By.id("examinationRequestList")).click();
+		
+		(new WebDriverWait(driver, 10))
+        .until(ExpectedConditions.visibilityOf(driver.findElement(By.id("reserve_btn4"))));
+		driver.findElement(By.id("reserve_btn4")).click();
+		
+		driver.findElement(By.id("appEndTime")).sendKeys("14:00");
+		
+		(new WebDriverWait(driver, 10))
+        .until(ExpectedConditions.presenceOfElementLocated(By.id("DoctorPicker")));
+		Select docSelect = new Select(driver.findElement(By.id("selectDoctor")));
+		sleep(1);
+		docSelect.selectByIndex(0);
+		
+		driver.findElement(By.id("submitApp")).click();
+		sleep(6);
+	}
+	
 	
 	 @AfterEach
 	 public void tearDown() {

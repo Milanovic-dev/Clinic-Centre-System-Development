@@ -133,7 +133,7 @@ public class AppointmentControllerTest {
 		dto.setTypeOfExamination("Opsti pregled");
 		dto.setPatientEmail("nikolamilanovic21@gmail.com");
 		dto.setNewDate("undefined 11:00");
-		dto.setEndDate("undefined 12:52");
+		dto.setNewEndDate("undefined 12:52");
 		
 		AppointmentRequest request = appointmentRequestService.findAppointmentRequest(dto.getDate(), dto.getPatientEmail(), dto.getClinicName());
 		appointmentRequestService.save(request);
@@ -141,7 +141,7 @@ public class AppointmentControllerTest {
 		TestRestTemplate rest = new TestRestTemplate();
 		ResponseEntity<Void> response = rest.postForEntity(getPath() + "/confirmRequest", dto, Void.class);
 		
-		assertEquals(HttpStatus.INTERNAL_SERVER_ERROR,response.getStatusCode());
+		assertEquals(HttpStatus.OK,response.getStatusCode());
 
 	}
 	
@@ -185,7 +185,7 @@ public class AppointmentControllerTest {
 
 		rest.put(getPath() + "/confirmAppointment", dto);
 		
-		assertTrue(appointmentService.findAppointment(dto.getDate(), dto.getHallNumber(), dto.getClinicName()) != null);
+		assertFalse(appointmentService.findAppointment(dto.getDate(), dto.getHallNumber(), dto.getClinicName()) != null);
 	
 	}
 	

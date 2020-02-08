@@ -311,7 +311,7 @@ public class ContainerInitialize {
 			app4.getDoctors().add(doctor2);
 			appointmentRepository.save(app4);
 			
-			app3.getDoctors().add(doctor3);
+			app3.getDoctors().add(doctor1);
 			appointmentRepository.save(app2);
 			appointmentRepository.save(app3);
 			
@@ -355,7 +355,7 @@ public class ContainerInitialize {
 			userRepository.save(doctor2);
 			
 			
-		
+	
 			Prescription prescription = new Prescription();
 			prescription.getDrugs().add(drug);
 			prescription.getDrugs().add(drug2);

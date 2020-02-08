@@ -106,7 +106,7 @@ function setUpClinicAdminPage(user)
 	})
 	
 	let appointmentHeaders = ["Pacijent","Datum pocetka","Cena","Zahtev","Tip pregleda","Lekari","",""]
-	createDataTable("appReqTable","showExaminationRequestListContainer","Lista zahteva za preglede i operacije",appointmentHeaders,0)
+	createDataTable("appReqTable","showExaminationRequestListContainer","Lista zahteva za preglede i operacije",appointmentHeaders,1)
 	getTableDiv('appReqTable').show()
 	
 	let chooseHallHeaders = ["Ime Sale","Br. Sale","",""]
@@ -547,7 +547,6 @@ function listAppointmentRequest(clinic, appointment, i)
              $('#DoctorPicker').hide()
              $('#appPatient').val(appointment.patientEmail)
              $('#appDate').val(appointment.date.split(" ")[0])
-
          } else if(appointment.type = "Examination") {
         	 
         	 $("#examinationCard").text("Pregled")
@@ -556,7 +555,6 @@ function listAppointmentRequest(clinic, appointment, i)
              $('#DoctorPicker').show()
         	 $('#appPatient').val(appointment.patientEmail)
         	 $('#appDate').val(appointment.date.split(" ")[0])
-        	 
         	 $.ajax({
                  type: 'GET',
                  url:"api/clinic/getDoctorsByType/"+clinic.name + "/" + typeOfExamination,
@@ -569,13 +567,13 @@ function listAppointmentRequest(clinic, appointment, i)
                     			   value: item.user.email,
                     			   text : item.user.name + " " + item.user.surname + " - " + item.type
                     		}));
+                 	   $('#selectDoctor').selectpicker('refresh');
+                 		   
                  	   if(item.user.email == appointment.doctors[0])
                  	   {
                  		   
                  		   $('#selectDoctor').val(item.user.email)
                  	   }
-                 	   $('#selectDoctor').selectpicker('refresh');
-                 		   
                     	});
                          
                  }
@@ -759,6 +757,11 @@ function listChooseHalls(halls)
 	$.each(halls, function(i, item){
 		let d = [item.name, item.number, "<button class='btn btn-info' id='hallOcc"+i+"'>Zauzece</button>","<input type='checkbox' id='checkHall"+i+"'><label id='checkHallLabel"+i+"' for='checkHall"+i+"'></label>"]
 		insertTableData("chooseHallTable", d)
+		
+		if(i == 0)
+		{
+			$('#checkHall0').prop("checked", true)
+		}
 		
 		$('#hallOcc'+i).click(function(e){
 			e.preventDefault()
