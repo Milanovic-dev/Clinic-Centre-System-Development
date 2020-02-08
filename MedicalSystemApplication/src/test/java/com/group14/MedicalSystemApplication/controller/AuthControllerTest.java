@@ -19,7 +19,8 @@ import service.AuthService;
 import service.UserService;
 
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+//@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+@SpringBootTest
 public class AuthControllerTest {
 
 	@Autowired
