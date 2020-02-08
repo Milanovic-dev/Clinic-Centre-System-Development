@@ -58,7 +58,7 @@ import service.UserService;
 import service.VacationRequestService;
 
 
-@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 class MedicalSystemApplicationTests {
 	
 	@Autowired 

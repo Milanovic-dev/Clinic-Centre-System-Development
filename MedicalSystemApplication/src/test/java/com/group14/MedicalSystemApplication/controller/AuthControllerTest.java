@@ -18,7 +18,7 @@ import model.User;
 import service.AuthService;
 import service.UserService;
 
-@TestPropertySource("classpath:application-test.properties")
+
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 public class AuthControllerTest {
 
