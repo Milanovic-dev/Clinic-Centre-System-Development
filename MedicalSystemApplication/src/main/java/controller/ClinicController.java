@@ -383,10 +383,7 @@ public class ClinicController {
     		}
     	}
     	
-    	ClinicReview cr = new ClinicReview(dto.getRating(), DateUtil.getInstance().now("dd-MM-yyyy"), patient);
-    	clinic.getReviews().add(cr);
-    	
-    	clinicService.save(clinic);
+    	clinicService.rateClinicSafe(dto);
     	
     	notificationService.sendNotification(patient.getEmail(), "Ocenili ste kliniku!", "Vasa ocena od " + dto.getRating() + " zvezdice za kliniku "+dto.getClinicName()+" je uspesno zabelezena! Hvala vam na recenziji!");
     	

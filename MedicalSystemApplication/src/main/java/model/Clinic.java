@@ -27,6 +27,9 @@ public class Clinic
 
     @Column(name = "description", nullable = true)
 	private String description;
+    
+    @Column(name="rating", nullable = false)
+    private float rating;
 
     @OneToMany(fetch = FetchType.EAGER)
     private List<Hall> halls;
@@ -60,8 +63,18 @@ public class Clinic
 
     public Clinic(Clinic clinic) {
     }
+    
+    
 
-    public String getName() {
+    public float getRating() {
+		return rating;
+	}
+
+	public void setRating(float rating) {
+		this.rating = rating;
+	}
+
+	public String getName() {
     	return name;
     }
     
@@ -157,7 +170,10 @@ public class Clinic
 			sum = sum + r;
 		}
 		
-		 return sum = (Float) sum / ratings.size();
+		float ret = (Float) sum / ratings.size();
+		
+		this.rating = ret;
+		return ret;
 
 	}
 

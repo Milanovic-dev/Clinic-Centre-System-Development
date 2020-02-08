@@ -417,14 +417,16 @@ public class ContainerInitialize {
 
 
 			AppointmentRequest appReq = new AppointmentRequest(dateInstance.getDate("26-02-2020 10:00", "dd-MM-yyyy HH:mm"), null, patient, clinic,p1, AppointmentType.Surgery);
+			appReq.setDoctors(new ArrayList<Doctor>() {{add(doctor1);}});
 			AppointmentRequest appReq1 = new AppointmentRequest(dateInstance.getDate("24-02-2020 11:00", "dd-MM-yyyy HH:mm"), null, patient, clinic,p1, AppointmentType.Examination);
 			AppointmentRequest appReq2 = new AppointmentRequest(dateInstance.getDate("25-02-2020 11:00", "dd-MM-yyyy HH:mm"), null, patient, clinic,p1, AppointmentType.Surgery);
-			AppointmentRequest appReq3 = new AppointmentRequest(dateInstance.getDate("26-02-2020 11:00", "dd-MM-yyyy HH:mm"), null, patient, clinic,p1, AppointmentType.Surgery);
+			AppointmentRequest appReq3 = new AppointmentRequest(dateInstance.getDate("26-02-2020 10:30", "dd-MM-yyyy HH:mm"), null, patient, clinic,p1, AppointmentType.Surgery);
+			appReq3.setDoctors(new ArrayList<Doctor>() {{add(doctor1);}});
 			AppointmentRequest appReq4 = new AppointmentRequest(dateInstance.getDate("27-02-2020 11:00", "dd-MM-yyyy HH:mm"), null, patient, clinic,p1, AppointmentType.Surgery);
 			AppointmentRequest appReq5 = new AppointmentRequest(dateInstance.getDate("28-02-2020 11:00", "dd-MM-yyyy HH:mm"), null, patient, clinic,p1, AppointmentType.Examination);
 			AppointmentRequest appReq6 = new AppointmentRequest(dateInstance.getDate("26-02-2020 11:10", "dd-MM-yyyy HH:mm"), null, patient, clinic,p1, AppointmentType.Surgery);
-			AppointmentRequest appReq7 = new AppointmentRequest(dateInstance.getDate("26-02-2020 11:20", "dd-MM-yyyy HH:mm"), null, patient, clinic,p1, AppointmentType.Surgery);
-
+			AppointmentRequest appReq7 = new AppointmentRequest(dateInstance.getDate("26-02-2020 10:40", "dd-MM-yyyy HH:mm"), null, patient, clinic,p1, AppointmentType.Surgery);
+			appReq7.setDoctors(new ArrayList<Doctor>() {{add(doctor1);}});
 
 			List<Doctor> list = new ArrayList<Doctor>();
 			list.add(doctor2);

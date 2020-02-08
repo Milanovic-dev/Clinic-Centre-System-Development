@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -37,6 +38,11 @@ public class AppointmentRequestService {
 	
 	@Autowired
 	private UserRepository userRepository;
+	
+	public Optional<AppointmentRequest> findById(long id)
+	{
+		return appointmentRequestRepository.findById(id);
+	}
 	
 	public List<AppointmentRequest> getAllByClinic(String clinic)
 	{

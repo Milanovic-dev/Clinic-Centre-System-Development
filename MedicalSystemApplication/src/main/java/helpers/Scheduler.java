@@ -63,6 +63,8 @@ public class Scheduler {
 	{
 		List<DateInterval> intervals = new ArrayList<DateInterval>();
 		List<Date> datesList = new ArrayList<Date>();
+		Date minDate = getStartOfDay(day);
+		Date maxDate = getEndOfDay(day);
 		
 		for(Appointment app : apps)
 		{		
@@ -74,6 +76,7 @@ public class Scheduler {
 		
 		if(datesList.size() == 0)
 		{
+			intervals.add(new DateInterval(minDate,maxDate));
 			return intervals;
 		}
 		
@@ -82,8 +85,6 @@ public class Scheduler {
 		
 		Arrays.sort(dates);
 		
-		Date minDate = getStartOfDay(day);
-		Date maxDate = getEndOfDay(day);
 		
 		return makeIntervals(dates, minDate, maxDate);
 	}
