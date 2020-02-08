@@ -800,7 +800,6 @@ public class AppointmentController
 			userService.save(doc);
 		}
 		
-		//TODO:Send mail Pacijentu (Prihavti ili odbije)
 		String requestURL = httpRequest.getRequestURL().toString();
 		UriComponentsBuilder builderRootAccept = UriComponentsBuilder.fromUriString(requestURL.split("api")[0] + "confirmRequest.html")
 										.queryParam("clinic", appointment.getClinic().getName())
@@ -815,7 +814,6 @@ public class AppointmentController
 										.queryParam("confirmed", false);
 		
 		notificationService.sendNotification("nikolamilanovic21@gmail.com", "Potvrdite pregled","Admin klinike je odobrio vaš zahtev za pregled.\nPotvrdite odlaskom na link:" + builderRootAccept.toUriString() + " \n\n Odbijte odlaskom na link:"+ builderRootDeny.toUriString());
-		//TODO:Send mail Doktoru
 		notificationService.sendNotification(appointment.getDoctors().get(0).getEmail(), "Admin je rezervisao termin za pregled", "Admin je rezervisao pregled datuma " + DateUtil.getInstance().getString(appointment.getDate(), "dd-MM-yyyy HH:mm") + ", u klinici "+appointment.getClinic().getName() + ", u sali Br. " + appointment.getHall().getNumber()+ " i vas je izabrao za lekara.");
 		
 		return new ResponseEntity<>(HttpStatus.OK);
