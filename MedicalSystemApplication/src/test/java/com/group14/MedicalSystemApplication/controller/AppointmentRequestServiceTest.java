@@ -9,6 +9,8 @@ import java.util.List;
 import javax.transaction.Transactional;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
@@ -23,6 +25,7 @@ import service.ClinicService;
 import service.HallService;
 import service.PriceListService;
 import service.UserService;
+
 
 @SpringBootTest(webEnvironment= SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class AppointmentRequestServiceTest 
@@ -68,7 +71,7 @@ public class AppointmentRequestServiceTest
 		assertTrue(appreq.size() == 0);
 	}
 	
-	/*
+	
 	@Test
 	@Transactional
 	@Rollback(true)
@@ -82,7 +85,7 @@ public class AppointmentRequestServiceTest
 		
 		assertTrue(appreq != null);
 	}
-	*/
+	
 	
 	/*
 	@Test
