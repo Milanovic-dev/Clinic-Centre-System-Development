@@ -48,6 +48,7 @@ import model.User;
 import model.Vacation;
 import model.VacationRequest;
 import model.Appointment.AppointmentType;
+import model.AppointmentRequest;
 import service.AppointmentRequestService;
 import service.AppointmentService;
 import service.AuthService;
@@ -100,6 +101,20 @@ class MedicalSystemApplicationTests {
 		
 		assertTrue(DateUtil.getInstance().overlappingInterval(di1, di2));
 	}
+	
+	@Test
+	void check_transformDate()
+	{
+		Date date1 = DateUtil.getInstance().getDate("14:00", "HH:mm");
+		Date date2 = DateUtil.getInstance().getDate("26-02-2020 15:00", "dd-MM-yyyy HH:mm");
+		
+		Date date = DateUtil.getInstance().transformToDay(date2, date1);
+		
+		String dateString = DateUtil.getInstance().getString(date, "dd-MM-yyyy HH:mm");
+		
+		assertEquals(dateString, "26-02-2020 14:00");
+	}
+	
 	
 	@Test
 	void test_if_doctor_is_free()

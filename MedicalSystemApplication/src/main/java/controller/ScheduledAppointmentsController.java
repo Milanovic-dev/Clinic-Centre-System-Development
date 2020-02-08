@@ -211,11 +211,17 @@ public class ScheduledAppointmentsController {
     
     public Doctor findAvailableDoctor(AppointmentRequest request, Date start, Date end)
     {
+    	DateUtil util = DateUtil.getInstance();
    	
     	for(Doctor d : request.getDoctors())
     	{
-    		if(d.IsFreeOn(start) && checkAppointments(d, start, end))
-    		{
+    		DateInterval di = new DateInterval(util.transformToDay(start, d.getShiftStart()), util.transformToDay(end, d.getShiftEnd()));
+    				
+    		if(d.IsFreeOn(start) //Vacations
+    		   && checkAppointments(d, start, end) //Appointments
+    		   && util.insideInterval(start,di)//Shift start
+    		   && util.insideInterval(end, di)){//Shift end
+    			
     			return d;
     		}
     	}

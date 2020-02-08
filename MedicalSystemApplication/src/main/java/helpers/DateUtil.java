@@ -75,6 +75,19 @@ public class DateUtil {
 		return overlappingInterval(app1.getDate(),app1.getEndDate(),app2.getDate(),app2.getEndDate());
 	}
 	
+	public Date transformToDay(Date dateDay, Date dateHours)
+	{
+		Calendar cal1 = Calendar.getInstance();
+		cal1.setTime(dateDay);
+		Calendar cal2 = Calendar.getInstance();
+		cal2.setTime(dateHours);
+		
+		cal1.set(Calendar.HOUR_OF_DAY, cal2.get(Calendar.HOUR_OF_DAY));
+		cal1.set(Calendar.MINUTE, cal2.get(Calendar.MINUTE));
+		
+		return cal1.getTime();
+	}
+	
 	public Boolean overlappingInterval(DateInterval d1, DateInterval d2)
 	{
 		Calendar c1 = Calendar.getInstance();
