@@ -1,5 +1,10 @@
 package com.group14.MedicalSystemApplication;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.Date;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,9 +17,20 @@ import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.TestPropertySource;
+
+import dto.ClinicDTO;
+import dto.ClinicFilterDTO;
+import helpers.DateUtil;
+import model.Appointment;
+import model.AppointmentRequest;
+import service.AppointmentRequestService;
+import service.AppointmentService;
 
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -29,6 +45,12 @@ public class EndToEndTests {
 
 	private String base;
 	
+	@Autowired
+	private AppointmentService appointmentService;
+	
+	@Autowired
+	private AppointmentRequestService appointmentRequestService;
+	
 	@BeforeEach
     public void setUp() {
 
@@ -41,7 +63,7 @@ public class EndToEndTests {
         this.base = "http://localhost:"+port;
     }
 	
-	/*
+	
 	@Test
 	public void e2e_send_appointment_request_patient()
 	{		
@@ -83,11 +105,16 @@ public class EndToEndTests {
         .until(ExpectedConditions.presenceOfElementLocated(By.id("inputStartTime")));
 		driver.findElement(By.id("inputStartTime")).sendKeys("1400");
 		
-		sleep(1);
+		sleep(4);
 		
 		driver.findElement(By.id("submitAppointmentRequest")).click();
 		
 		sleep(2);
+		
+		AppointmentRequest request = appointmentRequestService.findAppointmentRequest(DateUtil.getInstance().getString(new Date(), "dd-MM-yyyy") + " 14:00","nikolamilanovic21@gmail.com", "KlinikaA");
+		
+		assertTrue(request != null);
+		
 		logger.info("e2e_send_appointment_request_patient finished successfully");
 	}
 	
@@ -117,8 +144,12 @@ public class EndToEndTests {
 		driver.findElement(By.id("makeAppointment_btn0")).click();
 						
 		sleep(1);
+		
+		TestRestTemplate rest = new TestRestTemplate();
+		ResponseEntity<ClinicDTO[]> response = rest.postForEntity(getPath()+"/getAll/{date}/{type}",new ClinicFilterDTO(), ClinicDTO[].class, DateUtil.getInstance().getString(new Date(), "dd-MM-yyyy"),"Stomatoloski");
+		assertTrue(response.getBody().length > 0);
 	}
-	*/
+	
 	@Test
 	public void e2e_confirm_appointment_request()
 	{
@@ -144,6 +175,13 @@ public class EndToEndTests {
 		
 		driver.findElement(By.id("submitApp")).click();
 		sleep(6);
+		
+		(new WebDriverWait(driver, 10))
+        .until(ExpectedConditions.visibilityOf(driver.findElement(By.id("examinationRequestList"))));
+		
+		Appointment app = appointmentService.findAppointment("28-02-2020 11:00", 1, "KlinikaA");
+		
+		assertTrue(app != null);
 	}
 	
 	
@@ -160,5 +198,10 @@ public class EndToEndTests {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+	 }
+	 
+	 private String getPath()
+	 {
+		 return "http://localhost:"+port+"api/clinic";
 	 }
 }
