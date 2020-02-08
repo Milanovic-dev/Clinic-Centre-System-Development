@@ -789,6 +789,7 @@ public class AppointmentController
 			header.set("responseText","conflict");
 			return new ResponseEntity<>(header, HttpStatus.CONFLICT);
 		}
+
 		catch (ValidationException e)
 		{
 
@@ -803,6 +804,7 @@ public class AppointmentController
 			}
 
 		}
+
 
 		return new ResponseEntity<>(HttpStatus.OK);
 	}

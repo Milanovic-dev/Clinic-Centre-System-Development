@@ -32,6 +32,7 @@ function initPatient(user)
     createAppointmentsTable()
     createAppointmentRequestsTable()
     setUpPatientPage(user)
+
 }
 
 
@@ -161,10 +162,15 @@ function setUpPatientPage(user)
         startHours = 10
     }
     
+    let today = new Date()
+    
     $('#clinicDatePick').datepicker({
     	dateFormat: "dd-mm-yyyy",
-    	minDate: new Date()
+    	todayButton: today,
+    	minDate: today
 	})
+	
+	$('#clinicDatePick').datepicker().data('datepicker').selectDate(today)
 	
 	$('#Apps').click(function(e){
 		e.preventDefault()
@@ -677,9 +683,10 @@ function submitAppointmentRequest(user, doctorsSelected)
 function p_listDoctorActive(data, i, doctorCount)
 {
 	
-	let d = [data.type, getProfileLink(data.user.email), data.user.name, data.user.surname, data.avarageRating,"<button class='btn btn-primary' id='doctorOcc"+i+"'>Sl.Termini</button>", data.shiftStart, data.shiftEnd, "<input type='checkbox' id='checkDoctor"+i+"'><label for='checkDoctor"+i+"'></label>"]
+	let d = [data.type, getProfileLink(data.user.email), data.user.name, data.user.surname, data.avarageRating,"<button class='btn btn-primary' id='doctorOcc"+i+"'>Sl.Termini</button>", data.shiftStart, data.shiftEnd, "<input type='checkbox' id='checkDoctor"+i+"'><label id='checkDoctorLabel"+i+"' for='checkDoctor"+i+"'></label>"]
 	insertTableData('chooseDoctorTable', d)
 	
+	$('#checkDoctor0').prop('checked',true)
 	
 	$('#doctorOcc'+i).click(function(e){
 		e.preventDefault()

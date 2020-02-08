@@ -20,6 +20,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.Rollback;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -35,7 +36,8 @@ import model.Clinic;
 import model.Doctor;
 import service.ClinicService;
 
-@SpringBootTest
+@TestPropertySource("classpath:application-test.properties")
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 public class ClinicControllerTest {
 
 	private String URI_PREFIX = "http://localhost:8282/api/clinic";
