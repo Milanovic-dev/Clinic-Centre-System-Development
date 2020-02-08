@@ -172,7 +172,7 @@ function setUpPageDoctor(user)
     $('#btnOK').click(function(e){
         e.preventDefault()
         $('#modalOK').modal('hide')
-        location.reload()
+        window.location.href = 'index.html'
     })
 
      $('#addRow').click(function(e){
@@ -218,7 +218,7 @@ function addVacationRequest(user)
 			return
 		}
 
-		let json = JSON.stringify({"date": startDate,"end": endDate,"user": user })
+		let json = JSON.stringify({"startDate": startDate,"endDate": endDate,"user": user })
 
 		$('#vacationRequestSpinner').show()
 		$.ajax({
@@ -280,7 +280,7 @@ function addVacationRequest(user)
 		$('#submitVacationRequest').prop('disabled',true)
 		let startDate = $('#startDayInputVacationRequest').val()
 		let endDate = $('#endDayInputVacationRequest').val()
-		let json = JSON.stringify({"date": startDate,"end": endDate,"user": user })
+		let json = JSON.stringify({"startDate": startDate,"endDate": endDate,"user": user })
 		showLoading('submitVacationRequest')
 
 		$.ajax({
@@ -439,6 +439,11 @@ function patientMedicalReportUpdate(report){
 
                     }
 
+                    if(data.status == "409")
+                    {
+                        $('#modalNotOK').modal('show')
+                    }
+
                 }
 
          })
@@ -566,10 +571,10 @@ function initCalendarDoc(user)
 
                   selectable: true,
                   eventRender: function(event, element) {
-                      if(event.source.uid == 2){
+                      if(event.source.uid == 0){
                           element.find('.fc-title').append("Godisnji odmor");
                           element.find('.fc-time').hide();
-                          $(element).tooltip({title: "od " + dateFormat(event.date) + " do " + dateFormat(event.end), container: "body"})
+                          $(element).tooltip({title: "od " + dateFormat(event.start) + " do " + dateFormat(event.end), container: "body"})
                       }
 
                   },
@@ -577,8 +582,7 @@ function initCalendarDoc(user)
                   eventClick: function(info)
                   {
 
-                      if(info.source.uid == 2){
-                      console.log(info)
+                      if(info.source.uid == 0){
                         return
                       }
                       console.log(info)
@@ -597,7 +601,8 @@ function initCalendarDoc(user)
 
                       var sd = info.start._i
                            sd = formatDateHours(sd)
-
+                      var ed = info.endDate
+                          ed = formatDateHours(ed)
 
                       $.ajax({
                                 type: 'GET',
@@ -613,7 +618,7 @@ function initCalendarDoc(user)
 
                       })
 
-                      $("#durationId").text('Trajanje: ' + info.duration + 'h');
+                      $("#durationId").text('Zavrsetak: ' + ed);
                       $("#typeId").text('Tip pregleda: ' + type);
                       $("#clinicId").text('Klinika: ' + info.clinicName);
                       $("#hallId").text('Broj sale: ' + info.hallNumber);
@@ -624,15 +629,15 @@ function initCalendarDoc(user)
                       $('#modalCalendar').modal('show');
 
 
-                          if(!info.done)
+                          if(info.done)
                           {
                              $('#modalCalendar').modal('show');
-                             $('#startExamination').show();
+                             $('#startExamination').hide();
                           }
                           else
                           {
                               $('#modalCalendar').modal('show');
-                              $('#startExamination').hide();
+                              $('#startExamination').show();
                           }
 
                       },
@@ -670,8 +675,13 @@ function initCalendarDoc(user)
                            failure: function() {
                              alert('there was an error while fetching events!');
                            },
+                            complete: function(data)
+                           {
+                                 $.each(data.responseJSON, function(i, item){
+                                    $('#calendar').fullCalendar('renderEvent', event, true)
+                                 })
 
-
+                           }
                          },
                          {
                             url: 'api/vacation/getAllVacationsByUser/'+user.email,
@@ -682,6 +692,25 @@ function initCalendarDoc(user)
                             failure: function() {
                               alert('there was an error while fetching vac events!');
                             },
+                             complete: function(data)
+                            {
+                            $('#calendar').fullCalendar('removeEvents')
+                                  $.each(data.responseJSON, function(i, item){
+
+                                      let event = {
+                                              start: item.startDate,
+                                              end: item.endDate,
+                                              stick: true,
+                                              color: '#f4a896',
+                                              textColor: 'black',
+
+                                      }
+
+                                     $('#calendar').fullCalendar('renderEvent', event, true)
+
+                                  })
+
+                            }
 
                           },
                        ],

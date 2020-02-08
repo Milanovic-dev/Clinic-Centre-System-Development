@@ -17,6 +17,7 @@ public class PatientMedicalReportDTO {
 	private PrescriptionDTO prescription;
 	private String patientEmail;
 	private long id;
+	private int version;
 	
 	
 	public PatientMedicalReportDTO() {
@@ -59,6 +60,7 @@ public class PatientMedicalReportDTO {
 		}
 		this.patientEmail = report.getPatient().getEmail();
 		this.id = report.getId();
+		this.version = report.getVersion();
 	}
 
 	public String getDescription() {
@@ -124,5 +126,12 @@ public class PatientMedicalReportDTO {
 	public void setId(long id) {
 		this.id = id;
 	}
-		
+
+	public int getVersion() {
+		return version;
+	}
+
+	public void setVersion(int version) {
+		this.version = version;
+	}
 }

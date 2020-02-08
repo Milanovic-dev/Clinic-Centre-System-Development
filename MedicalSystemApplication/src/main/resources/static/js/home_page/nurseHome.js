@@ -157,18 +157,18 @@ function initCalendarNurse(user)
 
                   selectable: true,
                   eventRender: function(event, element) {
-                      if(event.source.uid == 1){
+                      if(event.uid == 1){
                           element.find('.fc-title').append("Godisnji odmor");
                           element.find('.fc-time').hide();
-                          $(element).tooltip({title: "od " + dateFormat(event.date) + " do " + dateFormat(event.end), container: "body"})
+                          $(element).tooltip({title: "od " + dateFormat(event.start) + " do " + dateFormat(event.end), container: "body"})
                       }
 
                   },
 
                   eventClick: function(info)
                   {
-
-                      if(info.source.uid == 1){
+                        console.log(info)
+                      if(info.uid == 1){
                         return
                       }
 
@@ -268,7 +268,25 @@ function initCalendarNurse(user)
                             failure: function() {
                               alert('there was an error while fetching vac events!');
                             },
+                             complete: function(data)
+                            {
+                            $('#calendar').fullCalendar('removeEvents')
+                                  $.each(data.responseJSON, function(i, item){
 
+                                      let event = {
+                                              start: item.startDate,
+                                              end: item.endDate,
+                                              stick: true,
+                                              color: '#f4a896',
+                                              textColor: 'black',
+                                              uid: 1,
+                                      }
+
+                                     $('#calendar').fullCalendar('renderEvent', event, true)
+
+                                  })
+
+                            }
                           },
                        ],
                     schedulerLicenseKey: 'GPL-My-Project-Is-Open-Source'
@@ -362,7 +380,7 @@ function addVacationRequestForNurse(user)
 			return
 		}
 
-		let json = JSON.stringify({"date": startDate,"end": endDate,"user": user })
+		let json = JSON.stringify({"startDate": startDate,"endDate": endDate,"user": user })
 
 		$('#vacationRequestSpinner').show()
 		$.ajax({
@@ -424,7 +442,7 @@ function addVacationRequestForNurse(user)
 		$('#submitVacationRequest').prop('disabled',true)
 		let startDate = $('#startDayInputVacationRequest').val()
 		let endDate = $('#endDayInputVacationRequest').val()
-		let json = JSON.stringify({"date": startDate,"end": endDate,"user": user })
+		let json = JSON.stringify({"startDate": startDate,"endDate": endDate,"user": user })
 		showLoading('submitVacationRequest')
 
 		$.ajax({
