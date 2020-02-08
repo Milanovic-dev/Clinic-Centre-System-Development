@@ -185,7 +185,7 @@ public class AppointmentControllerTest {
 
 		rest.put(getPath() + "/confirmAppointment", dto);
 		
-		assertTrue(appointmentService.findAppointment(dto.getDate(), dto.getHallNumber(), dto.getClinicName()) != null);
+		assertFalse(appointmentService.findAppointment(dto.getDate(), dto.getHallNumber(), dto.getClinicName()) != null);
 	
 	}
 	
