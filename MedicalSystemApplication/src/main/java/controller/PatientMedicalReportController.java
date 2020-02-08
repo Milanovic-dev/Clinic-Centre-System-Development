@@ -8,9 +8,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.web.bind.annotation.*;
 import service.*;
 
+import javax.validation.ValidationException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -65,42 +67,26 @@ public class PatientMedicalReportController {
         return new ResponseEntity<>(dtos,HttpStatus.OK);
     }
 
+
     @PutMapping(value = "/updateReport/{id}")
     public ResponseEntity<Void> updateReport(@PathVariable("id")long id, @RequestBody PatientMedicalReportDTO dto)
     {
-        HttpHeaders header = new HttpHeaders();
 
-        PatientMedicalReport report = patientMedicalReportService.findById(id);
-        if(report == null)
+        dto.setId(id);
+
+        try
         {
-            header.set("responseText","report not found: " + id);
-            return new ResponseEntity<>(header, HttpStatus.NOT_FOUND);
+            patientMedicalReportService.updatePatientMedicalReport(dto);
+
+        } catch (ObjectOptimisticLockingFailureException e) {
+
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
+
+        } catch (ValidationException e) {
+
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
         }
-
-        report.getDiagnosis().clear();
-        for(String d : dto.getDiagnosis()){
-            Diagnosis diagnosis = diagnosisService.findByName(d);
-            report.getDiagnosis().add(diagnosis);
-        }
-        report.setDescription(dto.getDescription());
-
-        long idPres = report.getPrescription().getId();
-        Prescription prescription = prescriptionService.findById(idPres);
-
-        prescription.setDescription(dto.getPrescription().getDescription());
-        report.getPrescription().getDrugs().clear();
-        for(String d : dto.getPrescription().getDrugs()){
-            Drug drug = drugService.findByName(d);
-            report.getPrescription().getDrugs().add(drug);
-        }
-        prescription.setValid(false);
-        prescription.setNurse(null);
-        prescription.setValidationDate(null);
-
-        prescriptionService.save(prescription);
-
-        report.setPrescription(prescription);
-        patientMedicalReportService.save(report);
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
