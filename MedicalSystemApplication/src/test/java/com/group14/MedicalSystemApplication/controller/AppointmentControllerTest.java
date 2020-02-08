@@ -47,7 +47,7 @@ import service.VacationRequestService;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 public class AppointmentControllerTest {
 
-	private String URI_PREFIX = "http://localhost:8282/api/appointments";
+	private String URI_PREFIX = "http://localhost:8080/api/appointments";
 	
 	@Autowired
 	private UserService userService;
@@ -143,7 +143,6 @@ public class AppointmentControllerTest {
 
 	}
 	*/
-	
 	
 	/*
 	@Test
