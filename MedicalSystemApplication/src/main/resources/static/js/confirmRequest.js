@@ -63,9 +63,20 @@ $(document).ready(function(){
 		}
 		else
 		{
-			$('#header').text("Uspesno!")
-			$('#spinner').hide()
-			$('#message').text("Pregled je uspesno odbijen.")
+			$.ajax({
+				type:'DELETE',
+				url:"api/appointments/denyAppointment",
+				complete:function(data)
+				{
+					if(data.status == "200")
+					{
+						$('#header').text("Uspesno!")
+						$('#spinner').hide()
+						$('#message').text("Pregled je uspesno odbijen.")
+					}
+				}
+			})
+				
 		}
 		
 	}
