@@ -39,9 +39,6 @@ public class PatientMedicalReport {
 
 	@ManyToMany(fetch = FetchType.LAZY)
 	private List<Diagnosis> diagnosis;
-
-	@Version
-	private Integer version;
 	
 
 	public PatientMedicalReport()
@@ -118,14 +115,6 @@ public class PatientMedicalReport {
 
 	public void setDiagnosis(List<Diagnosis> diagnosis) {
 		this.diagnosis = diagnosis;
-	}
-
-	public Integer getVersion() {
-		return version;
-	}
-
-	public void setVersion(Integer version) {
-		this.version = version;
 	}
 
 	public Patient getPatient() {

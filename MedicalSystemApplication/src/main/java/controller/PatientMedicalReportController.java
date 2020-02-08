@@ -2,17 +2,14 @@ package controller;
 
 import dto.PatientMedicalReportDTO;
 import dto.PrescriptionDTO;
-import helpers.DateUtil;
 import model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.web.bind.annotation.*;
 import service.*;
 
-import javax.validation.ValidationException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -67,26 +64,42 @@ public class PatientMedicalReportController {
         return new ResponseEntity<>(dtos,HttpStatus.OK);
     }
 
-
     @PutMapping(value = "/updateReport/{id}")
     public ResponseEntity<Void> updateReport(@PathVariable("id")long id, @RequestBody PatientMedicalReportDTO dto)
     {
+        HttpHeaders header = new HttpHeaders();
 
-        dto.setId(id);
-
-        try
+        PatientMedicalReport report = patientMedicalReportService.findById(id);
+        if(report == null)
         {
-            patientMedicalReportService.updatePatientMedicalReport(dto);
-
-        } catch (ObjectOptimisticLockingFailureException e) {
-
-            return new ResponseEntity<>(HttpStatus.CONFLICT);
-
-        } catch (ValidationException e) {
-
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-
+            header.set("responseText","report not found: " + id);
+            return new ResponseEntity<>(header, HttpStatus.NOT_FOUND);
         }
+
+        report.getDiagnosis().clear();
+        for(String d : dto.getDiagnosis()){
+            Diagnosis diagnosis = diagnosisService.findByName(d);
+            report.getDiagnosis().add(diagnosis);
+        }
+        report.setDescription(dto.getDescription());
+
+        long idPres = report.getPrescription().getId();
+        Prescription prescription = prescriptionService.findById(idPres);
+
+        prescription.setDescription(dto.getPrescription().getDescription());
+        report.getPrescription().getDrugs().clear();
+        for(String d : dto.getPrescription().getDrugs()){
+            Drug drug = drugService.findByName(d);
+            report.getPrescription().getDrugs().add(drug);
+        }
+        prescription.setValid(false);
+        prescription.setNurse(null);
+        prescription.setValidationDate(null);
+
+        prescriptionService.save(prescription);
+
+        report.setPrescription(prescription);
+        patientMedicalReportService.save(report);
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -160,7 +173,7 @@ public class PatientMedicalReportController {
         report.setDescription(dto.getDescription());
         report.setDoctor(doctor);
         report.setPrescription(pr);
-        report.setDateAndTime(DateUtil.getInstance().getDate(dto.getDateAndTime(),"dd-MM-yyyy"));
+        report.setDateAndTime(dto.getDateAndTime());
         report.setPatient(patient);
 
         for(String name : dto.getDiagnosis())

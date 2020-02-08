@@ -16,6 +16,7 @@ public class PrescriptionDTO {
     private String nurseEmail;
     private Boolean isValid;
     private long id;
+    private int version;
 
     public PrescriptionDTO(){
         super();
@@ -33,6 +34,7 @@ public class PrescriptionDTO {
         }
         this.isValid = false;
         this.id = prescription.getId();
+        this.version =prescription.getVersion();
     }
 
     public PrescriptionDTO(String description, Date validationDate,
@@ -95,5 +97,13 @@ public class PrescriptionDTO {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public int getVersion() {
+        return version;
+    }
+
+    public void setVersion(int version) {
+        this.version = version;
     }
 }

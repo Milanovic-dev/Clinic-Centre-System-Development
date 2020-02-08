@@ -439,11 +439,6 @@ function patientMedicalReportUpdate(report){
 
                     }
 
-                    if(data.status == "409")
-                    {
-                        $('#modalNotOK').modal('show')
-                    }
-
                 }
 
          })
