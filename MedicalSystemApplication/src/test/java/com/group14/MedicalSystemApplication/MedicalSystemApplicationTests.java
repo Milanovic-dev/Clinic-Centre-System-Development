@@ -37,6 +37,7 @@ import helpers.DateUtil;
 import helpers.SecurePasswordHasher;
 import model.Appointment;
 import model.Clinic;
+import model.ClinicReview;
 import model.Doctor;
 import model.Hall;
 import model.Nurse;
@@ -135,6 +136,7 @@ class MedicalSystemApplicationTests {
 		
 	}
 	
+	
 	@Test
 	void test_if_clinic_filter_works()
 	{
@@ -153,6 +155,30 @@ class MedicalSystemApplicationTests {
 		
 		Filter filter = FilterFactory.getInstance().get("clinic");
 		assertFalse(filter.test(clinic1, clinic2));
+	}
+	
+	@Test 
+	void test_if_doctor_filter_works()
+	{
+		Doctor doctor = new Doctor();
+		doctor.setName("Nikola");
+		doctor.setSurname("Nikolic");
+		doctor.setType("Opsti pregled");
+		doctor.setShiftEnd(DateUtil.getInstance().getDate("13:00", "mm:HH"));
+		doctor.setShiftStart(DateUtil.getInstance().getDate("21:00", "mm:HH"));
+		
+		UserDTO user = new UserDTO();
+		user.setName("Nikola");
+		user.setSurname("Milic");
+		
+		DoctorDTO dto = new DoctorDTO();
+		dto.setUser(user);
+		dto.setShiftEnd("13:00");
+		dto.setShiftStart("21:00");
+		
+		Filter filter = FilterFactory.getInstance().get("doctor");
+		assertFalse(filter.test(doctor, dto));
+		
 	}
 	
 	@Test 
@@ -198,6 +224,7 @@ class MedicalSystemApplicationTests {
 		
 		assertTrue(DateUtil.getInstance().getTimeBetween(date1, date2) == 0);
 	}
+	
 	
 	
 	}

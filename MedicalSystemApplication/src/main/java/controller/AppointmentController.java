@@ -174,7 +174,7 @@ public class AppointmentController
 	}
 	
 	@GetMapping(value="/clinic/getAllRequests/{clinicName}")
-	public ResponseEntity<List<AppointmentDTO>> getAppointmentRequests(@PathVariable("clinicName") String clinic)
+	public ResponseEntity<AppointmentDTO[]> getAppointmentRequests(@PathVariable("clinicName") String clinic)
 	{
 		List<AppointmentRequest> list = appointmentRequestService.getAllByClinic(clinic);
 		
@@ -190,7 +190,7 @@ public class AppointmentController
 			dtos.add(new AppointmentDTO(req));
 		}
 		
-		return new ResponseEntity<>(dtos,HttpStatus.OK);
+		return new ResponseEntity<>(dtos.toArray(new AppointmentDTO[dtos.size()]),HttpStatus.OK);
 	}
 	
 	@GetMapping(value="/clinic/getAllAppointments/{clinicName}")
@@ -728,7 +728,7 @@ public class AppointmentController
 
 		Appointment appointment = new Appointment.Builder(desiredStartTime)
 				.withClinic(request.getClinic())
-				.withHall(hall)//TODO: Admin treba da bira salu
+				.withHall(hall)
 				.withPatient(request.getPatient())
 				.withType(request.getAppointmentType())
 				.withPriceslist(request.getPriceslist())

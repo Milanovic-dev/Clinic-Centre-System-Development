@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.lang.annotation.Annotation;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Date;
@@ -28,6 +29,8 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import dto.ClinicDTO;
 import dto.ClinicFilterDTO;
+import dto.DoctorDTO;
+import dto.UserDTO;
 import filters.ClinicFilter;
 import filters.Filter;
 import filters.FilterFactory;
@@ -39,12 +42,11 @@ import service.ClinicService;
 
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class ClinicControllerTest {
+public class ClinicControllerTest{
 
 	@LocalServerPort
 	private int port;
 	
-	private String URI_PREFIX = "http://localhost:"+port+"/api/clinic";
 	
 	@Autowired
 	private ClinicService clinicService;
@@ -73,9 +75,59 @@ public class ClinicControllerTest {
 		assertTrue(clinics.length > 0);
 	}
 	
+	@Test
+	@Transactional
+	@Rollback(true)
+	void get_all_doctors_by_type_and_vacation()
+	{
+		TestRestTemplate restTemplate = new TestRestTemplate();
+		ResponseEntity<DoctorDTO[]> responseEntity =
+				restTemplate.getForEntity(getPath()+ "/getDoctorsByTypeAndVacation/{clinicName}/{typeOfExamination}/{date}",DoctorDTO[].class,"KlinikaA","Stomatoloski","18-02-2023");
+		
+		DoctorDTO[] doctors = responseEntity.getBody();
+		
+		assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+		assertTrue(doctors.length > 0);
+	}
 	
-	private String getPath()
+	@Test
+	@Transactional
+	@Rollback(true)
+	void test_get_doctor_by_filter()
+	{
+		TestRestTemplate restTemplate = new TestRestTemplate();
+		
+		UserDTO user = new UserDTO();
+		user.setName("Steva");
+		user.setSurname("Stevic");
+		user.setEmail("doktor1@gmail.com");
+		user.setAddress("Kisacka");
+		user.setCity("Novi Sad");
+		user.setState("Srbija");
+		
+		
+		DoctorDTO dto = new DoctorDTO();
+		dto.setType("Stomatoloski");
+		dto.setClinicName("KlinikaA");
+		dto.setUser(user);
+		
+		ResponseEntity<DoctorDTO[]> responseEntity =
+				restTemplate.postForEntity(getPath()+ "/getDoctorsByFilter/{clinicName}", dto ,DoctorDTO[].class,"KlinikaA" );
+		
+		DoctorDTO[] doctors = responseEntity.getBody();
+
+		
+		assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+		assertTrue(doctors.length > 0);
+
+		
+	}
+	
+	
+	
+	public String getPath()
 	{
 		return "http://localhost:"+port+"/api/clinic";
 	}
+
 }
