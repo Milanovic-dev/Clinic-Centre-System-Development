@@ -1,5 +1,4 @@
 package com.group14.MedicalSystemApplication;
-import static com.sun.tools.javac.util.Assert.check;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;

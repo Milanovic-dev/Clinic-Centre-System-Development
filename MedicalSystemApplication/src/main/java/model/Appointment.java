@@ -57,6 +57,7 @@ public class Appointment
 
 	private Date newDate;
 	private Date newEndDate;
+
 	@Version
 	private Integer version;
 	
