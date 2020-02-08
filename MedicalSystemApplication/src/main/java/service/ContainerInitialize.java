@@ -422,8 +422,8 @@ public class ContainerInitialize {
 			AppointmentRequest appReq3 = new AppointmentRequest(dateInstance.getDate("26-02-2020 11:00", "dd-MM-yyyy HH:mm"), null, patient, clinic,p1, AppointmentType.Surgery);
 			AppointmentRequest appReq4 = new AppointmentRequest(dateInstance.getDate("27-02-2020 11:00", "dd-MM-yyyy HH:mm"), null, patient, clinic,p1, AppointmentType.Surgery);
 			AppointmentRequest appReq5 = new AppointmentRequest(dateInstance.getDate("28-02-2020 11:00", "dd-MM-yyyy HH:mm"), null, patient, clinic,p1, AppointmentType.Examination);
-			AppointmentRequest appReq6 = new AppointmentRequest(dateInstance.getDate("26-02-2020 11:00", "dd-MM-yyyy HH:mm"), null, patient, clinic,p1, AppointmentType.Surgery);
-			AppointmentRequest appReq7 = new AppointmentRequest(dateInstance.getDate("26-02-2020 11:00", "dd-MM-yyyy HH:mm"), null, patient, clinic,p1, AppointmentType.Surgery);
+			AppointmentRequest appReq6 = new AppointmentRequest(dateInstance.getDate("26-02-2020 11:10", "dd-MM-yyyy HH:mm"), null, patient, clinic,p1, AppointmentType.Surgery);
+			AppointmentRequest appReq7 = new AppointmentRequest(dateInstance.getDate("26-02-2020 11:20", "dd-MM-yyyy HH:mm"), null, patient, clinic,p1, AppointmentType.Surgery);
 
 
 			List<Doctor> list = new ArrayList<Doctor>();

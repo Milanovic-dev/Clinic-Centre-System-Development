@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import dto.AppointmentDTO;
+import helpers.DateInterval;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,10 +27,11 @@ import model.Hall;
 import model.Patient;
 import model.Priceslist;
 import model.User;
-import repository.AppointmentRepository;
-import repository.AppointmentRequestRepository;
-import repository.ClinicRepository;
-import repository.HallRepository;
+import repository.*;
+
+import javax.print.Doc;
+import javax.validation.ValidationException;
+
 
 @Service
 @EnableTransactionManagement
@@ -42,6 +45,10 @@ public class AppointmentService {
 	
 	@Autowired
 	private ClinicRepository clinicRepository;
+
+	@Autowired
+	private UserRepository userRepository;
+
 	
 	public Appointment findAppointment(Date date, Hall hall, Clinic clinic)
 	{
@@ -100,6 +107,69 @@ public class AppointmentService {
 		
 		appointmentRepository.save(appointment);
 	}
+
+	@Transactional(isolation =  Isolation.SERIALIZABLE, propagation = Propagation.REQUIRES_NEW, readOnly = false)
+	public void confirmAppointmentRequest(Appointment appointment, AppointmentDTO dto) throws ObjectOptimisticLockingFailureException {
+
+		List<Appointment> apps = appointmentRepository.findAllByHall(appointment.getHall());
+		DateUtil util = DateUtil.getInstance();
+
+		Date desiredStartTime = util.getDate(dto.getDate(), "dd-MM-yyyy HH:mm");
+		Date desiredEndTime = util.getDate(dto.getEndDate(), "dd-MM-yyyy HH:mm");
+
+		String parts[] = dto.getNewDate().split(" ");
+		String dat = parts[0];
+
+		if(!dat.equals("undefined")){
+			desiredStartTime = util.getDate(dto.getNewDate(), "dd-MM-yyyy HH:mm");
+			desiredEndTime = util.getDate(dto.getNewEndDate(), "dd-MM-yyyy HH:mm");
+		}
+
+		DateInterval di1 = new DateInterval(desiredStartTime, desiredEndTime);
+
+		for(Appointment app : apps)
+		{
+			DateInterval di2 = new DateInterval(app.getDate(), app.getEndDate());
+
+			if(util.overlappingInterval(di1, di2)) {
+				throw new ValidationException("hall");
+			}
+		}
+
+
+		for(Doctor doctor : appointment.getDoctors())
+		{
+			List<Appointment> appointments = doctor.getAppointments();
+			for(Appointment app : appointments)
+			{
+				DateInterval di2 = new DateInterval(app.getDate(), app.getEndDate());
+				if(util.overlappingInterval(di1, di2) || !doctor.IsFreeOn(appointment.getDate()))
+				{
+					throw new ValidationException("doctor,"+doctor.getName() + " " + doctor.getSurname());
+				}
+
+			}
+		}
+
+		Appointment app = appointmentRepository.findByDateAndHallAndClinic(appointment.getDate(), appointment.getHall(), appointment.getClinic());
+
+		if(app != null)
+		{
+			if(app.getVersion() != appointment.getVersion())
+			{
+				throw new ObjectOptimisticLockingFailureException("Resource Locked.", app);
+			}
+		}
+
+		appointmentRepository.save(appointment);
+
+		for(Doctor doc : appointment.getDoctors())
+		{
+			doc.getAppointments().add(appointment);
+			userRepository.save(doc);
+		}
+	}
+
 	
 	public List<Appointment> findAllByPatient(Patient p)
 	{

@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.ValidationException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -688,7 +689,6 @@ public class AppointmentController
 		HttpHeaders header = new HttpHeaders();
 		AppointmentRequest request = appointmentRequestService.findAppointmentRequest(dto.getDate(), 0, dto.getClinicName());
 
-		Clinic clinic = clinicService.findByName(dto.getClinicName());
 
 		if(request == null)
 		{
@@ -696,21 +696,20 @@ public class AppointmentController
 			return new ResponseEntity<>(header,HttpStatus.NOT_FOUND);
 		}
 
-		
+
 		Hall hall = hallService.findByNumber(dto.getHallNumber());
-		
+
 		if(hall == null)
 		{
 			header.set("responseText","Hall not found " + dto.getHallNumber());
 			return new ResponseEntity<>(header,HttpStatus.NOT_FOUND);
 		}
-		
+
 		List<Appointment> apps = appointmentService.findAllByHall(hall);
-		List<Doctor> doctors = new ArrayList<Doctor>();
+		ArrayList<Doctor> doctors = new ArrayList<>();
 		DateUtil util = DateUtil.getInstance();
 		Date desiredStartTime = util.getDate(dto.getDate(), "dd-MM-yyyy HH:mm");
 		Date desiredEndTime = util.getDate(dto.getEndDate(), "dd-MM-yyyy HH:mm");
-
 
 		String parts[] = dto.getNewDate().split(" ");
 		String dat = parts[0];
@@ -720,19 +719,12 @@ public class AppointmentController
 			desiredEndTime = util.getDate(dto.getNewEndDate(), "dd-MM-yyyy HH:mm");
 		}
 
-		DateInterval di1 = new DateInterval(desiredStartTime, desiredEndTime);
 
-		for(Appointment app : apps)
+		for(String email : dto.getDoctors())
 		{
-			DateInterval di2 = new DateInterval(app.getDate(), app.getEndDate());
-			
-			if(util.overlappingInterval(di1, di2))
-			{
-				header.set("responseText","hall");
-				return new ResponseEntity<>(header, HttpStatus.CONFLICT);
-			}
+			Doctor doctor = (Doctor) userService.findByEmailAndDeleted(email, false);
+			doctors.add(doctor);
 		}
-
 
 		Appointment appointment = new Appointment.Builder(desiredStartTime)
 				.withClinic(request.getClinic())
@@ -741,83 +733,77 @@ public class AppointmentController
 				.withType(request.getAppointmentType())
 				.withPriceslist(request.getPriceslist())
 				.withEndingDate(desiredEndTime)
+				.withDoctors(doctors)
 				.build();
-		
+
 		appointment.setConfirmed(false);
 
-		for(String email : dto.getDoctors())
+		try
 		{
-			Doctor doctor = (Doctor) userService.findByEmailAndDeleted(email, false);
-			
-			List<Appointment> appointments = doctor.getAppointments();
-			
-			for(Appointment app : appointments)
-			{
-				DateInterval di2 = new DateInterval(app.getDate(), app.getEndDate());
-				if(util.overlappingInterval(di1, di2) || !doctor.IsFreeOn(desiredStartTime))
+			appointmentService.confirmAppointmentRequest(appointment, dto);
+			appointmentRequestService.delete(request);
+
+			if(appointment.getAppointmentType() == Appointment.AppointmentType.Surgery){
+				for(Doctor doctor: doctors)
 				{
-					header.set("responseText","doctor,"+doctor.getName() + " " + doctor.getSurname());
-					return new ResponseEntity<>(header, HttpStatus.CONFLICT);
+					notificationService.sendNotification(doctor.getEmail(), "Nova operacija je zakazana",  "Zakazana je nova operacija u Vasem radnom kalendaru. Datum operacije je "+ desiredStartTime +
+							", u klinici  " + appointment.getClinic().getName() + ", u sali " + appointment.getHall().getName() + ", broj " + appointment.getHall().getNumber() + ".");
+
 				}
-				
+
+				if(dat!= "undefined"){
+					notificationService.sendNotification(request.getPatient().getEmail(), "Vasa operacija je zakazana", "Zahtev za operaciju je prihvacen. Datum operacije je "+  dto.getDate() +
+							", u klinici  " + appointment.getClinic().getName() + ", u sali " + appointment.getHall().getName() + ", broj " + appointment.getHall().getNumber() + "." );
+				} else {
+					notificationService.sendNotification(request.getPatient().getEmail(), "Datum operacije je promenjen", "Datum operacije, koja je bila zakazana " +
+							dto.getDate() +  ", promenjen je na  " + dto.getNewDate() +
+							". Operacija je zakazana u klinici  " + appointment.getClinic().getName() + ", u sali " + appointment.getHall().getName() +
+							", broj " + appointment.getHall().getNumber() + "." );
+				}
+
 			}
-			
-			doctors.add(doctor);
+
+
+			//TODO:Send mail Pacijentu (Prihavti ili odbije)
+			String requestURL = httpRequest.getRequestURL().toString();
+			UriComponentsBuilder builderRootAccept = UriComponentsBuilder.fromUriString(requestURL.split("api")[0] + "confirmRequest.html")
+					.queryParam("clinic", appointment.getClinic().getName())
+					.queryParam("date", DateUtil.getInstance().getString(appointment.getDate(), "dd-MM-yyyy HH:mm"))
+					.queryParam("hall", appointment.getHall().getNumber())
+					.queryParam("confirmed", true);
+
+			UriComponentsBuilder builderRootDeny = UriComponentsBuilder.fromUriString(requestURL.split("api")[0] + "confirmRequest.html")
+					.queryParam("clinic", appointment.getClinic().getName())
+					.queryParam("date", DateUtil.getInstance().getString(appointment.getDate(), "dd-MM-yyyy HH:mm"))
+					.queryParam("hall", appointment.getHall().getNumber())
+					.queryParam("confirmed", false);
+
+			notificationService.sendNotification("nikolamilanovic21@gmail.com", "Potvrdite pregled","Admin klinike je odobrio vaš zahtev za pregled.\nPotvrdite odlaskom na link:" + builderRootAccept.toUriString() + " \n\n Odbijte odlaskom na link:"+ builderRootDeny.toUriString());
+			//TODO:Send mail Doktoru
+			notificationService.sendNotification(appointment.getDoctors().get(0).getEmail(), "Admin je rezervisao termin za pregled", "Admin je rezervisao pregled datuma " + DateUtil.getInstance().getString(appointment.getDate(), "dd-MM-yyyy HH:mm") + ", u klinici "+appointment.getClinic().getName() + ", u sali Br. " + appointment.getHall().getNumber()+ " i vas je izabrao za lekara.");
+
+
 		}
-
-		if(appointment.getAppointmentType() == Appointment.AppointmentType.Surgery){
-			for(Doctor doctor: doctors)
-			{
-				notificationService.sendNotification(doctor.getEmail(), "Nova operacija je zakazana",  "Zakazana je nova operacija u Vasem radnom kalendaru. Datum operacije je "+ desiredStartTime +
-						", u klinici  " + appointment.getClinic().getName() + ", u sali " + appointment.getHall().getName() + ", broj " + appointment.getHall().getNumber() + ".");
-
-			}
-
-			if(dat!= "undefined"){
-				notificationService.sendNotification("miaknezevic5@gmail.com", "Vasa operacija je zakazana", "Zahtev za operaciju je prihvacen. Datum operacije je "+  dto.getDate() +
-						", u klinici  " + appointment.getClinic().getName() + ", u sali " + appointment.getHall().getName() + ", broj " + appointment.getHall().getNumber() + "." );
-			} else {
-				notificationService.sendNotification("miaknezevic5@gmail.com", "Datum operacije je promenjen", "Datum operacije, koja je bila zakazana " +
-						dto.getDate() +  ", promenjen je na  " + dto.getNewDate() +
-						". Operacija je zakazana u klinici  " + appointment.getClinic().getName() + ", u sali " + appointment.getHall().getName() +
-						", broj " + appointment.getHall().getNumber() + "." );
-			}
-
-		}
-
-		appointment.getDoctors().addAll(doctors);
-
-		
-
-		appointmentService.save(appointment);
-		
-		appointmentRequestService.delete(request);
-		
-
-		for(Doctor doc : doctors)
+		catch(ConcurrentModificationException e)
 		{
-			doc.getAppointments().add(appointment);
-			userService.save(doc);
+			header.set("responseText","conflict");
+			return new ResponseEntity<>(header, HttpStatus.CONFLICT);
 		}
-		
-		//TODO:Send mail Pacijentu (Prihavti ili odbije)
-		String requestURL = httpRequest.getRequestURL().toString();
-		UriComponentsBuilder builderRootAccept = UriComponentsBuilder.fromUriString(requestURL.split("api")[0] + "confirmRequest.html")
-										.queryParam("clinic", appointment.getClinic().getName())
-										.queryParam("date", DateUtil.getInstance().getString(appointment.getDate(), "dd-MM-yyyy HH:mm"))
-										.queryParam("hall", appointment.getHall().getNumber())
-										.queryParam("confirmed", true);
-		
-		UriComponentsBuilder builderRootDeny = UriComponentsBuilder.fromUriString(requestURL.split("api")[0] + "confirmRequest.html")
-										.queryParam("clinic", appointment.getClinic().getName())
-										.queryParam("date", DateUtil.getInstance().getString(appointment.getDate(), "dd-MM-yyyy HH:mm"))
-										.queryParam("hall", appointment.getHall().getNumber())
-										.queryParam("confirmed", false);
-		
-		notificationService.sendNotification("nikolamilanovic21@gmail.com", "Potvrdite pregled","Admin klinike je odobrio vaš zahtev za pregled.\nPotvrdite odlaskom na link:" + builderRootAccept.toUriString() + " \n\n Odbijte odlaskom na link:"+ builderRootDeny.toUriString());
-		//TODO:Send mail Doktoru
-		notificationService.sendNotification(appointment.getDoctors().get(0).getEmail(), "Admin je rezervisao termin za pregled", "Admin je rezervisao pregled datuma " + DateUtil.getInstance().getString(appointment.getDate(), "dd-MM-yyyy HH:mm") + ", u klinici "+appointment.getClinic().getName() + ", u sali Br. " + appointment.getHall().getNumber()+ " i vas je izabrao za lekara.");
-		
+		catch (ValidationException e)
+		{
+
+			System.out.println(e.getMessage()+"MESSAGE+++++++++++++++++++++++");
+
+			if(e.getMessage() == "Hall"){
+				header.set("responseText","hall");
+				return new ResponseEntity<>(header, HttpStatus.CONFLICT);
+			}else{
+				header.set("responseText",e.getMessage());
+				return new ResponseEntity<>(header, HttpStatus.CONFLICT);
+			}
+
+		}
+
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 	
