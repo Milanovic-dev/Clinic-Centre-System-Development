@@ -30,9 +30,6 @@ public class HallFilter implements Filter{
 			}
 		}
 		
-		//TODO: Date
-		
-		
 		return flag;
 	}
 
