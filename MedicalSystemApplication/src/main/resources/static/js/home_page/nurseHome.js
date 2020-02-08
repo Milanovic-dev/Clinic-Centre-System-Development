@@ -40,7 +40,7 @@ function setUpPageNurse(nurseClinic,user)
 	patientSearch.input("<input class='form-control' type='text' placeholder='Prezime pacijenta' id='patientSurnameLabelNurse'>")
 	patientSearch.input("<input class='form-control' type='text' placeholder='Broj osiguranika' id='patientIdLabelNurse'>")
     
-	let headersPatients = ["Ime","Prezime","Email","Telefon","Adresa","Grad","Drzava","Broj zdravstvenog osiguranja"]
+	let headersPatients = ["Ime","Prezime","Email","Telefon","Adresa","Grad","Drzava","Broj zdravstvenog osiguranja", ""]
 	createDataTable("listPatientsTable","showPatientsContainer","Lista pacijenata",headersPatients,0)
 	getTableDiv("listPatientsTable").show()
 	
@@ -301,7 +301,8 @@ function initCalendarNurse(user)
 
 function listPatientNurse(data)
 {
-	let d = [data.name,data.surname,getProfileLink(data.email),data.phone,data.address,data.city,data.state,data.insuranceId]
+    var btn = '<button type="button" class="btn btn-primary" id="updateBtn'+i+'">Izmeni</button>'
+	let d = [data.name,data.surname,getProfileLink(data.email),data.phone,data.address,data.city,data.state,data.insuranceId, btn]
 	insertTableData("listPatientsTable",d)
 }
 
