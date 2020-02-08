@@ -90,6 +90,17 @@ public class DateUtil {
 		return c1.getTime().before(c4.getTime()) && c2.getTime().after(c3.getTime());
 	}
 	
+	
+	public Boolean insideInterval(Date testDate,DateInterval di)
+	{
+		Date startDate = di.getStart();
+		Date endDate = di.getEnd();
+		
+		
+		return !(testDate.before(startDate) || testDate.after(endDate));
+	}
+	
+	
 	public long getTimeBetween(Date d1, Date d2)
 	{
 		Calendar cal = Calendar.getInstance();
@@ -130,11 +141,11 @@ public class DateUtil {
 		return instance;
 	}
 
-	public static Date addDays(Date date, int days)
+	public Date addDays(Date date, int days)
 	{
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(date);
-		calendar.add(Calendar.HOUR_OF_DAY, days*24);
+		calendar.add(Calendar.DAY_OF_MONTH, days);
 		return calendar.getTime();
 	}
 }

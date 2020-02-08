@@ -23,4 +23,9 @@ public class DoctorService {
     {
     	return doctorRepository.findByType(type);
     }
+    
+    public List<Doctor> findAllByClinicAndType(Clinic clinic, String type)
+    {
+    	return doctorRepository.findAllByClinicAndType(clinic, type);
+    }
 }
