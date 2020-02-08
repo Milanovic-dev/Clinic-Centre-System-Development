@@ -14,12 +14,14 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.Rollback;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -35,10 +37,14 @@ import model.Clinic;
 import model.Doctor;
 import service.ClinicService;
 
-@SpringBootTest
+
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ClinicControllerTest {
 
-	private String URI_PREFIX = "http://localhost:8282/api/clinic";
+	@LocalServerPort
+	private int port;
+	
+	private String URI_PREFIX = "http://localhost:"+port+"/api/clinic";
 	
 	@Autowired
 	private ClinicService clinicService;
@@ -53,13 +59,12 @@ public class ClinicControllerTest {
 	@Rollback(true)
 	void get_all_by_date_and_type()
 	{		
-		RestTemplate restTemplate = new RestTemplate();
+		TestRestTemplate restTemplate = new TestRestTemplate();
 		
 		ClinicFilterDTO clinicFilter = new ClinicFilterDTO();
 
-		
 		ResponseEntity<ClinicDTO[]> responseEntity =
-				restTemplate.postForEntity(URI_PREFIX + "/getAll/{date}/{type}",clinicFilter, ClinicDTO[].class,"22-04-2020","Stomatoloski");
+				restTemplate.postForEntity(getPath()+ "/getAll/{date}/{type}",clinicFilter, ClinicDTO[].class,"22-04-2020","Stomatoloski");
 		
 		ClinicDTO[] clinics = responseEntity.getBody();
 		
@@ -68,4 +73,9 @@ public class ClinicControllerTest {
 		assertTrue(clinics.length > 0);
 	}
 	
+	
+	private String getPath()
+	{
+		return "http://localhost:"+port+"/api/clinic";
+	}
 }
