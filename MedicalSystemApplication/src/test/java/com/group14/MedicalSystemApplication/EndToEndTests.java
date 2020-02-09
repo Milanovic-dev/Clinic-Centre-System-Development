@@ -160,7 +160,7 @@ public class EndToEndTests {
 		(new WebDriverWait(driver, 10))
         .until(ExpectedConditions.visibilityOf(driver.findElement(By.id("examinationRequestList"))));
 		driver.findElement(By.id("examinationRequestList")).click();
-
+		
 		(new WebDriverWait(driver, 10))
         .until(ExpectedConditions.visibilityOf(driver.findElement(By.id("reserve_btn4"))));
 		driver.findElement(By.id("reserve_btn4")).click();

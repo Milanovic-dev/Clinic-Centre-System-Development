@@ -221,9 +221,7 @@ public class AppointmentControllerTest {
 		TestRestTemplate rest = new TestRestTemplate();
 		rest.put(getPath() + "/reservePredefined/{email}", dto,"patient1@gmail.com");
 
-	//	ResponseEntity<Void> response = rest.put(getPath() + "/reservePredefined/{email}", dto, Void.class, "patient1@gmail.com");
-
-		assertNotNull(appointmentService.findAppointment(dto.getDate(), dto.getHallNumber(), dto.getClinicName()));
+		assertNotNull(appointmentService.findAppointment(dto.getDate(), dto.getHallNumber(), dto.getClinicName()).getPatient());
 	}
 
 
