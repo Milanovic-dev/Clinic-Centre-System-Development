@@ -27,7 +27,7 @@ Web based application made for patients and Clinic Centre. Made for a course at 
 
 #### Creating the database
 - In order for application to run, it will need a database. Default name is set as postgres, running on port `5432`. 
--  Postgres tutorial: https://www.postgresql.org/docs/10/tutorial-createdb.html
+  Postgres tutorial: https://www.postgresql.org/docs/10/tutorial-createdb.html
 
 ### Building the project
 
