@@ -12,6 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -48,6 +51,7 @@ public class ScheduledAppointmentsController {
         reserveAlgorithmExamination();
         logger.info("Automatic scheduling ended.");
     }
+
 
     public void reserveAlgorithmSurgery() {
 
@@ -147,12 +151,12 @@ public class ScheduledAppointmentsController {
     	reserveAlgorithmExamination();
     	return new ResponseEntity<>(HttpStatus.OK);
     }
-    
+
     //2_3.18
     public void reserveAlgorithmExamination()
     {
     	List<AppointmentRequest> requests = appointmentRequestService.findAll();
-    		
+
     	for(AppointmentRequest request : requests)
     	{
     		if(request.getAppointmentType().equals(AppointmentType.Examination))
@@ -161,24 +165,24 @@ public class ScheduledAppointmentsController {
     		}
     	}
     }
-    
+
     public void reserve(AppointmentRequest request, Date start)
-    {   	
+    {
     	int hoursDelta = 1; //Pomeraj termina ukoliko ne moze da se zakaze(1 sat)
     						//TODO: Moze ovo lepse
     	Date end = Scheduler.addHoursToJavaUtilDate(start, hoursDelta);
-    	
+
     	Hall hall = findAvailableHall(request, start, end);
-    	
+
     	if(hall == null)
     	{
     		start = Scheduler.addHoursToJavaUtilDate(start, hoursDelta);
     		reserve(request, start);
     		return;
     	}
-    	
+
     	Doctor doctor = findAvailableDoctor(request, start, end);
-    	
+
     	if(doctor == null)
     	{
     		start = Scheduler.addHoursToJavaUtilDate(start, hoursDelta);
@@ -188,7 +192,7 @@ public class ScheduledAppointmentsController {
     	{
     		ArrayList<Doctor> d = new ArrayList<Doctor>();
     		d.add(doctor);
-    		
+
     		Appointment appointment = new Appointment.Builder(start)
                     .withClinic(request.getClinic())
                     .withHall(hall)
@@ -198,8 +202,8 @@ public class ScheduledAppointmentsController {
                     .withEndingDate(end)
                     .withDoctors(d)
                     .build();
-    		
-    		try {    			
+
+    		try {
     			appointmentService.save(appointment);
     			doctor.getAppointments().add(appointment);
     			userService.save(doctor);
@@ -208,31 +212,31 @@ public class ScheduledAppointmentsController {
     		catch(Exception e){
     			logger.error("Failed saving: " + e.getMessage());
     		}
-    		 		
+
     	}
-    	
+
     }
-    
+
     public Doctor findAvailableDoctor(AppointmentRequest request, Date start, Date end)
     {
     	DateUtil util = DateUtil.getInstance();
-   	
+
     	for(Doctor d : request.getDoctors())
     	{
     		DateInterval di = new DateInterval(util.transformToDay(start, d.getShiftStart()), util.transformToDay(end, d.getShiftEnd()));
-    				
+
     		if(d.IsFreeOn(start) //Vacations
     		   && checkAppointments(d, start, end) //Appointments
     		   && util.insideInterval(start,di)//Shift start
     		   && util.insideInterval(end, di)){//Shift end
-    			
+
     			return d;
     		}
     	}
-    	
-    	
+
+
     	List<Doctor> doctors = doctorService.findAllByClinicAndType(request.getClinic(), request.getPriceslist().getTypeOfExamination());
-    	
+
     	for(Doctor d : doctors)
     	{
     		if(d.IsFreeOn(start) && checkAppointments(d, start, end))
@@ -240,42 +244,42 @@ public class ScheduledAppointmentsController {
     			return d;
     		}
     	}
-    	  	
+
     	return null;
     }
-    
-  
+
+
     public Boolean checkAppointments(Doctor d, Date start, Date end)
     {
     	List<Appointment> apps = d.getAppointments();
-		
+
 		for(Appointment app : apps)
 		{
 			DateInterval di1 = new DateInterval(start,end);
 			DateInterval di2 = new DateInterval(app.getDate(),app.getEndDate());
-			
+
 			if(DateUtil.getInstance().overlappingInterval(di1, di2))
 			{
 				return false;
 			}
 		}
-		
+
 		return true;
     }
-    
+
     public Hall findAvailableHall(AppointmentRequest request, Date start, Date end)
     {
     	List<Hall> halls = hallService.findAllByClinic(request.getClinic());
     	for(Hall hall : halls)
     	{
-    		List<Appointment> apps = appointmentService.findAllByHall(hall);   		
+    		List<Appointment> apps = appointmentService.findAllByHall(hall);
     		List<DateInterval> intervals = Scheduler.getFreeIntervals(apps, start);
-    		
+
     		if(intervals.size() == 0)
     		{
     			return hall;
     		}
-    		
+
     		for(DateInterval di : intervals)
     		{
     			if(DateUtil.getInstance().insideInterval(start, di) && DateUtil.getInstance().insideInterval(end, di))
@@ -284,7 +288,7 @@ public class ScheduledAppointmentsController {
     			}
     		}
     	}
-    	
+
     	return null;
     }
     

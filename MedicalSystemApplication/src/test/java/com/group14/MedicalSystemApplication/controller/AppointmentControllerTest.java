@@ -250,16 +250,16 @@ public class AppointmentControllerTest {
 	@Test
 	void test_get_all_for_calendar()
 	{
-//		TestRestTemplate rest = new TestRestTemplate();
-//
-//
-//		ResponseEntity<AppointmentDTO[]> response =
-//				rest.getForEntity(getPath() + "/doctor/getAllAppointmentsCalendar/", AppointmentDTO[].class, "doktor1@gmail.com");
-//
-//		AppointmentDTO[] apps = response.getBody();
-//
-//		assertEquals(HttpStatus.OK, response.getStatusCode());
-//		assertTrue(apps.length > 0);
+		TestRestTemplate rest = new TestRestTemplate();
+
+
+		ResponseEntity<AppointmentDTO[]> response =
+				rest.getForEntity(getPath() + "/doctor/getAllAppointmentsCalendar/", AppointmentDTO[].class, "doktor1@gmail.com");
+
+		AppointmentDTO[] apps = response.getBody();
+
+		assertEquals(HttpStatus.OK, response.getStatusCode());
+		assertTrue(apps.length > 0);
 	}
 
 
