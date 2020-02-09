@@ -335,7 +335,7 @@ function setUpClinicAdminPage(user)
 				return
 			}
 			
-			if(validation($('#inputHall'),idHall == 0,"Morate uneti validan broj sale."))
+			if(!validation($('#inputHall'),idHall < 0,"Morate uneti validan broj sale."))
 			{
 				return;
 			}
@@ -349,7 +349,8 @@ function setUpClinicAdminPage(user)
 				contentType : "application/json; charset=utf-8",
 				complete: function(data)
 				{
-							
+					hideValidation('inputHall')
+					hideValidation('inputHallName')
 					if(data.status == "200")
 					{
 						warningModal("Uspešno","Uspešno ste dodali novu salu sa brojem: "+$('#inputHall').val()+ " i  nazivom: "+$('#inputHallName').val()+".Pregled postojećih sala možete izvršiti klikom na 'Lista Hala'.")
