@@ -949,7 +949,7 @@ public class AppointmentController
 		}
 		catch(ConcurrentModificationException e)
 		{
-			return new ResponseEntity<>(HttpStatus.CONFLICT);
+			return new ResponseEntity<>(HttpStatus.LOCKED);
 		}
 		
 		return new ResponseEntity<>(HttpStatus.CREATED);

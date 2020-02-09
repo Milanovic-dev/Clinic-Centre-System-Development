@@ -158,7 +158,7 @@ public class AppointmentRequestServiceTest
 		Hall hall = hallService.findByNumber(1);
 		Patient patient = (Patient) userService.findByEmailAndDeleted("nikolamilanovic21@gmail.com", false);
 		
-		Priceslist pl = priceListService.findByTypeOfExamination("Opsti pregled");
+		Priceslist pl = priceListService.findByTypeOfExaminationAndClinic("Opsti pregled","KlinikaA");
 		
 		AppointmentRequest appReq1 = new AppointmentRequest(DateUtil.getInstance().getDate("28-03-2020 10:00", "dd-MM-yyyy HH:mm"), hall, patient, clinic,pl, AppointmentType.Examination);
 		appointmentRequestService.save(appReq1);
