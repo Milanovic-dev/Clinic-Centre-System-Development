@@ -18,7 +18,10 @@ import org.springframework.test.annotation.Rollback;
 import helpers.DateUtil;
 import model.AppointmentRequest;
 import model.Clinic;
+import model.Hall;
 import model.Patient;
+import model.Priceslist;
+import model.Appointment.AppointmentType;
 import service.AppointmentRequestService;
 import service.AppointmentService;
 import service.ClinicService;
@@ -87,7 +90,7 @@ public class AppointmentRequestServiceTest
 	}
 	
 	
-	/*
+	
 	@Test
 	@Transactional
 	@Rollback(true)
@@ -102,7 +105,88 @@ public class AppointmentRequestServiceTest
 		
 		assertTrue(true);
 	}
+	
+	@Test
+	@Transactional
+	@Rollback(true)
+	void test_find_appointment_request_by_hall()
+	{
+		Clinic clinic = clinicService.findByName("KlinikaA");
+		Date date = DateUtil.getInstance().getDate("26-02-2020 10:00", "dd-MM-yyyy HH:mm");
+		Hall hall = hallService.findByNumber(1);
+		
+		AppointmentRequest app = appointmentRequestService.findAppointmentRequest(date, hall, clinic);
+		
+		assertTrue(app == null);
+	}
+	
+	@Test
+	@Transactional
+	@Rollback(true)
+	void test_find_appointment_request_by_hall_string()
+	{
+		AppointmentRequest app = appointmentRequestService.findAppointmentRequest("26-02-2020 10:00", 1, "KlinikaA");
+		assertTrue(app == null);
+
+	}
+	
+	/*
+	@Test
+	@Transactional
+	@Rollback(true)
+	void test_save_appointment_request()
+	{
+		Clinic clinic = clinicService.findByName("KlinikaA");
+		Hall hall = hallService.findByNumber(1);
+		Patient patient = (Patient) userService.findByEmailAndDeleted("nikolamilanovic21@gmail.com", false);
+		
+		Priceslist pl = priceListService.findByTypeOfExamination("Opsti pregled");
+		
+		AppointmentRequest appReq1 = new AppointmentRequest(DateUtil.getInstance().getDate("28-03-2020 10:00", "dd-MM-yyyy HH:mm"), hall, patient, clinic,pl, AppointmentType.Examination);
+		appointmentRequestService.save(appReq1);
+		
+		assertTrue(appointmentRequestService.findAppointmentRequest("28-03-2020 10:00", "nikolamilanovic21@gmail.com", "KlinikaA") != null);
+	}
 	*/
+	@Test
+	@Transactional
+	@Rollback(true)
+	void test_delete_appointment_request()
+	{
+		Clinic clinic = clinicService.findByName("KlinikaA");
+		Date date = DateUtil.getInstance().getDate("28-03-2020 10:00", "dd-MM-yyyy HH:mm");
+		Hall hall = hallService.findByNumber(1);
+		Patient patient = (Patient) userService.findByEmailAndDeleted("nikolamilanovic21@gmail.com", false);
+		
+		Priceslist pl = priceListService.findByTypeOfExamination("Opsti pregled");
+		
+		AppointmentRequest appReq1 = new AppointmentRequest(DateUtil.getInstance().getDate("28-03-2020 10:00", "dd-MM-yyyy HH:mm"), hall, patient, clinic,pl, AppointmentType.Examination);
+		appointmentRequestService.save(appReq1);
+		
+		appointmentRequestService.delete(appReq1);
+		
+		assertTrue(appointmentRequestService.findAppointmentRequest("28-03-2020 10:00", "nikolamilanovic21@gmail.com", "KlinikaA") == null);
+		
+	}
+	
+	@Test
+	@Transactional
+	@Rollback(true)
+	void test_find_all_appointments_requests()
+	{
+		List<AppointmentRequest> appreq = appointmentRequestService.findAll();
+		assertTrue(appreq.size() != 0);
+	}
+	
+	@Test
+	@Transactional
+	@Rollback(true)
+	void test_find_all_surgeries()
+	{
+		List<AppointmentRequest> surgeries = appointmentRequestService.findAllSurgeries();
+		
+		assertTrue(surgeries.size() != 0);
+	}
 	
 
 }
