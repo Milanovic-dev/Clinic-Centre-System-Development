@@ -1,8 +1,5 @@
 package com.group14.MedicalSystemApplication;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import java.util.Date;
 
 import org.junit.jupiter.api.AfterEach;
@@ -31,6 +28,8 @@ import model.Appointment;
 import model.AppointmentRequest;
 import service.AppointmentRequestService;
 import service.AppointmentService;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -189,16 +188,37 @@ public class EndToEndTests {
 		docSelect.selectByIndex(0);
 		
 		driver.findElement(By.id("submitApp")).click();
-		sleep(6);
+		sleep(20);
 		
 		(new WebDriverWait(driver, 10))
         .until(ExpectedConditions.visibilityOf(driver.findElement(By.id("examinationRequestList"))));
 		
 		Appointment app = appointmentService.findAppointment("28-02-2020 11:00", 1, "KlinikaA");
 		
-		assertTrue(app != null);
+		assertNotNull(app);
 	}
-	
+
+
+	@Test
+	public void e2e_send_predefined_appointment_request_patient(){
+		driver.navigate().to(base+"/login.html");
+		driver.findElement(By.id("inputEmail")).sendKeys("patient@gmail.com");
+		driver.findElement(By.id("inputPassword")).sendKeys("123");
+		driver.findElement(By.id("submitLogin")).click();
+		sleep(2);
+		(new WebDriverWait(driver, 10))
+				.until(ExpectedConditions.presenceOfElementLocated(By.id("clinicList")));
+		driver.findElement(By.id("preApps")).click();
+		sleep(2);
+		(new WebDriverWait(driver, 10))
+				.until(ExpectedConditions.presenceOfElementLocated(By.id("clinicList")));
+		driver.findElement(By.id("submitPredefinedAppRequest0")).click();
+		sleep(5);
+
+		Appointment app = appointmentService.findAppointment("21-03-2020 07:30", 1, "KlinikaA");
+		assertNotNull(app);
+	}
+
 	
 	 @AfterEach
 	 public void tearDown() {
