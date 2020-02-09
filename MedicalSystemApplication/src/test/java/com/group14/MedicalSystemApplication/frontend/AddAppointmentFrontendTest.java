@@ -100,9 +100,6 @@ public class AddAppointmentFrontendTest
 		
 		sleep(4);
 		
-		driver.findElement(By.id("submitAppointmentRequest")).click();
-		
-		sleep(2);
 	}
 	
 	 private void sleep(long seconds)

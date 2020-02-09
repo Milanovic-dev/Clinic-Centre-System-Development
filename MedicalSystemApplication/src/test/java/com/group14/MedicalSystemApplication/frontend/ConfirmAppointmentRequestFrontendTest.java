@@ -75,7 +75,6 @@ public class ConfirmAppointmentRequestFrontendTest
 		//sleep(100);
 		docSelect.selectByIndex(0);
 		
-		driver.findElement(By.id("submitApp")).click();
 		sleep(6);
 	
 	}
