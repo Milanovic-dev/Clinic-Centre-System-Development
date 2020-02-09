@@ -31,6 +31,9 @@ public class Prescription {
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "nurse_id",  nullable = true)
 	private Nurse nurse;
+
+	@Version
+	private Integer version;
 	
 	
 	public Prescription()
@@ -109,5 +112,13 @@ public class Prescription {
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+	public Integer getVersion() {
+		return version;
+	}
+
+	public void setVersion(Integer version) {
+		this.version = version;
 	}
 }

@@ -173,9 +173,7 @@ public class EndToEndTests {
 		(new WebDriverWait(driver, 10))
         .until(ExpectedConditions.presenceOfElementLocated(By.id("examinationRequestList")));
 		driver.findElement(By.id("examinationRequestList")).click();
-		
-		//sleep(1000);
-		
+
 		(new WebDriverWait(driver, 10))
         .until(ExpectedConditions.presenceOfElementLocated(By.name("28-02-2020 11:00")));
 		driver.findElement(By.name("28-02-2020 11:00")).click();

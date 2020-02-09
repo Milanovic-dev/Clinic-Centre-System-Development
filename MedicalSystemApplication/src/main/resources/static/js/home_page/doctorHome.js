@@ -439,11 +439,6 @@ function patientMedicalReportUpdate(report){
 
                     }
 
-                    if(data.status == "409")
-                    {
-                        $('#modalNotOK').modal('show')
-                    }
-
                 }
 
          })
@@ -629,7 +624,7 @@ function initCalendarDoc(user)
                       $('#modalCalendar').modal('show');
 
 
-                          if(info.done)
+                          if(info.done || info.predefined)
                           {
                              $('#modalCalendar').modal('show');
                              $('#startExamination').hide();
@@ -638,6 +633,12 @@ function initCalendarDoc(user)
                           {
                               $('#modalCalendar').modal('show');
                               $('#startExamination').show();
+                          }
+
+                          if(info.predefined){
+                               $('#modalTitle').text('Rezervisan termin')
+                          } else {
+                               $('#modalTitle').text('Zakazan termin')
                           }
 
                       },

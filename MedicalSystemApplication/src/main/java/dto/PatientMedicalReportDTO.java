@@ -4,20 +4,18 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import helpers.DateUtil;
 import model.*;
 
 public class PatientMedicalReportDTO {
 
     private String description;
-    private String dateAndTime;
+    private Date dateAndTime;
     private String doctorEmail;
     private String clinicName;
     private List<String> diagnosis = new ArrayList<>();
 	private PrescriptionDTO prescription;
 	private String patientEmail;
 	private long id;
-	private int version;
 	
 	
 	public PatientMedicalReportDTO() {
@@ -25,7 +23,7 @@ public class PatientMedicalReportDTO {
 		// TODO Auto-generated constructor stub
 	}
 
-	public PatientMedicalReportDTO(String description, String dateAndTime, String doctorEmail, String clinicEmail,
+	public PatientMedicalReportDTO(String description, Date dateAndTime, String doctorEmail, String clinicEmail,
 			PrescriptionDTO prescription, String patientEmail) {
 		super();
 		this.description = description;
@@ -49,7 +47,7 @@ public class PatientMedicalReportDTO {
 			dto.getDrugs().add(dr.getName());
 		}
 		this.description = report.getDescription();
-		this.dateAndTime = DateUtil.getInstance().getString(report.getDateAndTime(),"dd-MM-yyyy");
+		this.dateAndTime = report.getDateAndTime();
 		this.clinicName = report.getClinic().getName();
 		this.doctorEmail = report.getDoctor().getEmail();
 		this.prescription = dto;
@@ -60,7 +58,6 @@ public class PatientMedicalReportDTO {
 		}
 		this.patientEmail = report.getPatient().getEmail();
 		this.id = report.getId();
-		this.version = report.getVersion();
 	}
 
 	public String getDescription() {
@@ -71,11 +68,11 @@ public class PatientMedicalReportDTO {
 		this.description = description;
 	}
 
-	public String getDateAndTime() {
+	public Date getDateAndTime() {
 		return dateAndTime;
 	}
 
-	public void setDateAndTime(String dateAndTime) {
+	public void setDateAndTime(Date dateAndTime) {
 		this.dateAndTime = dateAndTime;
 	}
 
@@ -126,12 +123,5 @@ public class PatientMedicalReportDTO {
 	public void setId(long id) {
 		this.id = id;
 	}
-
-	public int getVersion() {
-		return version;
-	}
-
-	public void setVersion(int version) {
-		this.version = version;
-	}
+		
 }

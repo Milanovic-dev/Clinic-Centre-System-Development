@@ -6,10 +6,12 @@ import model.Prescription;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.web.bind.annotation.*;
 import service.PrescriptionService;
 import service.UserService;
 
+import javax.validation.ValidationException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -51,25 +53,22 @@ public class PrescriptionController {
     @PutMapping(value = "/validate/{email}")
     public ResponseEntity<Void> confirmRegister(@RequestBody PrescriptionDTO dto, @PathVariable("email") String email)
     {
-        Prescription prescription = prescriptionService.findById(dto.getId());
 
-        if(prescription == null)
+        dto.setNurseEmail(email);
+
+        try
         {
+            prescriptionService.validate(dto);
+
+        } catch (ObjectOptimisticLockingFailureException e) {
+
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
+
+        } catch (ValidationException e) {
+
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
         }
-
-        Nurse nurse = (Nurse)userService.findByEmailAndDeleted(email, false);
-        if(nurse == null)
-        {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-
-        Date date = new Date();
-
-        prescription.setValid(true);
-        prescription.setNurse(nurse);
-        prescription.setValidationDate(date);
-        prescriptionService.save(prescription);
 
         return new ResponseEntity<>(HttpStatus.OK);
 

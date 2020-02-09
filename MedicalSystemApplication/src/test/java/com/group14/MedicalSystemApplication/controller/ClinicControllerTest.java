@@ -122,6 +122,19 @@ public class ClinicControllerTest{
 
 		
 	}
+
+	@Test
+	void get_all_doctors_by_type()
+	{
+		TestRestTemplate restTemplate = new TestRestTemplate();
+		ResponseEntity<DoctorDTO[]> responseEntity =
+				restTemplate.getForEntity(getPath()+ "/getDoctorsByType/{clinicName}/{typeOfExamination}",DoctorDTO[].class,"KlinikaA","Stomatoloski");
+
+		DoctorDTO[] doctors = responseEntity.getBody();
+
+		assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+		assertTrue(doctors.length > 0);
+	}
 	
 	
 	

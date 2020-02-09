@@ -100,19 +100,7 @@ public class VacationController {
 		}
 		else if(user instanceof Nurse)
 		{
-			Nurse nurse = (Nurse)user;
-
-//			List<Appointment> appointments = nurse.getAppointments();
-//
-//			for(Appointment app : appointments)
-//			{
-//				Date date = app.getDate();
-//
-//				if(date.after(vacationStart) && date.before(vacationEnd))
-//				{
-//					return new ResponseEntity<>(false, HttpStatus.OK);
-//				}
-//			}
+			//TODO
 		}
 
 		return new ResponseEntity<>(true, HttpStatus.OK);

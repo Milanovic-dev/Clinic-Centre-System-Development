@@ -1,9 +1,4 @@
 package com.group14.MedicalSystemApplication.controller;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -18,6 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
@@ -47,63 +43,65 @@ import service.PriceListService;
 import service.UserService;
 import service.VacationRequestService;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class AppointmentControllerTest {
-	
+
 	@LocalServerPort
 	private int port;
-	
+
 	@Autowired
 	private UserService userService;
-	
+
 	@Autowired
 	private AppointmentService appointmentService;
-				
+
 	@Autowired
 	private ClinicService clinicService;
-	
+
 	@Autowired
 	private HallService hallService;
-	
+
 	@Autowired
 	private PriceListService priceslistService;
-	
+
 	@Autowired
 	private AppointmentRequestService appointmentRequestService;
-	
+
 	@Test
 	void whenSelectByDoctor_ReturnAppointments()
 	{
 		Doctor d = (Doctor)userService.findByEmailAndDeleted("doktor1@gmail.com",false);
-		
+
 		List<Appointment> list = appointmentService.findAllByDoctor(d.getId());
 
-		assertNotEquals(list, null);	
+		assertNotEquals(list, null);
 	}
-	
-		
+
+
 	@Test
 	@Transactional
 	@Rollback(true)
-	void find_all_predefined_appointments()
+	void test_find_all_predefined_appointments()
 	{
 		TestRestTemplate rest = new TestRestTemplate();
-		
-		
-		ResponseEntity<AppointmentDTO[]> response = 
+
+
+		ResponseEntity<AppointmentDTO[]> response =
 									rest.getForEntity(getPath() + "/getAllPredefined", AppointmentDTO[].class);
-		
+
 		AppointmentDTO[] apps = response.getBody();
-		
+
 		assertEquals(HttpStatus.OK, response.getStatusCode());
 		assertTrue(apps.length > 0);
 	}
-	
+
 	@Test
 	@Transactional
 	@Rollback(true)
-	void send_request_for_appointment()
+	void test_send_request_for_appointment()
 	{
 		AppointmentDTO dto = new AppointmentDTO();
 		dto.setClinicName("KlinikaA");
@@ -114,10 +112,10 @@ public class AppointmentControllerTest {
 		dto.setType(AppointmentType.Examination);
 		dto.setTypeOfExamination("Opsti pregled");
 		dto.setPatientEmail("nikolamilanovic21@gmail.com");
-		
+
 		TestRestTemplate rest = new TestRestTemplate();
 		ResponseEntity<Void> response = rest.postForEntity(getPath() + "/sendRequest", dto, Void.class);
-		
+
 		assertEquals(HttpStatus.CREATED,response.getStatusCode());
 	}
 
@@ -137,19 +135,19 @@ public class AppointmentControllerTest {
 		dto.setPatientEmail("nikolamilanovic21@gmail.com");
 		dto.setNewDate("undefined 11:00");
 		dto.setNewEndDate("undefined 12:52");
-		
+
 		AppointmentRequest request = appointmentRequestService.findAppointmentRequest(dto.getDate(), dto.getPatientEmail(), dto.getClinicName());
 		appointmentRequestService.save(request);
-		
+
 		TestRestTemplate rest = new TestRestTemplate();
 		ResponseEntity<Void> response = rest.postForEntity(getPath() + "/confirmRequest", dto, Void.class);
-		
+
 		assertEquals(HttpStatus.OK,response.getStatusCode());
 
 	}
-	
-	
-	
+
+
+
 	@Test
 	@Transactional
 	@Rollback(true)
@@ -159,16 +157,16 @@ public class AppointmentControllerTest {
 		dto.setClinicName("KlinikaA");
 		dto.setDate("25-01-2020 07:30");
 		dto.setHallNumber(1);
-		
+
 		TestRestTemplate rest = new TestRestTemplate();
-		
+
 		rest.delete(getPath() + "/denyAppointment", dto);
-		
+
 		assertTrue(appointmentRequestService.findAppointmentRequest(dto.getDate(), dto.getPatientEmail(), dto.getClinicName()) == null);
 
 	}
-	
-	
+
+
 	@Test
 	@Transactional
 	@Rollback(true)
@@ -183,15 +181,15 @@ public class AppointmentControllerTest {
 		dto.setType(AppointmentType.Examination);
 		dto.setTypeOfExamination("Opsti pregled");
 		dto.setPatientEmail("nikolamilanovic21@gmail.com");
-		
+
 		TestRestTemplate rest = new TestRestTemplate();
 
 		rest.put(getPath() + "/confirmAppointment", dto);
-		
+
 		assertFalse(appointmentService.findAppointment(dto.getDate(), dto.getHallNumber(), dto.getClinicName()) != null);
-	
+
 	}
-	
+
 	@Test
 	@Transactional
 	@Rollback(true)
@@ -199,17 +197,77 @@ public class AppointmentControllerTest {
 	{
 		TestRestTemplate rest = new TestRestTemplate();
 		ResponseEntity<AppointmentDTO[]> response = rest.getForEntity(getPath() + "/clinic/getAllRequests/{clinicName}", AppointmentDTO[].class, "KlinikaA");
-		
+
 		AppointmentDTO[] apps = response.getBody();
-		
+
 		assertEquals(response.getStatusCode(),HttpStatus.OK);
 		assertTrue(apps.length > 0);
 	}
-	
-	
+
+	@Test
+	@Transactional
+	@Rollback(true)
+	void test_reserve_predefined_appointment()
+	{
+		AppointmentDTO dto = new AppointmentDTO();
+		dto.setDate("21-03-2020 07:30");
+		dto.setEndDate("21-01-2020 09:00");
+		dto.setHallNumber(1);
+		dto.setClinicName("KlinikaA");
+		dto.setDuration(2);
+		dto.setPrice(1000L);
+		dto.setPredefined(true);
+
+		TestRestTemplate rest = new TestRestTemplate();
+		rest.put(getPath() + "/reservePredefined/{email}", dto,"patient1@gmail.com");
+
+	//	ResponseEntity<Void> response = rest.put(getPath() + "/reservePredefined/{email}", dto, Void.class, "patient1@gmail.com");
+
+		assertNotNull(appointmentService.findAppointment(dto.getDate(), dto.getHallNumber(), dto.getClinicName()));
+	}
+
+
+	@Test
+	void test_make_predefined_appointment(){
+
+		AppointmentDTO dto = new AppointmentDTO();
+		dto.setDate("13-04-2020 08:30");
+		dto.setEndDate("13-04-2020 09:30");
+		dto.setHallNumber(1);
+		dto.setClinicName("KlinikaA");
+		dto.setDuration(1);
+		dto.setPrice(1000L);
+		dto.setPredefined(true);
+		dto.setDoctors(new ArrayList<String>() {{add("doktor1@gmail.com");}});
+		dto.setType(AppointmentType.Examination);
+		dto.setTypeOfExamination("Opsti pregled");
+
+		TestRestTemplate rest = new TestRestTemplate();
+		ResponseEntity<Void> response = rest.postForEntity(getPath() + "/makePredefined", dto, Void.class);
+
+		assertEquals(HttpStatus.CREATED,response.getStatusCode());
+		assertTrue(appointmentService.findAppointment(dto.getDate(), dto.getHallNumber(), dto.getClinicName()) != null);
+	}
+
+	@Test
+	void test_get_all_for_calendar()
+	{
+//		TestRestTemplate rest = new TestRestTemplate();
+//
+//
+//		ResponseEntity<AppointmentDTO[]> response =
+//				rest.getForEntity(getPath() + "/doctor/getAllAppointmentsCalendar/", AppointmentDTO[].class, "doktor1@gmail.com");
+//
+//		AppointmentDTO[] apps = response.getBody();
+//
+//		assertEquals(HttpStatus.OK, response.getStatusCode());
+//		assertTrue(apps.length > 0);
+	}
+
+
 	private String getPath()
 	{
 		return "http://localhost:"+port+"/api/appointments";
 	}
-	
+
 }

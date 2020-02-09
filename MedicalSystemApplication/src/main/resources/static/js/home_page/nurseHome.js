@@ -359,9 +359,19 @@ function prescriptionAuth(prescription, user){
             contentType : "application/json; charset=utf-8",
             complete: function(data)
             {
-                emptyTable("tablePrescriptions")
-                getPrescriptions(user)
-                showView('showPrescriptionAuthContainer')
+
+                if(data.status == "200")
+                {
+                  emptyTable("tablePrescriptions")
+                  getPrescriptions(user)
+                  showView('showPrescriptionAuthContainer')
+                }
+
+                if(data.status == "409")
+                {
+                    $('#modalNotOK').modal('show')
+                }
+
             }
         })
      
