@@ -22,7 +22,7 @@ public class HallControllerTest
 	@LocalServerPort
 	private int port;
 	
-	/*
+	
 	@Test
 	@Transactional
 	@Rollback(true)
@@ -31,23 +31,21 @@ public class HallControllerTest
 		HallDTO dto = new HallDTO();
 		dto.setClinicName("KlinikaA");
 		dto.setNumber(1);
-		dto.setName("Druga sala");
-		dto.setDate("23-02-2020");
 		
 		
 		TestRestTemplate rest = new TestRestTemplate();
 		ResponseEntity<HallDTO[]> response = rest.postForEntity(getPath() + "/getAllByFilter", dto, HallDTO[].class);
-
+	
 		HallDTO[] halls = response.getBody();
 		
 		assertEquals(HttpStatus.OK,response.getStatusCode());
 		assertTrue(halls.length > 0 );
 		
 	}
-	*/
+	
 	
 	public String getPath()
 	{
-		return "http://localhost:"+port+"/api/clinic";
+		return "http://localhost:"+port+"/api/hall";
 	}
 }

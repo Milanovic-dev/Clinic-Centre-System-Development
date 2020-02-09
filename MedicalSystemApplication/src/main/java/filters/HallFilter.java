@@ -14,12 +14,15 @@ public class HallFilter implements Filter{
 		
 		Boolean flag = true;
 		
-		if(!hdto.getName().equals(""))
+		if(hdto.getName() != null)
 		{
-			if(!h.getName().toLowerCase().contains(hdto.getName().toLowerCase()))
+			if(!hdto.getName().equals(""))
 			{
-				flag = false;
-			}
+				if(!h.getName().toLowerCase().contains(hdto.getName().toLowerCase()))
+				{
+					flag = false;
+				}
+			}		
 		}
 		
 		if(hdto.getNumber() != 0)
