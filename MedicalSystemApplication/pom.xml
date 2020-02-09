@@ -12,9 +12,10 @@
 
 	<groupId>com.group14</groupId>
 	<artifactId>MedicalSystemApplication</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.1</version>
+	<packaging>jar</packaging>
 	<name>MedicalSystemApplication</name>
-	<description>Demo project for Spring Boot</description>
+	<description>ISAProjekat</description>
 	
 
 	<properties>
@@ -105,10 +106,6 @@
     </dependency>
 		
 		<!-- send email -->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-mail</artifactId>
-		</dependency>
 
 		<!--dev tools -->
 		<dependency>
@@ -125,8 +122,21 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                        <configuration>
+                            <classifier>exec</classifier>
+                        </configuration>
+                    </execution>
+                </executions>
 			</plugin>
-						
+			<plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+            </plugin>	
 		</plugins>
 	</build>
 

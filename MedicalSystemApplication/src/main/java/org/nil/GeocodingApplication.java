@@ -3,15 +3,15 @@ package org.nil;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-@SpringBootApplication
+//@SpringBootApplication
 public class GeocodingApplication {
 	
 	/*@Autowired
 	private Environment env;*/
 	
-	public static void main(String[] args) {
-		SpringApplication.run(GeocodingApplication.class, args);
-	}
+	//public static void main(String[] args) {
+		//SpringApplication.run(GeocodingApplication.class, args);
+	//}
 	
 	/*@Bean
 	public RestTemplate restTemplate(RestTemplateBuilder builder) {

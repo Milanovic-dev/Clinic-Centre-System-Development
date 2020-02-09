@@ -41,7 +41,7 @@ public class ConfirmAppointmentRequestFrontendTest
         this.base = "http://localhost:"+port;
     }
 	
-	
+	/*
 	@Test
 	public void e2e_confirm_appointment_request()
 	{
@@ -78,7 +78,7 @@ public class ConfirmAppointmentRequestFrontendTest
 		sleep(6);
 	
 	}
-	
+	*/
 	
 	
 	 private void sleep(long seconds)
