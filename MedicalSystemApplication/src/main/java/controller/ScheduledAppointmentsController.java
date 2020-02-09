@@ -4,6 +4,7 @@ import helpers.DateInterval;
 import helpers.DateUtil;
 import helpers.Scheduler;
 import model.*;
+import model.Appointment.AppointmentType;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -99,7 +100,7 @@ public class ScheduledAppointmentsController {
         }
 
         //za ostale koji nisu dodeljeni
-        requests = appointmentRequestService.findAll();
+        requests = appointmentRequestService.findAllSurgeries();
         System.out.println(requests + "REQUESTS++++++++++++++");
 
         int i = 0;
@@ -154,7 +155,10 @@ public class ScheduledAppointmentsController {
     		
     	for(AppointmentRequest request : requests)
     	{
-    		reserve(request, request.getDate());
+    		if(request.getAppointmentType().equals(AppointmentType.Examination))
+    		{
+    			reserve(request, request.getDate());    			
+    		}
     	}
     }
     
