@@ -6,11 +6,13 @@ import helpers.Scheduler;
 import model.*;
 import model.Appointment.AppointmentType;
 
+import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
@@ -18,6 +20,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
+
 import service.*;
 
 import javax.print.Doc;
@@ -29,6 +33,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping(value = "api/scheduled")
+@EnableScheduling
 public class ScheduledAppointmentsController {
 
 	private final static Logger logger = LoggerFactory.getLogger(ScheduledAppointmentsController.class);
@@ -48,7 +53,14 @@ public class ScheduledAppointmentsController {
     public void onSchedule() {
     	logger.info("Starting automatic scheduling.");
         reserveAlgorithmSurgery();
-        reserveAlgorithmExamination();
+        try {       	
+        	RestTemplate rest = new RestTemplate();
+        	rest.put("http://localhost:8282/api/scheduled/reserve", null);
+        }
+        catch(Exception e)
+        {
+        	e.printStackTrace();
+        }
         logger.info("Automatic scheduling ended.");
     }
 
@@ -63,7 +75,9 @@ public class ScheduledAppointmentsController {
         boolean nemoze;
         List<DateInterval> intervals;
 
+        
         for (AppointmentRequest r : requests) {
+        	
             done = false;
             List<Hall> halls = hallService.findAllByClinic(r.getClinic());
             for (Hall h : halls) {
@@ -153,6 +167,7 @@ public class ScheduledAppointmentsController {
     }
 
     //2_3.18
+    @Transactional
     public void reserveAlgorithmExamination()
     {
     	List<AppointmentRequest> requests = appointmentRequestService.findAll();
@@ -161,11 +176,13 @@ public class ScheduledAppointmentsController {
     	{
     		if(request.getAppointmentType().equals(AppointmentType.Examination))
     		{
+    			List<Doctor> doctors = request.getDoctors();
     			reserve(request, request.getDate());    			
     		}
     	}
     }
-
+    
+    @Transactional
     public void reserve(AppointmentRequest request, Date start)
     {
     	int hoursDelta = 1; //Pomeraj termina ukoliko ne moze da se zakaze(1 sat)
@@ -216,12 +233,15 @@ public class ScheduledAppointmentsController {
     	}
 
     }
-
+    @Transactional
     public Doctor findAvailableDoctor(AppointmentRequest request, Date start, Date end)
     {
     	DateUtil util = DateUtil.getInstance();
 
-    	for(Doctor d : request.getDoctors())
+    	Hibernate.initialize(request.getDoctors());
+    	List<Doctor> doctors = request.getDoctors();
+    	
+    	for(Doctor d : doctors)
     	{
     		DateInterval di = new DateInterval(util.transformToDay(start, d.getShiftStart()), util.transformToDay(end, d.getShiftEnd()));
 
@@ -235,7 +255,7 @@ public class ScheduledAppointmentsController {
     	}
 
 
-    	List<Doctor> doctors = doctorService.findAllByClinicAndType(request.getClinic(), request.getPriceslist().getTypeOfExamination());
+    	doctors = doctorService.findAllByClinicAndType(request.getClinic(), request.getPriceslist().getTypeOfExamination());
 
     	for(Doctor d : doctors)
     	{
@@ -248,7 +268,7 @@ public class ScheduledAppointmentsController {
     	return null;
     }
 
-
+    @Transactional
     public Boolean checkAppointments(Doctor d, Date start, Date end)
     {
     	List<Appointment> apps = d.getAppointments();
@@ -266,7 +286,7 @@ public class ScheduledAppointmentsController {
 
 		return true;
     }
-
+    @Transactional
     public Hall findAvailableHall(AppointmentRequest request, Date start, Date end)
     {
     	List<Hall> halls = hallService.findAllByClinic(request.getClinic());
