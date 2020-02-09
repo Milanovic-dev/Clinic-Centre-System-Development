@@ -106,7 +106,7 @@ function setUpClinicAdminPage(user)
 	})
 	
 	let appointmentHeaders = ["Pacijent","Datum pocetka","Cena","Zahtev","Tip pregleda","Lekari","",""]
-	createDataTable("appReqTable","showExaminationRequestListContainer","Lista zahteva za preglede i operacije",appointmentHeaders,0)
+	createDataTable("appReqTable","showExaminationRequestListContainer","Lista zahteva za preglede i operacije",appointmentHeaders,1)
 	getTableDiv('appReqTable').show()
 	
 	let chooseHallHeaders = ["Ime Sale","Br. Sale","",""]
@@ -410,7 +410,7 @@ function listVacationRequests(clinic,data,i)
 		e.preventDefault()
 		
 		showLoading('acceptRequestVacation'+ i)
-		request = JSON.stringify({"startDate":data.startDate,"endDate" : data.endDate , "user": data.user,"id": data.id})
+		request = JSON.stringify({"startDate":data.startDate,"endDate" : data.endDate , "user": data.user,"id": data.id, "version":data.version})
 		$.ajax({
 			type: 'POST',
 			url: 'api/vacation/confirmVacationRequest',
@@ -424,7 +424,7 @@ function listVacationRequests(clinic,data,i)
 				
 			}
 			
-		})
+		})		
 	})
 	
 	//ODBIJANJE ZAHTEVA ZA GODISNJI ODMOR ILI ODSUSTVO
@@ -453,9 +453,15 @@ function listVacationRequests(clinic,data,i)
 				$('#vacationRequestModal').modal("hide")
 				getAllVacationRequestsByClinic(clinic)
 				
+				if(response.status == "423")
+				{
+					window.location.reload()
+				}
 			}
 			
 		})
+		
+		
 			
 		})
 		
@@ -547,7 +553,6 @@ function listAppointmentRequest(clinic, appointment, i)
              $('#DoctorPicker').hide()
              $('#appPatient').val(appointment.patientEmail)
              $('#appDate').val(appointment.date.split(" ")[0])
-
          } else if(appointment.type = "Examination") {
         	 
         	 $("#examinationCard").text("Pregled")
@@ -556,7 +561,6 @@ function listAppointmentRequest(clinic, appointment, i)
              $('#DoctorPicker').show()
         	 $('#appPatient').val(appointment.patientEmail)
         	 $('#appDate').val(appointment.date.split(" ")[0])
-        	 
         	 $.ajax({
                  type: 'GET',
                  url:"api/clinic/getDoctorsByType/"+clinic.name + "/" + typeOfExamination,
@@ -569,13 +573,13 @@ function listAppointmentRequest(clinic, appointment, i)
                     			   value: item.user.email,
                     			   text : item.user.name + " " + item.user.surname + " - " + item.type
                     		}));
+                 	   $('#selectDoctor').selectpicker('refresh');
+                 		   
                  	   if(item.user.email == appointment.doctors[0])
                  	   {
                  		   
                  		   $('#selectDoctor').val(item.user.email)
                  	   }
-                 	   $('#selectDoctor').selectpicker('refresh');
-                 		   
                     	});
                          
                  }
@@ -759,6 +763,11 @@ function listChooseHalls(halls)
 	$.each(halls, function(i, item){
 		let d = [item.name, item.number, "<button class='btn btn-info' id='hallOcc"+i+"'>Zauzece</button>","<input type='checkbox' id='checkHall"+i+"'><label id='checkHallLabel"+i+"' for='checkHall"+i+"'></label>"]
 		insertTableData("chooseHallTable", d)
+		
+		if(i == 0)
+		{
+			$('#checkHall0').prop("checked", true)
+		}
 		
 		$('#hallOcc'+i).click(function(e){
 			e.preventDefault()
@@ -1218,7 +1227,7 @@ function makeTypeOfExaminationTable(clinic)
 {
 	$.ajax({
 		type: 'GET',
-		url: 'api/priceList/getAll',
+		url: 'api/priceList/getAllByClinic/'+ clinic.name,
 		complete: function(data)
 		{
 			console.log(data)
@@ -1332,7 +1341,7 @@ function listTypesOfExamination(t,i,clinic)
 		
 			$.ajax({
 				type:'PUT',
-				url: 'api/priceList/update/' + t.typeOfExamination,
+				url: 'api/priceList/update/' + t.typeOfExamination+"/"+clinic.name,
 				data: data,
 				dataType : "json",
 				contentType : "application/json; charset=utf-8",

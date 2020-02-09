@@ -75,6 +75,19 @@ public class DateUtil {
 		return overlappingInterval(app1.getDate(),app1.getEndDate(),app2.getDate(),app2.getEndDate());
 	}
 	
+	public Date transformToDay(Date dateDay, Date dateHours)
+	{
+		Calendar cal1 = Calendar.getInstance();
+		cal1.setTime(dateDay);
+		Calendar cal2 = Calendar.getInstance();
+		cal2.setTime(dateHours);
+		
+		cal1.set(Calendar.HOUR_OF_DAY, cal2.get(Calendar.HOUR_OF_DAY));
+		cal1.set(Calendar.MINUTE, cal2.get(Calendar.MINUTE));
+		
+		return cal1.getTime();
+	}
+	
 	public Boolean overlappingInterval(DateInterval d1, DateInterval d2)
 	{
 		Calendar c1 = Calendar.getInstance();
@@ -89,6 +102,17 @@ public class DateUtil {
 							
 		return c1.getTime().before(c4.getTime()) && c2.getTime().after(c3.getTime());
 	}
+	
+	
+	public Boolean insideInterval(Date testDate,DateInterval di)
+	{
+		Date startDate = di.getStart();
+		Date endDate = di.getEnd();
+		
+		
+		return !(testDate.before(startDate) || testDate.after(endDate));
+	}
+	
 	
 	public long getTimeBetween(Date d1, Date d2)
 	{
@@ -130,11 +154,11 @@ public class DateUtil {
 		return instance;
 	}
 
-	public static Date addDays(Date date, int days)
+	public Date addDays(Date date, int days)
 	{
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(date);
-		calendar.add(Calendar.HOUR_OF_DAY, days*24);
+		calendar.add(Calendar.DAY_OF_MONTH, days);
 		return calendar.getTime();
 	}
 }

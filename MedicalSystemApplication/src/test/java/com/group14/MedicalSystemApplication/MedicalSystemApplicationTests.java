@@ -37,6 +37,7 @@ import helpers.DateUtil;
 import helpers.SecurePasswordHasher;
 import model.Appointment;
 import model.Clinic;
+import model.ClinicReview;
 import model.Doctor;
 import model.Hall;
 import model.Nurse;
@@ -47,6 +48,7 @@ import model.User;
 import model.Vacation;
 import model.VacationRequest;
 import model.Appointment.AppointmentType;
+import model.AppointmentRequest;
 import service.AppointmentRequestService;
 import service.AppointmentService;
 import service.AuthService;
@@ -101,6 +103,20 @@ class MedicalSystemApplicationTests {
 	}
 	
 	@Test
+	void check_transformDate()
+	{
+		Date date1 = DateUtil.getInstance().getDate("14:00", "HH:mm");
+		Date date2 = DateUtil.getInstance().getDate("26-02-2020 15:00", "dd-MM-yyyy HH:mm");
+		
+		Date date = DateUtil.getInstance().transformToDay(date2, date1);
+		
+		String dateString = DateUtil.getInstance().getString(date, "dd-MM-yyyy HH:mm");
+		
+		assertEquals(dateString, "26-02-2020 14:00");
+	}
+	
+	
+	@Test
 	void test_if_doctor_is_free()
 	{
 		Doctor doctor = new Doctor();
@@ -135,6 +151,7 @@ class MedicalSystemApplicationTests {
 		
 	}
 	
+	
 	@Test
 	void test_if_clinic_filter_works()
 	{
@@ -153,6 +170,30 @@ class MedicalSystemApplicationTests {
 		
 		Filter filter = FilterFactory.getInstance().get("clinic");
 		assertFalse(filter.test(clinic1, clinic2));
+	}
+	
+	@Test 
+	void test_if_doctor_filter_works()
+	{
+		Doctor doctor = new Doctor();
+		doctor.setName("Nikola");
+		doctor.setSurname("Nikolic");
+		doctor.setType("Opsti pregled");
+		doctor.setShiftEnd(DateUtil.getInstance().getDate("13:00", "mm:HH"));
+		doctor.setShiftStart(DateUtil.getInstance().getDate("21:00", "mm:HH"));
+		
+		UserDTO user = new UserDTO();
+		user.setName("Nikola");
+		user.setSurname("Milic");
+		
+		DoctorDTO dto = new DoctorDTO();
+		dto.setUser(user);
+		dto.setShiftEnd("13:00");
+		dto.setShiftStart("21:00");
+		
+		Filter filter = FilterFactory.getInstance().get("doctor");
+		assertFalse(filter.test(doctor, dto));
+		
 	}
 	
 	@Test 
@@ -198,6 +239,7 @@ class MedicalSystemApplicationTests {
 		
 		assertTrue(DateUtil.getInstance().getTimeBetween(date1, date2) == 0);
 	}
+	
 	
 	
 	}

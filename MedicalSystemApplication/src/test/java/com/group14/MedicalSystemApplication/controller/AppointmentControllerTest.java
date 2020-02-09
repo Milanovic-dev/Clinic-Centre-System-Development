@@ -11,6 +11,8 @@ import java.util.List;
 
 import org.hibernate.Hibernate;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
@@ -44,6 +46,7 @@ import service.NotificationService;
 import service.PriceListService;
 import service.UserService;
 import service.VacationRequestService;
+
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class AppointmentControllerTest {
@@ -117,9 +120,7 @@ public class AppointmentControllerTest {
 		
 		assertEquals(HttpStatus.CREATED,response.getStatusCode());
 	}
-	
-	
-	/*
+
 	@Test
 	@Transactional
 	@Rollback(true)
@@ -134,19 +135,21 @@ public class AppointmentControllerTest {
 		dto.setType(AppointmentType.Examination);
 		dto.setTypeOfExamination("Opsti pregled");
 		dto.setPatientEmail("nikolamilanovic21@gmail.com");
+		dto.setNewDate("undefined 11:00");
+		dto.setNewEndDate("undefined 12:52");
 		
 		AppointmentRequest request = appointmentRequestService.findAppointmentRequest(dto.getDate(), dto.getPatientEmail(), dto.getClinicName());
 		appointmentRequestService.save(request);
 		
-		RestTemplate rest = new RestTemplate();
-		ResponseEntity<Void> response = rest.postForEntity(URI_PREFIX + "/confirmRequest", dto, Void.class);
+		TestRestTemplate rest = new TestRestTemplate();
+		ResponseEntity<Void> response = rest.postForEntity(getPath() + "/confirmRequest", dto, Void.class);
 		
 		assertEquals(HttpStatus.OK,response.getStatusCode());
 
 	}
-	*/
 	
-	/*
+	
+	
 	@Test
 	@Transactional
 	@Rollback(true)
@@ -154,17 +157,17 @@ public class AppointmentControllerTest {
 	{
 		AppointmentDTO dto = new AppointmentDTO();
 		dto.setClinicName("KlinikaA");
-		dto.setDate("21-01-2020 07:30");
+		dto.setDate("25-01-2020 07:30");
 		dto.setHallNumber(1);
 		
-		RestTemplate rest = new RestTemplate();
+		TestRestTemplate rest = new TestRestTemplate();
 		
-		rest.delete(URI_PREFIX + "/denyAppointment", dto);
+		rest.delete(getPath() + "/denyAppointment", dto);
 		
 		assertTrue(appointmentRequestService.findAppointmentRequest(dto.getDate(), dto.getPatientEmail(), dto.getClinicName()) == null);
 
 	}
-	*/
+	
 	
 	@Test
 	@Transactional
@@ -185,8 +188,22 @@ public class AppointmentControllerTest {
 
 		rest.put(getPath() + "/confirmAppointment", dto);
 		
-		assertTrue(appointmentService.findAppointment(dto.getDate(), dto.getHallNumber(), dto.getClinicName()) != null);
+		assertFalse(appointmentService.findAppointment(dto.getDate(), dto.getHallNumber(), dto.getClinicName()) != null);
 	
+	}
+	
+	@Test
+	@Transactional
+	@Rollback(true)
+	void test_get_all_appointment_request_by_clinic()
+	{
+		TestRestTemplate rest = new TestRestTemplate();
+		ResponseEntity<AppointmentDTO[]> response = rest.getForEntity(getPath() + "/clinic/getAllRequests/{clinicName}", AppointmentDTO[].class, "KlinikaA");
+		
+		AppointmentDTO[] apps = response.getBody();
+		
+		assertEquals(response.getStatusCode(),HttpStatus.OK);
+		assertTrue(apps.length > 0);
 	}
 	
 	

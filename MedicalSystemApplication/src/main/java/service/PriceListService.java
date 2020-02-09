@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import model.Clinic;
 import model.Hall;
 import model.Priceslist;
+import repository.ClinicRepository;
 import repository.PriceListRepository;
 
 
@@ -16,11 +17,18 @@ public class PriceListService {
 
 	@Autowired
 	private PriceListRepository priceListRepository;
+	@Autowired
+	private ClinicRepository clinicRepository;
 	
-	 public Priceslist findByTypeOfExamination(String typeOfExamination ) 
-	 {
-	        return priceListRepository.findByTypeOfExamination(typeOfExamination);
+	 public Priceslist findByTypeOfExaminationAndClinic(String typeOfExamination, String clinicName) 
+	 {		 
+		 Clinic clinic = clinicRepository.findByName(clinicName);
+		 return priceListRepository.findByTypeOfExaminationAndClinicAndDeleted(typeOfExamination,clinic,false);	 
+	 }
 	 
+	 public Priceslist findByTypeOfExaminationAndClinic(String typeOfExamination, Clinic clinic) 
+	 {		 
+		 return priceListRepository.findByTypeOfExaminationAndClinicAndDeleted(typeOfExamination,clinic,false);	 
 	 }
 	 public List<Priceslist> findAllByClinic(Clinic c)
 	 {

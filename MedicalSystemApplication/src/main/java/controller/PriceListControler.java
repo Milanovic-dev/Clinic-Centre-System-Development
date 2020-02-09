@@ -43,7 +43,7 @@ public class PriceListControler {
 		@DeleteMapping(value="/deletePriceList/{typeOfExamination}/{clinicName}")
 		public ResponseEntity<Void> deletePriceList(@PathVariable ("typeOfExamination") String typeOfExamination,@PathVariable("clinicName") String clinicName)
 		{
-			Priceslist priceList = priceListService.findByTypeOfExamination(typeOfExamination);
+			Priceslist priceList = priceListService.findByTypeOfExaminationAndClinic(typeOfExamination, clinicName);
 		
 			if(priceList == null)
 			{
@@ -126,10 +126,10 @@ public class PriceListControler {
 			return new ResponseEntity<>(priceListDTO,HttpStatus.OK);
 		}
 	
-	 	@GetMapping(value="/get/{typeOfExamination}")
-	    public ResponseEntity<PriceListDTO> getTypeOfExamination(@PathVariable("typeOfExamination") String typeOfExamination)
+	 	@GetMapping(value="/get/{typeOfExamination}/{clinicName}")
+	    public ResponseEntity<PriceListDTO> getTypeOfExamination(@PathVariable("typeOfExamination") String typeOfExamination, @PathVariable("clinicName") String clinicName)
 	    {
-	    	Priceslist priceList= priceListService.findByTypeOfExamination(typeOfExamination);
+	    	Priceslist priceList= priceListService.findByTypeOfExaminationAndClinic(typeOfExamination, clinicName);
 	    	if(priceList == null)
 	    	{
 	    		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -144,10 +144,10 @@ public class PriceListControler {
 	    	return new ResponseEntity<>(pr,HttpStatus.OK);
 	    }
 	 	
-	 	@PutMapping(value="/update/{typeOfExamination}")
-	 	public ResponseEntity<Void> update(@RequestBody PriceListDTO pricesList,@PathVariable("typeOfExamination") String typeOfExamination)
+	 	@PutMapping(value="/update/{typeOfExamination}/{clinicName}")
+	 	public ResponseEntity<Void> update(@RequestBody PriceListDTO pricesList,@PathVariable("typeOfExamination") String typeOfExamination, @PathVariable("clinicName") String clinicName)
 	 	{
-	 		Priceslist oldPricesList = priceListService.findByTypeOfExaminationAndDeleted(typeOfExamination,false);
+	 		Priceslist oldPricesList = priceListService.findByTypeOfExaminationAndClinic(typeOfExamination, clinicName);
 	 		
 	 		if(oldPricesList == null)
 	 		{
@@ -175,7 +175,7 @@ public class PriceListControler {
 	    {
 	 		
 	       Clinic c = clinicService.findByName(dto.getClinicName());
-	       Priceslist pl = priceListService.findByTypeOfExamination(dto.getTypeOfExamination());
+	       Priceslist pl = priceListService.findByTypeOfExaminationAndClinic(dto.getTypeOfExamination(), dto.getClinicName());
 	       
 	       if(c == null)
 	       {

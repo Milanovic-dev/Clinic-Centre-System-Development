@@ -7,15 +7,20 @@ import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import helpers.DateUtil;
+import helpers.Scheduler;
 import model.Appointment;
 import model.AppointmentRequest;
 import model.Clinic;
+import model.Doctor;
 import model.Hall;
 import model.Patient;
 import repository.AppointmentRequestRepository;
@@ -37,6 +42,11 @@ public class AppointmentRequestService {
 	
 	@Autowired
 	private UserRepository userRepository;
+	
+	public Optional<AppointmentRequest> findById(long id)
+	{
+		return appointmentRequestRepository.findById(id);
+	}
 	
 	public List<AppointmentRequest> getAllByClinic(String clinic)
 	{
@@ -113,7 +123,7 @@ public class AppointmentRequestService {
 		appointmentRequestRepository.save(request);
 	}
 	
-	@Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW, isolation = Isolation.SERIALIZABLE)
 	public void saveLock(AppointmentRequest request) throws ConcurrentModificationException
 	{
 		AppointmentRequest req = findAppointmentRequest(request.getDate(), request.getHall(), request.getClinic());
@@ -121,6 +131,22 @@ public class AppointmentRequestService {
 		if(req != null)
 		{
 			throw new ConcurrentModificationException("Already made");
+		}
+		
+		Date start = request.getDate();
+		Date end = Scheduler.addHoursToJavaUtilDate(start, 1);
+		
+		for(Doctor d : request.getDoctors())
+		{
+			List<Appointment> appointments = d.getAppointments();
+			
+			for(Appointment app : appointments)
+			{
+				if(DateUtil.getInstance().overlappingInterval(start, end, app.getDate(), app.getEndDate()))
+				{
+					throw new ConcurrentModificationException("Overlap");
+				}
+			}
 		}
 		
 		appointmentRequestRepository.save(request);

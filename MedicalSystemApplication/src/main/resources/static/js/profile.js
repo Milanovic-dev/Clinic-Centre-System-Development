@@ -111,8 +111,8 @@ function setPatientProfile(patient, foreign)
 			complete: function(data)
 			{
 				let apps = data.responseJSON
+				console.log(apps)
 				emptyTable("listAppointmentsTable")
-						
 				$.each(apps, function(i, a){
 								
 					if(a.done) return

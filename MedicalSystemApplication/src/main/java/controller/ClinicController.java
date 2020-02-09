@@ -1,6 +1,7 @@
 package controller;
 
 
+import dto.AppointmentDTO;
 import dto.ClinicDTO;
 import dto.ClinicFilterDTO;
 import dto.DoctorDTO;
@@ -285,7 +286,7 @@ public class ClinicController {
     }
     
     @GetMapping(value="/getDoctorsByTypeAndVacation/{clinicName}/{typeOfExamination}/{date}")
-    public ResponseEntity<List<DoctorDTO>> getClinicDoctorsByTypeAndVacation(@PathVariable("clinicName") String clinicName,@PathVariable("typeOfExamination") String typeOfExamination
+    public ResponseEntity<DoctorDTO[]> getClinicDoctorsByTypeAndVacation(@PathVariable("clinicName") String clinicName,@PathVariable("typeOfExamination") String typeOfExamination
     																		,@PathVariable("date") String date)
     {
     	Clinic clinic = clinicService.findByName(clinicName);
@@ -307,7 +308,7 @@ public class ClinicController {
     		}
     	}
     	
-    	return new ResponseEntity<>(dtos,HttpStatus.OK);
+    	return new ResponseEntity<>(dtos.toArray(new DoctorDTO[dtos.size()]),HttpStatus.OK);
 
     }
 
@@ -337,7 +338,7 @@ public class ClinicController {
     }
     
     @PostMapping(value="/getDoctorsByFilter/{clinicName}")
-    public ResponseEntity<List<DoctorDTO>> getDoctorsByFilter(@RequestBody DoctorDTO dto, @PathVariable("clinicName") String clinicName)
+    public ResponseEntity<DoctorDTO[]> getDoctorsByFilter(@RequestBody DoctorDTO dto, @PathVariable("clinicName") String clinicName)
     {
     	Clinic clinic = clinicService.findByName(clinicName);
 
@@ -359,7 +360,7 @@ public class ClinicController {
     		}
     	}
     	
-    	return new ResponseEntity<>(ret, HttpStatus.OK);
+    	return new ResponseEntity<>(ret.toArray(new DoctorDTO[ret.size()]), HttpStatus.OK);
     }
     
     @PostMapping(value="/addReview")
@@ -383,10 +384,7 @@ public class ClinicController {
     		}
     	}
     	
-    	ClinicReview cr = new ClinicReview(dto.getRating(), DateUtil.getInstance().now("dd-MM-yyyy"), patient);
-    	clinic.getReviews().add(cr);
-    	
-    	clinicService.save(clinic);
+    	clinicService.rateClinicSafe(dto);
     	
     	notificationService.sendNotification(patient.getEmail(), "Ocenili ste kliniku!", "Vasa ocena od " + dto.getRating() + " zvezdice za kliniku "+dto.getClinicName()+" je uspesno zabelezena! Hvala vam na recenziji!");
     	
