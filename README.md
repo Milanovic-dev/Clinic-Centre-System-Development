@@ -26,9 +26,9 @@ Web based application made for patients and Clinic Centre. Made for a course at 
 
  `cd MedicalSystemApplication`
 
-- Install and wait for Tests to finish or install without tests
+- Install and wait for Tests to finish **or** install without tests
 
- `mvnw clean install` or `mvnw install -DskipTests`
+ `mvnw clean install` **or** `mvnw clean install -DskipTests`
 
 - Run on localhost
 
