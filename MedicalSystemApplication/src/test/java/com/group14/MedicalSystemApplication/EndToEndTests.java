@@ -1,3 +1,4 @@
+
 package com.group14.MedicalSystemApplication;
 
 import java.util.Date;
@@ -240,3 +241,4 @@ public class EndToEndTests {
 		 return "http://localhost:"+port+"api/clinic";
 	 }
 }
+

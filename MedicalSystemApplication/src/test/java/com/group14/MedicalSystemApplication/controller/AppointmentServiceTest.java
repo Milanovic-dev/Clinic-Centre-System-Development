@@ -1,6 +1,7 @@
 package com.group14.MedicalSystemApplication.controller;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -10,6 +11,7 @@ import java.util.List;
 import javax.transaction.Transactional;
 
 import org.glassfish.jersey.jaxb.internal.XmlCollectionJaxbProvider.App;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
@@ -136,19 +138,7 @@ public class AppointmentServiceTest
 		assertTrue(test !=null);
 	}
 	
-	
-	@Test
-	@Transactional
-	@Rollback(true)
-	void test_find_all_by_patient()
-	{
-		Patient patient = (Patient) userService.findByEmailAndDeleted("patient1@gmail.com", false);
 		
-		List<Appointment> app = appointmentService.findAllByPatient(patient);
-		
-		assertTrue(app.size() == 0);
-	}
-	
 	@Test
 	@Transactional
 	@Rollback(true)

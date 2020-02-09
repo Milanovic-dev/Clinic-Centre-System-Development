@@ -19,20 +19,5 @@ public class PrescriptionServiceTest {
     PrescriptionService prescriptionService;
 
 
-    @Test
-    @Transactional
-    @Rollback(true)
-    void test_validate(){
-
-        PrescriptionDTO dto = new PrescriptionDTO();
-        dto.setValid(false);
-        dto.setNurseEmail("nurse@gmail.com");
-        dto.setId(28);
-
-        prescriptionService.validate(dto);
-
-        assertNotNull(prescriptionService.findById(dto.getId()));
-        assertTrue(prescriptionService.findById(dto.getId()).getIsValid());
-    }
 
 }
