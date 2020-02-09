@@ -68,13 +68,20 @@ public class EndToEndTests {
 	public void e2e_send_appointment_request_patient()
 	{		
 		driver.navigate().to(base+"/login.html");
+		(new WebDriverWait(driver, 10))
+        .until(ExpectedConditions.presenceOfElementLocated(By.id("inputEmail")));
 		driver.findElement(By.id("inputEmail")).sendKeys("nikolamilanovic21@gmail.com");
+		(new WebDriverWait(driver, 10))
+        .until(ExpectedConditions.presenceOfElementLocated(By.id("inputPassword")));
 		driver.findElement(By.id("inputPassword")).sendKeys("123");
+		(new WebDriverWait(driver, 10))
+        .until(ExpectedConditions.presenceOfElementLocated(By.id("submitLogin")));
 		driver.findElement(By.id("submitLogin")).click();
 		
 		(new WebDriverWait(driver, 10))
         .until(ExpectedConditions.presenceOfElementLocated(By.id("clinicList")));
 		driver.findElement(By.id("clinicList")).click();
+		
 		
 		sleep(1);
 		
@@ -154,23 +161,33 @@ public class EndToEndTests {
 	public void e2e_confirm_appointment_request()
 	{
 		driver.navigate().to(base+"/login.html");
+		(new WebDriverWait(driver, 10))
+        .until(ExpectedConditions.presenceOfElementLocated(By.id("inputEmail")));
 		driver.findElement(By.id("inputEmail")).sendKeys("adminKlinike@gmail.com");
+		(new WebDriverWait(driver, 10))
+        .until(ExpectedConditions.presenceOfElementLocated(By.id("inputPassword")));
 		driver.findElement(By.id("inputPassword")).sendKeys("123");
+		(new WebDriverWait(driver, 10))
+        .until(ExpectedConditions.presenceOfElementLocated(By.id("submitLogin")));
 		driver.findElement(By.id("submitLogin")).click();
 		(new WebDriverWait(driver, 10))
-        .until(ExpectedConditions.visibilityOf(driver.findElement(By.id("examinationRequestList"))));
+        .until(ExpectedConditions.presenceOfElementLocated(By.id("examinationRequestList")));
 		driver.findElement(By.id("examinationRequestList")).click();
 		
-		(new WebDriverWait(driver, 10))
-        .until(ExpectedConditions.visibilityOf(driver.findElement(By.id("reserve_btn4"))));
-		driver.findElement(By.id("reserve_btn4")).click();
+		//sleep(1000);
 		
+		(new WebDriverWait(driver, 10))
+        .until(ExpectedConditions.presenceOfElementLocated(By.name("28-02-2020 11:00")));
+		driver.findElement(By.name("28-02-2020 11:00")).click();
+		
+		(new WebDriverWait(driver, 10))
+        .until(ExpectedConditions.presenceOfElementLocated(By.id("appEndTime")));
 		driver.findElement(By.id("appEndTime")).sendKeys("14:00");
 		
 		(new WebDriverWait(driver, 10))
         .until(ExpectedConditions.presenceOfElementLocated(By.id("DoctorPicker")));
 		Select docSelect = new Select(driver.findElement(By.id("selectDoctor")));
-		sleep(1);
+		//sleep(100);
 		docSelect.selectByIndex(0);
 		
 		driver.findElement(By.id("submitApp")).click();

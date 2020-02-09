@@ -533,7 +533,7 @@ function listAppointmentRequest(clinic, appointment, i)
         
     }
 
-	let values = [getProfileLink(appointment.patientEmail), appointment.date,appointment.price, tipic, typeOfExamination,doctorsDisplay,'<button class="btn btn-primary" id="reserve_btn'+i+'">Rezervisi</button>','<button class="btn btn-danger" id="deny_btn'+i+'">Odbij</button>']
+	let values = [getProfileLink(appointment.patientEmail), appointment.date,appointment.price, tipic, typeOfExamination,doctorsDisplay,'<button class="btn btn-primary" name="'+appointment.date+'" id="reserve_btn'+i+'">Rezervisi</button>','<button class="btn btn-danger" id="deny_btn'+i+'">Odbij</button>']
 	insertTableData("appReqTable",values)
 	
 	
