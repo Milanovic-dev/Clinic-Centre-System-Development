@@ -56,7 +56,7 @@ public class AppointmentServiceTest
 	void find_appointment()
 	{
 		Clinic clinic = clinicService.findByName("KlinikaA");
-		Hall hall = hallService.findByNumber(1);
+		Hall hall = hallService.findByNumberAndClinic(1, clinic);
 		Appointment app = appointmentService.findAppointment(DateUtil.getInstance().getDate("21-03-2020 07:30","dd-MM-yyyy HH:mm"), hall, clinic);
 		
 		assertNotNull(app);
@@ -68,7 +68,7 @@ public class AppointmentServiceTest
 	void test_find_all_by_hall_and_clinic()
 	{
 		Clinic clinic = clinicService.findByName("KlinikaA");
-		Hall hall = hallService.findByNumber(1);
+		Hall hall = hallService.findByNumberAndClinic(1, clinic);
 		List<Appointment> app = appointmentService.findAllByHallAndClinic(hall, clinic);
 		
 		assertTrue(app.size() !=0);
@@ -118,7 +118,7 @@ public class AppointmentServiceTest
 	void test_save()
 	{
 		Clinic clinic = clinicService.findByName("KlinikaA");
-		Hall hall = hallService.findByNumber(1);
+		Hall hall = hallService.findByNumberAndClinic(1, clinic);
 		Priceslist pl = priceListService.findByTypeOfExaminationAndClinic("Opsti pregled","KlinikaA");
 		
 		Appointment app4 = new Appointment.Builder(DateUtil.getInstance().getDate("05-02-2020 12:00","dd-MM-yyyy HH:mm"))
@@ -178,7 +178,8 @@ public class AppointmentServiceTest
 	@Rollback(true)
 	void test_find_all_by_hall()
 	{
-		Hall hall = hallService.findByNumber(1);
+		Clinic clinic = clinicService.findByName("KlinikaA");
+		Hall hall = hallService.findByNumberAndClinic(1, clinic);
 		List<Appointment> apps = appointmentService.findAllByHall(hall);
 		
 		assertTrue(apps.size() != 0);

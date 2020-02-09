@@ -56,8 +56,6 @@ public class HallController {
 	public ResponseEntity<List<Date>> getHallBusyFromHallAndClinic(@PathVariable("clinicName") String clinicName,@PathVariable ("hallNumber") int hallNumber)
 	{
 		Clinic c = clinicService.findByName(clinicName);
-		Hall h = hallService.findByNumber(hallNumber);
-		List<Appointment> app = appointmentService.findAllByHallAndClinic(h, c);
 		List<Date> busyHall = new ArrayList<Date>();
 		
 		if(c == null)
@@ -65,11 +63,13 @@ public class HallController {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 		
+		Hall h = hallService.findByNumberAndClinic(hallNumber,c);
 		if(h == null)
 		{
 			 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 		
+		List<Appointment> app = appointmentService.findAllByHallAndClinic(h, c);
 		if(app == null)
 		{
 			 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -186,10 +186,17 @@ public class HallController {
 	   return new ResponseEntity<>(ret,HttpStatus.OK);
 	}
 	
-	@DeleteMapping(value="/deleteHall/{number}")
-	public ResponseEntity<Void> deleteHall(@PathVariable ("number") int number)
+	@DeleteMapping(value="/deleteHall/{number}/{clinicName}")
+	public ResponseEntity<Void> deleteHall(@PathVariable ("number") int number, @PathVariable("clinicName") String clinicName)
 	{
-		Hall hall = hallService.findByNumber(number);
+		Clinic clinic = clinicService.findByName(clinicName);
+		
+		if(clinic == null)
+		{
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+		
+		Hall hall = hallService.findByNumberAndClinic(number, clinic);
 		
 		if(hall == null)
 		{
@@ -218,10 +225,18 @@ public class HallController {
 		
 	}
 	
-	@PutMapping(value="/changeHall/{oldNumber}/{newNumber}/{newName}")
-	public ResponseEntity<Void> changeHall(@PathVariable("oldNumber") int oldNumber,@PathVariable("newNumber") int newNumber,@PathVariable("newName") String newName)
+	@PutMapping(value="/changeHall/{oldNumber}/{newNumber}/{newName}/{clinicName}")
+	public ResponseEntity<Void> changeHall(@PathVariable("oldNumber") int oldNumber,@PathVariable("newNumber") int newNumber,@PathVariable("newName") String newName, @PathVariable("clinicName") String clinicName)
 	{
-		Hall hall = hallService.findByNumber(oldNumber);
+		Clinic clinic = clinicService.findByName(clinicName);
+		
+		if(clinic == null)
+		{
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+		}
+		
+		Hall hall = hallService.findByNumberAndClinic(oldNumber, clinic);
 		
 		if(hall == null)
 		{
@@ -246,10 +261,18 @@ public class HallController {
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 			
-	 @GetMapping(value="/get/{number}")
-	    public ResponseEntity<HallDTO> getHallByNumber(@PathVariable("number") int number)
+	 	@GetMapping(value="/get/{number}/{clinicName}")
+	    public ResponseEntity<HallDTO> getHallByNumber(@PathVariable("number") int number, @PathVariable("clinicName") String clinicName)
 	    {
-	    	Hall hall= hallService.findByNumber(number);
+	 		Clinic clinic = clinicService.findByName(clinicName);
+			
+			if(clinic == null)
+			{
+				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+			}
+			
+	    	Hall hall= hallService.findByNumberAndClinic(number, clinic);
 	    	if(hall == null)
 	    	{
 	    		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -269,7 +292,6 @@ public class HallController {
 	    {
 	        HttpHeaders header = new HttpHeaders();
 
-	        Hall h = hallService.findByNumber(hall.getNumber());
 	        Clinic clinic = clinicService.findByName(hall.getClinicName());
 
 	        if(clinic == null)
@@ -277,6 +299,8 @@ public class HallController {
 	        	return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 	        }
 	        		
+	        Hall h = hallService.findByNumberAndClinic(hall.getNumber(), clinic);
+	        
 	        if(h == null) {
 	            Hall newHall = new Hall(clinic,hall.getNumber(),hall.getName());
 	            hallService.save(newHall);
