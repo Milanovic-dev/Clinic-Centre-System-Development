@@ -99,9 +99,11 @@ public class AppointmentRequestService {
 		try {
 			Date d = df.parse(date);
 			
-			Hall h = hallRepository.findByNumber(hallNumber);
 			
 			Clinic c = clinicRepository.findByName(clinic);
+			
+					
+			Hall h = hallRepository.findByNumberAndClinicAndDeleted(hallNumber, c, false);
 			
 			return findAppointmentRequest(d,h,c);
 			

@@ -113,7 +113,7 @@ public class AppointmentRequestServiceTest
 	{
 		Clinic clinic = clinicService.findByName("KlinikaA");
 		Date date = DateUtil.getInstance().getDate("26-02-2020 10:00", "dd-MM-yyyy HH:mm");
-		Hall hall = hallService.findByNumber(1);
+		Hall hall = hallService.findByNumberAndClinic(1, clinic);
 		
 		AppointmentRequest app = appointmentRequestService.findAppointmentRequest(date, hall, clinic);
 		
@@ -155,7 +155,7 @@ public class AppointmentRequestServiceTest
 	{
 		Clinic clinic = clinicService.findByName("KlinikaA");
 		Date date = DateUtil.getInstance().getDate("28-03-2020 10:00", "dd-MM-yyyy HH:mm");
-		Hall hall = hallService.findByNumber(1);
+		Hall hall = hallService.findByNumberAndClinic(1, clinic);
 		Patient patient = (Patient) userService.findByEmailAndDeleted("nikolamilanovic21@gmail.com", false);
 		
 		Priceslist pl = priceListService.findByTypeOfExaminationAndClinic("Opsti pregled","KlinikaA");

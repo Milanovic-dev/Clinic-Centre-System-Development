@@ -20,9 +20,11 @@ import helpers.DateInterval;
 import helpers.DateUtil;
 import helpers.Scheduler;
 import model.Appointment;
+import model.Clinic;
 import model.Doctor;
 import model.Hall;
 import service.AppointmentService;
+import service.ClinicService;
 import service.HallService;
 import service.UserService;
 
@@ -120,10 +122,21 @@ public class UtilityController
 	@Autowired
 	private AppointmentService apService;
 	
-	@GetMapping(value="/hall/getBusyTime/{hallNumber}/{date}")
-	public ResponseEntity<List<DateIntervalDTO>> getBusyHall(@PathVariable("hallNumber") int num, @PathVariable("date") String date)
+	@Autowired
+	private ClinicService clinicService;
+	
+	@GetMapping(value="/hall/getBusyTime/{hallNumber}/{date}/{clinicName}")
+	public ResponseEntity<List<DateIntervalDTO>> getBusyHall(@PathVariable("hallNumber") int num, @PathVariable("date") String date,@PathVariable("clinicName") String clinicName)
 	{
-		Hall hall = hallService.findByNumber(num);
+		Clinic clinic = clinicService.findByName(clinicName);
+		
+		if(clinic == null)
+		{
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+		}
+		
+		Hall hall = hallService.findByNumberAndClinic(num, clinic);
 		
 		List<Appointment> apps = apService.findAllByHall(hall);
 		

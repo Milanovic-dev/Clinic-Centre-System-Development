@@ -335,7 +335,7 @@ function setUpClinicAdminPage(user)
 				return
 			}
 			
-			if(validation($('#inputHall'),idHall == 0,"Morate uneti validan broj sale."))
+			if(!validation($('#inputHall'),idHall < 0,"Morate uneti validan broj sale."))
 			{
 				return;
 			}
@@ -349,7 +349,8 @@ function setUpClinicAdminPage(user)
 				contentType : "application/json; charset=utf-8",
 				complete: function(data)
 				{
-							
+					hideValidation('inputHall')
+					hideValidation('inputHallName')
 					if(data.status == "200")
 					{
 						warningModal("Uspešno","Uspešno ste dodali novu salu sa brojem: "+$('#inputHall').val()+ " i  nazivom: "+$('#inputHallName').val()+".Pregled postojećih sala možete izvršiti klikom na 'Lista Hala'.")
@@ -533,7 +534,7 @@ function listAppointmentRequest(clinic, appointment, i)
         
     }
 
-	let values = [getProfileLink(appointment.patientEmail), appointment.date,appointment.price, tipic, typeOfExamination,doctorsDisplay,'<button class="btn btn-primary" id="reserve_btn'+i+'">Rezervisi</button>','<button class="btn btn-danger" id="deny_btn'+i+'">Odbij</button>']
+	let values = [getProfileLink(appointment.patientEmail), appointment.date,appointment.price, tipic, typeOfExamination,doctorsDisplay,'<button class="btn btn-primary" name="'+appointment.date+'" id="reserve_btn'+i+'">Rezervisi</button>','<button class="btn btn-danger" id="deny_btn'+i+'">Odbij</button>']
 	insertTableData("appReqTable",values)
 	
 	
@@ -1092,7 +1093,7 @@ function listHall(data,i)
 		
 		$.ajax({
 			type: 'DELETE',
-			url: 'api/hall/deleteHall/'+data.number,
+			url: 'api/hall/deleteHall/'+data.number+"/"+clinic.name,
 			complete: function(data)
 			{
 				if(data.status == "200")
@@ -1123,7 +1124,7 @@ function listHall(data,i)
 			let newName = $('#inputChangeHallName').val()
 			$.ajax({
 				type: 'PUT',
-				url: 'api/hall/changeHall/'+data.number+"/"+newNumber + "/" +newName,
+				url: 'api/hall/changeHall/'+data.number+"/"+newNumber + "/" +newName + "/" + clinic.name,
 				complete: function(data2)
 				{
 					if(data2.status == "200")
