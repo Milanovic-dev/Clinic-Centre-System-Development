@@ -565,7 +565,7 @@ public class AppointmentController
 		
 		for(Appointment app : appointments)
 		{
-			if(app.getPatient() != null && !app.getPredefined())
+			//if(app.getPatient() != null && !app.getPredefined())
 			{
 				AppointmentDTO dt = new AppointmentDTO(app);
 				dt.setDate(app.getDate().toString());
@@ -792,8 +792,6 @@ public class AppointmentController
 
 		catch (ValidationException e)
 		{
-
-			System.out.println(e.getMessage()+"MESSAGE+++++++++++++++++++++++");
 
 			if(e.getMessage() == "Hall"){
 				header.set("responseText","hall");

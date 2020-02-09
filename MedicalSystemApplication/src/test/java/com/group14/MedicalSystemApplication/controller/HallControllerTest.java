@@ -37,7 +37,7 @@ public class HallControllerTest
 		
 		TestRestTemplate rest = new TestRestTemplate();
 		ResponseEntity<HallDTO[]> response = rest.postForEntity(getPath() + "/getAllByFilter", dto, HallDTO[].class);
-		
+
 		HallDTO[] halls = response.getBody();
 		
 		assertEquals(HttpStatus.OK,response.getStatusCode());
