@@ -8,6 +8,6 @@ import model.Clinic;
 import model.Hall;
 
 public interface HallRepository extends JpaRepository<Hall,Long> {
-	public Hall findByNumber(int number);
+	public Hall findByNumberAndClinicAndDeleted(int number, Clinic clinic, Boolean deleted);
 	public List<Hall> findByClinic(Clinic c);
 }

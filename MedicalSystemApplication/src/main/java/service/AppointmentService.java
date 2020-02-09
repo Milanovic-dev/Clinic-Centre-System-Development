@@ -80,8 +80,9 @@ public class AppointmentService {
 	{	
 		Date d = DateUtil.getInstance().getDate(date, "dd-MM-yyyy HH:mm");
 			
-		Hall h = hallRepository.findByNumber(hallNumber);
 		Clinic c = clinicRepository.findByName(clinic);
+		
+		Hall h = hallRepository.findByNumberAndClinicAndDeleted(hallNumber, c, false);
 			
 		return findAppointment(d,h,c);
 	}
