@@ -112,7 +112,7 @@ public class EndToEndTests {
         .until(ExpectedConditions.presenceOfElementLocated(By.id("inputStartTime")));
 		driver.findElement(By.id("inputStartTime")).sendKeys("1400");
 		
-		sleep(4);
+		sleep(1);
 		
 		driver.findElement(By.id("submitAppointmentRequest")).click();
 		
@@ -189,7 +189,7 @@ public class EndToEndTests {
 		docSelect.selectByIndex(0);
 		
 		driver.findElement(By.id("submitApp")).click();
-		sleep(6);
+		sleep(2);
 		
 		(new WebDriverWait(driver, 10))
         .until(ExpectedConditions.visibilityOf(driver.findElement(By.id("examinationRequestList"))));
