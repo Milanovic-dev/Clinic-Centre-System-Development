@@ -410,7 +410,7 @@ function listVacationRequests(clinic,data,i)
 		e.preventDefault()
 		
 		showLoading('acceptRequestVacation'+ i)
-		request = JSON.stringify({"startDate":data.startDate,"endDate" : data.endDate , "user": data.user,"id": data.id})
+		request = JSON.stringify({"startDate":data.startDate,"endDate" : data.endDate , "user": data.user,"id": data.id, "version":data.version})
 		$.ajax({
 			type: 'POST',
 			url: 'api/vacation/confirmVacationRequest',
@@ -424,7 +424,7 @@ function listVacationRequests(clinic,data,i)
 				
 			}
 			
-		})
+		})		
 	})
 	
 	//ODBIJANJE ZAHTEVA ZA GODISNJI ODMOR ILI ODSUSTVO
@@ -453,9 +453,15 @@ function listVacationRequests(clinic,data,i)
 				$('#vacationRequestModal').modal("hide")
 				getAllVacationRequestsByClinic(clinic)
 				
+				if(response.status == "423")
+				{
+					window.location.reload()
+				}
 			}
 			
 		})
+		
+		
 			
 		})
 		
@@ -1221,7 +1227,7 @@ function makeTypeOfExaminationTable(clinic)
 {
 	$.ajax({
 		type: 'GET',
-		url: 'api/priceList/getAll',
+		url: 'api/priceList/getAllByClinic/'+ clinic.name,
 		complete: function(data)
 		{
 			console.log(data)
@@ -1335,7 +1341,7 @@ function listTypesOfExamination(t,i,clinic)
 		
 			$.ajax({
 				type:'PUT',
-				url: 'api/priceList/update/' + t.typeOfExamination,
+				url: 'api/priceList/update/' + t.typeOfExamination+"/"+clinic.name,
 				data: data,
 				dataType : "json",
 				contentType : "application/json; charset=utf-8",

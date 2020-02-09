@@ -148,7 +148,7 @@ public class ContainerInitialize {
 			userRepository.save(patient2);
 			
 			Clinic clinic = new Clinic("KlinikaA","Bulevar Osl. 10","Novi Sad","Srbija","Opis");
-			Clinic clinic2 = new Clinic("KlinikaB","Kisacka 5","Beogard","Srbija","Opis");
+			Clinic clinic2 = new Clinic("KlinikaB","Uzicka 10","Beogard","Srbija","Opis");
 				
 			clinicRepository.save(clinic);
 			clinicRepository.save(clinic2);
@@ -424,9 +424,6 @@ public class ContainerInitialize {
 			appReq3.setDoctors(new ArrayList<Doctor>() {{add(doctor1);}});
 			AppointmentRequest appReq4 = new AppointmentRequest(dateInstance.getDate("27-02-2020 11:00", "dd-MM-yyyy HH:mm"), null, patient, clinic,p1, AppointmentType.Surgery);
 			AppointmentRequest appReq5 = new AppointmentRequest(dateInstance.getDate("28-02-2020 11:00", "dd-MM-yyyy HH:mm"), null, patient, clinic,p1, AppointmentType.Examination);
-			AppointmentRequest appReq6 = new AppointmentRequest(dateInstance.getDate("26-02-2020 11:10", "dd-MM-yyyy HH:mm"), null, patient, clinic,p1, AppointmentType.Surgery);
-			AppointmentRequest appReq7 = new AppointmentRequest(dateInstance.getDate("26-02-2020 10:40", "dd-MM-yyyy HH:mm"), null, patient, clinic,p1, AppointmentType.Surgery);
-			appReq7.setDoctors(new ArrayList<Doctor>() {{add(doctor1);}});
 
 			List<Doctor> list = new ArrayList<Doctor>();
 			list.add(doctor2);
@@ -437,9 +434,120 @@ public class ContainerInitialize {
 			appointmentRequestRepository.save(appReq3);
 			appointmentRequestRepository.save(appReq4);
 			appointmentRequestRepository.save(appReq5);
-			appointmentRequestRepository.save(appReq6);
-			appointmentRequestRepository.save(appReq7);
+
+			
+			
+			Priceslist p3 = new Priceslist();
+			p3.setClinic(clinic2);
+			p3.setTypeOfExamination("Opsti pregled");
+			p3.setPrice(1100L);
+			
+			Priceslist p4 = new Priceslist();
+			p4.setClinic(clinic2);
+			p4.setTypeOfExamination("Neuroloski");
+			p4.setPrice(4500L);
+			
+			Priceslist p5 = new Priceslist();
+			p5.setClinic(clinic2);
+			p5.setTypeOfExamination("Stomatoloski");
+			p5.setPrice(1200L);
+			
+			Priceslist p6 = new Priceslist();
+			p6.setClinic(clinic2);
+			p6.setTypeOfExamination("Ocni");
+			p6.setPrice(2000L);
+			
+			pricelistRepository.save(p3);
+			pricelistRepository.save(p4);
+			pricelistRepository.save(p5);
+			pricelistRepository.save(p6);
 					
+			Doctor doctor4 = new Doctor.Builder("doktor4@gmail.com")
+					.withPassword(hash)
+					.withName("Dejan")
+					.withSurname("Dejanovic")
+					.withCity("Beograd")
+					.withAddress("Uzicka 6")
+					.withState("Srbija")
+					.withPhone("5435435")
+					.withInsuranceID("123487654524")
+					.withType("Neuroloski")
+					.withClinic(clinic2)					
+					.withShiftStart(DateUtil.getInstance().getDate("18:00","HH:mm"))
+					.withShiftEnd(DateUtil.getInstance().getDate("23:00","HH:mm"))
+					.build();
+			
+			Doctor doctor5 = new Doctor.Builder("gorangoranovic9@gmail.com")
+					.withPassword(hash)
+					.withName("Goran")
+					.withSurname("Goranovic")
+					.withCity("Novi Sad")
+					.withAddress("Mise Dimitrijevica 9")
+					.withState("Srbija")
+					.withPhone("5435435")
+					.withInsuranceID("323487654328")
+					.withType("Opsti pregled")
+					.withClinic(clinic2)					
+					.withShiftStart(DateUtil.getInstance().getDate("08:00","HH:mm"))
+					.withShiftEnd(DateUtil.getInstance().getDate("16:00","HH:mm"))
+					.build();
+			
+			Doctor doctor6 = new Doctor.Builder("ivanovic1@gmail.com")
+					.withPassword(hash)
+					.withName("Ivan")
+					.withSurname("Ivanovic")
+					.withCity("Novi Sad")
+					.withAddress("Mise Dimitrijevica 9")
+					.withState("Srbija")
+					.withPhone("5435435")
+					.withInsuranceID("323487654124")
+					.withType("Opsti pregled")
+					.withClinic(clinic2)					
+					.withShiftStart(DateUtil.getInstance().getDate("02:00","HH:mm"))
+					.withShiftEnd(DateUtil.getInstance().getDate("10:00","HH:mm"))
+					.build();
+			
+			Doctor doctor7 = new Doctor.Builder("jelenajelic@gmail.com")
+					.withPassword(hash)
+					.withName("Jelena")
+					.withSurname("Jelic")
+					.withCity("Novi Sad")
+					.withAddress("Pap Pavla 5")
+					.withState("Srbija")
+					.withPhone("5435435")
+					.withInsuranceID("323487664324")
+					.withType("Neuroloski")
+					.withClinic(clinic2)					
+					.withShiftStart(DateUtil.getInstance().getDate("07:00","HH:mm"))
+					.withShiftEnd(DateUtil.getInstance().getDate("15:00","HH:mm"))
+					.build();
+			
+			Doctor doctor8 = new Doctor.Builder("milanm@gmail.com")
+					.withPassword(hash)
+					.withName("Milan")
+					.withSurname("Milanovic")
+					.withCity("Novi Sad")
+					.withAddress("Mise Dimitrijevica 9")
+					.withState("Srbija")
+					.withPhone("5435435")
+					.withInsuranceID("323427654324")
+					.withType("Ocni")
+					.withClinic(clinic2)					
+					.withShiftStart(DateUtil.getInstance().getDate("06:00","HH:mm"))
+					.withShiftEnd(DateUtil.getInstance().getDate("14:00","HH:mm"))
+					.build();
+			
+			clinic2.getDoctors().add(doctor4);
+			clinic2.getDoctors().add(doctor5);
+			clinic2.getDoctors().add(doctor6);
+			clinic2.getDoctors().add(doctor7);
+			clinic2.getDoctors().add(doctor8);
+			userRepository.save(doctor4);
+			userRepository.save(doctor5);
+			userRepository.save(doctor6);
+			userRepository.save(doctor7);
+			userRepository.save(doctor8);
+			clinicRepository.save(clinic2);
 
 		} catch (Exception e) {
 			// TODO Auto-generated catch block

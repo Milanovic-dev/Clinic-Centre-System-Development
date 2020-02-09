@@ -133,8 +133,14 @@ function setUpPatientPage(user)
 		{
 			
 			let pricelists = data.responseJSON
+			const result = Array.from(new Set(pricelists.map(p => p.typeOfExamination)))
+				.map(typeOfExamination => {
+					return{
+						typeOfExamination: typeOfExamination
+					}
+				})
 						
-			for(let p of pricelists)
+			for(let p of result)
 			{
 				$('#selectAppointmentType').append($('<option>',{
 					value: p.typeOfExamination,
@@ -582,6 +588,7 @@ function p_listClinic(data,i,user)
 							doctorsSelected.push(doctors[j])
 							$('#inputStartTime').prop('min',doctors[j].shiftStart)
 							$('#inputStartTime').prop('max',doctors[j].shiftEnd)
+							$('#inputStartTime').val(doctors[j].shiftStart)
 						}
 						
 					}
@@ -661,15 +668,16 @@ function submitAppointmentRequest(user, doctorsSelected)
 		complete: function(data)
 		{
 			console.log(data)
+			hideValidation("inputStartTime")
 			if(data.status == "201")
-			{
+			{			
 				listAppRequests(user)
 			}
 			else if(data.status == "500")
 			{
 				warningModal("Neuspesno " + data.status, "Server nije uspeo da odgovori. Molimo pokusajte kasnije")
 			}
-			else if(data.status == "400")
+			else if(data.status == "409")
 			{
 				displayError('submitAppointmentRequest', "Upit već postoji. Pokušajte drugo vreme.")
 			}

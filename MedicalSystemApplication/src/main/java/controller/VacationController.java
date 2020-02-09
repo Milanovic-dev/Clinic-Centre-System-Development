@@ -4,7 +4,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.validation.ValidationException;
+
 import model.*;
+
+import org.hibernate.dialect.lock.OptimisticEntityLockException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -181,27 +185,20 @@ public class VacationController {
 	{
 		User user = userService.findByEmailAndDeleted(dto.getUser().getEmail(), false);
 		List<VacationRequest> vrq = vacationRequestService.findAllByUser(user);
-		VacationRequest req = null;
-
-
-		for(VacationRequest request : vrq)
+		
+		try
 		{
-			if(request.getId().equals(dto.getId()))
-			{
-				req = request;
-			}
+			Vacation req = vacationRequestService.resolveVacationRequestLock(vrq, dto, true);			
+			notificationService.sendNotification(req.getUser().getEmail(), "Zahtev za godišnji odmor ili odsustvo ",
+					"Poštovani,"
+							+ "Vaš zahtev za godišnji odmor ili odsustvo u periodu od " + DateUtil.getInstance().getString(req.getStartDate(), "dd-MM-yyyy") + " do " + DateUtil.getInstance().getString(req.getEndDate(), "dd-MM-yyyy") + " je odobren.");
+			return new ResponseEntity<>(HttpStatus.OK);
+		}
+		catch(Exception e)
+		{
+			return new ResponseEntity<>(HttpStatus.LOCKED);
 		}
 
-		if(req == null)
-		{
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-		}
-
-		notificationService.sendNotification(req.getUser().getEmail(), "Zahtev za godišnji odmor ili odsustvo ",
-				"Poštovani,"
-						+ "Vaš zahtev za godišnji odmor ili odsustvo u periodu od " + DateUtil.getInstance().getString(req.getStartDate(), "dd-MM-yyyy") + " do " + DateUtil.getInstance().getString(req.getEndDate(), "dd-MM-yyyy") + " je odobren.");
-		vacationRequestService.delete(req);
-		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
 	@DeleteMapping(value="/denyVacationRequest/{denyText}")
@@ -209,27 +206,19 @@ public class VacationController {
 	{
 		User user = userService.findByEmailAndDeleted(dto.getUser().getEmail(), false);
 		List<VacationRequest> vrq = vacationRequestService.findAllByUser(user);
-		VacationRequest req = null;
 
-
-		for(VacationRequest request : vrq)
+		try
 		{
-			if(request.getId().equals(dto.getId()))
-			{
-				req = request;
-			}
+			Vacation req = vacationRequestService.resolveVacationRequestLock(vrq, dto, true);			
+			notificationService.sendNotification(req.getUser().getEmail(), "Zahtev za godišnji odmor ili odsustvo ",
+					"Poštovani,"
+							+ "Vaš zahtev za godišnji odmor ili odsustvo u periodu od " + DateUtil.getInstance().getString(req.getStartDate(), "dd-MM-yyyy") + " do " + DateUtil.getInstance().getString(req.getEndDate(), "dd-MM-yyyy") + " je odbijen.Razlog odbijanja zahteva je sledeći: " + denyText);
+			return new ResponseEntity<>(HttpStatus.OK);
 		}
-
-		if(req == null)
+		catch(Exception e)
 		{
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			return new ResponseEntity<>(HttpStatus.LOCKED);
 		}
-
-		notificationService.sendNotification(req.getUser().getEmail(), "Zahtev za godišnji odmor ili odsustvo ",
-				"Poštovani,"
-						+ "Vaš zahtev za godišnji odmor ili odsustvo u periodu od " + DateUtil.getInstance().getString(req.getStartDate(), "dd-MM-yyyy") + " do " + DateUtil.getInstance().getString(req.getEndDate(), "dd-MM-yyyy") + " je odbijen.Razlog odbijanja zahteva je sledeći: " + denyText);
-		vacationRequestService.delete(req);
-		return new ResponseEntity<>(HttpStatus.OK);
 
 	}
 

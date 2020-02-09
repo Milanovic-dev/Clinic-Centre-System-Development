@@ -12,7 +12,7 @@ public class VacationDTO
 	private String endDate;
 	private UserDTO user;
 	private Long id;
-
+	private int version;
 
 	public VacationDTO(String date, String end,UserDTO userDTO,Long id) {
 		super();
@@ -27,7 +27,7 @@ public class VacationDTO
 		this.endDate = DateUtil.getInstance().getString(vrq.getEndDate(), "dd-MM-yyyy");
 		this.user = new UserDTO(vrq.getUser());
 		this.id = vrq.getId();
-
+		this.version = vrq.getVersion();
 	}
 
 	public VacationDTO(Vacation vac)
@@ -43,7 +43,14 @@ public class VacationDTO
 		// TODO Auto-generated constructor stub
 	}
 
+	
 
+	public int getVersion() {
+		return version;
+	}
+	public void setVersion(int version) {
+		this.version = version;
+	}
 	public Long getId() {
 		return id;
 	}
