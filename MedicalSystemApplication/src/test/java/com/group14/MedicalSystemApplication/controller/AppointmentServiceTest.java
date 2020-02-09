@@ -97,7 +97,7 @@ public class AppointmentServiceTest
 	@Rollback(true)
 	void test_find_all_by_pricelist()
 	{
-		Priceslist pl = priceListService.findByTypeOfExamination("Opsti pregled");
+		Priceslist pl = priceListService.findByTypeOfExaminationAndClinic("Opsti pregled", "KlinikaA");
 		List<Appointment> app = appointmentService.findAllByPricesList(pl);
 		
 		assertTrue(app.size() != 0 );
@@ -119,7 +119,7 @@ public class AppointmentServiceTest
 	{
 		Clinic clinic = clinicService.findByName("KlinikaA");
 		Hall hall = hallService.findByNumber(1);
-		Priceslist pl = priceListService.findByTypeOfExamination("Opsti pregled");
+		Priceslist pl = priceListService.findByTypeOfExaminationAndClinic("Opsti pregled","KlinikaA");
 		
 		Appointment app4 = new Appointment.Builder(DateUtil.getInstance().getDate("05-02-2020 12:00","dd-MM-yyyy HH:mm"))
 				.withEndingDate(DateUtil.getInstance().getDate("05-02-2020 13:00","dd-MM-yyyy HH:mm"))

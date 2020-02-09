@@ -13,6 +13,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import org.springframework.data.annotation.Version;
+
 @Entity
 public class VacationRequest
 {
@@ -32,6 +34,9 @@ public class VacationRequest
     
     @ManyToOne(fetch = FetchType.EAGER)
     private Clinic clinic;
+    
+    @Version
+    private int version;
 
 	public VacationRequest() {
 		super();
@@ -47,6 +52,15 @@ public class VacationRequest
 	}
 
 	
+	public int getVersion() {
+		return version;
+	}
+
+
+	public void setVersion(int version) {
+		this.version = version;
+	}
+
 
 	public Clinic getClinic() {
 		return clinic;

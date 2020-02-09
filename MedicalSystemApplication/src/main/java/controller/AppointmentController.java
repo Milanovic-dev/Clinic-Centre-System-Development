@@ -624,7 +624,7 @@ public class AppointmentController
 		}
 		
 		
-		Priceslist p = priceslistService.findByTypeOfExamination(dto.getTypeOfExamination());
+		Priceslist p = priceslistService.findByTypeOfExaminationAndClinic(dto.getTypeOfExamination(), dto.getClinicName());
 		
 		if(p == null)
 		{
@@ -879,7 +879,8 @@ public class AppointmentController
 		
 		if(clinic == null)
 		{
-			header.set("responseText","Clinic not found: " + dto.getClinicName());
+			System.out.println("CLINIC");
+			header.set("mess","Clinic not found: " + dto.getClinicName());
 			return new ResponseEntity<>(header,HttpStatus.NOT_FOUND);
 		}		
 		request.setClinic(clinic);
@@ -889,7 +890,8 @@ public class AppointmentController
 		
 		if(patient == null)
 		{
-			header.set("responseText","Patient not found: " + dto.getPatientEmail());
+			System.out.println("PATIENT");
+			header.set("mess","Patient not found: " + dto.getPatientEmail());
 			return new ResponseEntity<>(header,HttpStatus.NOT_FOUND);
 		}
 		request.setPatient(patient);
@@ -907,18 +909,20 @@ public class AppointmentController
 				
 			if(doctor == null)
 			{
-				header.set("responseText","Doctor not found: " + email);
+				System.out.println("DOCTOR");
+				header.set("mess","Doctor not found: " + email);
 				return new ResponseEntity<>(header,HttpStatus.NOT_FOUND);
 			}
 				
 			request.getDoctors().add(doctor);	
 		}
 		
-		Priceslist pl = priceslistService.findByTypeOfExamination(dto.getTypeOfExamination());
+		Priceslist pl = priceslistService.findByTypeOfExaminationAndClinic(dto.getTypeOfExamination(), clinic);
 		
-		if(pl == null)
+		if(pl == null)			
 		{
-			header.set("responseText","Priceslist not found: " + dto.getTypeOfExamination());
+			System.out.println("PRICELIST");
+			header.set("mess","Priceslist not found: " + dto.getTypeOfExamination());
 			return new ResponseEntity<>(header,HttpStatus.NOT_FOUND);
 		}
 		

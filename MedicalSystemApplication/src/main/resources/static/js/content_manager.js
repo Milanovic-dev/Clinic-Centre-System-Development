@@ -200,8 +200,19 @@ function validation(element, condition, errorMessage)
 
 function hideValidation(element)
 {
-	element.removeClass('is-invalid')	
-	element.removeClass('is-valid')
+	let elem
+	
+	if(isString(element))
+	{
+		elem = $('#'+element)	
+	}
+	else
+	{
+		elem = element
+	}
+	
+	elem.removeClass('is-invalid')	
+	elem.removeClass('is-valid')
 }
 
 function hideView(id)
