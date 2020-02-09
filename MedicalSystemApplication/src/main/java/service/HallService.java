@@ -16,8 +16,8 @@ public class HallService {
 	@Autowired
 	private HallRepository hallRepository;
 	
-	 public Hall findByNumber(int number) {
-	        return hallRepository.findByNumber(number);
+	 public Hall findByNumberAndClinic(int number, Clinic clinic) {
+	        return hallRepository.findByNumberAndClinicAndDeleted(number, clinic, false);
 	 
 	    }
 

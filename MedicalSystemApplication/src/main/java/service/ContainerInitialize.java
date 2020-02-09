@@ -167,6 +167,18 @@ public class ContainerInitialize {
 			clinicAdmin.setIsFirstLog(false);
 			userRepository.save(clinicAdmin);
 
+			ClinicAdmin clinicAdminB = new ClinicAdmin.Builder("adminKlinikeB@gmail.com")
+					.withPassword(hash)
+					.withName("Jovan")
+					.withSurname("Jovanovic")
+					.withCity("Novi Sad")
+					.withAddress("Kisacka")
+					.withState("Srbija")
+					.withPhone("42332423")
+					.withClinic(clinic2)					
+					.build();
+			
+			userRepository.save(clinicAdminB);
 
 			Doctor doctor1 = new Doctor.Builder("doktor1@gmail.com")
 					.withPassword(hash)
@@ -419,10 +431,13 @@ public class ContainerInitialize {
 			AppointmentRequest appReq = new AppointmentRequest(dateInstance.getDate("26-02-2020 10:00", "dd-MM-yyyy HH:mm"), null, patient, clinic,p1, AppointmentType.Surgery);
 			appReq.setDoctors(new ArrayList<Doctor>() {{add(doctor1);}});
 			AppointmentRequest appReq1 = new AppointmentRequest(dateInstance.getDate("24-02-2020 11:00", "dd-MM-yyyy HH:mm"), null, patient, clinic,p1, AppointmentType.Examination);
+			appReq1.setDoctors(new ArrayList<Doctor>() {{add(doctor2);}});
 			AppointmentRequest appReq2 = new AppointmentRequest(dateInstance.getDate("25-02-2020 11:00", "dd-MM-yyyy HH:mm"), null, patient, clinic,p1, AppointmentType.Surgery);
+			appReq2.setDoctors(new ArrayList<Doctor>() {{add(doctor3);}});
 			AppointmentRequest appReq3 = new AppointmentRequest(dateInstance.getDate("26-02-2020 10:30", "dd-MM-yyyy HH:mm"), null, patient, clinic,p1, AppointmentType.Surgery);
-			appReq3.setDoctors(new ArrayList<Doctor>() {{add(doctor1);}});
+			appReq3.setDoctors(new ArrayList<Doctor>() {{add(doctor2);}});
 			AppointmentRequest appReq4 = new AppointmentRequest(dateInstance.getDate("27-02-2020 11:00", "dd-MM-yyyy HH:mm"), null, patient, clinic,p1, AppointmentType.Surgery);
+			appReq4.setDoctors(new ArrayList<Doctor>(){{add(doctor1); add(doctor2);}});
 			AppointmentRequest appReq5 = new AppointmentRequest(dateInstance.getDate("28-02-2020 11:00", "dd-MM-yyyy HH:mm"), null, patient, clinic,p1, AppointmentType.Examination);
 
 			List<Doctor> list = new ArrayList<Doctor>();
@@ -547,6 +562,17 @@ public class ContainerInitialize {
 			userRepository.save(doctor6);
 			userRepository.save(doctor7);
 			userRepository.save(doctor8);
+			
+			
+			Hall hall3 = new Hall(clinic2,1,"Sala 1");
+			Hall hall4 = new Hall(clinic2,2,"Sala 2");	
+			Hall hall5 = new Hall(clinic2,3,"Sala 3");
+			clinic2.getHalls().add(hall3);
+			clinic2.getHalls().add(hall4);
+			clinic2.getHalls().add(hall5);
+			hallRepository.save(hall3);
+			hallRepository.save(hall4);
+			hallRepository.save(hall5);
 			clinicRepository.save(clinic2);
 
 		} catch (Exception e) {

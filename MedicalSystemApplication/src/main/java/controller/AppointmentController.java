@@ -350,7 +350,7 @@ public class AppointmentController
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 		
-		Hall hall = hallService.findByNumber(hallNumber);
+		Hall hall = hallService.findByNumberAndClinic(hallNumber, clinic);
 		
 		if(hall == null)
 		{
@@ -601,7 +601,7 @@ public class AppointmentController
 		Date endDate = DateUtil.getInstance().getDate(dto.getEndDate(), "dd-MM-yyyy HH:mm");
 		
 		
-		Hall hall = hallService.findByNumber(dto.getHallNumber());
+		Hall hall = hallService.findByNumberAndClinic(dto.getHallNumber(), clinic);
 		
 		if(hall == null)
 		{
@@ -697,7 +697,7 @@ public class AppointmentController
 		}
 
 
-		Hall hall = hallService.findByNumber(dto.getHallNumber());
+		Hall hall = hallService.findByNumberAndClinic(dto.getHallNumber(), request.getClinic());
 
 		if(hall == null)
 		{
