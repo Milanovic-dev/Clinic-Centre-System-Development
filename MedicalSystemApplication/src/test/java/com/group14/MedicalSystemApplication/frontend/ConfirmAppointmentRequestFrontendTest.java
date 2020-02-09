@@ -1,4 +1,4 @@
-package com.group14.MedicalSystemApplication.fronted;
+package com.group14.MedicalSystemApplication.frontend;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 

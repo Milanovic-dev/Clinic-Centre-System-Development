@@ -1,7 +1,4 @@
-package com.group14.MedicalSystemApplication.fronted;
-
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
+package com.group14.MedicalSystemApplication.frontend;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,7 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class AddAppointmentFrontendTest
+public class SearchKlinicFrontendTest 
 {
 	@LocalServerPort
 	private int port;
@@ -39,70 +36,31 @@ public class AddAppointmentFrontendTest
     }
 	
 	@Test
-	void test_unsuccessful_login() throws Exception
+	void frontend_test_search_clinic()
 	{
 		driver.navigate().to(base+"/login.html");
-		driver.findElement(By.id("inputEmail")).sendKeys("nikola21@gmail.com");
-		driver.findElement(By.id("inputPassword")).sendKeys("123");
-		driver.findElement(By.id("submitLogin")).click();
-		
-		assertNotNull(driver.findElement(By.className("is-invalid")));
-		
-	}
-	
-	@Test 
-	void test_making_appointment()
-	{
-		driver.navigate().to(base+"/login.html");
-		(new WebDriverWait(driver, 10))
-        .until(ExpectedConditions.presenceOfElementLocated(By.id("inputEmail")));
 		driver.findElement(By.id("inputEmail")).sendKeys("nikolamilanovic21@gmail.com");
-		(new WebDriverWait(driver, 10))
-        .until(ExpectedConditions.presenceOfElementLocated(By.id("inputPassword")));
 		driver.findElement(By.id("inputPassword")).sendKeys("123");
-		(new WebDriverWait(driver, 10))
-        .until(ExpectedConditions.presenceOfElementLocated(By.id("submitLogin")));
 		driver.findElement(By.id("submitLogin")).click();
 		
 		(new WebDriverWait(driver, 10))
         .until(ExpectedConditions.presenceOfElementLocated(By.id("clinicList")));
 		driver.findElement(By.id("clinicList")).click();
 		
-		
-		sleep(1);
-		
 		(new WebDriverWait(driver, 10))
-           .until(ExpectedConditions.visibilityOf(driver.findElement(By.id("selectAppointmentType"))));
+        .until(ExpectedConditions.visibilityOf(driver.findElement(By.id("selectAppointmentType"))));
 		Select ToE = new Select(driver.findElement(By.id("selectAppointmentType")));
 		ToE.selectByValue("Stomatoloski");
 		
-		sleep(1);
-		
-		(new WebDriverWait(driver, 10))
-        .until(ExpectedConditions.visibilityOf(driver.findElement(By.id("tableSearch_btn_clinicTable"))));
-		driver.findElement(By.id("tableSearch_btn_clinicTable")).click();
-		   
-		sleep(1);
-	
+		driver.findElement(By.id("clinicAdressPick")).sendKeys("Bulevar Osl.");
+		driver.findElement(By.id("clinicRatingPick")).sendKeys("0");
+		driver.findElement(By.id("tableSearch_btn_clinicTable")).click()
+		;
 		(new WebDriverWait(driver, 10))
         .until(ExpectedConditions.presenceOfElementLocated(By.id("makeAppointment_btn0")));
 		driver.findElement(By.id("makeAppointment_btn0")).click();
 						
 		sleep(1);
-		
-		driver.findElement(By.id("detailsAppointment_btn")).click();
-		
-		sleep(1);
-		
-		(new WebDriverWait(driver, 10))
-        .until(ExpectedConditions.presenceOfElementLocated(By.id("inputStartTime")));
-		driver.findElement(By.id("inputStartTime")).sendKeys("1400");
-		
-		sleep(4);
-		
-		driver.findElement(By.id("submitAppointmentRequest")).click();
-		
-		sleep(2);
 	}
 	
 	 private void sleep(long seconds)
