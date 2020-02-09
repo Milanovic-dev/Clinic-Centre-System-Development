@@ -52,7 +52,7 @@ public class ScheduledAppointmentsController {
     @Scheduled(cron = "0 0 0 * * *")
     public void onSchedule() {
     	logger.info("Starting automatic scheduling.");
-        reserveAlgorithmSurgery();
+
         try {       	
         	RestTemplate rest = new RestTemplate();
         	rest.put("http://localhost:8282/api/scheduled/reserve", null);
@@ -65,104 +65,13 @@ public class ScheduledAppointmentsController {
     }
 
 
-    public void reserveAlgorithmSurgery() {
-
-        List<AppointmentRequest> requests = appointmentRequestService.findAllSurgeries();
-
-        System.out.println("OPERACIJE : " + requests.size() );
-
-        boolean done;
-        boolean nemoze;
-        List<DateInterval> intervals;
-
-        
-        for (AppointmentRequest r : requests) {
-        	
-            done = false;
-            List<Hall> halls = hallService.findAllByClinic(r.getClinic());
-            for (Hall h : halls) {
-                if (done) continue;
-                nemoze = false;
-                List<Appointment> appointments = appointmentService.findAllByHall(h);
-
-
-                Date endDate = Scheduler.addHoursToJavaUtilDate(r.getDate(), 3);
-                DateInterval diRikvesta = new DateInterval(r.getDate(), endDate);
-
-                for (Appointment app : appointments) {
-                    DateInterval di1 = new DateInterval(app.getDate(), app.getEndDate());
-
-                    if (DateUtil.getInstance().overlappingInterval(di1, diRikvesta)) {
-                        System.out.println("POKLAPA SE++++++++++++++++++++++++");
-                        nemoze = true;
-                    }
-                }
-                System.out.println(nemoze + "++++++++++++++++++++++++");
-                if (!nemoze) {
-                    Appointment appointment = new Appointment.Builder(r.getDate())
-                            .withClinic(r.getClinic())
-                            .withHall(h)
-                            .withPatient(r.getPatient())
-                            .withType(r.getAppointmentType())
-                            .withPriceslist(r.getPriceslist())
-                            .withEndingDate(endDate)
-                            .build();
-                    System.out.println(r.getDate() + "********************prvi put" + endDate);
-                    appointmentService.save(appointment);
-                    appointmentRequestService.delete(r);
-
-                    done = true;
-                }
-                if (done) continue;
-            }
-        }
-
-        //za ostale koji nisu dodeljeni
-        requests = appointmentRequestService.findAllSurgeries();
-        System.out.println(requests + "REQUESTS++++++++++++++");
-
-        int i = 0;
-
-        for (AppointmentRequest r : requests) {
-            done = false;
-            List<Hall> halls = hallService.findAllByClinic(r.getClinic());
-
-            for (Hall h : halls) {
-                if (done) continue;
-                List<Appointment> appointments = appointmentService.findAllByHall(h);
-                intervals = Scheduler.getFreeIntervalsForSurgery(appointments, r.getDate());
-
-                for (DateInterval interval : intervals) {
-                    if (done) continue;
-                    Date startDate = interval.getStart();
-                    Date endDate1 = Scheduler.addHoursToJavaUtilDate(interval.getStart(), 3);
-
-                    if (DateUtil.getInstance().overlappingInterval(startDate, endDate1, startDate, interval.getEnd())) {
-                        Appointment appointment = new Appointment.Builder(startDate)
-                                .withClinic(r.getClinic())
-                                .withHall(h)
-                                .withPatient(r.getPatient())
-                                .withType(r.getAppointmentType())
-                                .withPriceslist(r.getPriceslist())
-                                .withEndingDate(endDate1)
-                                .build();
-                        System.out.println(startDate + "********************drugi put" + endDate1);
-                        appointmentService.save(appointment);
-                        appointmentRequestService.delete(r);
-
-                        done = true;
-                    }
-                }
-            }
-
-        }
-    }
     
     //Test
     @PutMapping(value="/reserve")
     public ResponseEntity<Void> Reserve()
     {
     	reserveAlgorithmExamination();
+        reserveAlgorithmSurgery();
     	return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -181,11 +90,36 @@ public class ScheduledAppointmentsController {
     		}
     	}
     }
+
+
+    //2_3.20
+    @Transactional
+    public void reserveAlgorithmSurgery()
+    {
+        List<AppointmentRequest> requests = appointmentRequestService.findAllSurgeries();
+
+        for(AppointmentRequest request : requests)
+        {
+                List<Doctor> doctors = request.getDoctors();
+                reserve(request, request.getDate());
+        }
+    }
+
     
     @Transactional
     public void reserve(AppointmentRequest request, Date start)
     {
-    	int hoursDelta = 1; //Pomeraj termina ukoliko ne moze da se zakaze(1 sat)
+        int hoursDelta = 1;
+
+        if(request.getAppointmentType().equals(AppointmentType.Examination))
+        {
+            hoursDelta = 1;
+        }
+        else if (request.getAppointmentType().equals(AppointmentType.Surgery))
+        {
+            hoursDelta = 3;
+        }
+    	 //Pomeraj termina ukoliko ne moze da se zakaze(1 sat)
     						//TODO: Moze ovo lepse
     	Date end = Scheduler.addHoursToJavaUtilDate(start, hoursDelta);
 
