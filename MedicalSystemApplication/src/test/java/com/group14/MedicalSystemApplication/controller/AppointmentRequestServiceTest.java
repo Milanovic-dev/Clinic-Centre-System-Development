@@ -130,24 +130,24 @@ public class AppointmentRequestServiceTest
 
 	}
 	
-	/*
+	
 	@Test
 	@Transactional
 	@Rollback(true)
 	void test_save_appointment_request()
 	{
 		Clinic clinic = clinicService.findByName("KlinikaA");
-		Hall hall = hallService.findByNumber(1);
+		Hall hall = hallService.findByNumberAndClinic(1, clinic);
 		Patient patient = (Patient) userService.findByEmailAndDeleted("nikolamilanovic21@gmail.com", false);
 		
-		Priceslist pl = priceListService.findByTypeOfExamination("Opsti pregled");
+		Priceslist pl = priceListService.findByTypeOfExaminationAndClinic("Opsti pregled", clinic);
 		
 		AppointmentRequest appReq1 = new AppointmentRequest(DateUtil.getInstance().getDate("28-03-2020 10:00", "dd-MM-yyyy HH:mm"), hall, patient, clinic,pl, AppointmentType.Examination);
 		appointmentRequestService.save(appReq1);
 		
 		assertTrue(appointmentRequestService.findAppointmentRequest("28-03-2020 10:00", "nikolamilanovic21@gmail.com", "KlinikaA") != null);
 	}
-	*/
+	
 	@Test
 	@Transactional
 	@Rollback(true)

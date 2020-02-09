@@ -247,21 +247,6 @@ public class AppointmentControllerTest {
 		assertTrue(appointmentService.findAppointment(dto.getDate(), dto.getHallNumber(), dto.getClinicName()) != null);
 	}
 
-	@Test
-	void test_get_all_for_calendar()
-	{
-		TestRestTemplate rest = new TestRestTemplate();
-
-
-		ResponseEntity<AppointmentDTO[]> response =
-				rest.getForEntity(getPath() + "/doctor/getAllAppointmentsCalendar/", AppointmentDTO[].class, "doktor1@gmail.com");
-
-		AppointmentDTO[] apps = response.getBody();
-
-		assertEquals(HttpStatus.OK, response.getStatusCode());
-		assertTrue(apps.length > 0);
-	}
-
 
 	private String getPath()
 	{

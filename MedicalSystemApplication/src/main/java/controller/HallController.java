@@ -121,14 +121,12 @@ public class HallController {
 		
 		List<HallDTO> ret = new ArrayList<HallDTO>();
 		HallFilter filter = (HallFilter) FilterFactory.getInstance().get("hall");
-		
-		Date startDate = DateUtil.getInstance().getDate(dto.getDate(), "dd-MM-yyyy");
-		
-		
+			
 		for(Hall hall : c.getHalls())
 		{
 			if(dto.getDate() != null && dto.getDate() != "")
 			{
+				Date startDate = DateUtil.getInstance().getDate(dto.getDate(), "dd-MM-yyyy");
 				long hours = 0; //miliisecs
 				List<Appointment> appointments = appointmentService.findAllByHall(hall);
 				
@@ -156,9 +154,9 @@ public class HallController {
 			}
 		}
 		
-		
-		
-		return new ResponseEntity<>(ret.toArray(new HallDTO[ret.size()]),HttpStatus.OK);
+		HallDTO[] retArray = ret.toArray(new HallDTO[ret.size()]);
+
+		return new ResponseEntity<>(retArray ,HttpStatus.OK);
 	}
 	
 	@GetMapping(value = "/getAllByClinic/{clinicName}")
